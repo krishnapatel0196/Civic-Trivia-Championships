@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 ## Current Position
 
 Phase: 29 of 30 (Admin Review Queue)
-Plan: 2 of 3 complete
-Status: In progress
-Last activity: 2026-02-22 — Completed 29-02-PLAN.md (Admin Flag Review UI)
+Plan: 3 of 3 complete
+Status: Phase complete
+Last activity: 2026-02-22 — Completed 29-03-PLAN.md (Flag Detail Panel & Actions)
 
-Progress: [██████████████████████░] 91% (82 plans complete)
+Progress: [██████████████████████░] 92% (83 plans complete)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -22,7 +22,7 @@ Progress: [██████████████████████░
 - v1.2 (Phases 13-17): Complete - 20/20 requirements delivered
 - v1.3 (Phases 18-22): Complete - 23/23 requirements delivered
 - v1.4 (Phases 23-26): Complete - 19/19 requirements delivered
-- v1.5 (Phases 27-30): 17/23 requirements complete (FLAG-01–08, ELAB-01–06, INFR-01–03)
+- v1.5 (Phases 27-30): 21/23 requirements complete (FLAG-01–08, ELAB-01–06, INFR-01–03, ADMN-01–04)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -34,7 +34,7 @@ Progress: [██████████████████████░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 82 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 7 v1.5)
+- Total plans completed: 83 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 8 v1.5)
 - Quick tasks completed: 10
 - Milestones shipped: 5 (v1.0 through v1.4)
 - Total execution time: ~10 days (2026-02-13 → 2026-02-22)
@@ -76,6 +76,11 @@ Recent decisions affecting v1.5 work:
 - Phase 29-02: Default sort flag_count desc — highest severity first
 - Phase 29-02: Reuse /api/admin/collections/health for filter — avoid duplicate endpoint
 - Phase 29-02: Reason chips with semantic colors — confusing=amber, outdated=blue, wrong=red, boring=gray
+- Phase 29-03: Custom undo toast vs library — 50-line custom hook avoids 3KB dependency
+- Phase 29-03: Dismiss no undo — hard delete requires confirm, archive has undo
+- Phase 29-03: Optimistic UI with refreshKey fallback — instant feedback with error recovery
+- Phase 29-03: Elaboration truncation at 100 chars — Show more/less toggle for long text
+- Phase 29-03: Close panel after action — snappy workflow, no stale content
 
 ### Pending Todos
 
@@ -93,11 +98,12 @@ Recent decisions affecting v1.5 work:
 
 ### Blockers/Concerns
 
-None. Phase 29-03 (Flag Detail Panel & Actions) ready to begin:
-- Flag Review page renders with tabbed interface
-- Table click handler sets selectedQuestionId state
-- /api/admin/flags/:questionId/detail endpoint available
-- Archive/Dismiss/Restore action endpoints available
+None. Phase 29 complete — all ADMN requirements delivered (flag review queue, detail panel, actions).
+
+Phase 30 (Broken Links Repair) ready to begin:
+- Admin flag review provides visibility into problematic questions
+- Edit in Question Explorer link provides quick access to fix individual questions
+- Phase 30 will add bulk source URL repair workflow for 320 legacy questions
 
 ### Quick Tasks Completed
 
@@ -110,11 +116,11 @@ None. Phase 29-03 (Flag Detail Panel & Actions) ready to begin:
 ## Session Continuity
 
 Last session: 2026-02-22
-Topic: Phase 29-02 - Admin flag review UI
-Stopped at: Completed 29-02-PLAN.md — Flag Review page with tabs, filters, table, pagination (2/2 tasks)
-Resume file: None — Plan complete
+Topic: Phase 29-03 - Flag detail panel and actions
+Stopped at: Completed 29-03-PLAN.md — FlagDetailPanel with optimistic updates and undo toast (2/2 tasks)
+Resume file: None — Phase 29 complete
 
-Next action: Execute 29-03-PLAN.md for Flag Detail Panel & Actions
+Next action: Begin Phase 30 (Broken Links Repair) — final phase of v1.5 milestone
 
 ---
-*v1.5 Feedback Marks — Phase 28 complete (2/4 phases in milestone)*
+*v1.5 Feedback Marks — Phase 29 complete (3/4 phases in milestone)*
