@@ -109,10 +109,11 @@ Plans:
 5. Player can submit all feedback at once with single button tap
 6. Feedback persists to database with user, question, session, reasons array, and text
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 28-01: TBD
+- [ ] 28-01-PLAN.md — Backend batch endpoint + frontend elaboration UI components (ReasonChip, FlaggedQuestionItem, FeedbackElaborationScreen)
+- [ ] 28-02-PLAN.md — Game.tsx integration: conditional elaboration screen between game end and results, API wiring
 
 #### Phase 29: Admin Review Queue
 
@@ -168,7 +169,7 @@ Phases execute in numeric order: 27 → 28 → 29 → 30
 | 18-22 | v1.3 | 17/17 | Complete | 2026-02-20 |
 | 23-26 | v1.4 | 6/6 | Complete | 2026-02-21 |
 | 27. Backend Foundation & Inline Flagging | v1.5 | 0/3 | Not started | - |
-| 28. Progressive Disclosure UI | v1.5 | 0/TBD | Not started | - |
+| 28. Progressive Disclosure UI | v1.5 | 0/2 | Not started | - |
 | 29. Admin Review Queue | v1.5 | 0/TBD | Not started | - |
 | 30. Admin Integration & Tech Debt | v1.5 | 0/TBD | Not started | - |
 
