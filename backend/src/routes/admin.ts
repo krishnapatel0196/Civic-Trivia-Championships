@@ -420,9 +420,10 @@ router.get('/questions/explore', async (req: Request, res: Response) => {
     const difficultyFilter = req.query.difficulty as string;
     const statusFilter = req.query.status as string;
     const searchFilter = req.query.search as string;
+    const flaggedFilter = req.query.flagged as string;
 
     // Validate sort column
-    const validSortColumns = ['quality_score', 'difficulty', 'encounter_count', 'correct_count', 'created_at'];
+    const validSortColumns = ['quality_score', 'difficulty', 'encounter_count', 'correct_count', 'created_at', 'flag_count'];
     const sortColumn = validSortColumns.includes(sort) ? sort : 'quality_score';
 
     // Build dynamic filters
@@ -452,6 +453,10 @@ router.get('/questions/explore', async (req: Request, res: Response) => {
       );
     }
 
+    if (flaggedFilter === 'true') {
+      filters.push(gt(questions.flagCount, 0));
+    }
+
     // Build base query with collection names aggregation
     let query = db
       .select({
@@ -461,6 +466,7 @@ router.get('/questions/explore', async (req: Request, res: Response) => {
         difficulty: questions.difficulty,
         qualityScore: questions.qualityScore,
         violationCount: questions.violationCount,
+        flagCount: questions.flagCount,
         status: questions.status,
         encounterCount: questions.encounterCount,
         correctCount: questions.correctCount,
@@ -492,6 +498,8 @@ router.get('/questions/explore', async (req: Request, res: Response) => {
       query = query.orderBy(order === 'desc' ? desc(questions.correctCount) : asc(questions.correctCount)) as any;
     } else if (sortColumn === 'created_at') {
       query = query.orderBy(order === 'desc' ? desc(questions.createdAt) : asc(questions.createdAt)) as any;
+    } else if (sortColumn === 'flag_count') {
+      query = query.orderBy(order === 'desc' ? desc(questions.flagCount) : asc(questions.flagCount)) as any;
     }
 
     // Get total count with same filters
@@ -565,6 +573,7 @@ router.get('/questions/:id/detail', async (req: Request, res: Response) => {
         correctCount: questions.correctCount,
         qualityScore: questions.qualityScore,
         violationCount: questions.violationCount,
+        flagCount: questions.flagCount,
         collectionNames: sql<string[]>`array_agg(DISTINCT ${collections.name})`
       })
       .from(questions)
