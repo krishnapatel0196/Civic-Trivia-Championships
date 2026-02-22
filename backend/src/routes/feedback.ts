@@ -8,7 +8,7 @@ import { Router, Request, Response } from 'express';
 import { body, param, validationResult } from 'express-validator';
 import { authenticateToken } from '../middleware/auth.js';
 import { flagRateLimiter } from '../middleware/rateLimiter.js';
-import { createFlag, deleteFlag } from '../services/feedbackService.js';
+import { createFlag, deleteFlag, updateFlagElaborations } from '../services/feedbackService.js';
 import { db } from '../db/index.js';
 import { questions } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
@@ -110,6 +110,47 @@ router.delete(
     } catch (error: any) {
       console.error('Error deleting flag:', error);
       res.status(500).json({ error: 'Failed to delete flag' });
+    }
+  }
+);
+
+/**
+ * PATCH /flags/batch - Update elaborations for multiple flagged questions
+ * Body: { sessionId: string, elaborations: Array<{ questionId: string, reasons: string[], elaborationText: string }> }
+ * Middleware: authenticateToken (NO rate limiter - infrequent post-game action)
+ * Returns: { success: true, updatedCount: number }
+ */
+router.patch(
+  '/flags/batch',
+  authenticateToken,
+  body('sessionId').isString().notEmpty(),
+  body('elaborations').isArray({ min: 1 }),
+  body('elaborations.*.questionId').isString().notEmpty(),
+  body('elaborations.*.reasons').isArray(),
+  body('elaborations.*.reasons.*').isIn(['confusing-wording', 'outdated-info', 'wrong-answer', 'not-interesting']),
+  body('elaborations.*.elaborationText').isString().isLength({ max: 500 }),
+  async (req: Request, res: Response) => {
+    try {
+      // Validate request
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ error: 'Validation failed', details: errors.array() });
+        return;
+      }
+
+      const { sessionId, elaborations } = req.body;
+      const userId = req.user!.userId;
+
+      // Update elaborations
+      const updatedCount = await updateFlagElaborations(userId, sessionId, elaborations);
+
+      res.status(200).json({
+        success: true,
+        updatedCount,
+      });
+    } catch (error: any) {
+      console.error('Error updating flag elaborations:', error);
+      res.status(500).json({ error: 'Failed to update flag elaborations' });
     }
   }
 );

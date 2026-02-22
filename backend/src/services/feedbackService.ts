@@ -99,3 +99,62 @@ export async function deleteFlag(
     return false;
   });
 }
+
+/**
+ * Update elaborations (reasons and text) for multiple flagged questions
+ * All updates happen in a single transaction (all-or-nothing)
+ * @param userId - User ID updating their flags
+ * @param sessionId - Game session ID for context
+ * @param elaborations - Array of elaborations to update
+ * @returns Count of flags actually updated
+ */
+export async function updateFlagElaborations(
+  userId: number,
+  sessionId: string,
+  elaborations: Array<{
+    questionId: string;  // externalId
+    reasons: string[];
+    elaborationText: string;
+  }>
+): Promise<number> {
+  return await db.transaction(async (tx) => {
+    let updatedCount = 0;
+
+    for (const elaboration of elaborations) {
+      // Look up question by externalId
+      const question = await tx
+        .select({ id: questions.id })
+        .from(questions)
+        .where(eq(questions.externalId, elaboration.questionId))
+        .limit(1);
+
+      if (question.length === 0) {
+        throw new Error(`Question not found: ${elaboration.questionId}`);
+      }
+
+      const questionId = question[0].id;
+
+      // Update the questionFlags row
+      const updateResult = await tx
+        .update(questionFlags)
+        .set({
+          reasons: elaboration.reasons.length > 0 ? elaboration.reasons : null,
+          elaborationText: elaboration.elaborationText.trim() || null,
+        })
+        .where(
+          and(
+            eq(questionFlags.userId, userId),
+            eq(questionFlags.questionId, questionId),
+            eq(questionFlags.sessionId, sessionId)
+          )
+        )
+        .returning({ id: questionFlags.id });
+
+      if (updateResult.length > 0) {
+        updatedCount++;
+      }
+    }
+
+    return updatedCount;
+  });
+}
