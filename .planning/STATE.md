@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 
 ## Current Position
 
-Phase: 29 of 30 (Admin Review Queue)
-Plan: 3 of 3 complete
-Status: Phase complete
-Last activity: 2026-02-22 — Completed 29-03-PLAN.md (Flag Detail Panel & Actions)
+Phase: 30 of 30 (Admin Integration & Tech Debt)
+Plan: 2 of 4 complete
+Status: In progress
+Last activity: 2026-02-22 — Completed 30-02-PLAN.md (Cross-Linking Flag Review & Question Explorer)
 
-Progress: [██████████████████████░] 92% (83 plans complete)
+Progress: [██████████████████████░] 94% (85 plans complete)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -22,7 +22,7 @@ Progress: [██████████████████████░
 - v1.2 (Phases 13-17): Complete - 20/20 requirements delivered
 - v1.3 (Phases 18-22): Complete - 23/23 requirements delivered
 - v1.4 (Phases 23-26): Complete - 19/19 requirements delivered
-- v1.5 (Phases 27-30): 19/23 requirements complete (FLAG-01–06, ELAB-01–06, INFR-01–03, ADMN-01–04)
+- v1.5 (Phases 27-30): 20/23 requirements complete (FLAG-01–06, ELAB-01–06, INFR-01–03, ADMN-01–04, DEBT-02)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -34,7 +34,7 @@ Progress: [██████████████████████░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 83 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 8 v1.5)
+- Total plans completed: 84 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 9 v1.5)
 - Quick tasks completed: 10
 - Milestones shipped: 5 (v1.0 through v1.4)
 - Total execution time: ~10 days (2026-02-13 → 2026-02-22)
@@ -48,7 +48,7 @@ Progress: [██████████████████████░
 | v1.2 Community Collections | 13-17 | 15 | 2026-02-19 |
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
-| v1.5 Feedback Marks | 27-30 | 8 | In progress |
+| v1.5 Feedback Marks | 27-30 | 9 | In progress |
 
 ## Accumulated Context
 
@@ -81,6 +81,8 @@ Recent decisions affecting v1.5 work:
 - Phase 29-03: Optimistic UI with refreshKey fallback — instant feedback with error recovery
 - Phase 29-03: Elaboration truncation at 100 chars — Show more/less toggle for long text
 - Phase 29-03: Close panel after action — snappy workflow, no stale content
+- Phase 30-01: Simple regex validation for ADMIN_EMAIL vs Zod schema — kept env.ts minimal
+- Phase 30-01: flagged=true filter uses gt(questions.flagCount, 0) for consistency
 
 ### Pending Todos
 
@@ -98,12 +100,12 @@ Recent decisions affecting v1.5 work:
 
 ### Blockers/Concerns
 
-None. Phase 29 complete — all ADMN requirements delivered (flag review queue, detail panel, actions).
+None. Phase 30 Plan 01 complete — backend API now serves flagCount to frontend.
 
-Phase 30 (Broken Links Repair) ready to begin:
-- Admin flag review provides visibility into problematic questions
-- Edit in Question Explorer link provides quick access to fix individual questions
-- Phase 30 will add bulk source URL repair workflow for 320 legacy questions
+Phase 30 remaining plans:
+- 30-02: Frontend integration (Question Explorer flags column, filter, detail badge)
+- 30-03: Bulk link repair workflow (bulk edit for fixing broken source URLs)
+- 30-04: Admin Question Explorer enhancement (quality filters, responsive improvements)
 
 ### Quick Tasks Completed
 
@@ -116,11 +118,11 @@ Phase 30 (Broken Links Repair) ready to begin:
 ## Session Continuity
 
 Last session: 2026-02-22
-Topic: Phase 29 execution complete — Admin Review Queue verified
-Stopped at: Phase 29 verified ✓ — all 6 success criteria met, 1 gap fixed (tab param mismatch)
-Resume file: None — Phase 29 complete
+Topic: Phase 30 Plan 01 execution complete — API Flag Count Integration
+Stopped at: 30-01-PLAN.md complete — backend ready for frontend integration
+Resume file: None
 
-Next action: `/gsd:plan-phase 30` to create execution plans for Admin Integration & Tech Debt
+Next action: `/gsd:execute-phase 30 02` to integrate flagCount into Question Explorer frontend
 
 ---
-*v1.5 Feedback Marks — Phase 29 complete (3/4 phases in milestone)*
+*v1.5 Feedback Marks — Phase 30 Plan 01 complete (1/4 plans in phase)*
