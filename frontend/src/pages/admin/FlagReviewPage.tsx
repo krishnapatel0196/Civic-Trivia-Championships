@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { API_URL } from '../../services/api';
 import { FlaggedQuestionsTable, FlaggedQuestionRow } from './components/FlaggedQuestionsTable';
+import { FlagDetailPanel } from './components/FlagDetailPanel';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 
 interface PaginationMeta {
@@ -26,8 +27,11 @@ export function FlagReviewPage() {
   const [pagination, setPagination] = useState<PaginationMeta | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Detail panel state (for Plan 03)
-  const [_selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+  // Detail panel state
+  const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+
+  // Refresh trigger for re-fetching after errors
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Collections list (fetched from API)
   const [collections, setCollections] = useState<{ name: string; slug: string }[]>([]);
@@ -96,7 +100,7 @@ export function FlagReviewPage() {
     };
 
     fetchFlags();
-  }, [searchParams.toString(), accessToken]);
+  }, [searchParams.toString(), accessToken, refreshKey]);
 
   // Helper to update a single URL param
   const updateParam = (key: string, value: string) => {
@@ -160,6 +164,26 @@ export function FlagReviewPage() {
 
   // Sync tab with URL
   const selectedIndex = tab === 'archived' ? 1 : 0;
+
+  // Detail panel callbacks
+  const handleQuestionArchived = (id: number) => {
+    setQuestions((prev) => prev?.filter((q) => q.id !== id) || null);
+    setSelectedQuestionId(null);
+  };
+
+  const handleFlagsDismissed = (id: number) => {
+    setQuestions((prev) => prev?.filter((q) => q.id !== id) || null);
+    setSelectedQuestionId(null);
+  };
+
+  const handleQuestionRestored = (id: number) => {
+    setQuestions((prev) => prev?.filter((q) => q.id !== id) || null);
+    setSelectedQuestionId(null);
+  };
+
+  const handleRefreshNeeded = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
 
   return (
     <div className="space-y-6">
@@ -378,6 +402,16 @@ export function FlagReviewPage() {
           </TabPanel>
         </TabPanels>
       </TabGroup>
+
+      {/* Flag Detail Panel */}
+      <FlagDetailPanel
+        questionId={selectedQuestionId}
+        onClose={() => setSelectedQuestionId(null)}
+        onQuestionArchived={handleQuestionArchived}
+        onFlagsDismissed={handleFlagsDismissed}
+        onQuestionRestored={handleQuestionRestored}
+        onRefreshNeeded={handleRefreshNeeded}
+      />
     </div>
   );
 }
