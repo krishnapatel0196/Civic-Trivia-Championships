@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 
 ## Current Position
 
-Phase: 28 of 30 (Progressive Disclosure UI)
-Plan: 2 of 2 complete
-Status: Phase 28 complete
-Last activity: 2026-02-22 — Completed 28-02-PLAN.md (Game Flow Integration)
+Phase: 29 of 30 (Admin Review Queue)
+Plan: 1 of 2 complete
+Status: In progress
+Last activity: 2026-02-22 — Completed 29-01-PLAN.md (Admin Flag Review API)
 
-Progress: [██████████████████████░] 90% (80 plans complete)
+Progress: [██████████████████████░] 90% (81 plans complete)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -34,7 +34,7 @@ Progress: [██████████████████████░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 80 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 5 v1.5)
+- Total plans completed: 81 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 6 v1.5)
 - Quick tasks completed: 10
 - Milestones shipped: 5 (v1.0 through v1.4)
 - Total execution time: ~10 days (2026-02-13 → 2026-02-22)
@@ -48,7 +48,7 @@ Progress: [██████████████████████░
 | v1.2 Community Collections | 13-17 | 15 | 2026-02-19 |
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
-| v1.5 Feedback Marks | 27-30 | 5 | In progress |
+| v1.5 Feedback Marks | 27-30 | 6 | In progress |
 
 ## Accumulated Context
 
@@ -67,6 +67,10 @@ Recent decisions affecting v1.5 work:
 - Phase 28-01: Equal visual weight for Skip/Submit buttons — no dark patterns
 - Phase 28-02: Elaboration after results, not before — user requested interactive flags on results screen
 - Phase 28-02: pendingAction pattern — intercept Play Again/Home with elaboration before executing
+- Phase 29-01: Denormalized flag_count for sorting — avoid expensive COUNT(*) aggregations
+- Phase 29-01: Raw SQL for cross-schema JOIN — auth.users not in Drizzle schema
+- Phase 29-01: Hard delete flags on dismiss — simpler, no audit trail needed
+- Phase 29-01: Limit 20 flags in detail view — performance consideration
 
 ### Pending Todos
 
@@ -84,10 +88,10 @@ Recent decisions affecting v1.5 work:
 
 ### Blockers/Concerns
 
-None. Phase 29 (Admin Review Queue) can leverage:
-- question_flags table with reasons/elaborationText columns
-- flag_count denormalized on questions table
-- Existing admin UI (React + TanStack Table) ready for new review page
+None. Phase 29-02 (Admin Review UI) ready to begin:
+- API endpoints complete with pagination, filtering, and actions
+- All endpoints protected by admin auth middleware
+- Frontend can consume GET /flags and detail endpoints immediately
 
 ### Quick Tasks Completed
 
@@ -100,11 +104,11 @@ None. Phase 29 (Admin Review Queue) can leverage:
 ## Session Continuity
 
 Last session: 2026-02-22
-Topic: Quick task 019 - Mobile question size and progress button removal
-Stopped at: Completed quick-019 — mobile UI optimizations applied (2/2 tasks)
-Resume file: None — Quick task complete
+Topic: Phase 29-01 - Admin flag review API endpoints
+Stopped at: Completed 29-01-PLAN.md — 5 admin endpoints for flag review (2/2 tasks)
+Resume file: None — Plan complete
 
-Next action: `/gsd:plan-phase 29` to create execution plans for Admin Review Queue
+Next action: Execute 29-02-PLAN.md for Admin Review UI (frontend implementation)
 
 ---
 *v1.5 Feedback Marks — Phase 28 complete (2/4 phases in milestone)*
