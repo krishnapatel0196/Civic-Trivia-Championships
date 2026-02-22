@@ -722,6 +722,7 @@ router.get('/flags', async (req: Request, res: Response) => {
     const order = (req.query.order as string) === 'asc' ? 'asc' : 'desc';
     const collectionFilter = req.query.collection as string;
     const tab = (req.query.tab as string) || 'active';
+    const questionIdFilter = req.query.questionId as string;
 
     // Validate sort column
     const validSortColumns = ['flag_count', 'created_at'];
@@ -739,6 +740,14 @@ router.get('/flags', async (req: Request, res: Response) => {
     // Apply collection filter if provided
     if (collectionFilter) {
       filters.push(eq(collections.slug, collectionFilter));
+    }
+
+    // Apply questionId filter if provided
+    if (questionIdFilter) {
+      const questionIdNum = parseInt(questionIdFilter, 10);
+      if (!isNaN(questionIdNum)) {
+        filters.push(eq(questions.id, questionIdNum));
+      }
     }
 
     // Get total count with same filters

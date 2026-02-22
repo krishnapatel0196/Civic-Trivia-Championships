@@ -60,6 +60,7 @@ export function FlagReviewPage() {
   const order = searchParams.get('order') || 'desc';
   const collection = searchParams.get('collection') || '';
   const tab = searchParams.get('tab') || 'active';
+  const questionId = searchParams.get('questionId') || '';
 
   // Fetch data when URL params change
   useEffect(() => {
@@ -76,6 +77,7 @@ export function FlagReviewPage() {
         params.set('order', order);
         params.set('tab', tab);
         if (collection) params.set('collection', collection);
+        if (questionId) params.set('questionId', questionId);
 
         const response = await fetch(
           `${API_URL}/api/admin/flags?${params.toString()}`,
@@ -209,6 +211,26 @@ export function FlagReviewPage() {
         <TabPanels className="mt-6">
           {/* Active Tab */}
           <TabPanel className="space-y-6">
+            {/* Question ID Filter Banner */}
+            {questionId && (
+              <div className="bg-blue-50 border border-blue-200 px-4 py-3 rounded-md flex items-center justify-between">
+                <span className="text-sm text-blue-800">
+                  Showing flags for Question #{questionId}
+                </span>
+                <button
+                  onClick={() => {
+                    const newParams = new URLSearchParams(searchParams);
+                    newParams.delete('questionId');
+                    newParams.set('page', '1');
+                    setSearchParams(newParams);
+                  }}
+                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  Clear filter
+                </button>
+              </div>
+            )}
+
             {/* Collection Filter */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -306,6 +328,26 @@ export function FlagReviewPage() {
 
           {/* Archived Tab */}
           <TabPanel className="space-y-6">
+            {/* Question ID Filter Banner */}
+            {questionId && (
+              <div className="bg-blue-50 border border-blue-200 px-4 py-3 rounded-md flex items-center justify-between">
+                <span className="text-sm text-blue-800">
+                  Showing flags for Question #{questionId}
+                </span>
+                <button
+                  onClick={() => {
+                    const newParams = new URLSearchParams(searchParams);
+                    newParams.delete('questionId');
+                    newParams.set('page', '1');
+                    setSearchParams(newParams);
+                  }}
+                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  Clear filter
+                </button>
+              </div>
+            )}
+
             {/* Collection Filter */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
