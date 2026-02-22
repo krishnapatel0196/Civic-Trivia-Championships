@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { authenticateToken, requireAdmin } from '../middleware/auth.js';
 import { db } from '../db/index.js';
-import { questions, collections, collectionQuestions } from '../db/schema.js';
+import { questions, collections, collectionQuestions, questionFlags } from '../db/schema.js';
 import { eq, and, or, lte, gt, isNotNull, sql, inArray, ilike, desc, asc } from 'drizzle-orm';
 import { auditQuestion } from '../services/qualityRules/index.js';
 import type { QuestionInput } from '../services/qualityRules/types.js';
@@ -690,6 +690,255 @@ router.get('/collections/health', async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Error fetching collection health:', error);
     res.status(500).json({ error: 'Failed to fetch collection health', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * GET /flags - Paginated list of flagged questions
+ * Query params:
+ *   - page: number (default 1)
+ *   - limit: number (default 25, max 100)
+ *   - sort: 'flag_count' | 'created_at' (default: 'flag_count')
+ *   - order: 'asc' | 'desc' (default: 'desc')
+ *   - collection: string (collection slug filter)
+ *   - tab: 'active' | 'archived' (default: 'active')
+ * Returns: { data: FlaggedQuestionRow[], pagination: { page, limit, total, totalPages } }
+ */
+router.get('/flags', async (req: Request, res: Response) => {
+  try {
+    // Parse and validate query params
+    let page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 25));
+    const sort = (req.query.sort as string) || 'flag_count';
+    const order = (req.query.order as string) === 'asc' ? 'asc' : 'desc';
+    const collectionFilter = req.query.collection as string;
+    const tab = (req.query.tab as string) || 'active';
+
+    // Validate sort column
+    const validSortColumns = ['flag_count', 'created_at'];
+    const sortColumn = validSortColumns.includes(sort) ? sort : 'flag_count';
+
+    // Build filters based on tab
+    const filters: any[] = [];
+    if (tab === 'active') {
+      filters.push(eq(questions.status, 'active'));
+      filters.push(gt(questions.flagCount, 0));
+    } else if (tab === 'archived') {
+      filters.push(eq(questions.status, 'archived'));
+    }
+
+    // Apply collection filter if provided
+    if (collectionFilter) {
+      filters.push(eq(collections.slug, collectionFilter));
+    }
+
+    // Get total count with same filters
+    let countQuery = db
+      .select({ count: sql<number>`COUNT(DISTINCT ${questions.id})` })
+      .from(questions)
+      .leftJoin(collectionQuestions, eq(questions.id, collectionQuestions.questionId))
+      .leftJoin(collections, eq(collectionQuestions.collectionId, collections.id));
+
+    if (filters.length > 0) {
+      countQuery = countQuery.where(and(...filters)) as any;
+    }
+
+    const [{ count: total }] = await countQuery;
+
+    // Reset page to bounds if out of range
+    const totalPages = Math.ceil(total / limit);
+    if (page > totalPages && totalPages > 0) {
+      page = totalPages;
+    }
+
+    // Build main query with collection names aggregation
+    let query = db
+      .select({
+        id: questions.id,
+        externalId: questions.externalId,
+        text: questions.text,
+        difficulty: questions.difficulty,
+        status: questions.status,
+        flagCount: questions.flagCount,
+        createdAt: questions.createdAt,
+        collectionNames: sql<string[]>`array_agg(DISTINCT ${collections.name})`
+      })
+      .from(questions)
+      .leftJoin(collectionQuestions, eq(questions.id, collectionQuestions.questionId))
+      .leftJoin(collections, eq(collectionQuestions.collectionId, collections.id))
+      .groupBy(questions.id);
+
+    // Apply filters
+    if (filters.length > 0) {
+      query = query.where(and(...filters)) as any;
+    }
+
+    // Apply sorting
+    if (sortColumn === 'flag_count') {
+      query = query.orderBy(order === 'desc' ? desc(questions.flagCount) : asc(questions.flagCount)) as any;
+    } else if (sortColumn === 'created_at') {
+      query = query.orderBy(order === 'desc' ? desc(questions.createdAt) : asc(questions.createdAt)) as any;
+    }
+
+    // Apply pagination
+    const results = await query.limit(limit).offset((page - 1) * limit);
+
+    // For each question, get reason breakdown and lastFlaggedAt
+    const questionIds = results.map(r => r.id);
+
+    let reasonsData: { questionId: number; reasons: string[] | null; createdAt: Date }[] = [];
+    if (questionIds.length > 0) {
+      reasonsData = await db
+        .select({
+          questionId: questionFlags.questionId,
+          reasons: questionFlags.reasons,
+          createdAt: questionFlags.createdAt
+        })
+        .from(questionFlags)
+        .where(inArray(questionFlags.questionId, questionIds));
+    }
+
+    // Build reason breakdown and lastFlaggedAt for each question
+    const flagDataMap = new Map<number, { reasonBreakdown: Record<string, number>; lastFlaggedAt: Date | null }>();
+
+    for (const row of reasonsData) {
+      if (!flagDataMap.has(row.questionId)) {
+        flagDataMap.set(row.questionId, { reasonBreakdown: {}, lastFlaggedAt: null });
+      }
+
+      const flagData = flagDataMap.get(row.questionId)!;
+
+      // Aggregate reasons
+      if (row.reasons) {
+        for (const reason of row.reasons) {
+          flagData.reasonBreakdown[reason] = (flagData.reasonBreakdown[reason] || 0) + 1;
+        }
+      }
+
+      // Track most recent flag date
+      if (!flagData.lastFlaggedAt || row.createdAt > flagData.lastFlaggedAt) {
+        flagData.lastFlaggedAt = row.createdAt;
+      }
+    }
+
+    // Map to response shape
+    const data = results.map(q => ({
+      id: q.id,
+      externalId: q.externalId,
+      text: q.text.length > 120 ? q.text.substring(0, 120) + '...' : q.text,
+      difficulty: q.difficulty,
+      status: q.status,
+      flagCount: q.flagCount,
+      collectionNames: q.collectionNames.filter(Boolean),
+      reasonBreakdown: flagDataMap.get(q.id)?.reasonBreakdown || {},
+      lastFlaggedAt: flagDataMap.get(q.id)?.lastFlaggedAt || null
+    }));
+
+    res.json({
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages
+      }
+    });
+  } catch (error: any) {
+    console.error('Error fetching flagged questions:', error);
+    res.status(500).json({ error: 'Failed to fetch flagged questions', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * GET /flags/:questionId/detail - Full question context + individual flags
+ * Path param: questionId (numeric question ID)
+ * Returns: { question: QuestionDetail, flags: FlagEntry[] }
+ */
+router.get('/flags/:questionId/detail', async (req: Request, res: Response) => {
+  try {
+    const questionId = parseInt(req.params.questionId, 10);
+    if (isNaN(questionId)) {
+      return res.status(400).json({ error: 'Invalid question ID' });
+    }
+
+    // Fetch full question with collection names
+    const result = await db
+      .select({
+        id: questions.id,
+        externalId: questions.externalId,
+        text: questions.text,
+        options: questions.options,
+        correctAnswer: questions.correctAnswer,
+        explanation: questions.explanation,
+        difficulty: questions.difficulty,
+        topicId: questions.topicId,
+        subcategory: questions.subcategory,
+        source: questions.source,
+        learningContent: questions.learningContent,
+        expiresAt: questions.expiresAt,
+        status: questions.status,
+        expirationHistory: questions.expirationHistory,
+        createdAt: questions.createdAt,
+        updatedAt: questions.updatedAt,
+        encounterCount: questions.encounterCount,
+        correctCount: questions.correctCount,
+        qualityScore: questions.qualityScore,
+        violationCount: questions.violationCount,
+        flagCount: questions.flagCount,
+        collectionNames: sql<string[]>`array_agg(DISTINCT ${collections.name})`
+      })
+      .from(questions)
+      .leftJoin(collectionQuestions, eq(questions.id, collectionQuestions.questionId))
+      .leftJoin(collections, eq(collectionQuestions.collectionId, collections.id))
+      .where(eq(questions.id, questionId))
+      .groupBy(questions.id)
+      .limit(1);
+
+    if (result.length === 0) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+
+    const questionData = result[0];
+
+    // Fetch individual flags with usernames - use raw SQL for users table JOIN
+    const flagsResult = await db.execute<{
+      id: number;
+      user_id: number;
+      username: string | null;
+      reasons: string[];
+      elaboration_text: string | null;
+      created_at: string;
+    }>(sql`
+      SELECT
+        qf.id,
+        qf.user_id,
+        COALESCE(u.name, u.email) as username,
+        qf.reasons,
+        qf.elaboration_text,
+        qf.created_at
+      FROM civic_trivia.question_flags qf
+      LEFT JOIN auth.users u ON qf.user_id = u.id
+      WHERE qf.question_id = ${questionId}
+      ORDER BY qf.created_at DESC
+      LIMIT 20
+    `);
+
+    const flags = flagsResult.rows.map(row => ({
+      id: row.id,
+      userId: row.user_id,
+      username: row.username || 'Unknown User',
+      reasons: row.reasons || [],
+      elaborationText: row.elaboration_text,
+      createdAt: row.created_at
+    }));
+
+    res.json({
+      question: questionData,
+      flags
+    });
+  } catch (error: any) {
+    console.error('Error fetching flag detail:', error);
+    res.status(500).json({ error: 'Failed to fetch flag detail', detail: error?.message || String(error) });
   }
 });
 
