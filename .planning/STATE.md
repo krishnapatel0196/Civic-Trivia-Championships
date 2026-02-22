@@ -34,7 +34,7 @@ Progress: [██████████████████████░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 84 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 9 v1.5)
+- Total plans completed: 85 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 10 v1.5)
 - Quick tasks completed: 10
 - Milestones shipped: 5 (v1.0 through v1.4)
 - Total execution time: ~10 days (2026-02-13 → 2026-02-22)
@@ -48,7 +48,7 @@ Progress: [██████████████████████░
 | v1.2 Community Collections | 13-17 | 15 | 2026-02-19 |
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
-| v1.5 Feedback Marks | 27-30 | 9 | In progress |
+| v1.5 Feedback Marks | 27-30 | 10 | In progress |
 
 ## Accumulated Context
 
@@ -83,6 +83,9 @@ Recent decisions affecting v1.5 work:
 - Phase 29-03: Close panel after action — snappy workflow, no stale content
 - Phase 30-01: Simple regex validation for ADMIN_EMAIL vs Zod schema — kept env.ts minimal
 - Phase 30-01: flagged=true filter uses gt(questions.flagCount, 0) for consistency
+- Phase 30-02: Use id param (?id=X) instead of search for Question Explorer deep-linking
+- Phase 30-02: Blue filter banner UI for question ID filter consistency
+- Phase 30-02: Close panel on Edit in Explorer click for smooth navigation flow
 
 ### Pending Todos
 
@@ -118,11 +121,11 @@ Phase 30 remaining plans:
 ## Session Continuity
 
 Last session: 2026-02-22
-Topic: Phase 30 Plan 01 execution complete — API Flag Count Integration
-Stopped at: 30-01-PLAN.md complete — backend ready for frontend integration
+Topic: Phase 30 in progress — Admin Integration & Tech Debt
+Stopped at: Completed 30-02-PLAN.md — Cross-linking Flag Review & Question Explorer
 Resume file: None
 
-Next action: `/gsd:execute-phase 30 02` to integrate flagCount into Question Explorer frontend
+Next action: Continue Phase 30 execution (Plan 03: Question Explorer deep-linking)
 
 ---
-*v1.5 Feedback Marks — Phase 30 Plan 01 complete (1/4 plans in phase)*
+*v1.5 Feedback Marks — Phase 30 Plan 02 complete (2/4 plans in phase)*
