@@ -89,9 +89,9 @@ Add a Fremont, CA community collection with 92 quality questions, proper expirat
 **Plans:** 3 plans
 
 Plans:
-- [ ] 27-01-PLAN.md — Backend infrastructure: database schema, feedback service, rate limiter, API endpoints
-- [ ] 27-02-PLAN.md — Frontend: FlagButton component, GameScreen integration, results screen display
-- [ ] 27-03-PLAN.md — Human verification: end-to-end flagging flow testing
+- [x] 27-01-PLAN.md — Backend infrastructure: database schema, feedback service, rate limiter, API endpoints
+- [x] 27-02-PLAN.md — Frontend: FlagButton component, GameScreen integration, results screen display
+- [x] ~~27-03-PLAN.md~~ — Removed (verification done via checkpoint in 27-02)
 
 #### Phase 28: Progressive Disclosure UI
 
@@ -112,8 +112,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 28-01-PLAN.md — Backend batch endpoint + frontend elaboration UI components (ReasonChip, FlaggedQuestionItem, FeedbackElaborationScreen)
-- [ ] 28-02-PLAN.md — Game.tsx integration: conditional elaboration screen between game end and results, API wiring
+- [x] 28-01-PLAN.md — Backend batch endpoint + frontend elaboration UI components (ReasonChip, FlaggedQuestionItem, FeedbackElaborationScreen)
+- [x] 28-02-PLAN.md — Game.tsx integration: interactive flags on results screen, post-results elaboration flow
 
 #### Phase 29: Admin Review Queue
 
@@ -168,12 +168,12 @@ Phases execute in numeric order: 27 → 28 → 29 → 30
 | 13-17 | v1.2 | 15/15 | Complete | 2026-02-19 |
 | 18-22 | v1.3 | 17/17 | Complete | 2026-02-20 |
 | 23-26 | v1.4 | 6/6 | Complete | 2026-02-21 |
-| 27. Backend Foundation & Inline Flagging | v1.5 | 0/3 | Not started | - |
-| 28. Progressive Disclosure UI | v1.5 | 0/2 | Not started | - |
+| 27. Backend Foundation & Inline Flagging | v1.5 | 2/2 | Complete | 2026-02-22 |
+| 28. Progressive Disclosure UI | v1.5 | 2/2 | Complete | 2026-02-22 |
 | 29. Admin Review Queue | v1.5 | 0/TBD | Not started | - |
 | 30. Admin Integration & Tech Debt | v1.5 | 0/TBD | Not started | - |
 
-**Total:** 6 milestones, 30 phases, 75 plans (previous) + 3 (Phase 27) + TBD (Phases 28-30) = 78+ total
+**Total:** 6 milestones, 30 phases, 80 plans complete + TBD (Phases 29-30)
 
 ---
-*Last updated: 2026-02-21 after Phase 27 planning complete*
+*Last updated: 2026-02-22 after Phase 28 complete*
