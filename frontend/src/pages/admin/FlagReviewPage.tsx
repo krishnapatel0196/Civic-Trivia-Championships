@@ -74,7 +74,7 @@ export function FlagReviewPage() {
         params.set('limit', limit.toString());
         params.set('sort', sort);
         params.set('order', order);
-        params.set('archived', tab === 'archived' ? 'true' : 'false');
+        params.set('tab', tab);
         if (collection) params.set('collection', collection);
 
         const response = await fetch(
