@@ -942,4 +942,148 @@ router.get('/flags/:questionId/detail', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * PATCH /flags/:questionId/archive - Archive a flagged question
+ * Path param: questionId (numeric question ID)
+ * Returns: { success: true }
+ */
+router.patch('/flags/:questionId/archive', async (req: Request, res: Response) => {
+  try {
+    const questionId = parseInt(req.params.questionId, 10);
+    if (isNaN(questionId)) {
+      return res.status(400).json({ error: 'Invalid question ID' });
+    }
+
+    // Fetch current question to verify it exists
+    const [question] = await db
+      .select()
+      .from(questions)
+      .where(eq(questions.id, questionId))
+      .limit(1);
+
+    if (!question) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+
+    // Build history entry
+    const historyEntry = {
+      action: 'archived' as const,
+      timestamp: new Date().toISOString()
+    };
+
+    // Update question: set status to 'archived', clear flag_count, append to history
+    await db
+      .update(questions)
+      .set({
+        status: 'archived',
+        flagCount: 0,
+        expirationHistory: sql`${questions.expirationHistory} || ${JSON.stringify([historyEntry])}::jsonb`,
+        updatedAt: new Date()
+      })
+      .where(eq(questions.id, questionId));
+
+    res.json({ success: true });
+  } catch (error: any) {
+    console.error('Error archiving question:', error);
+    res.status(500).json({ error: 'Failed to archive question', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * POST /flags/:questionId/dismiss - Dismiss flags (keep question active)
+ * Path param: questionId (numeric question ID)
+ * Returns: { success: true }
+ */
+router.post('/flags/:questionId/dismiss', async (req: Request, res: Response) => {
+  try {
+    const questionId = parseInt(req.params.questionId, 10);
+    if (isNaN(questionId)) {
+      return res.status(400).json({ error: 'Invalid question ID' });
+    }
+
+    // Verify question exists
+    const [question] = await db
+      .select()
+      .from(questions)
+      .where(eq(questions.id, questionId))
+      .limit(1);
+
+    if (!question) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+
+    // Use transaction to ensure atomicity
+    await db.transaction(async (tx) => {
+      // Delete all flag records
+      await tx
+        .delete(questionFlags)
+        .where(eq(questionFlags.questionId, questionId));
+
+      // Clear flag count
+      await tx
+        .update(questions)
+        .set({
+          flagCount: 0,
+          updatedAt: new Date()
+        })
+        .where(eq(questions.id, questionId));
+    });
+
+    res.json({ success: true });
+  } catch (error: any) {
+    console.error('Error dismissing flags:', error);
+    res.status(500).json({ error: 'Failed to dismiss flags', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * PATCH /flags/:questionId/restore - Restore an archived question
+ * Path param: questionId (numeric question ID)
+ * Returns: { success: true }
+ */
+router.patch('/flags/:questionId/restore', async (req: Request, res: Response) => {
+  try {
+    const questionId = parseInt(req.params.questionId, 10);
+    if (isNaN(questionId)) {
+      return res.status(400).json({ error: 'Invalid question ID' });
+    }
+
+    // Fetch current question
+    const [question] = await db
+      .select()
+      .from(questions)
+      .where(eq(questions.id, questionId))
+      .limit(1);
+
+    if (!question) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+
+    if (question.status !== 'archived') {
+      return res.status(400).json({ error: 'Question is not archived' });
+    }
+
+    // Build history entry (use 'renewed' to match existing history format)
+    const historyEntry = {
+      action: 'renewed' as const,
+      timestamp: new Date().toISOString()
+    };
+
+    // Update question: set status to 'active', append to history
+    await db
+      .update(questions)
+      .set({
+        status: 'active',
+        expirationHistory: sql`${questions.expirationHistory} || ${JSON.stringify([historyEntry])}::jsonb`,
+        updatedAt: new Date()
+      })
+      .where(eq(questions.id, questionId));
+
+    res.json({ success: true });
+  } catch (error: any) {
+    console.error('Error restoring question:', error);
+    res.status(500).json({ error: 'Failed to restore question', detail: error?.message || String(error) });
+  }
+});
+
 export { router };
