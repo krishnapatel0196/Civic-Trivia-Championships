@@ -530,22 +530,6 @@ export function GameScreen({
                       </div>
                     </div>
                   )}
-
-                  {/* Next Question button - pauses until user taps */}
-                  {state.phase === 'revealing' && (
-                    <div className="flex justify-center" onClick={(e) => e.stopPropagation()}>
-                      <motion.button
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5, duration: 0.3 }}
-                        onClick={nextQuestion}
-                        className="mt-6 mb-4 px-8 py-3 bg-teal-600 hover:bg-teal-500 active:bg-teal-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 focus:ring-offset-slate-900 min-h-[48px]"
-                        aria-label="Next question"
-                      >
-                        {state.currentQuestionIndex < state.totalQuestions - 1 ? 'Next Question' : 'See Results'}
-                      </motion.button>
-                    </div>
-                  )}
                 </motion.div>
               )}
             </AnimatePresence>
