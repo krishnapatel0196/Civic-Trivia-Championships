@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useGameState } from '../features/game/hooks/useGameState';
 import { GameScreen } from '../features/game/components/GameScreen';
 import { ResultsScreen } from '../features/game/components/ResultsScreen';
+import { FeedbackElaborationScreen } from '../features/game/components/FeedbackElaborationScreen';
 import { announce } from '../utils/announce';
 import { useAuthStore } from '../store/authStore';
 import { API_URL } from '../services/api';
@@ -34,6 +35,8 @@ export function Game() {
   // Flag state management
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
   const [isRateLimited, setIsRateLimited] = useState(false);
+  const [showElaborationScreen, setShowElaborationScreen] = useState(false);
+  const [elaborationComplete, setElaborationComplete] = useState(false);
 
   // Auto-start game when navigating from Dashboard with a collectionId
   useEffect(() => {
@@ -47,6 +50,8 @@ export function Game() {
     if (state.phase === 'starting' || (state.phase === 'answering' && state.currentQuestionIndex === 0)) {
       setFlaggedQuestions(new Set());
       setIsRateLimited(false);
+      setShowElaborationScreen(false);
+      setElaborationComplete(false);
     }
   }, [state.phase, state.currentQuestionIndex]);
 
@@ -65,6 +70,50 @@ export function Game() {
 
   // Wrapper for GameScreen startGame that passes collectionId
   const handleStartGame = () => startGame(collectionId);
+
+  // Trigger elaboration screen when game completes with flagged questions
+  useEffect(() => {
+    if (state.phase === 'complete' && flaggedQuestions.size > 0 && !elaborationComplete) {
+      setShowElaborationScreen(true);
+    }
+  }, [state.phase, flaggedQuestions.size, elaborationComplete]);
+
+  // Handle elaboration submission
+  const handleSubmitElaborations = async (elaborations: Array<{
+    questionId: string;
+    reasons: string[];
+    elaborationText: string;
+  }>) => {
+    const token = useAuthStore.getState().accessToken;
+    if (!token || !state.sessionId) return;
+
+    const response = await fetch(`${API_URL}/api/feedback/flags/batch`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        sessionId: state.sessionId,
+        elaborations,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Failed to submit elaborations:', await response.text());
+      // Don't block user — still proceed to results even if API fails
+    }
+
+    setElaborationComplete(true);
+    setShowElaborationScreen(false);
+  };
+
+  // Handle elaboration skip
+  const handleSkipElaboration = () => {
+    setElaborationComplete(true);
+    setShowElaborationScreen(false);
+  };
 
   // Handle flag toggle with API calls
   const handleFlagToggle = async (questionId: string) => {
@@ -158,6 +207,19 @@ export function Game() {
       );
     }
   }, [state.phase, gameResult]);
+
+  // Show elaboration screen between game end and results (when questions were flagged)
+  if (showElaborationScreen && state.phase === 'complete' && gameResult) {
+    return (
+      <FeedbackElaborationScreen
+        flaggedQuestions={Array.from(flaggedQuestions)}
+        questions={state.questions}
+        sessionId={state.sessionId!}
+        onSubmit={handleSubmitElaborations}
+        onSkip={handleSkipElaboration}
+      />
+    );
+  }
 
   // Show results screen when game is complete
   if (state.phase === 'complete' && gameResult) {
