@@ -16,10 +16,11 @@ interface ResultsScreenProps {
   collectionName?: string | null;
   onPlayAgain: () => void;
   onHome: () => void;
-  flaggedQuestions?: Set<string>;  // Optional for backward compatibility
+  flaggedQuestions?: Set<string>;
+  onFlagToggle?: (questionId: string) => void;  // Interactive flag toggles (authenticated users only)
 }
 
-export function ResultsScreen({ result, questions, collectionName, onPlayAgain, onHome, flaggedQuestions }: ResultsScreenProps) {
+export function ResultsScreen({ result, questions, collectionName, onPlayAgain, onHome, flaggedQuestions, onFlagToggle }: ResultsScreenProps) {
   const [expandedQuestions, setExpandedQuestions] = useState<Set<number>>(new Set());
   const [learnMoreQuestion, setLearnMoreQuestion] = useState<{ content: LearningContent; userAnswer: number | null; correctAnswer: number } | null>(null);
   const motionScore = useMotionValue(0);
@@ -473,8 +474,15 @@ export function ResultsScreen({ result, questions, collectionName, onPlayAgain, 
                               </span>
                             );
                           })()}
-                          {/* Flag indicator for flagged questions */}
-                          {flaggedQuestions?.has(question.id) && (
+                          {/* Flag button for all questions (interactive when onFlagToggle provided) */}
+                          {onFlagToggle ? (
+                            <FlagButton
+                              flagged={flaggedQuestions?.has(question.id) || false}
+                              disabled={false}
+                              onToggle={() => onFlagToggle(question.id)}
+                              size="sm"
+                            />
+                          ) : flaggedQuestions?.has(question.id) ? (
                             <FlagButton
                               flagged={true}
                               disabled={false}
@@ -482,7 +490,7 @@ export function ResultsScreen({ result, questions, collectionName, onPlayAgain, 
                               readOnly={true}
                               size="sm"
                             />
-                          )}
+                          ) : null}
                         </div>
                         <p className="text-white text-base mt-1">{question.text}</p>
                       </div>

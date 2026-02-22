@@ -32,11 +32,15 @@ export function Game() {
     resumeGame,
   } = useGameState();
 
+  // Auth state for conditional flag UI
+  const accessToken = useAuthStore((state) => state.accessToken);
+
   // Flag state management
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [showElaborationScreen, setShowElaborationScreen] = useState(false);
   const [elaborationComplete, setElaborationComplete] = useState(false);
+  const [pendingAction, setPendingAction] = useState<'playAgain' | 'home' | null>(null);
 
   // Auto-start game when navigating from Dashboard with a collectionId
   useEffect(() => {
@@ -52,15 +56,26 @@ export function Game() {
       setIsRateLimited(false);
       setShowElaborationScreen(false);
       setElaborationComplete(false);
+      setPendingAction(null);
     }
   }, [state.phase, state.currentQuestionIndex]);
 
   const handlePlayAgain = () => {
-    startGame(collectionId);
+    if (flaggedQuestions.size > 0 && !elaborationComplete) {
+      setPendingAction('playAgain');
+      setShowElaborationScreen(true);
+    } else {
+      startGame(collectionId);
+    }
   };
 
   const handleHome = () => {
-    navigate('/dashboard');
+    if (flaggedQuestions.size > 0 && !elaborationComplete) {
+      setPendingAction('home');
+      setShowElaborationScreen(true);
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   const handleQuit = () => {
@@ -70,13 +85,6 @@ export function Game() {
 
   // Wrapper for GameScreen startGame that passes collectionId
   const handleStartGame = () => startGame(collectionId);
-
-  // Trigger elaboration screen when game completes with flagged questions
-  useEffect(() => {
-    if (state.phase === 'complete' && flaggedQuestions.size > 0 && !elaborationComplete) {
-      setShowElaborationScreen(true);
-    }
-  }, [state.phase, flaggedQuestions.size, elaborationComplete]);
 
   // Handle elaboration submission
   const handleSubmitElaborations = async (elaborations: Array<{
@@ -102,17 +110,31 @@ export function Game() {
 
     if (!response.ok) {
       console.error('Failed to submit elaborations:', await response.text());
-      // Don't block user — still proceed to results even if API fails
+      // Don't block user — still proceed even if API fails
     }
 
     setElaborationComplete(true);
     setShowElaborationScreen(false);
+    // Execute the pending action (play again or go home)
+    if (pendingAction === 'playAgain') {
+      startGame(collectionId);
+    } else if (pendingAction === 'home') {
+      navigate('/dashboard');
+    }
+    setPendingAction(null);
   };
 
   // Handle elaboration skip
   const handleSkipElaboration = () => {
     setElaborationComplete(true);
     setShowElaborationScreen(false);
+    // Execute the pending action (play again or go home)
+    if (pendingAction === 'playAgain') {
+      startGame(collectionId);
+    } else if (pendingAction === 'home') {
+      navigate('/dashboard');
+    }
+    setPendingAction(null);
   };
 
   // Handle flag toggle with API calls
@@ -231,6 +253,7 @@ export function Game() {
         onPlayAgain={handlePlayAgain}
         onHome={handleHome}
         flaggedQuestions={flaggedQuestions}
+        onFlagToggle={accessToken ? handleFlagToggle : undefined}
       />
     );
   }
