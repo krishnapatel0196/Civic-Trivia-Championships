@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study
-**Current focus:** v1.5 Feedback Marks - Progressive Disclosure UI complete
+**Current focus:** v1.5 Feedback Marks - Admin Review Queue complete
 
 ## Current Position
 
@@ -22,7 +22,7 @@ Progress: [██████████████████████░
 - v1.2 (Phases 13-17): Complete - 20/20 requirements delivered
 - v1.3 (Phases 18-22): Complete - 23/23 requirements delivered
 - v1.4 (Phases 23-26): Complete - 19/19 requirements delivered
-- v1.5 (Phases 27-30): 21/23 requirements complete (FLAG-01–08, ELAB-01–06, INFR-01–03, ADMN-01–04)
+- v1.5 (Phases 27-30): 19/23 requirements complete (FLAG-01–06, ELAB-01–06, INFR-01–03, ADMN-01–04)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -48,7 +48,7 @@ Progress: [██████████████████████░
 | v1.2 Community Collections | 13-17 | 15 | 2026-02-19 |
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
-| v1.5 Feedback Marks | 27-30 | 7 | In progress |
+| v1.5 Feedback Marks | 27-30 | 8 | In progress |
 
 ## Accumulated Context
 
@@ -116,11 +116,11 @@ Phase 30 (Broken Links Repair) ready to begin:
 ## Session Continuity
 
 Last session: 2026-02-22
-Topic: Phase 29-03 - Flag detail panel and actions
-Stopped at: Completed 29-03-PLAN.md — FlagDetailPanel with optimistic updates and undo toast (2/2 tasks)
+Topic: Phase 29 execution complete — Admin Review Queue verified
+Stopped at: Phase 29 verified ✓ — all 6 success criteria met, 1 gap fixed (tab param mismatch)
 Resume file: None — Phase 29 complete
 
-Next action: Begin Phase 30 (Broken Links Repair) — final phase of v1.5 milestone
+Next action: `/gsd:plan-phase 30` to create execution plans for Admin Integration & Tech Debt
 
 ---
 *v1.5 Feedback Marks — Phase 29 complete (3/4 phases in milestone)*

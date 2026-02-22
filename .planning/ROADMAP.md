@@ -134,9 +134,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 29-01-PLAN.md — Backend API endpoints for flag review (list, detail, archive, dismiss, restore)
-- [ ] 29-02-PLAN.md — Frontend FlagReviewPage with table, tabs, sorting, filtering, pagination, sidebar nav
-- [ ] 29-03-PLAN.md — FlagDetailPanel with question context, flag entries, action buttons, undo toast
+- [x] 29-01-PLAN.md — Backend API endpoints for flag review (list, detail, archive, dismiss, restore)
+- [x] 29-02-PLAN.md — Frontend FlagReviewPage with table, tabs, sorting, filtering, pagination, sidebar nav
+- [x] 29-03-PLAN.md — FlagDetailPanel with question context, flag entries, action buttons, undo toast
 
 #### Phase 30: Admin Integration & Tech Debt
 
@@ -172,10 +172,10 @@ Phases execute in numeric order: 27 → 28 → 29 → 30
 | 23-26 | v1.4 | 6/6 | Complete | 2026-02-21 |
 | 27. Backend Foundation & Inline Flagging | v1.5 | 2/2 | Complete | 2026-02-22 |
 | 28. Progressive Disclosure UI | v1.5 | 2/2 | Complete | 2026-02-22 |
-| 29. Admin Review Queue | v1.5 | 0/3 | Not started | - |
+| 29. Admin Review Queue | v1.5 | 3/3 | Complete | 2026-02-22 |
 | 30. Admin Integration & Tech Debt | v1.5 | 0/TBD | Not started | - |
 
-**Total:** 6 milestones, 30 phases, 80 plans complete + 3 planned (Phase 29) + TBD (Phase 30)
+**Total:** 6 milestones, 30 phases, 83 plans complete + TBD (Phase 30)
 
 ---
-*Last updated: 2026-02-22 after Phase 29 planned*
+*Last updated: 2026-02-22 after Phase 29 complete*

@@ -27,10 +27,10 @@ Requirements for Feedback Marks milestone. Each maps to roadmap phases.
 
 ### Admin Review
 
-- [ ] **ADMN-01**: Dedicated flags review page accessible from admin navigation
-- [ ] **ADMN-02**: Review page shows list of flagged questions sorted by flag count (most flagged first)
-- [ ] **ADMN-03**: Each flagged question shows aggregate flag count and individual player feedback (reasons + text)
-- [ ] **ADMN-04**: Admin can archive a question directly from the review queue
+- [x] **ADMN-01**: Dedicated flags review page accessible from admin navigation
+- [x] **ADMN-02**: Review page shows list of flagged questions sorted by flag count (most flagged first)
+- [x] **ADMN-03**: Each flagged question shows aggregate flag count and individual player feedback (reasons + text)
+- [x] **ADMN-04**: Admin can archive a question directly from the review queue
 - [ ] **ADMN-05**: Flag count badge visible on existing question table in admin UI
 - [ ] **ADMN-06**: Flag count and feedback notes visible on existing question detail panel
 
@@ -90,10 +90,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ELAB-04 | Phase 28 | Complete |
 | ELAB-05 | Phase 28 | Complete |
 | ELAB-06 | Phase 28 | Complete |
-| ADMN-01 | Phase 29 | Pending |
-| ADMN-02 | Phase 29 | Pending |
-| ADMN-03 | Phase 29 | Pending |
-| ADMN-04 | Phase 29 | Pending |
+| ADMN-01 | Phase 29 | Complete |
+| ADMN-02 | Phase 29 | Complete |
+| ADMN-03 | Phase 29 | Complete |
+| ADMN-04 | Phase 29 | Complete |
 | ADMN-05 | Phase 30 | Pending |
 | ADMN-06 | Phase 30 | Pending |
 | INFR-01 | Phase 27 | Complete |
@@ -109,4 +109,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-21*
-*Last updated: 2026-02-22 after Phase 28 completion*
+*Last updated: 2026-02-22 after Phase 29 completion*
