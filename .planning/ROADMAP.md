@@ -153,10 +153,13 @@ Plans:
 4. ADMIN_EMAIL environment variable exists in production backend for admin promotion workflow
 5. Flag counts appear correctly in question explorer without performance degradation
 
-**Plans:** TBD
+**Plans:** 4 plans
 
 Plans:
-- [ ] 30-01: TBD
+- [ ] 30-01-PLAN.md — Backend: flagCount in explore/detail endpoints, flag_count sort/filter, ADMIN_EMAIL env var
+- [ ] 30-02-PLAN.md — Cross-link navigation: questionId filter on FlagReviewPage, "Edit in Explorer" on FlagDetailPanel
+- [ ] 30-03-PLAN.md — Frontend flag integration: Flags column in QuestionTable, flag badge + View Flags in detail panel, flagged filter
+- [ ] 30-04-PLAN.md — Link repair tool: AI-assisted broken URL discovery, validation, and batch repair of 320 questions
 
 ## Progress
 
@@ -173,9 +176,9 @@ Phases execute in numeric order: 27 → 28 → 29 → 30
 | 27. Backend Foundation & Inline Flagging | v1.5 | 2/2 | Complete | 2026-02-22 |
 | 28. Progressive Disclosure UI | v1.5 | 2/2 | Complete | 2026-02-22 |
 | 29. Admin Review Queue | v1.5 | 3/3 | Complete | 2026-02-22 |
-| 30. Admin Integration & Tech Debt | v1.5 | 0/TBD | Not started | - |
+| 30. Admin Integration & Tech Debt | v1.5 | 0/4 | Not started | - |
 
-**Total:** 6 milestones, 30 phases, 83 plans complete + TBD (Phase 30)
+**Total:** 6 milestones, 30 phases, 83 plans complete + 4 remaining (Phase 30)
 
 ---
-*Last updated: 2026-02-22 after Phase 29 complete*
+*Last updated: 2026-02-22 after Phase 30 planning complete*
