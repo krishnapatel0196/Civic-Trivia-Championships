@@ -270,7 +270,7 @@ export class SessionManager {
           flagged = true;
           session.plausibilityFlags += 1;
           console.warn(
-            `⚠️  Plausibility flag: sessionId=${sessionId}, questionIndex=${questionIndex}, ` +
+            `⚠️  Plausibility flag: sessionId=${sessionId}, questionId=${questionId}, ` +
             `difficulty=${difficulty}, timerMultiplier=${timerMultiplier}, ` +
             `threshold=${threshold}s, responseTime=${responseTime}s`
           );
