@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 ## Current Position
 
 Phase: 29 of 30 (Admin Review Queue)
-Plan: 1 of 2 complete
+Plan: 2 of 3 complete
 Status: In progress
-Last activity: 2026-02-22 — Completed 29-01-PLAN.md (Admin Flag Review API)
+Last activity: 2026-02-22 — Completed 29-02-PLAN.md (Admin Flag Review UI)
 
-Progress: [██████████████████████░] 90% (81 plans complete)
+Progress: [██████████████████████░] 91% (82 plans complete)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -22,7 +22,7 @@ Progress: [██████████████████████░
 - v1.2 (Phases 13-17): Complete - 20/20 requirements delivered
 - v1.3 (Phases 18-22): Complete - 23/23 requirements delivered
 - v1.4 (Phases 23-26): Complete - 19/19 requirements delivered
-- v1.5 (Phases 27-30): 15/23 requirements complete (FLAG-01–06, ELAB-01–06, INFR-01–03)
+- v1.5 (Phases 27-30): 17/23 requirements complete (FLAG-01–08, ELAB-01–06, INFR-01–03)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -34,7 +34,7 @@ Progress: [██████████████████████░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 81 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 6 v1.5)
+- Total plans completed: 82 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 7 v1.5)
 - Quick tasks completed: 10
 - Milestones shipped: 5 (v1.0 through v1.4)
 - Total execution time: ~10 days (2026-02-13 → 2026-02-22)
@@ -48,7 +48,7 @@ Progress: [██████████████████████░
 | v1.2 Community Collections | 13-17 | 15 | 2026-02-19 |
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
-| v1.5 Feedback Marks | 27-30 | 6 | In progress |
+| v1.5 Feedback Marks | 27-30 | 7 | In progress |
 
 ## Accumulated Context
 
@@ -71,6 +71,11 @@ Recent decisions affecting v1.5 work:
 - Phase 29-01: Raw SQL for cross-schema JOIN — auth.users not in Drizzle schema
 - Phase 29-01: Hard delete flags on dismiss — simpler, no audit trail needed
 - Phase 29-01: Limit 20 flags in detail view — performance consideration
+- Phase 29-02: Headless UI TabGroup for tabs — accessible, clean state management
+- Phase 29-02: Flag count color-coding by severity — red >5, orange >2, gray default
+- Phase 29-02: Default sort flag_count desc — highest severity first
+- Phase 29-02: Reuse /api/admin/collections/health for filter — avoid duplicate endpoint
+- Phase 29-02: Reason chips with semantic colors — confusing=amber, outdated=blue, wrong=red, boring=gray
 
 ### Pending Todos
 
@@ -88,10 +93,11 @@ Recent decisions affecting v1.5 work:
 
 ### Blockers/Concerns
 
-None. Phase 29-02 (Admin Review UI) ready to begin:
-- API endpoints complete with pagination, filtering, and actions
-- All endpoints protected by admin auth middleware
-- Frontend can consume GET /flags and detail endpoints immediately
+None. Phase 29-03 (Flag Detail Panel & Actions) ready to begin:
+- Flag Review page renders with tabbed interface
+- Table click handler sets selectedQuestionId state
+- /api/admin/flags/:questionId/detail endpoint available
+- Archive/Dismiss/Restore action endpoints available
 
 ### Quick Tasks Completed
 
@@ -104,11 +110,11 @@ None. Phase 29-02 (Admin Review UI) ready to begin:
 ## Session Continuity
 
 Last session: 2026-02-22
-Topic: Phase 29-01 - Admin flag review API endpoints
-Stopped at: Completed 29-01-PLAN.md — 5 admin endpoints for flag review (2/2 tasks)
+Topic: Phase 29-02 - Admin flag review UI
+Stopped at: Completed 29-02-PLAN.md — Flag Review page with tabs, filters, table, pagination (2/2 tasks)
 Resume file: None — Plan complete
 
-Next action: Execute 29-02-PLAN.md for Admin Review UI (frontend implementation)
+Next action: Execute 29-03-PLAN.md for Flag Detail Panel & Actions
 
 ---
 *v1.5 Feedback Marks — Phase 28 complete (2/4 phases in milestone)*
