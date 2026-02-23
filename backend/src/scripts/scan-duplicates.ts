@@ -334,10 +334,44 @@ async function main() {
     );
     console.log(`Found ${pairs.length} similar pairs above ${flags.minTier} threshold`);
 
+    // 7b. Filter out cross-collection pairs with different answers
+    const questionMap = new Map(questions.map(q => [q.externalId, q]));
+    const filteredPairs = pairs.filter(pair => {
+      const qA = questionMap.get(pair.questionA);
+      const qB = questionMap.get(pair.questionB);
+
+      if (!qA || !qB) {
+        return true; // Keep if question not found (shouldn't happen)
+      }
+
+      // Check if questions are from different collections (no overlap)
+      const collectionsOverlap = qA.collections.some(c => qB.collections.includes(c));
+
+      if (collectionsOverlap) {
+        // Same collection or collection overlap - keep the pair
+        return true;
+      }
+
+      // Different collections - only keep if answers are similar
+      const answerA = qA.options[qA.correctAnswer];
+      const answerB = qB.options[qB.correctAnswer];
+
+      // Normalize answers for comparison
+      const normalizeAnswer = (text: string) => text.toLowerCase().trim();
+      const normalizedA = normalizeAnswer(answerA);
+      const normalizedB = normalizeAnswer(answerB);
+
+      // Keep only if answers match
+      return normalizedA === normalizedB;
+    });
+
+    const filteredCount = pairs.length - filteredPairs.length;
+    console.log(`Filtered out ${filteredCount} cross-collection pairs with different answers`);
+    console.log(`Remaining pairs: ${filteredPairs.length}`);
+
     // 8. Build clusters
     const clusterBuilder = new ClusterBuilder();
-    const questionMap = new Map(questions.map(q => [q.externalId, q]));
-    const clusters = clusterBuilder.buildClusters(pairs, questionMap);
+    const clusters = clusterBuilder.buildClusters(filteredPairs, questionMap);
     console.log(`Grouped into ${clusters.length} duplicate clusters`);
 
     // 8b. Run advanced detection rules
