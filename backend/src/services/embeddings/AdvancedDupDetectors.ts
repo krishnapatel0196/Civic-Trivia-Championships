@@ -142,6 +142,10 @@ export class SourceClusterDetector {
     // Group questions by source URL (normalize trailing slashes)
     const sourceGroups = new Map<string, QuestionForDedupFull[]>();
     for (const q of questions) {
+      // Skip questions without a source URL
+      if (!q.source?.url) {
+        continue;
+      }
       const normalizedUrl = q.source.url.replace(/\/+$/, '');
       if (!sourceGroups.has(normalizedUrl)) {
         sourceGroups.set(normalizedUrl, []);
