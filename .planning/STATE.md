@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 ## Current Position
 
 Phase: 30 of 30 (Admin Integration & Tech Debt)
-Plan: 2 of 4 complete
-Status: In progress
-Last activity: 2026-02-22 — Completed 30-02-PLAN.md (Cross-Linking Flag Review & Question Explorer)
+Plan: 4 of 4 complete
+Status: Phase complete
+Last activity: 2026-02-22 — Completed 30-04-PLAN.md (Repair Broken Source URLs)
 
-Progress: [██████████████████████░] 94% (85 plans complete)
+Progress: [███████████████████████] 96% (87 plans complete)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -22,7 +22,7 @@ Progress: [██████████████████████░
 - v1.2 (Phases 13-17): Complete - 20/20 requirements delivered
 - v1.3 (Phases 18-22): Complete - 23/23 requirements delivered
 - v1.4 (Phases 23-26): Complete - 19/19 requirements delivered
-- v1.5 (Phases 27-30): 20/23 requirements complete (FLAG-01–06, ELAB-01–06, INFR-01–03, ADMN-01–04, DEBT-02)
+- v1.5 (Phases 27-30): 22/23 requirements complete (FLAG-01–06, ELAB-01–06, INFR-01–03, ADMN-01–04, DEBT-01; DEBT-02 optional)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -34,7 +34,7 @@ Progress: [██████████████████████░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 85 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 10 v1.5)
+- Total plans completed: 87 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 12 v1.5)
 - Quick tasks completed: 10
 - Milestones shipped: 5 (v1.0 through v1.4)
 - Total execution time: ~10 days (2026-02-13 → 2026-02-22)
@@ -48,7 +48,7 @@ Progress: [██████████████████████░
 | v1.2 Community Collections | 13-17 | 15 | 2026-02-19 |
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
-| v1.5 Feedback Marks | 27-30 | 10 | In progress |
+| v1.5 Feedback Marks | 27-30 | 12 | 2026-02-22 |
 
 ## Accumulated Context
 
@@ -86,6 +86,10 @@ Recent decisions affecting v1.5 work:
 - Phase 30-02: Use id param (?id=X) instead of search for Question Explorer deep-linking
 - Phase 30-02: Blue filter banner UI for question ID filter consistency
 - Phase 30-02: Close panel on Edit in Explorer click for smooth navigation flow
+- Phase 30-04: AI suggestions limited to .gov/.edu/civic orgs for authoritative sources
+- Phase 30-04: Null source URL for unrepairable links rather than keeping broken URLs
+- Phase 30-04: Two-phase operation (scan + apply) for safe bulk repairs at scale
+- Phase 30-04: Batch processing with 1-second AI call delays to avoid rate limits
 
 ### Pending Todos
 
@@ -96,19 +100,13 @@ Recent decisions affecting v1.5 work:
 
 ### Known Tech Debt
 
-- All 320 original questions have broken source.url Learn More links (legacy CMS migration) — DEBT-01 addresses in Phase 30
 - violation_count column may go stale if quality rules change without re-audit
 - ILIKE search may degrade beyond 1000 questions (consider pg_trgm GIN index)
 - useBlocker unavailable (requires createBrowserRouter) — sidebar nav during edit won't prompt for unsaved changes
 
 ### Blockers/Concerns
 
-None. Phase 30 Plan 01 complete — backend API now serves flagCount to frontend.
-
-Phase 30 remaining plans:
-- 30-02: Frontend integration (Question Explorer flags column, filter, detail badge)
-- 30-03: Bulk link repair workflow (bulk edit for fixing broken source URLs)
-- 30-04: Admin Question Explorer enhancement (quality filters, responsive improvements)
+None. Phase 30 complete (all 4 plans delivered).
 
 ### Quick Tasks Completed
 
@@ -121,11 +119,11 @@ Phase 30 remaining plans:
 ## Session Continuity
 
 Last session: 2026-02-22
-Topic: Phase 30 in progress — Admin Integration & Tech Debt
-Stopped at: Completed 30-02-PLAN.md — Cross-linking Flag Review & Question Explorer
+Topic: Phase 30 complete — Admin Integration & Tech Debt
+Stopped at: Completed 30-04-PLAN.md — Repair Broken Source URLs
 Resume file: None
 
-Next action: Continue Phase 30 execution (Plan 03: Question Explorer deep-linking)
+Next action: v1.5 milestone complete (22/23 requirements delivered). DEBT-02 (performance optimization) is optional.
 
 ---
-*v1.5 Feedback Marks — Phase 30 Plan 02 complete (2/4 plans in phase)*
+*v1.5 Feedback Marks — Phase 30 complete (4/4 plans delivered)*
