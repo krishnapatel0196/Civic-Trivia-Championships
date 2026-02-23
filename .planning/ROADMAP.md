@@ -325,7 +325,7 @@ Plans:
 
 Plans:
 - [x] 31-01-PLAN.md — Core embedding, similarity, and clustering services
-- [ ] 31-02-PLAN.md — CLI scanner tool with dual JSON/markdown reports
+- [x] 31-02-PLAN.md — CLI scanner tool with dual JSON/markdown reports
 
 #### Phase 32: Existing Collection Audit
 **Goal**: All 639 existing questions scanned for duplicates, duplicates reviewed and archived
@@ -382,7 +382,7 @@ Phases execute in numeric order: 31 → 32 → 33 → 34
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 31. Semantic Deduplication Infrastructure | 1/2 | In progress | - |
+| 31. Semantic Deduplication Infrastructure | 2/2 | Complete | 2026-02-23 |
 | 32. Existing Collection Audit | 0/TBD | Not started | - |
 | 33. Generation Pipeline Enhancement | 0/TBD | Not started | - |
 | 34. Scale to 90+ Questions | 0/TBD | Not started | - |

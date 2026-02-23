@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 31 of 34 (Semantic Deduplication Infrastructure)
-Plan: 1 of 2 complete
-Status: Phase in progress
-Last activity: 2026-02-23 — Completed 31-01-PLAN.md (Core embedding services)
+Plan: 2 of 2 complete
+Status: Phase complete
+Last activity: 2026-02-23 — Completed 31-02-PLAN.md (CLI scanner tool)
 
-Progress: [███████████████████░░░░░] 87/TBD plans complete (86 from v1.0-v1.5, 1 from v1.6)
+Progress: [███████████████████░░░░░] 88/TBD plans complete (86 from v1.0-v1.5, 2 from v1.6)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -23,7 +23,7 @@ Progress: [███████████████████░░░░
 - v1.3 (Phases 18-22): Complete - 23/23 requirements delivered
 - v1.4 (Phases 23-26): Complete - 19/19 requirements delivered
 - v1.5 (Phases 27-30): Complete - 23/23 requirements delivered
-- v1.6 (Phases 31-34): In progress - 3/18 requirements delivered (DEDUP-01, DEDUP-02, DEDUP-03)
+- v1.6 (Phases 31-34): In progress - 6/18 requirements delivered (DEDUP-01, DEDUP-02, DEDUP-03, plus Phase 31 complete)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -35,7 +35,7 @@ Progress: [███████████████████░░░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 87 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 11 v1.5 + 1 v1.6)
+- Total plans completed: 88 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 11 v1.5 + 2 v1.6)
 - Quick tasks completed: 10
 - Milestones shipped: 6 (v1.0 through v1.5)
 - Total execution time: ~10 days (2026-02-13 → 2026-02-23)
@@ -50,7 +50,7 @@ Progress: [███████████████████░░░░
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
 | v1.5 Feedback Marks | 27-30 | 11 | 2026-02-22 |
-| v1.6 Content Quality & Scale | 31-34 | 1/TBD | In progress |
+| v1.6 Content Quality & Scale | 31-34 | 2/TBD | In progress |
 
 ## Accumulated Context
 
@@ -74,10 +74,10 @@ All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 
 ### Blockers/Concerns
 
-**Phase 31 Plan 01 complete - USER SETUP REQUIRED:**
+**Phase 31 complete - USER SETUP REQUIRED:**
 OpenAI API key needed for embedding generation. See `.planning/phases/31-semantic-deduplication-infrastructure/31-USER-SETUP.md` for setup instructions.
 
-Next: Plan 31-02 (CLI scanner tool).
+Next: Phase 32 (Existing Collection Audit).
 
 ### Quick Tasks Completed
 
@@ -90,11 +90,11 @@ Next: Plan 31-02 (CLI scanner tool).
 ## Session Continuity
 
 Last session: 2026-02-23
-Topic: Phase 31 Plan 01 — Semantic deduplication core services
-Stopped at: Plan 31-01 complete (embedding, similarity, clustering services implemented)
+Topic: Phase 31 — Semantic deduplication infrastructure (Plans 01-02)
+Stopped at: Phase 31 complete (embedding services + CLI scanner tool)
 Resume file: None
 
-Next action: Plan and execute 31-02 (CLI scanner tool)
+Next action: Plan Phase 32 (Existing Collection Audit)
 
 ---
 *v1.6 Content Quality & Scale — ROADMAP COMPLETE*
