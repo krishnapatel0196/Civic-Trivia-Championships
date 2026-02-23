@@ -132,6 +132,226 @@ function generateJsonReport(clusters: DuplicateCluster[], advancedFlags: Advance
 }
 
 /**
+ * Determine which question to keep in a cluster (used by splitCrossCollectionClusters)
+ * Duplicates the logic from ClusterBuilder.recommendKeep
+ */
+function recommendKeepForCluster(clusterQuestions: QuestionForDedupFull[]): {
+  keep: string;
+  archive: string[];
+  reason: string;
+} {
+  if (clusterQuestions.length === 0) {
+    throw new Error('Cannot recommend keep for empty cluster');
+  }
+
+  if (clusterQuestions.length === 1) {
+    return {
+      keep: clusterQuestions[0].externalId,
+      archive: [],
+      reason: 'Single question cluster',
+    };
+  }
+
+  // Import collection hierarchy from types
+  const COLLECTION_HIERARCHY: Record<string, 'federal' | 'state' | 'local'> = {
+    'Federal': 'federal',
+    'California': 'state',
+    'Indiana': 'state',
+    'Bloomington, IN': 'local',
+    'Fremont, CA': 'local',
+    'Los Angeles, CA': 'local',
+  };
+
+  const TIER_RANK = {
+    federal: 3,
+    state: 2,
+    local: 1,
+  };
+
+  // Determine the collection tier for each question
+  const questionsWithTier = clusterQuestions.map((q) => {
+    // Find the highest tier among this question's collections
+    let highestTier: 'federal' | 'state' | 'local' | null = null;
+    let highestRank = 0;
+
+    for (const collection of q.collections) {
+      const tier = COLLECTION_HIERARCHY[collection];
+      if (tier) {
+        const rank = TIER_RANK[tier];
+        if (rank > highestRank) {
+          highestTier = tier;
+          highestRank = rank;
+        }
+      }
+    }
+
+    return {
+      question: q,
+      tier: highestTier,
+      tierRank: highestRank,
+    };
+  });
+
+  // Sort by: tier rank DESC, quality score DESC, externalId ASC
+  questionsWithTier.sort((a, b) => {
+    // 1. Highest tier wins
+    if (a.tierRank !== b.tierRank) {
+      return b.tierRank - a.tierRank;
+    }
+
+    // 2. Highest quality score wins (null = 0)
+    const scoreA = a.question.qualityScore ?? 0;
+    const scoreB = b.question.qualityScore ?? 0;
+    if (scoreA !== scoreB) {
+      return scoreB - scoreA;
+    }
+
+    // 3. Lowest externalId wins (alphabetical stability)
+    return a.question.externalId.localeCompare(b.question.externalId);
+  });
+
+  const keep = questionsWithTier[0];
+  const archive = questionsWithTier.slice(1);
+
+  // Build reason
+  let reason = `Keep ${keep.question.externalId}`;
+
+  if (keep.tier) {
+    reason += ` (${keep.tier} tier`;
+    if (keep.question.qualityScore !== null) {
+      reason += `, quality: ${keep.question.qualityScore.toFixed(2)}`;
+    }
+    reason += ')';
+  } else if (keep.question.qualityScore !== null) {
+    reason += ` (quality: ${keep.question.qualityScore.toFixed(2)})`;
+  } else {
+    reason += ' (alphabetical order)';
+  }
+
+  return {
+    keep: keep.question.externalId,
+    archive: archive.map((a) => a.question.externalId),
+    reason,
+  };
+}
+
+/**
+ * Split clusters containing cross-collection questions with different answers.
+ *
+ * Algorithm:
+ * 1. For each cluster, check if it has questions from multiple collections
+ * 2. If all same collection, keep as-is
+ * 3. If cross-collection, group questions by their normalized correct answer text
+ * 4. If all questions have the same answer, keep as-is (legitimate cross-collection duplicate)
+ * 5. If questions have different answers, split into sub-clusters by answer
+ * 6. Re-compute the similarities and recommendation for each sub-cluster
+ * 7. Sub-clusters with only 1 question are discarded (not duplicates)
+ */
+function splitCrossCollectionClusters(
+  clusters: DuplicateCluster[],
+  questionMap: Map<string, QuestionForDedupFull>
+): DuplicateCluster[] {
+  const resultClusters: DuplicateCluster[] = [];
+
+  for (const cluster of clusters) {
+    // Check if cluster has questions from multiple collections
+    const allCollections = new Set<string>();
+    for (const q of cluster.questions) {
+      for (const c of q.collections) {
+        allCollections.add(c);
+      }
+    }
+
+    // If all questions are from the same collection, keep as-is
+    if (allCollections.size === 1) {
+      resultClusters.push(cluster);
+      continue;
+    }
+
+    // Multi-collection cluster - group by correct answer
+    const normalizeAnswer = (text: string) => text.toLowerCase().trim();
+    const answerGroups = new Map<string, QuestionForDedupFull[]>();
+
+    for (const q of cluster.questions) {
+      const answerText = q.options[q.correctAnswer];
+      const normalizedAnswer = normalizeAnswer(answerText);
+
+      if (!answerGroups.has(normalizedAnswer)) {
+        answerGroups.set(normalizedAnswer, []);
+      }
+      answerGroups.get(normalizedAnswer)!.push(q);
+    }
+
+    // If all have the same answer, keep as-is (legitimate cross-collection duplicate)
+    if (answerGroups.size === 1) {
+      resultClusters.push(cluster);
+      continue;
+    }
+
+    // Different answers - split into sub-clusters
+    let subClusterIndex = 0;
+    for (const [answer, groupQuestions] of answerGroups) {
+      // Skip single-question sub-clusters (not duplicates)
+      if (groupQuestions.length < 2) {
+        continue;
+      }
+
+      // Get the question IDs for this sub-cluster
+      const groupIds = new Set(groupQuestions.map(q => q.externalId));
+
+      // Filter similarities to only include pairs within this sub-cluster
+      const subClusterSimilarities = cluster.similarities.filter(
+        sim => groupIds.has(sim.questionA) && groupIds.has(sim.questionB)
+      );
+
+      // Determine sub-cluster tier (highest severity)
+      const tierOrder: SimilarityTier[] = ['exact', 'near-duplicate', 'possible', 'unrelated'];
+      let highestTier: SimilarityTier = 'unrelated';
+      let highestTierIndex = tierOrder.length;
+
+      for (const sim of subClusterSimilarities) {
+        const simTierIndex = tierOrder.indexOf(sim.tier);
+        if (simTierIndex < highestTierIndex) {
+          highestTier = sim.tier;
+          highestTierIndex = simTierIndex;
+        }
+      }
+
+      // Generate new recommendation for this sub-cluster
+      const recommendation = recommendKeepForCluster(groupQuestions);
+
+      // Generate sub-cluster ID
+      const subClusterId = subClusterIndex === 0
+        ? cluster.clusterId
+        : `${cluster.clusterId}${String.fromCharCode(97 + subClusterIndex)}`; // a, b, c, etc.
+
+      resultClusters.push({
+        clusterId: subClusterId,
+        tier: highestTier,
+        questions: groupQuestions,
+        similarities: subClusterSimilarities,
+        recommendation,
+      });
+
+      subClusterIndex++;
+    }
+  }
+
+  // Re-sort by tier severity (exact first)
+  const tierOrder: SimilarityTier[] = ['exact', 'near-duplicate', 'possible', 'unrelated'];
+  resultClusters.sort((a, b) => {
+    return tierOrder.indexOf(a.tier) - tierOrder.indexOf(b.tier);
+  });
+
+  // Renumber cluster IDs to be sequential
+  resultClusters.forEach((cluster, index) => {
+    cluster.clusterId = `cluster-${String(index + 1).padStart(3, '0')}`;
+  });
+
+  return resultClusters;
+}
+
+/**
  * Generate markdown report
  */
 function generateMarkdownReport(
@@ -371,10 +591,21 @@ async function main() {
 
     // 8. Build clusters
     const clusterBuilder = new ClusterBuilder();
-    const clusters = clusterBuilder.buildClusters(filteredPairs, questionMap);
+    let clusters = clusterBuilder.buildClusters(filteredPairs, questionMap);
     console.log(`Grouped into ${clusters.length} duplicate clusters`);
 
-    // 8b. Run advanced detection rules
+    // 8b. Split cross-collection clusters with different answers
+    console.log('Splitting cross-collection clusters with different answers...');
+    const clustersBefore = clusters.length;
+    clusters = splitCrossCollectionClusters(clusters, questionMap);
+    const splitCount = clusters.length - clustersBefore;
+    if (splitCount > 0) {
+      console.log(`Split ${splitCount} clusters (now ${clusters.length} total clusters)`);
+    } else {
+      console.log(`No clusters needed splitting`);
+    }
+
+    // 8c. Run advanced detection rules
     console.log('Running advanced detection rules...');
     const advancedFlags = runAllAdvancedDetectors(questions);
     console.log(`Found ${advancedFlags.length} advanced flags:`);
