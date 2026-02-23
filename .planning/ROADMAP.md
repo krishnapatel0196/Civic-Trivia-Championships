@@ -328,23 +328,23 @@ Plans:
 - [x] 31-01-PLAN.md — Core embedding, similarity, and clustering services
 - [x] 31-02-PLAN.md — CLI scanner tool with dual JSON/markdown reports
 
-#### Phase 32: Existing Collection Audit
+#### Phase 32: Existing Collection Audit ✅
 **Goal**: All 639 existing questions scanned for duplicates, duplicates reviewed and archived
 **Depends on**: Phase 31
 **Requirements**: DEDUP-04, DEDUP-05, DEDUP-06, DEDUP-07, DEDUP-08, DATA-01, DATA-04
 **Success Criteria** (what must be TRUE):
-  1. Embeddings generated for all 639 existing questions across 6 collections
-  2. Duplicate report generated showing grouped pairs/clusters with similarity scores
-  3. Admin manual review workflow identifies which duplicates to keep vs archive
-  4. Confirmed duplicates archived from database and removed from JSON source files
-  5. Federal collection (117 questions) audited and verified unique
-**Plans**: 4 plans
+  1. ✅ Embeddings generated for all existing questions across 6 collections
+  2. ✅ Duplicate report generated showing grouped pairs/clusters with similarity scores
+  3. ✅ Admin manual review workflow identifies which duplicates to keep vs archive
+  4. ✅ Confirmed duplicates archived from database and removed from JSON source files (268 archived)
+  5. ✅ Federal collection audited and verified unique (114 active, 6 archived)
+**Plans**: 4 plans — COMPLETE
 
 Plans:
-- [ ] 32-01-PLAN.md — Backend services and API endpoints for duplicate review workflow
-- [ ] 32-02-PLAN.md — Admin UI for reviewing and resolving duplicate clusters
-- [ ] 32-03-PLAN.md — Execute full audit: run scanner, review clusters, archive duplicates
-- [ ] 32-04-PLAN.md — Advanced detection rules: answer leakage, same-source clustering, inverse duplicates
+- [x] 32-01-PLAN.md — Backend services and API endpoints for duplicate review workflow
+- [x] 32-02-PLAN.md — Admin UI for reviewing and resolving duplicate clusters
+- [x] 32-03-PLAN.md — Execute full audit: run scanner, review clusters, archive duplicates
+- [x] 32-04-PLAN.md — Advanced detection rules: answer leakage, same-source clustering, inverse duplicates
 
 #### Phase 33: Generation Pipeline Enhancement
 **Goal**: Content generation integrated with semantic dedup and cross-question quality rules

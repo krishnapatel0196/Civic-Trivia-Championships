@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 
 ## Current Position
 
-Phase: 32 of 34 (Existing Collection Audit)
-Plan: 2 of TBD complete (32-01, 32-02, 32-04 complete)
-Status: In progress
-Last activity: 2026-02-23 — Completed 32-02-PLAN.md (duplicate review UI)
+Phase: 32 of 34 (Existing Collection Audit) — COMPLETE
+Plan: 4 of 4 complete (32-01, 32-02, 32-03, 32-04)
+Status: Phase 32 complete, ready for Phase 33
+Last activity: 2026-02-23 — Phase 32 complete: 268 duplicates archived, 386 active questions remain
 
 Progress: [███████████████████░░░░░] 91/TBD plans complete (86 from v1.0-v1.5, 5 from v1.6)
 
@@ -23,7 +23,7 @@ Progress: [███████████████████░░░░
 - v1.3 (Phases 18-22): Complete - 23/23 requirements delivered
 - v1.4 (Phases 23-26): Complete - 19/19 requirements delivered
 - v1.5 (Phases 27-30): Complete - 23/23 requirements delivered
-- v1.6 (Phases 31-34): In progress - 10/18 requirements delivered (DEDUP-01 through DEDUP-07, AUDIT-01, plus Phase 31 complete)
+- v1.6 (Phases 31-34): In progress - 15/18 requirements delivered (DEDUP-01 through DEDUP-08, AUDIT-01, DATA-01, DATA-04, plus Phase 31-32 complete)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -50,7 +50,7 @@ Progress: [███████████████████░░░░
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
 | v1.5 Feedback Marks | 27-30 | 11 | 2026-02-22 |
-| v1.6 Content Quality & Scale | 31-34 | 5/TBD | In progress |
+| v1.6 Content Quality & Scale | 31-34 | 9/TBD | In progress |
 
 ## Accumulated Context
 
@@ -74,14 +74,13 @@ All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 
 ### Blockers/Concerns
 
-**Phase 32 in progress:**
-- Plan 32-01 complete: Backend duplicate review services and API endpoints
-- Plan 32-02 complete: Frontend duplicate review UI with advanced flag badges
-- Plan 32-04 complete: Advanced duplicate detection rules (answer leakage, source clustering, inverse duplicates)
-- Next: Manual workflow validation (Plan 32-03) or Archive automation (Plan 32-05)
+**Phase 32 COMPLETE:**
+- All 4 plans executed: backend services (32-01), review UI (32-02), full audit (32-03), advanced detection (32-04)
+- 268 questions archived across 6 collections, 386 active remain
+- Cross-collection duplicates handled: same question text + different answer = NOT a duplicate
+- Admin review UI enhanced with multi-keep checkboxes and persistent resolution state
 
-**USER SETUP REQUIRED for duplicate scanning:**
-OpenAI API key needed for embedding generation. See `.planning/phases/31-semantic-deduplication-infrastructure/31-USER-SETUP.md` for setup instructions.
+**Next:** Phase 33 (Generation Pipeline Enhancement) or Phase 34 (Scale to 90+)
 
 ### Quick Tasks Completed
 
@@ -94,11 +93,11 @@ OpenAI API key needed for embedding generation. See `.planning/phases/31-semanti
 ## Session Continuity
 
 Last session: 2026-02-23
-Topic: Phase 32 — Existing Collection Audit (Plan 02)
-Stopped at: Plan 32-02 complete (duplicate review UI)
+Topic: Phase 32 — Existing Collection Audit (COMPLETE)
+Stopped at: Phase 32 fully complete, all duplicates reviewed and archived
 Resume file: None
 
-Next action: Continue Phase 32 plans (03 or 05)
+Next action: /gsd:plan-phase 33 (Generation Pipeline Enhancement)
 
 ---
 *v1.6 Content Quality & Scale — ROADMAP COMPLETE*
