@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 Phase: 30 of 30 (Admin Integration & Tech Debt)
 Plan: 4 of 4 complete
 Status: Phase complete
-Last activity: 2026-02-22 — Completed 30-04-PLAN.md (Repair Broken Source URLs)
+Last activity: 2026-02-23 — Completed 30-03-PLAN.md (Flag Count Visibility in Explorer)
 
-Progress: [███████████████████████] 96% (87 plans complete)
+Progress: [███████████████████████] 97% (88 plans complete)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -34,10 +34,10 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 87 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 12 v1.5)
+- Total plans completed: 88 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 13 v1.5)
 - Quick tasks completed: 10
 - Milestones shipped: 5 (v1.0 through v1.4)
-- Total execution time: ~10 days (2026-02-13 → 2026-02-22)
+- Total execution time: ~10 days (2026-02-13 → 2026-02-23)
 
 **By Milestone:**
 
@@ -48,7 +48,7 @@ Progress: [███████████████████████
 | v1.2 Community Collections | 13-17 | 15 | 2026-02-19 |
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
-| v1.5 Feedback Marks | 27-30 | 12 | 2026-02-22 |
+| v1.5 Feedback Marks | 27-30 | 13 | 2026-02-23 |
 
 ## Accumulated Context
 
@@ -86,6 +86,9 @@ Recent decisions affecting v1.5 work:
 - Phase 30-02: Use id param (?id=X) instead of search for Question Explorer deep-linking
 - Phase 30-02: Blue filter banner UI for question ID filter consistency
 - Phase 30-02: Close panel on Edit in Explorer click for smooth navigation flow
+- Phase 30-03: Color scheme matches Phase 29 flag severity — red >5, orange >2, gray >0
+- Phase 30-03: Deep-link opens panel on mount only (not on every URL change)
+- Phase 30-03: 4-column filter grid accommodates flagged checkbox inline
 - Phase 30-04: AI suggestions limited to .gov/.edu/civic orgs for authoritative sources
 - Phase 30-04: Null source URL for unrepairable links rather than keeping broken URLs
 - Phase 30-04: Two-phase operation (scan + apply) for safe bulk repairs at scale
@@ -118,12 +121,12 @@ None. Phase 30 complete (all 4 plans delivered).
 
 ## Session Continuity
 
-Last session: 2026-02-22
+Last session: 2026-02-23
 Topic: Phase 30 complete — Admin Integration & Tech Debt
-Stopped at: Completed 30-04-PLAN.md — Repair Broken Source URLs
+Stopped at: Completed 30-03-PLAN.md — Flag Count Visibility in Explorer
 Resume file: None
 
-Next action: v1.5 milestone complete (22/23 requirements delivered). DEBT-02 (performance optimization) is optional.
+Next action: v1.5 milestone complete (23/23 requirements delivered including ADMN-05 and ADMN-06). DEBT-02 (performance optimization) is optional.
 
 ---
 *v1.5 Feedback Marks — Phase 30 complete (4/4 plans delivered)*
