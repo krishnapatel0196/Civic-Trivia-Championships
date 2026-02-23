@@ -338,12 +338,13 @@ Plans:
   3. Admin manual review workflow identifies which duplicates to keep vs archive
   4. Confirmed duplicates archived from database and removed from JSON source files
   5. Federal collection (117 questions) audited and verified unique
-**Plans**: 3 plans
+**Plans**: 4 plans
 
 Plans:
 - [ ] 32-01-PLAN.md — Backend services and API endpoints for duplicate review workflow
 - [ ] 32-02-PLAN.md — Admin UI for reviewing and resolving duplicate clusters
 - [ ] 32-03-PLAN.md — Execute full audit: run scanner, review clusters, archive duplicates
+- [ ] 32-04-PLAN.md — Advanced detection rules: answer leakage, same-source clustering, inverse duplicates
 
 #### Phase 33: Generation Pipeline Enhancement
 **Goal**: Content generation integrated with semantic dedup and cross-question quality rules
@@ -385,6 +386,6 @@ Phases execute in numeric order: 31 → 32 → 33 → 34
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 31. Semantic Deduplication Infrastructure | 2/2 | Complete | 2026-02-23 |
-| 32. Existing Collection Audit | 0/3 | Not started | - |
+| 32. Existing Collection Audit | 0/4 | Not started | - |
 | 33. Generation Pipeline Enhancement | 0/TBD | Not started | - |
 | 34. Scale to 90+ Questions | 0/TBD | Not started | - |
