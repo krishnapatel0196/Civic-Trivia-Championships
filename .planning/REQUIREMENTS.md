@@ -58,30 +58,30 @@ Deferred to later milestones.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEDUP-01 | — | Pending |
-| DEDUP-02 | — | Pending |
-| DEDUP-03 | — | Pending |
-| DEDUP-04 | — | Pending |
-| DEDUP-05 | — | Pending |
-| DEDUP-06 | — | Pending |
-| DEDUP-07 | — | Pending |
-| DEDUP-08 | — | Pending |
-| GEN-01 | — | Pending |
-| GEN-02 | — | Pending |
-| GEN-03 | — | Pending |
-| GEN-04 | — | Pending |
-| GEN-05 | — | Pending |
-| GEN-06 | — | Pending |
-| DATA-01 | — | Pending |
-| DATA-02 | — | Pending |
-| DATA-03 | — | Pending |
-| DATA-04 | — | Pending |
+| DEDUP-01 | Phase 31 | Pending |
+| DEDUP-02 | Phase 31 | Pending |
+| DEDUP-03 | Phase 31 | Pending |
+| DEDUP-04 | Phase 32 | Pending |
+| DEDUP-05 | Phase 32 | Pending |
+| DEDUP-06 | Phase 32 | Pending |
+| DEDUP-07 | Phase 32 | Pending |
+| DEDUP-08 | Phase 32 | Pending |
+| GEN-01 | Phase 34 | Pending |
+| GEN-02 | Phase 33 | Pending |
+| GEN-03 | Phase 33 | Pending |
+| GEN-04 | Phase 33 | Pending |
+| GEN-05 | Phase 33 | Pending |
+| GEN-06 | Phase 33 | Pending |
+| DATA-01 | Phase 32 | Pending |
+| DATA-02 | Phase 34 | Pending |
+| DATA-03 | Phase 34 | Pending |
+| DATA-04 | Phase 32 | Pending |
 
 **Coverage:**
 - v1.6 requirements: 18 total
-- Mapped to phases: 0
-- Unmapped: 18 (pending roadmap)
+- Mapped to phases: 18 (100% coverage)
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-22*
-*Last updated: 2026-02-22 after initial definition*
+*Last updated: 2026-02-22 after roadmap creation*
