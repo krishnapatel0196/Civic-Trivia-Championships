@@ -31,6 +31,9 @@ export async function flagRateLimiter(
   const key = `rate_limit:flag:${userId}`;
 
   try {
+    // No Redis - fail open
+    if (!redis) { next(); return; }
+
     // Atomic increment - returns new count
     const count = await redis.incr(key);
 
@@ -69,6 +72,7 @@ export async function getRateLimitStatus(
   const key = `rate_limit:flag:${userId}`;
 
   try {
+    if (!redis) return { remaining: MAX_FLAGS_PER_WINDOW, retryAfter: null };
     const count = await redis.get(key);
     const currentCount = count ? parseInt(count, 10) : 0;
 

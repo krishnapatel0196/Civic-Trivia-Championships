@@ -35,7 +35,15 @@ async function startServer() {
 
   // Middleware
   app.use(cors({
-    origin: ALLOWED_ORIGINS,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (server-to-server, curl, etc.)
+      if (!origin) return callback(null, true);
+      // Allow any localhost origin in development (Vite port changes)
+      if (origin.match(/^https?:\/\/localhost(:\d+)?$/)) return callback(null, true);
+      // Allow configured origins
+      if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true
   }));
   app.use(cookieParser());

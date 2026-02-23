@@ -61,6 +61,7 @@ export function verifyRefreshToken(token: string): TokenPayload {
  * Store refresh token in Redis with TTL
  */
 export async function storeRefreshToken(userId: number, token: string): Promise<void> {
+  if (!redis) return;
   const key = `refresh:${userId}:${token}`;
   await redis.set(key, '1', { EX: REFRESH_TOKEN_EXPIRY_SECONDS });
 }
@@ -69,6 +70,7 @@ export async function storeRefreshToken(userId: number, token: string): Promise<
  * Check if a refresh token is valid (exists in Redis)
  */
 export async function isRefreshTokenValid(userId: number, token: string): Promise<boolean> {
+  if (!redis) return true;
   const key = `refresh:${userId}:${token}`;
   const exists = await redis.exists(key);
   return exists === 1;
@@ -78,6 +80,7 @@ export async function isRefreshTokenValid(userId: number, token: string): Promis
  * Blacklist a token until its expiry
  */
 export async function blacklistToken(token: string, expirySeconds: number): Promise<void> {
+  if (!redis) return;
   const key = `blacklist:${token}`;
   await redis.set(key, '1', { EX: expirySeconds });
 }
@@ -86,6 +89,7 @@ export async function blacklistToken(token: string, expirySeconds: number): Prom
  * Check if a token is blacklisted
  */
 export async function isTokenBlacklisted(token: string): Promise<boolean> {
+  if (!redis) return false;
   const key = `blacklist:${token}`;
   const exists = await redis.exists(key);
   return exists === 1;
@@ -95,6 +99,7 @@ export async function isTokenBlacklisted(token: string): Promise<boolean> {
  * Revoke a specific refresh token
  */
 export async function revokeRefreshToken(userId: number, token: string): Promise<void> {
+  if (!redis) return;
   const key = `refresh:${userId}:${token}`;
   await redis.del(key);
 }

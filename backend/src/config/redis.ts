@@ -138,22 +138,25 @@ export class SessionStorageFactory {
 export const storageFactory = new SessionStorageFactory();
 
 // Legacy Redis client export for backward compatibility (used by tokenUtils)
-// This is a simple Redis client for token management (separate from session storage)
-const legacyRedis = createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379'
-});
+// Only connect if REDIS_URL is set — skip localhost fallback to avoid error spam
+let legacyRedis: RedisClientType<any, any, any> | null = null;
 
-legacyRedis.on('connect', () => {
-  console.log('Redis connected (legacy token storage)');
-});
+if (process.env.REDIS_URL) {
+  legacyRedis = createClient({
+    url: process.env.REDIS_URL
+  });
 
-legacyRedis.on('error', (err) => {
-  console.error('Redis connection error (legacy token storage):', err);
-});
+  legacyRedis.on('connect', () => {
+    console.log('Redis connected (legacy token storage)');
+  });
 
-// Connect to Redis
-legacyRedis.connect().catch((err) => {
-  console.error('Failed to connect to Redis (legacy token storage):', err);
-});
+  legacyRedis.on('error', (err) => {
+    console.error('Redis connection error (legacy token storage):', err);
+  });
+
+  legacyRedis.connect().catch((err) => {
+    console.error('Failed to connect to Redis (legacy token storage):', err);
+  });
+}
 
 export { legacyRedis as redis };
