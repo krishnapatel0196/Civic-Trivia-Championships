@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
 import { API_URL } from '../../../services/api';
 import { DifficultyRate } from './DifficultyRate';
@@ -30,6 +31,7 @@ interface QuestionDetail {
   encounterCount: number;
   correctCount: number;
   qualityScore: number | null;
+  flagCount: number;
   violations: Violation[];
 }
 
@@ -121,6 +123,7 @@ export function QuestionDetailPanel({
   onQuestionUpdated,
 }: QuestionDetailPanelProps) {
   const { accessToken } = useAuthStore();
+  const navigate = useNavigate();
   const [questionDetail, setQuestionDetail] = useState<QuestionDetail | null>(
     null
   );
@@ -180,6 +183,7 @@ export function QuestionDetailPanel({
           encounterCount: q.encounterCount || 0,
           correctCount: q.correctCount || 0,
           qualityScore: audit.score ?? q.qualityScore ?? null,
+          flagCount: q.flagCount ?? 0,
           violations: audit.violations || [],
         });
       } catch (err) {
@@ -741,6 +745,29 @@ export function QuestionDetailPanel({
                               </span>
                               <span className="text-gray-600">
                                 ID: {questionDetail.externalId}
+                              </span>
+                              {/* Flag count */}
+                              <span className="flex items-center gap-1">
+                                <span className="text-gray-600">Flags:</span>
+                                {questionDetail.flagCount > 0 ? (
+                                  <>
+                                    <span className={`px-2 py-0.5 text-xs rounded-full ${
+                                      questionDetail.flagCount > 5 ? 'bg-red-100 text-red-600 font-bold' :
+                                      questionDetail.flagCount > 2 ? 'bg-orange-100 text-orange-600 font-bold' :
+                                      'bg-gray-100 text-gray-600'
+                                    }`}>
+                                      {questionDetail.flagCount}
+                                    </span>
+                                    <button
+                                      onClick={() => navigate(`/admin/flags?questionId=${questionDetail.id}&tab=active`)}
+                                      className="text-sm text-blue-600 hover:text-blue-800 hover:underline ml-1"
+                                    >
+                                      View Flags
+                                    </button>
+                                  </>
+                                ) : (
+                                  <span className="text-sm text-gray-400">0</span>
+                                )}
                               </span>
                             </div>
 

@@ -39,6 +39,17 @@ export function QuestionsPage() {
   );
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
 
+  // Deep-link: auto-open detail panel if ?id=X is in URL
+  useEffect(() => {
+    const idParam = searchParams.get('id');
+    if (idParam) {
+      const id = parseInt(idParam, 10);
+      if (!isNaN(id)) {
+        setSelectedQuestionId(id);
+      }
+    }
+  }, []); // Only on mount
+
   // Collections list (fetched from API)
   const [collections, setCollections] = useState<{ name: string; slug: string }[]>([]);
 
@@ -97,6 +108,8 @@ export function QuestionsPage() {
         if (difficulty) params.set('difficulty', difficulty);
         if (status) params.set('status', status);
         if (search) params.set('search', search);
+        const flagged = searchParams.get('flagged') || '';
+        if (flagged) params.set('flagged', flagged);
 
         const response = await fetch(
           `${API_URL}/api/admin/questions/explore?${params.toString()}`,
@@ -252,7 +265,7 @@ export function QuestionsPage() {
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div>
           <label
             htmlFor="collection"
@@ -313,6 +326,18 @@ export function QuestionsPage() {
             <option value="archived">Archived</option>
             <option value="expired">Expired</option>
           </select>
+        </div>
+
+        <div className="flex items-center">
+          <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={searchParams.get('flagged') === 'true'}
+              onChange={(e) => handleFilterChange('flagged', e.target.checked ? 'true' : '')}
+              className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+            />
+            Flagged only
+          </label>
         </div>
       </div>
 
