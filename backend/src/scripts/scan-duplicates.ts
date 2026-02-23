@@ -18,11 +18,14 @@ import { sql } from 'drizzle-orm';
 import { OpenAIEmbeddingService } from '../services/embeddings/OpenAIEmbeddingService.js';
 import { SemanticDupDetector } from '../services/embeddings/SemanticDupDetector.js';
 import { ClusterBuilder } from '../services/embeddings/ClusterBuilder.js';
+import { runAllAdvancedDetectors } from '../services/embeddings/AdvancedDupDetectors.js';
 import {
   QuestionForDedup,
+  QuestionForDedupFull,
   SimilarityResult,
   DuplicateCluster,
   SimilarityTier,
+  AdvancedFlag,
 } from '../services/embeddings/types.js';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { resolve, dirname } from 'path';
@@ -58,8 +61,9 @@ function parseFlags(): Flags {
 
 /**
  * Fetch all active questions with collection memberships
+ * Returns QuestionForDedupFull with explanation and source fields for advanced detectors
  */
-async function fetchQuestions(collectionFilter: string[] | null): Promise<QuestionForDedup[]> {
+async function fetchQuestions(collectionFilter: string[] | null): Promise<QuestionForDedupFull[]> {
   console.log('Fetching active questions from database...');
 
   let query;
@@ -71,12 +75,14 @@ async function fetchQuestions(collectionFilter: string[] | null): Promise<Questi
         q.options,
         q.correct_answer as "correctAnswer",
         q.quality_score as "qualityScore",
+        q.explanation,
+        q.source,
         array_agg(c.name ORDER BY c.name) as "collections"
       FROM civic_trivia.questions q
       JOIN civic_trivia.collection_questions cq ON q.id = cq.question_id
       JOIN civic_trivia.collections c ON cq.collection_id = c.id
       WHERE q.status = 'active' AND c.name = ANY(${collectionFilter})
-      GROUP BY q.id, q.external_id, q.text, q.options, q.correct_answer, q.quality_score
+      GROUP BY q.id, q.external_id, q.text, q.options, q.correct_answer, q.quality_score, q.explanation, q.source
       ORDER BY q.external_id
     `;
   } else {
@@ -87,12 +93,14 @@ async function fetchQuestions(collectionFilter: string[] | null): Promise<Questi
         q.options,
         q.correct_answer as "correctAnswer",
         q.quality_score as "qualityScore",
+        q.explanation,
+        q.source,
         array_agg(c.name ORDER BY c.name) as "collections"
       FROM civic_trivia.questions q
       JOIN civic_trivia.collection_questions cq ON q.id = cq.question_id
       JOIN civic_trivia.collections c ON cq.collection_id = c.id
       WHERE q.status = 'active'
-      GROUP BY q.id, q.external_id, q.text, q.options, q.correct_answer, q.quality_score
+      GROUP BY q.id, q.external_id, q.text, q.options, q.correct_answer, q.quality_score, q.explanation, q.source
       ORDER BY q.external_id
     `;
   }
@@ -107,14 +115,20 @@ async function fetchQuestions(collectionFilter: string[] | null): Promise<Questi
     correctAnswer: row.correctAnswer,
     collections: row.collections,
     qualityScore: row.qualityScore,
+    explanation: row.explanation,
+    source: row.source,
   }));
 }
 
 /**
  * Generate JSON report
+ * NOTE: Format changed from bare array to object with clusters and advancedFlags.
+ * For backward compatibility with DuplicateReviewService, check if parsed data is array or object:
+ *   if (Array.isArray(parsed)) { clusters = parsed; flags = []; }
+ *   else { clusters = parsed.clusters; flags = parsed.advancedFlags; }
  */
-function generateJsonReport(clusters: DuplicateCluster[]): string {
-  return JSON.stringify(clusters, null, 2);
+function generateJsonReport(clusters: DuplicateCluster[], advancedFlags: AdvancedFlag[]): string {
+  return JSON.stringify({ clusters, advancedFlags }, null, 2);
 }
 
 /**
@@ -122,6 +136,7 @@ function generateJsonReport(clusters: DuplicateCluster[]): string {
  */
 function generateMarkdownReport(
   clusters: DuplicateCluster[],
+  advancedFlags: AdvancedFlag[],
   totalQuestions: number,
   collectionsScanned: string[],
   cacheStats: { hits: number; misses: number }
@@ -208,6 +223,52 @@ function generateMarkdownReport(
     }
   }
 
+  // Advanced Detection Flags
+  md += '## Advanced Detection Flags\n\n';
+
+  const answerLeakageFlags = advancedFlags.filter(f => f.type === 'answer-leakage');
+  const sourceClusterFlags = advancedFlags.filter(f => f.type === 'same-source-cluster');
+  const inverseDuplicateFlags = advancedFlags.filter(f => f.type === 'inverse-duplicate');
+
+  // Answer Leakage
+  md += '### Answer Leakage\n\n';
+  if (answerLeakageFlags.length === 0) {
+    md += '*None detected.*\n\n';
+  } else {
+    md += '| Question A | Question B | Severity | Evidence |\n';
+    md += '|------------|------------|----------|----------|\n';
+    for (const flag of answerLeakageFlags) {
+      md += `| ${flag.questionA} | ${flag.questionB} | ${flag.severity} | ${flag.evidence} |\n`;
+    }
+    md += '\n';
+  }
+
+  // Same-Source Clusters
+  md += '### Same-Source Clusters\n\n';
+  if (sourceClusterFlags.length === 0) {
+    md += '*None detected.*\n\n';
+  } else {
+    md += '| Question A | Question B | Severity | Evidence |\n';
+    md += '|------------|------------|----------|----------|\n';
+    for (const flag of sourceClusterFlags) {
+      md += `| ${flag.questionA} | ${flag.questionB} | ${flag.severity} | ${flag.evidence} |\n`;
+    }
+    md += '\n';
+  }
+
+  // Inverse Duplicates
+  md += '### Inverse Duplicates\n\n';
+  if (inverseDuplicateFlags.length === 0) {
+    md += '*None detected.*\n\n';
+  } else {
+    md += '| Question A | Question B | Severity | Evidence |\n';
+    md += '|------------|------------|----------|----------|\n';
+    for (const flag of inverseDuplicateFlags) {
+      md += `| ${flag.questionA} | ${flag.questionB} | ${flag.severity} | ${flag.evidence} |\n`;
+    }
+    md += '\n';
+  }
+
   return md;
 }
 
@@ -279,6 +340,14 @@ async function main() {
     const clusters = clusterBuilder.buildClusters(pairs, questionMap);
     console.log(`Grouped into ${clusters.length} duplicate clusters`);
 
+    // 8b. Run advanced detection rules
+    console.log('Running advanced detection rules...');
+    const advancedFlags = runAllAdvancedDetectors(questions);
+    console.log(`Found ${advancedFlags.length} advanced flags:`);
+    console.log(`  - Answer leakage: ${advancedFlags.filter(f => f.type === 'answer-leakage').length}`);
+    console.log(`  - Same-source cluster: ${advancedFlags.filter(f => f.type === 'same-source-cluster').length}`);
+    console.log(`  - Inverse duplicate: ${advancedFlags.filter(f => f.type === 'inverse-duplicate').length}`);
+
     // 9. Generate reports
     const projectRoot = resolve(__dirname, '..', '..', '..');
     const reportsDir = resolve(projectRoot, '.planning', 'dedup-reports');
@@ -295,9 +364,10 @@ async function main() {
     const jsonPath = resolve(reportsDir, `duplicates-${timestamp}.json`);
     const mdPath = resolve(reportsDir, `duplicates-${timestamp}.md`);
 
-    const jsonReport = generateJsonReport(clusters);
+    const jsonReport = generateJsonReport(clusters, advancedFlags);
     const mdReport = generateMarkdownReport(
       clusters,
+      advancedFlags,
       questions.length,
       uniqueCollections,
       cacheStats
@@ -321,6 +391,11 @@ async function main() {
     console.log(`  - Exact (>0.95): ${tierCounts.exact} clusters`);
     console.log(`  - Near-duplicate (>0.85): ${tierCounts['near-duplicate']} clusters`);
     console.log(`  - Possible (>0.75): ${tierCounts.possible} clusters`);
+    console.log('');
+    console.log(`Advanced flags: ${advancedFlags.length}`);
+    console.log(`  - Answer leakage: ${advancedFlags.filter(f => f.type === 'answer-leakage').length} flags`);
+    console.log(`  - Same-source cluster: ${advancedFlags.filter(f => f.type === 'same-source-cluster').length} flags`);
+    console.log(`  - Inverse duplicate: ${advancedFlags.filter(f => f.type === 'inverse-duplicate').length} flags`);
     console.log('');
     console.log(`Embedding cache: ${cacheStats.hits} hits, ${cacheStats.misses} new embeddings`);
     console.log('');
