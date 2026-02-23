@@ -38,3 +38,10 @@ redis-data
 
 # Generated content artifacts
 backend/generated-content-*.json
+
+# Embedding cache (Phase 31 dedup tooling)
+backend/.embedding-cache/
+
+# Dedup reports (generated, review locally)
+.planning/dedup-reports/*.json
+.planning/dedup-reports/*.md

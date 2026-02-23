@@ -13,7 +13,8 @@
     "db:seed:community": "tsx src/db/seed/seed-community.ts",
     "audit-questions": "tsx src/scripts/audit-questions.ts",
     "archive-violations": "tsx src/scripts/archive-violations.ts",
-    "verify:production": "tsx src/scripts/verify-production.ts"
+    "verify:production": "tsx src/scripts/verify-production.ts",
+    "scan-duplicates": "tsx src/scripts/scan-duplicates.ts"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
