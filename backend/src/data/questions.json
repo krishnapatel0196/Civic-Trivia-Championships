@@ -806,21 +806,6 @@
     "topicCategory": "judiciary"
   },
   {
-    "id": "q040",
-    "text": "Which amendment gave Congress the power to levy an income tax?",
-    "options": [
-      "14th Amendment",
-      "15th Amendment",
-      "16th Amendment",
-      "17th Amendment"
-    ],
-    "correctAnswer": 2,
-    "explanation": "The 16th Amendment, ratified in 1913, explicitly gave Congress the power to tax income, overturning previous Supreme Court rulings that had limited this power.",
-    "difficulty": "medium",
-    "topic": "Amendments",
-    "topicCategory": "amendments"
-  },
-  {
     "id": "q041",
     "text": "What is the purpose of the Commerce Clause?",
     "options": [
@@ -1279,21 +1264,6 @@
     "topicCategory": "elections"
   },
   {
-    "id": "q067",
-    "text": "Which court case established that states cannot tax federal institutions?",
-    "options": [
-      "Marbury v. Madison",
-      "McCulloch v. Maryland",
-      "Gibbons v. Ogden",
-      "Dred Scott v. Sandford"
-    ],
-    "correctAnswer": 1,
-    "explanation": "McCulloch v. Maryland (1819) established federal supremacy and ruled that states cannot tax federal institutions. Chief Justice Marshall wrote 'the power to tax is the power to destroy.'",
-    "difficulty": "medium",
-    "topic": "Supreme Court",
-    "topicCategory": "judiciary"
-  },
-  {
     "id": "q068",
     "text": "What is habeas corpus?",
     "options": [
@@ -1307,21 +1277,6 @@
     "difficulty": "medium",
     "topic": "Constitution",
     "topicCategory": "federalism"
-  },
-  {
-    "id": "q069",
-    "text": "Which amendment prohibited slavery?",
-    "options": [
-      "12th Amendment",
-      "13th Amendment",
-      "14th Amendment",
-      "15th Amendment"
-    ],
-    "correctAnswer": 1,
-    "explanation": "The 13th Amendment, ratified in December 1865 after the Civil War, abolished slavery and involuntary servitude except as punishment for a crime.",
-    "difficulty": "medium",
-    "topic": "Amendments",
-    "topicCategory": "amendments"
   },
   {
     "id": "q070",
@@ -2207,21 +2162,6 @@
     "topicCategory": "federalism"
   },
   {
-    "id": "q111",
-    "text": "Which case established that states cannot interfere with federal functions?",
-    "options": [
-      "Gibbons v. Ogden",
-      "McCulloch v. Maryland",
-      "Marbury v. Madison",
-      "United States v. Lopez"
-    ],
-    "correctAnswer": 1,
-    "explanation": "McCulloch v. Maryland (1819) established federal supremacy, ruling that states cannot tax or otherwise interfere with legitimate federal operations.",
-    "difficulty": "hard",
-    "topic": "Supreme Court",
-    "topicCategory": "judiciary"
-  },
-  {
     "id": "q112",
     "text": "What is the Compact Clause?",
     "options": [
@@ -2265,21 +2205,6 @@
     "difficulty": "hard",
     "topic": "Constitution",
     "topicCategory": "executive"
-  },
-  {
-    "id": "q115",
-    "text": "Which case addressed whether Congress can regulate non-economic activity under the Commerce Clause?",
-    "options": [
-      "Wickard v. Filburn",
-      "United States v. Lopez",
-      "Gibbons v. Ogden",
-      "Heart of Atlanta Motel v. United States"
-    ],
-    "correctAnswer": 1,
-    "explanation": "United States v. Lopez (1995) ruled that Congress exceeded Commerce Clause authority by prohibiting guns near schools, limiting federal power over non-economic local activity.",
-    "difficulty": "hard",
-    "topic": "Supreme Court",
-    "topicCategory": "judiciary"
   },
   {
     "id": "q116",
