@@ -347,20 +347,20 @@ Plans:
 - [x] 32-04-PLAN.md — Advanced detection rules: answer leakage, same-source clustering, inverse duplicates
 
 #### Phase 33: Generation Pipeline Enhancement
-**Goal**: Content generation integrated with semantic dedup and cross-question quality rules
+**Goal**: Self-validating generation pipeline with semantic dedup, quality rules, gap analysis, and source diversity tracking
 **Depends on**: Phase 32
 **Requirements**: GEN-02, GEN-03, GEN-04, GEN-05, GEN-06
 **Success Criteria** (what must be TRUE):
   1. Semantic duplicate check integrated into generation pipeline prevents creating duplicates
   2. All new questions pass 8 existing quality rules with no blocking violations
-  3. Source diversity enforced — no webpage sources more than 15% of collection questions
-  4. Difficulty distribution maintained per collection (30% easy, 40% medium, 30% hard target)
+  3. Source diversity enforced — soft 15% cap with adaptive scaling for source-poor locales
+  4. Difficulty distribution maintained per collection (40% easy, 35% medium, 25% hard target)
   5. Topic distribution balanced with minimum 10 questions per topic category
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 33-01: TBD
-- [ ] 33-02: TBD
+- [ ] 33-01-PLAN.md — Generation service modules: types, GapAnalyzer, SourceTracker, CollectionHierarchy
+- [ ] 33-02-PLAN.md — Main generateQuestions.ts orchestrator with full pipeline integration
 
 #### Phase 34: Scale to 90+ Questions
 **Goal**: All 5 non-Federal collections have 90+ unique, high-quality questions seeded to database
@@ -386,6 +386,6 @@ Phases execute in numeric order: 31 → 32 → 33 → 34
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 31. Semantic Deduplication Infrastructure | 2/2 | Complete | 2026-02-23 |
-| 32. Existing Collection Audit | 0/4 | Not started | - |
-| 33. Generation Pipeline Enhancement | 0/TBD | Not started | - |
+| 32. Existing Collection Audit | 4/4 | Complete | 2026-02-23 |
+| 33. Generation Pipeline Enhancement | 0/2 | Not started | - |
 | 34. Scale to 90+ Questions | 0/TBD | Not started | - |
