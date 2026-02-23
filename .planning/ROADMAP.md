@@ -346,21 +346,22 @@ Plans:
 - [x] 32-03-PLAN.md — Execute full audit: run scanner, review clusters, archive duplicates
 - [x] 32-04-PLAN.md — Advanced detection rules: answer leakage, same-source clustering, inverse duplicates
 
-#### Phase 33: Generation Pipeline Enhancement
+#### Phase 33: Generation Pipeline Enhancement ✅
 **Goal**: Self-validating generation pipeline with semantic dedup, quality rules, gap analysis, and source diversity tracking
 **Depends on**: Phase 32
 **Requirements**: GEN-02, GEN-03, GEN-04, GEN-05, GEN-06
+**Completed**: 2026-02-23
 **Success Criteria** (what must be TRUE):
-  1. Semantic duplicate check integrated into generation pipeline prevents creating duplicates
-  2. All new questions pass 8 existing quality rules with no blocking violations
-  3. Source diversity enforced — soft 15% cap with adaptive scaling for source-poor locales
-  4. Difficulty distribution maintained per collection (40% easy, 35% medium, 25% hard target)
-  5. Topic distribution balanced with minimum 10 questions per topic category
-**Plans**: 2 plans
+  1. ✅ Semantic duplicate check integrated into generation pipeline prevents creating duplicates
+  2. ✅ All new questions pass 8 existing quality rules with no blocking violations
+  3. ✅ Source diversity enforced — soft 15% cap with adaptive scaling for source-poor locales
+  4. ✅ Difficulty distribution maintained per collection (40% easy, 35% medium, 25% hard target)
+  5. ✅ Topic distribution balanced with minimum 10 questions per topic category
+**Plans**: 2 plans — COMPLETE
 
 Plans:
-- [ ] 33-01-PLAN.md — Generation service modules: types, GapAnalyzer, SourceTracker, CollectionHierarchy
-- [ ] 33-02-PLAN.md — Main generateQuestions.ts orchestrator with full pipeline integration
+- [x] 33-01-PLAN.md — Generation service modules: types, GapAnalyzer, SourceTracker, CollectionHierarchy
+- [x] 33-02-PLAN.md — Main generateQuestions.ts orchestrator with full pipeline integration
 
 #### Phase 34: Scale to 90+ Questions
 **Goal**: All 5 non-Federal collections have 90+ unique, high-quality questions seeded to database
@@ -387,5 +388,5 @@ Phases execute in numeric order: 31 → 32 → 33 → 34
 |-------|----------------|--------|-----------|
 | 31. Semantic Deduplication Infrastructure | 2/2 | Complete | 2026-02-23 |
 | 32. Existing Collection Audit | 4/4 | Complete | 2026-02-23 |
-| 33. Generation Pipeline Enhancement | 0/2 | Not started | - |
+| 33. Generation Pipeline Enhancement | 2/2 | Complete | 2026-02-23 |
 | 34. Scale to 90+ Questions | 0/TBD | Not started | - |

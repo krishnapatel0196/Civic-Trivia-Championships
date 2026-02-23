@@ -12,27 +12,27 @@ Requirements for content deduplication and scaling all collections to 90+ unique
 - [x] **DEDUP-01**: Semantic duplicate detection using embeddings identifies question pairs testing the same fact with different wording
 - [x] **DEDUP-02**: Cross-collection duplicate scanning detects shared questions across all 6 collection JSON files
 - [x] **DEDUP-03**: Duplicate report generated with grouped pairs/clusters, similarity scores, and recommended action (keep/archive)
-- [ ] **DEDUP-04**: Manual review workflow allows human to approve/reject duplicate findings before archival
-- [ ] **DEDUP-05**: Answer leakage detection flags questions where one question's text contains another's answer
-- [ ] **DEDUP-06**: Same-source factoid clustering identifies questions mined from the same sentence/paragraph whose explanations reveal each other's answers
-- [ ] **DEDUP-07**: Inverse duplicate detection catches complementary question pairs (Q1 gives office, asks date; Q2 gives date, asks office)
-- [ ] **DEDUP-08**: Cross-collection hierarchy policy defined and applied (which state-level facts are acceptable in city collections — decided during implementation based on actual duplicates found)
+- [x] **DEDUP-04**: Manual review workflow allows human to approve/reject duplicate findings before archival
+- [x] **DEDUP-05**: Answer leakage detection flags questions where one question's text contains another's answer
+- [x] **DEDUP-06**: Same-source factoid clustering identifies questions mined from the same sentence/paragraph whose explanations reveal each other's answers
+- [x] **DEDUP-07**: Inverse duplicate detection catches complementary question pairs (Q1 gives office, asks date; Q2 gives date, asks office)
+- [x] **DEDUP-08**: Cross-collection hierarchy policy defined and applied (which state-level facts are acceptable in city collections — decided during implementation based on actual duplicates found)
 
 ### Content Generation
 
 - [ ] **GEN-01**: All 5 non-Federal collections reach 90+ unique questions after dedup and generation
-- [ ] **GEN-02**: Semantic dedup check integrated into generation pipeline to prevent creating duplicates of existing questions
-- [ ] **GEN-03**: All new questions pass existing 8 quality rules with no blocking violations
-- [ ] **GEN-04**: Source diversity enforced — no single webpage sources more than 15% of a collection's questions
-- [ ] **GEN-05**: Difficulty distribution maintained across each collection (target: ~30% easy, ~40% medium, ~30% hard)
-- [ ] **GEN-06**: Topic distribution balanced — all topic categories for each collection have adequate representation (minimum 10 questions per topic)
+- [x] **GEN-02**: Semantic dedup check integrated into generation pipeline to prevent creating duplicates of existing questions
+- [x] **GEN-03**: All new questions pass existing 8 quality rules with no blocking violations
+- [x] **GEN-04**: Source diversity enforced — no single webpage sources more than 15% of a collection's questions
+- [x] **GEN-05**: Difficulty distribution maintained across each collection (target: 40% easy, 35% medium, 25% hard — updated for Easy Steps mode)
+- [x] **GEN-06**: Topic distribution balanced — all topic categories for each collection have adequate representation (minimum 10 questions per topic)
 
 ### Data Cleanup
 
-- [ ] **DATA-01**: Duplicate questions archived from existing collections (removed from JSON files, archived in database)
+- [x] **DATA-01**: Duplicate questions archived from existing collections (removed from JSON files, archived in database)
 - [ ] **DATA-02**: Updated JSON source files with duplicates removed and new questions added
 - [ ] **DATA-03**: All updated collections re-seeded to database with correct status (active)
-- [ ] **DATA-04**: Federal collection audited for duplicates (already at 117, but verify quality)
+- [x] **DATA-04**: Federal collection audited for duplicates (already at 117, but verify quality)
 
 ## Future Requirements
 
@@ -58,24 +58,24 @@ Deferred to later milestones.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEDUP-01 | Phase 31 | Pending |
-| DEDUP-02 | Phase 31 | Pending |
-| DEDUP-03 | Phase 31 | Pending |
-| DEDUP-04 | Phase 32 | Pending |
-| DEDUP-05 | Phase 32 | Pending |
-| DEDUP-06 | Phase 32 | Pending |
-| DEDUP-07 | Phase 32 | Pending |
-| DEDUP-08 | Phase 32 | Pending |
+| DEDUP-01 | Phase 31 | Complete |
+| DEDUP-02 | Phase 31 | Complete |
+| DEDUP-03 | Phase 31 | Complete |
+| DEDUP-04 | Phase 32 | Complete |
+| DEDUP-05 | Phase 32 | Complete |
+| DEDUP-06 | Phase 32 | Complete |
+| DEDUP-07 | Phase 32 | Complete |
+| DEDUP-08 | Phase 32 | Complete |
 | GEN-01 | Phase 34 | Pending |
-| GEN-02 | Phase 33 | Pending |
-| GEN-03 | Phase 33 | Pending |
-| GEN-04 | Phase 33 | Pending |
-| GEN-05 | Phase 33 | Pending |
-| GEN-06 | Phase 33 | Pending |
-| DATA-01 | Phase 32 | Pending |
+| GEN-02 | Phase 33 | Complete |
+| GEN-03 | Phase 33 | Complete |
+| GEN-04 | Phase 33 | Complete |
+| GEN-05 | Phase 33 | Complete |
+| GEN-06 | Phase 33 | Complete |
+| DATA-01 | Phase 32 | Complete |
 | DATA-02 | Phase 34 | Pending |
 | DATA-03 | Phase 34 | Pending |
-| DATA-04 | Phase 32 | Pending |
+| DATA-04 | Phase 32 | Complete |
 
 **Coverage:**
 - v1.6 requirements: 18 total
