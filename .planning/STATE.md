@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study
-**Current focus:** Planning next milestone
+**Current focus:** v1.6 Content Quality & Scale
 
 ## Current Position
 
-Phase: 30 of 30 — all milestones through v1.5 complete
-Plan: N/A
-Status: Ready for next milestone
-Last activity: 2026-02-22 — v1.5 Feedback Marks milestone complete
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-22 — Milestone v1.6 started
 
-Progress: [████████████████████████] 100% (86 plans complete across 30 phases)
+Progress: [░░░░░░░░░░░░░░░░░░░░░░░░] 0%
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -85,11 +85,11 @@ None. v1.5 shipped. Ready for next milestone.
 ## Session Continuity
 
 Last session: 2026-02-22
-Topic: v1.5 Feedback Marks — milestone completed and archived
-Stopped at: Milestone complete — ready for next milestone
+Topic: v1.6 Content Quality & Scale — milestone started
+Stopped at: Defining requirements
 Resume file: None
 
-Next action: `/gsd:new-milestone` to start next version (questioning -> research -> requirements -> roadmap)
+Next action: Define requirements → create roadmap
 
 ---
-*v1.5 Feedback Marks — SHIPPED (6 milestones complete)*
+*v1.6 Content Quality & Scale — DEFINING REQUIREMENTS*

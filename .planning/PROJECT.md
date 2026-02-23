@@ -50,7 +50,16 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ### Active
 
-(No active milestone — run `/gsd:new-milestone` to start next)
+## Current Milestone: v1.6 Content Quality & Scale
+
+**Goal:** Deduplicate all question collections and generate enough new content so every collection has 90+ unique, high-quality questions.
+
+**Target features:**
+- Audit and remove semantic duplicates within each collection file
+- Remove cross-collection duplicates (e.g., state questions repeated in city collections)
+- Generate new questions to bring all collections to 90+ unique questions
+- Validate all new content against existing quality rules engine
+- Seed updated content to database
 
 ### Out of Scope
 
@@ -128,7 +137,7 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - **Tech stack**: React 18+, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, PostgreSQL, Redis, JWT — specified in design doc
 - **Performance**: FCP <1.5s, TTI <3s, bundle <300KB gzipped
 - **Accessibility**: WCAG AA compliance required
-- **Content**: 639 questions across 6 collections (minimum 50 per collection for gameplay), all source URLs validated
+- **Content**: 639 questions across 6 collections (target 90+ unique per collection for gameplay), all source URLs validated
 
 ## Key Decisions
 
@@ -168,4 +177,4 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Null source URL for unrepairable links | Better than displaying broken "Learn More" link to users | Good — clean UX |
 
 ---
-*Last updated: 2026-02-22 after v1.5 milestone completion*
+*Last updated: 2026-02-22 after v1.6 milestone start*
