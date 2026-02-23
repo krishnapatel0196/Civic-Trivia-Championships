@@ -1,645 +1,1236 @@
-# Domain Pitfalls: Fremont, CA Community Collection
+# Domain Pitfalls: Content Deduplication & Generation Scaling
 
-**Domain:** Adding Fremont, California community question collection to existing civic trivia game (547 questions across 5 collections)
-**Researched:** 2026-02-20
-**Confidence:** HIGH (Fremont-specific facts), MEDIUM (locale expansion patterns from existing codebase)
+**Domain:** Educational trivia with AI-generated content at scale
+**Researched:** 2026-02-22
+**Confidence:** HIGH (based on codebase analysis and current research)
 
 ## Executive Summary
 
-Adding Fremont, CA as the sixth community collection carries specific risks beyond generic "add a new locale" patterns. Fremont's unique characteristics create content pitfalls: it's a **composite city** formed from five formerly-independent towns in 1956, each with distinct identity and history. Content that treats Fremont as monolithic will feel inauthentic to residents. The **Tesla/NUMMI factory** transition is a headline-grabbing topic that risks violating "no pure lookup trivia" rules. Fremont's position in the **Bay Area tech ecosystem** creates partisan framing risks ("Silicon Valley success story" vs "gentrification displacement"). The city's **high ethnic diversity** (particularly South Asian and Chinese communities) means civic questions must reflect multi-cultural civic participation, not default to anglicized assumptions.
+This research documents pitfalls when adding semantic deduplication and batch content generation to existing trivia systems. Unlike greenfield development, retrofitting these features into production systems with existing content creates unique challenges around data integrity, quality degradation, and system integration.
 
-The most dangerous pitfall is **Mission San Jose conflation** -- treating "Mission San Jose" (the 1797 Spanish mission, a historical site) and "Mission San Jose district" (a modern Fremont neighborhood, often abbreviated to "Mission San Jose") as the same entity. This creates factually wrong questions that fail verification. The second most dangerous is **five-district identity erasure** -- writing questions that ignore Centerville, Niles, Irvington, Mission San Jose, and Warm Springs as meaningful civic identities. Residents identify with their district first, then Fremont.
+**Critical finding:** Nearly 50% of questions in the LA collection were duplicates/near-duplicates (20 of 42), with issues ranging from exact text matches to semantic overlaps and answer leakage across explanations. This demonstrates that text-only deduplication is insufficient for educational content.
 
 ---
 
 ## Critical Pitfalls
 
-Mistakes that cause factual errors, resident backlash, or quality rule violations.
+These mistakes cause rewrites, data corruption, or major quality issues.
 
-### 1. Mission San Jose Conflation: Historical Site vs Modern District
+### Pitfall 1: Text-Only Deduplication Misses Semantic Duplicates
 
-**What goes wrong:** Content generators confuse "Mission San Jose" (the 1797 Spanish mission founded by Father Fermin de Lasuen, now a historical landmark and church) with "Mission San Jose district" (one of the five modern districts that unified to form Fremont in 1956). Questions ask "When was Mission San Jose founded?" with the answer "1956" (district) when residents expect "1797" (mission). Or worse: "Mission San Jose is known for..." with answers mixing historical mission facts and modern district characteristics (schools, demographics). Questions become factually ambiguous or outright wrong.
+**What goes wrong:**
+Simple text normalization (lowercase, collapse whitespace, strip punctuation) catches only exact duplicates. It misses semantic duplicates where the same fact is asked in different ways:
+- "How many people does LA County serve?" vs "What population does LA County government serve?"
+- "What is the LA County population?" (all asking about the same 10 million figure)
 
-**Why it happens:** "Mission San Jose" appears in both historical and modern contexts in Fremont sources. City government websites reference the "Mission San Jose district." Historical sources discuss "Mission San Jose" the mission. Tourism materials conflate the two because the district is named after the mission and contains the mission site. AI content generation trained on mixed sources produces questions that blend contexts without distinguishing them.
+**Why it happens:**
+Teams implement the simplest solution first (string matching), assuming it will catch "most" duplicates. AI generation produces fluent variations of the same underlying fact, which evade text-based detection.
+
+**Real-world evidence from codebase:**
+The `DuplicateDetector` class uses `normalizeText()` which only handles case and whitespace:
+```typescript
+export function normalizeText(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\?$/, '');
+}
+```
+
+This caught some duplicates but missed the semantic ones documented in the project context (e.g., three different phrasings about LA County population across different topics).
 
 **Consequences:**
-- **Factual errors:** Questions with answers that are wrong depending on which "Mission San Jose" is meant
-- **Quality rule violations:** Ambiguous answers (both "1797" and "1956" could be correct for "When was Mission San Jose established?")
-- **Resident backlash:** Locals instantly recognize the error -- the historical mission is a point of pride, and conflating it with a modern school district feels disrespectful to history
-- **Source verification fails:** Different sources give contradictory dates/facts depending on which entity they reference
-
-**Warning signs:**
-- Questions containing "Mission San Jose" without explicitly clarifying "the 1797 Spanish mission" or "the Mission San Jose district of Fremont"
-- Answer options mixing 18th-century dates (1797 mission founding) with 20th-century dates (1956 city incorporation)
-- Explanations that cite both historical mission sources and modern city district sources in the same question
-- Topic categorization confusion: is it "civic-history" (mission) or "city-government" (district)?
+- Users encounter "different" questions that test the same knowledge
+- Perceived content volume inflated (90 unique questions but only 70 distinct concepts)
+- User frustration ("I just answered this!")
+- Wasted generation costs on redundant content
 
 **Prevention:**
-- **Explicit disambiguation in all content:** Any question referencing "Mission San Jose" MUST specify which entity:
-  - "Mission San Jose, the historic Spanish mission founded in 1797..."
-  - "The Mission San Jose district of Fremont (one of the five original communities)..."
-- **Separate topic categories:**
-  - `civic-history` → Questions about the 1797 mission, Ohlone people, Father Durán's music program, the 1868 earthquake
-  - `five-districts` → Questions about the modern Mission San Jose district, its boundaries, demographics, civic identity
-- **Source URL verification:** Historical mission questions must cite `saintjosephmsj.org`, `californiamissions.com`, or national park sources. District questions must cite `fremont.gov` or city planning documents
-- **Quality rule enforcement:** Flag any question containing "Mission San Jose" for human review to verify disambiguation
-- **Generation prompt guidance:** Include explicit instruction: "Fremont has both a historic Mission San Jose (1797 Spanish mission) and a modern Mission San Jose district. Always specify which one when referencing this name."
+1. **Multi-level detection pipeline:**
+   - Level 1: Exact text matching (fast, catches typo variants)
+   - Level 2: Semantic similarity using embeddings (catches paraphrases)
+   - Level 3: Answer-overlap detection (catches questions about the same fact)
 
-**Phase to address:** Content generation phase -- locale config and generation prompt MUST include disambiguation rules before generating any questions
+2. **Semantic similarity threshold:**
+   Use cosine similarity on question embeddings. Questions with >0.85 similarity likely test the same knowledge. In your case:
+   ```typescript
+   // After text-based dedup, run semantic check
+   const embedding1 = await embedQuestion(q1.text);
+   const embedding2 = await embedQuestion(q2.text);
+   const similarity = cosineSimilarity(embedding1, embedding2);
+   if (similarity > 0.85) {
+     flagAsPotentialDuplicate(q1, q2);
+   }
+   ```
 
-**Source confidence:** HIGH -- Direct verification of historical mission founding (1797) via [Mission San José Wikipedia](https://en.wikipedia.org/wiki/Mission_San_José_(California)) and [California Missions Foundation](https://californiamissionsfoundation.org/mission-san-jose/), cross-referenced with Fremont city formation (1956) via [Fremont History](https://www.fremont.gov/about/history)
+3. **Fact extraction and comparison:**
+   Extract the core fact being tested (subject + predicate + object). Questions testing the same fact are duplicates regardless of phrasing:
+   - Subject: "LA County population"
+   - Predicate: "equals"
+   - Object: "10 million"
+
+**Detection:**
+- Audit reports show questions passing text dedup but receiving user feedback like "repetitive" or "I've seen this before"
+- Quality metrics show high pass rates but low perceived content diversity
+- Manual review finds multiple questions citing the same source fact
+
+**Phase assignment:** Phase 1 (Dedup Architecture) - Must be designed in from the start
+
+**Sources:**
+- [Semantic Deduplication Research](https://www.emergentmind.com/topics/semantic-deduplication-semdedup)
+- [MinishLab SemHash: Fast Multimodal Semantic Deduplication](https://github.com/MinishLab/semhash)
 
 ---
 
-### 2. Five-District Identity Erasure: Treating Fremont as Monolithic
+### Pitfall 2: Cross-Collection Duplicates Ignored
 
-**What goes wrong:** Content treats Fremont as a single unified city like Bloomington or Los Angeles, ignoring that it is **five formerly-independent towns** (Centerville, Niles, Irvington, Mission San Jose, Warm Springs) that merged in 1956. Questions ask "What is Fremont known for?" without acknowledging distinct district identities. Result: questions feel generic and disconnected from lived experience. Residents in Niles (birthplace of American film industry, Charlie Chaplin history) have different civic identity than residents in Warm Springs (tech boom, BART station, Silicon Valley connection) or Mission San Jose (schools, South Asian community).
+**What goes wrong:**
+Teams implement per-collection deduplication but ignore duplicates across collections. In multi-collection systems (e.g., federal, state, city levels), the same foundational facts appear in multiple collections:
+- "How many national parks does California have?" appears in LA, Fremont, AND California State collections
+- Federal civics concepts duplicated in locale-specific collections
 
-Each district has:
-- **Distinct history:** Niles was the early home of California's motion picture industry. Irvington is known for historic charm. Warm Springs had the tech boom.
-- **Different demographics:** Mission San Jose has high South Asian population; Warm Springs has high Chinese population
-- **Unique landmarks:** Niles Essanay Silent Film Museum (Niles), historic downtown (Irvington), Tesla factory (Warm Springs)
-- **Civic participation patterns:** Residents identify with their district first, especially in city council elections (6 districts, district-based voting since 2017)
+**Why it happens:**
+Collections are treated as independent silos during development. Generation scripts run per-collection without cross-collection awareness. In the codebase, `DuplicateDetector` is instantiated per generation run with no shared state:
 
-**Why it happens:** The existing locale configs (Bloomington, Los Angeles) model cities as unified entities. Copy-pasting that structure to Fremont misses the composite nature. AI generation prompts reference "the city of Fremont" without acknowledging internal civic geography. Content creators unfamiliar with Fremont don't realize district identity is central to civic life.
+```typescript
+// From generate-locale-questions.ts line 367
+const duplicateDetector = new DuplicateDetector();
+try {
+  const dataFilePath = join(process.cwd(), 'src/data', `${config.collectionSlug}-questions.json`);
+  duplicateDetector.loadExisting(existingData.questions);
+  // Only loads THIS collection - no cross-collection check
+}
+```
+
+**Real-world evidence:**
+Project context explicitly documents cross-collection duplicates discovered during audit.
 
 **Consequences:**
-- **Inauthentic questions:** "What is Fremont known for?" has no single answer -- depends on which district you ask
-- **Missed content opportunities:** Rich historical content (Niles film history, Mission San Jose mission founding, Warm Springs tech transformation) gets flattened to generic city facts
-- **Resident disengagement:** Questions feel like they're written by outsiders who don't understand the city's character
-- **Quality rule failures:** "Fremont is primarily known for..." violates vague qualifier rules because different districts are "primarily known" for different things
-
-**Warning signs:**
-- Topic categories copied from Bloomington config (`city-government`, `local-services`) without Fremont-specific categories
-- No `five-districts` or `civic-identity` topic category
-- Questions referencing "Fremont" without specifying which district or acknowledging district diversity
-- Generation prompt does not mention Centerville, Niles, Irvington, Mission San Jose, or Warm Springs by name
-- All "landmarks-culture" questions reference city-wide entities, none reference district-specific places
+- Users playing multiple collections encounter the same questions
+- Poor user experience for engaged users (the most valuable segment)
+- Wasted generation costs
+- Missed opportunity for collection-specific variants
 
 **Prevention:**
-- **Add district-specific topic category:** Create `five-districts` topic category explicitly for questions about Centerville, Niles, Irvington, Mission San Jose district, and Warm Springs civic identities and histories
-- **District-aware content distribution:**
-  - 10-15% of questions should explicitly reference district identities
-  - "Landmarks-culture" questions should balance across all five districts, not just city-wide landmarks
-  - "Civic-history" questions should include district-specific founding stories and historical events
-- **Locale config documentation:** Add `districtStructure` field to Fremont config explaining five-district composition, with brief description of each district's identity
-- **Generation prompt guidance:** "Fremont was formed in 1956 from five independent communities: Centerville, Niles, Irvington, Mission San Jose, and Warm Springs. Each retains distinct civic identity. Include questions about district-specific history and character, not just city-wide government."
-- **Quality review filter:** Flag questions that ask "What is Fremont known for?" or "Fremont is primarily..." for human review -- these often fail to capture district diversity
+1. **Global deduplication registry:**
+   ```typescript
+   class GlobalDuplicateDetector {
+     private allCollections = new Map<string, DuplicateDetector>();
 
-**Phase to address:** Locale config design phase -- add district structure BEFORE generating content
+     checkAcrossCollections(question: Question): CrossCollectionDuplicate[] {
+       const duplicates = [];
+       for (const [slug, detector] of this.allCollections) {
+         const result = detector.check(question);
+         if (!result.passed) {
+           duplicates.push({ collection: slug, ...result });
+         }
+       }
+       return duplicates;
+     }
+   }
+   ```
 
-**Source confidence:** HIGH -- Direct verification via [Fremont History](https://www.fremont.gov/about/history) stating five-district formation, cross-referenced with [Historic Districts](https://www.fremont.gov/government/departments/economic-development/real-estate-development-investment/historic-districts) describing distinct district identities
+2. **Content specialization strategy:**
+   When the same topic appears in multiple collections, require different angles:
+   - Federal collection: "How many national parks does the US have?"
+   - California State: "How many national parks does California have?"
+   - LA City: "Which national parks are accessible from LA County?"
+
+3. **Generation prompts with anti-patterns:**
+   Include cross-collection questions as "do not generate" examples:
+   ```typescript
+   const systemPrompt = `
+   Do NOT generate questions that duplicate these from other collections:
+   ${crossCollectionAntiPatterns.join('\n')}
+
+   Instead, focus on ${config.name}-specific angles.
+   `;
+   ```
+
+**Detection:**
+- Users report "I've seen this before" across different collections
+- Manual audit finds identical questions in multiple JSON files
+- Analytics show users skipping questions in later collections
+
+**Phase assignment:** Phase 1 (Dedup Architecture) - Must handle from the start
 
 ---
 
-### 3. NUMMI/Tesla Factory: High-Profile Topic with Lookup Trivia Risk
+### Pitfall 3: Answer Leakage in Explanations
 
-**What goes wrong:** The Tesla Fremont Factory (formerly NUMMI, the GM/Toyota joint venture) is Fremont's most internationally-recognized landmark. Content generators produce questions about it because it's prominent in search results. But most Tesla/NUMMI facts violate the "no pure lookup trivia" quality rule:
-- "In what year did Tesla purchase the NUMMI plant?" (2010 -- pure date lookup)
-- "How many employees work at Tesla Fremont Factory?" (22,000 as of 2023 -- pure number lookup, also time-sensitive)
-- "What was the name of the GM/Toyota joint venture that preceded Tesla?" (NUMMI -- acronym lookup)
-- "On what date did NUMMI produce its last car?" (April 1, 2010 -- pure date lookup)
+**What goes wrong:**
+One question's explanation reveals the answer to another question in the same collection. Example from project context:
+- Question A: "What is X?"
+- Question B: "What is Y?"
+- Question B's explanation: "According to source, Y is the process that X uses to..."
 
-These questions fail the **dinner party test** ("Would knowing this make you interesting at a dinner party?") and **civic utility** ("Does this make you a more informed citizen?"). They're trivia facts that don't help residents understand how government works or engage civically.
+When users see Question B first, they instantly know the answer to Question A when it appears later.
 
-**Why it happens:** Tesla/NUMMI appears prominently in "Fremont California" search results and Wikipedia entries. It's a point of local pride ("We have the Tesla factory!"). Content generators see high-profile topic and assume it's good content. AI generation favors factual dates and numbers from authoritative sources, which is exactly what NUMMI/Tesla history provides. The generation pipeline doesn't distinguish between "historically important" and "civically useful."
+**Why it happens:**
+AI generation treats each question independently, using shared source documents. The model naturally includes contextual information in explanations, which may reference facts tested in other questions. The quality validation system checks individual questions but doesn't detect cross-question dependencies.
+
+**Real-world evidence from codebase:**
+Quality validation runs per-question without cross-question checks:
+```typescript
+// From quality-validation.ts line 157
+lastAudit = await auditQuestion(currentQuestion, { skipUrlCheck });
+// No check for leakage into/from other questions
+```
 
 **Consequences:**
-- **Quality rule violations:** Questions that pass structural validation but fail "no pure lookup trivia" blocking rule
-- **Wasted generation budget:** Questions generated, flagged, regenerated in retry loop, still fail
-- **Resident annoyance:** "The factory is important, but quizzing me on the exact date NUMMI closed isn't helpful"
-- **Missed opportunities:** The NUMMI→Tesla transition has genuine civic content (impact on city employment, tax revenue, city planning for factory traffic, environmental reviews) that gets lost in trivia
-
-**Warning signs:**
-- Questions asking "In what year..." or "On what date..." about NUMMI/Tesla events
-- Questions asking for employee counts, production numbers, or square footage
-- Questions asking what "NUMMI" stands for (New United Motor Manufacturing, Inc. -- pure acronym lookup)
-- Answer options with multiple years in the 1980s-2020s range (dates of factory events)
-- Explanations citing Wikipedia Tesla Factory page or automotive news articles instead of civic sources
+- Questions become trivially easy if seen in wrong order
+- Users memorize answers without understanding concepts
+- Perceived difficulty distribution skewed
+- Educational value degraded
 
 **Prevention:**
-- **Civic angle filter:** If generating Tesla/NUMMI content, require civic angle:
-  - ✓ GOOD: "What type of environmental review did the City of Fremont require when Tesla expanded the factory?" (civic process)
-  - ✓ GOOD: "How does the Tesla factory impact Fremont's city budget?" (civic utility -- understanding tax base)
-  - ✗ BAD: "When did Tesla begin producing Model S vehicles in Fremont?" (pure lookup)
-- **Quality rule pre-screening:** Flag any question containing "Tesla", "NUMMI", "factory" for human review BEFORE inserting into database
-- **Generation prompt explicit guidance:** "The Tesla Fremont Factory (formerly NUMMI) is historically important but avoid pure trivia questions about dates, production numbers, or company history. Focus on civic aspects: how the factory relates to city government, environmental regulations, tax revenue, or civic participation."
-- **Topic category restriction:** Tesla/NUMMI questions should ONLY appear in `local-economy` or `civic-history` topics with clear civic angle, never in `landmarks-culture` as a "fun fact"
-- **Alternative content strategy:** Instead of factory trivia, focus on **manufacturing sector broadly** -- Fremont has 900+ advanced manufacturing companies (the "hardware side of Silicon Valley"). Questions about Fremont's role in Bay Area economy are more civically useful than Tesla trivia.
+1. **Cross-question leakage detection:**
+   ```typescript
+   function checkAnswerLeakage(questions: Question[]): LeakageReport[] {
+     const leakages = [];
 
-**Phase to address:** Generation prompt design AND quality review checklist -- establish civic angle requirement before generating
+     for (let i = 0; i < questions.length; i++) {
+       for (let j = 0; j < questions.length; j++) {
+         if (i === j) continue;
 
-**Source confidence:** HIGH -- Factory facts verified via [Tesla Fremont Factory Wikipedia](https://en.wikipedia.org/wiki/Tesla_Fremont_Factory) and [NUMMI Wikipedia](https://en.wikipedia.org/wiki/NUMMI). "No pure lookup trivia" rule confirmed via existing quality guidelines at `C:/Project Test/backend/src/scripts/content-generation/prompts/quality-guidelines.ts`
+         const correctAnswer = questions[i].options[questions[i].correctAnswer];
+         const otherExplanation = questions[j].explanation;
+
+         // Check if correct answer appears in other question's explanation
+         if (otherExplanation.toLowerCase().includes(correctAnswer.toLowerCase())) {
+           leakages.push({
+             leakerQuestion: questions[j].externalId,
+             victimQuestion: questions[i].externalId,
+             leakedAnswer: correctAnswer
+           });
+         }
+       }
+     }
+
+     return leakages;
+   }
+   ```
+
+2. **Explanation constraints in prompt:**
+   ```typescript
+   const prompt = `
+   Write explanations that:
+   - Cite the source
+   - Explain WHY this answer is correct
+   - Do NOT mention specific facts that could be tested in other questions
+   - Focus on this question's concept in isolation
+   `;
+   ```
+
+3. **Batch validation instead of single-question:**
+   Validate all questions together after generation, before seeding:
+   ```typescript
+   // After batch generation
+   const leakageReport = checkAnswerLeakage(batchResult.questions);
+   if (leakageReport.length > 0) {
+     // Regenerate affected questions with constraints
+   }
+   ```
+
+**Detection:**
+- Difficulty analytics show some questions answered correctly far more than expected
+- User feedback mentions "the previous question told me the answer"
+- Manual review finds answer phrases in unrelated explanations
+
+**Phase assignment:** Phase 2 (Quality Rules) - Add after basic dedup works
 
 ---
 
-### 4. Time-Sensitive Content: Mayor/Council Expiration Dates
+### Pitfall 4: Same-Source Mining Without Fact Tracking
 
-**What goes wrong:** Fremont has **district-based city council elections** (6 districts + mayor) adopted in 2017. Elections are on a rotation -- not all seats up simultaneously. The 2026 election (November 3, 2026) will elect specific district seats. Questions asking "Who is the current mayor?" or "Who represents District 3?" require expiration dates because officials change. BUT: Fremont's district rotation is different from the existing Bloomington/LA patterns, and content generators may set incorrect expiration dates or miss upcoming elections.
+**What goes wrong:**
+Multiple questions generated from the same source paragraph or sentence. The questions test related facts in ways that reveal each other's answers:
+- Question A: "What year did X happen?"
+- Question B: "Which governor signed X into law?"
+- Both from same source sentence: "Governor Smith signed X into law in 1995."
 
-**Current situation (as of Feb 2026):**
-- **Mayor:** Raj Salwan (elected December 2024 -- Fremont's first Indian-American mayor)
-- **City structure:** 6 council members (one per district) + mayor elected city-wide
-- **2026 election:** November 3, 2026, with filing deadline August 7, 2026
-- **District-based voting:** Adopted June 13, 2017 (replaced at-large system)
+Answering one gives strong hints for the other.
 
-Questions like "Who is the current mayor of Fremont?" need `expirationDate: 2028-12-31` (assuming mayor serves 4-year term through 2028). But if the content generator doesn't verify Fremont's specific term lengths and election schedule, it might copy Bloomington's expiration pattern (which could be different).
+**Why it happens:**
+RAG-based generation uses source documents as context. The AI naturally clusters around information-dense paragraphs, generating multiple questions from the same source material. No tracking mechanism prevents over-mining the same source.
 
-**Why it happens:** Each city has different election schedules, term lengths, and rotation patterns. Bloomington may have at-large council elections every 4 years. Los Angeles has a different pattern. Fremont's district-based system (adopted 2017) is relatively recent. Content generators default to "4 year term" assumptions without verifying Fremont-specific rules. The existing expiration sweep cron (`backend/src/cron/expirationSweep.ts`) handles expiration dates, but only if they're set correctly in the first place.
+**Real-world evidence:**
+The codebase loads entire source documents into the generation prompt without tracking which sections have been mined:
+```typescript
+// From generate-locale-questions.ts line 165
+const sourceDocuments = await loadSourceDocuments(dataDir);
+// All sources loaded, no tracking of which paragraphs already generated questions
+```
 
 **Consequences:**
-- **Factually wrong answers after election:** "Who is the current mayor?" shows "Raj Salwan" after a new mayor is elected in November 2026
-- **Premature expiration:** If expiration date is set too early, valid questions get archived before officials actually leave office
-- **Missing expiration dates:** Questions about "current" officials get inserted without expiration dates, creating orphan content that never expires
-- **Quality degradation:** Players encounter outdated civics, undermining the "stay informed" value proposition
-
-**Warning signs:**
-- Questions about "current mayor" or "current council member" inserted without `expirationDate` field
-- Expiration dates set to generic "4 years from now" without verifying Fremont's actual term lengths
-- No documentation of which council districts are up for election in 2026 vs later cycles
-- Source URLs pointing to campaign websites or news articles instead of official city election info
-- Questions asking "Who represents District [X]?" without checking if that district has an election in 2026
+- Questions become interdependent
+- Perceived collection size inflated (10 questions but only 5 source facts)
+- User experience feels repetitive
+- Reduced educational coverage (over-indexing on some topics)
 
 **Prevention:**
-- **Verify Fremont election schedule:** Check official city sources (fremont.gov/government/election-information) for term lengths and rotation schedule BEFORE generating any "current official" questions
-- **Document election cycle:** Create a Fremont-specific reference doc:
-  - Mayor term: [verify length, next election date]
-  - Council district rotation: [which districts up in 2026, 2028, etc.]
-  - Term limits: [if any]
-- **Expiration date formula:** For "current official" questions:
-  - Set expiration to end of term OR next election date, whichever is sooner
-  - Example: If November 2026 election might replace mayor, expire question December 31, 2026 (after election results finalized)
-- **Flag all "current" questions:** Any question containing "current", "who is", "who represents" should trigger expiration date validation in quality checks
-- **Source requirement:** Questions about current officials MUST cite official city government page (fremont.gov/government/mayor-city-council), not news articles or Wikipedia
-- **Pre-launch audit:** Before activating Fremont collection, manually verify all "current official" questions have correct expiration dates
+1. **Source citation tracking:**
+   ```typescript
+   interface SourceUsage {
+     url: string;
+     paragraph: number;
+     timesUsed: number;
+     generatedQuestions: string[]; // external IDs
+   }
 
-**Phase to address:** Content generation setup phase -- document Fremont election schedule BEFORE generating any time-sensitive questions
+   const sourceTracker = new Map<string, SourceUsage>();
 
-**Source confidence:** HIGH -- 2026 election confirmed via [Ballotpedia Fremont 2026](https://ballotpedia.org/City_elections_in_Fremont,_California_(2026)), district structure verified via [Fremont Mayor & City Council](https://www.fremont.gov/government/mayor-city-council), current mayor via [Raj Salwan election news](https://tricityvoice.com/raj-salwan-elected-fremont-mayor/)
+   // Before generation
+   const prompt = `
+   Source usage so far:
+   ${Array.from(sourceTracker.entries())
+     .filter(([_, usage]) => usage.timesUsed > 0)
+     .map(([key, usage]) => `- ${key}: ${usage.timesUsed} questions`)
+     .join('\n')}
+
+   Avoid generating more questions from heavily-used sources.
+   Prefer under-utilized sources.
+   `;
+   ```
+
+2. **Source diversity requirement:**
+   ```typescript
+   // Validation rule
+   function checkSourceDiversity(questions: Question[]): boolean {
+     const sourceCount = new Map<string, number>();
+
+     for (const q of questions) {
+       const url = q.source.url;
+       sourceCount.set(url, (sourceCount.get(url) || 0) + 1);
+     }
+
+     // No more than 20% of questions from any single source
+     const maxFromOneSource = questions.length * 0.2;
+     return Array.from(sourceCount.values()).every(count => count <= maxFromOneSource);
+   }
+   ```
+
+3. **Fact-level deduplication:**
+   Track facts, not just question text:
+   ```typescript
+   interface ExtractedFact {
+     subject: string;
+     predicate: string;
+     object: string;
+     sourceUrl: string;
+     sourceParagraph: number;
+   }
+
+   // Extract facts from generated questions
+   // Flag questions testing facts from the same source paragraph
+   ```
+
+**Detection:**
+- Analytics show clustering in source citations
+- Manual review finds multiple questions with identical source URLs
+- Users report questions feeling "samey" despite different text
+
+**Phase assignment:** Phase 2 (Quality Rules) - Implement after basic generation works
 
 ---
 
-### 5. Partisan Framing Risk: Bay Area Tech Boom Narrative
+### Pitfall 5: AI Hallucination in Factual Content
 
-**What goes wrong:** Fremont's identity as "Silicon Valley's hardware side" (900+ manufacturing companies, Tesla factory, tech boom in 1980s-90s) invites politically loaded framing:
-- **Pro-tech framing:** "Fremont's tech industry drives economic prosperity" (frames tech as unambiguous good)
-- **Anti-gentrification framing:** "Tech boom displaced working-class residents" (frames tech as harmful)
-- **Housing crisis framing:** "How has Fremont's tech growth affected housing affordability?" (loaded question -- assumes negative impact)
+**What goes wrong:**
+The AI generates questions with plausible-sounding but factually incorrect information. In educational content, this is catastrophic:
+- Wrong dates
+- Wrong numbers (e.g., "7 members" instead of "5 members")
+- Non-existent entities
+- Outdated information (pre-training data staleness)
 
-These framings violate the **partisan neutrality** quality rule (advisory level). Civic trivia should explain HOW government works, not advocate for or against specific economic policies. Questions should present factual civic structure, not editorial takes on whether tech growth is good/bad.
+**Why it happens:**
+LLMs are "optimized for fluency, not truth" (source: AI Quality Engineer article). Even with RAG, the model may:
+- Misinterpret source documents
+- Blend facts from multiple sources incorrectly
+- Fill gaps with training data (which may be outdated)
+- Generate confident-sounding falsehoods
 
-**Why it happens:** Bay Area tech boom is inseparable from Fremont's recent history. It's impossible to discuss Warm Springs district, BART expansion, or city budget without touching tech sector. Search results for "Fremont California" include both "Silicon Valley success story" articles and "gentrification displacement" articles. AI generation trained on mixed sources picks up loaded language. Content creators with opinions on Bay Area housing crisis unconsciously frame questions to reflect their views.
+**Real-world evidence:**
+The project uses Claude with RAG but still requires quality validation and retry loops:
+```typescript
+// From quality-validation.ts line 121
+export async function validateAndRetry(
+  questions: ValidatedQuestion[],
+  regenerateFn: RegenerateFn,
+  options: { maxRetries?: number; ... }
+)
+```
 
-**Consequences:**
-- **Quality rule violations:** Questions flagged for partisan framing (advisory severity, but still requires rework)
-- **Resident alienation:** Questions feel politically biased, alienating residents who disagree with framing
-- **Undermines civic utility goal:** Players disengage if quiz feels like it's advocating policy positions
-- **Regeneration churn:** Questions pass structural validation but fail partisan framing review, requiring multiple retries
-
-**Warning signs:**
-- Questions using value-laden terms: "prosperity", "displacement", "threat", "opportunity", "crisis", "success"
-- Questions asking "How has X affected Y?" where X is controversial (tech growth, housing development)
-- Answer options that frame tech/housing as binary good/bad
-- Explanations citing advocacy organizations, op-eds, or think tanks instead of government sources
-- Questions about "problems" or "challenges" facing Fremont (inherently editorial)
-
-**Prevention:**
-- **Neutral framing requirement:** Questions about tech/housing/economy should be descriptive, not evaluative:
-  - ✓ GOOD: "What percentage of Fremont jobs are in advanced manufacturing?" (factual, verifiable)
-  - ✓ GOOD: "When did Fremont's Warm Springs BART station open?" (factual civic infrastructure)
-  - ✗ BAD: "How has tech growth impacted housing affordability in Fremont?" (loaded -- assumes negative impact)
-  - ✗ BAD: "Fremont's tech industry is primarily known for..." (vague qualifier + evaluative framing)
-- **Focus on civic mechanics, not outcomes:** Questions should explain how government responds to economic changes (zoning, housing policy, business licenses) not whether those changes are good/bad
-- **Source restriction:** Economic/housing questions MUST cite official city documents (budget, planning reports, economic development strategy), not news articles or advocacy group reports
-- **Partisan framing checklist in quality review:** Human reviewers explicitly check: "Does this question advocate for or against a policy position?" If yes, reject
-- **Generation prompt guidance:** "Fremont is part of the Bay Area tech ecosystem. Focus on factual civic infrastructure (BART, city departments, manufacturing sector) and government processes (zoning, budgets), not editorial judgments about whether tech growth is positive or negative."
-
-**Phase to address:** Generation prompt design AND human review checklist -- establish neutral framing requirement before generating
-
-**Source confidence:** MEDIUM -- Partisan framing patterns are general content moderation best practices applied to Fremont context. Bay Area tech/housing as contentious topic confirmed via general knowledge and web search results showing mixed narratives.
-
----
-
-### 6. Ethnic Diversity and Civic Participation Assumptions
-
-**What goes wrong:** Fremont has high ethnic diversity, particularly South Asian and Chinese communities. The city has ~230,000 residents. Mayor Raj Salwan is Fremont's first Indian-American elected mayor (2024). Content that defaults to anglicized civic assumptions misses this reality:
-- Questions assuming all civic documents are English-only (Fremont may offer multilingual services)
-- Questions referencing only Western civic traditions (ignoring community organizations, cultural events)
-- Questions about "civic engagement" that don't reflect how immigrant communities participate (community associations, multilingual forums)
-- Names/places in questions that are all anglicized
-
-This doesn't violate quality rules directly, but creates content that feels non-representative. The "civic utility" test includes making ALL residents feel the quiz reflects their civic reality.
-
-**Why it happens:** Existing Bloomington/LA collections may not have the same diversity profile. Content generators trained on those collections replicate patterns. AI generation defaults to majority-culture assumptions unless explicitly prompted otherwise. Content creators unfamiliar with Fremont's demographics don't realize civic participation looks different in diverse communities.
+The audit report shows questions flagged for "ambiguous-answers" and "pure-lookup" violations, indicating the AI doesn't always follow instructions perfectly.
 
 **Consequences:**
-- **Non-representative content:** Questions feel like they're written for one demographic, not the whole city
-- **Missed content opportunities:** Rich civic participation patterns in immigrant communities go uncaptured
-- **Resident disengagement:** South Asian and Chinese residents feel the quiz doesn't reflect their civic experience
-- **Quality rule failures:** "Civic utility" is subjective, but content that excludes large demographics arguably fails to serve civic education mission
-
-**Warning signs:**
-- All example names in questions are anglicized (no South Asian, Chinese, or other ethnic names)
-- No questions about multilingual civic services, translation, or language access
-- No questions about community cultural organizations that play civic roles
-- All "civic engagement" questions reference voting/town halls, none reference community associations or ethnic civic groups
-- Source URLs all in English, no reference to multilingual city resources
+- Users learn incorrect information (worse than no app)
+- Loss of trust in the product
+- Liability risk (educational apps have credibility standards)
+- Expensive correction cycles after deployment
 
 **Prevention:**
-- **Demographic-aware content:** Include questions about:
-  - Multilingual city services (if Fremont offers them -- verify)
-  - Community organizations that bridge city government and ethnic communities
-  - Cultural events that have civic dimension (if any are city-sponsored)
-- **Representative examples:** When questions use example names, vary ethnic backgrounds (not all "John Smith", include South Asian and Chinese names)
-- **Source diversity:** Check if fremont.gov offers multilingual resources and reference them
-- **Civic participation breadth:** "Elections & voting" questions should include various participation modes (community forums, cultural advisory boards) not just voting booth
-- **Human review for representation:** Content reviewers should explicitly ask "Does this question set feel representative of Fremont's demographics?" If all questions feel like they're written for one demographic, flag for rebalancing
+1. **RAG with explicit source grounding:**
+   ```typescript
+   const prompt = `
+   CRITICAL: All facts must come directly from the provided source documents.
 
-**Phase to address:** Locale config design AND generation prompt -- establish demographic awareness before generating
+   For each question you generate:
+   1. Identify the exact paragraph in the source containing the fact
+   2. Quote the relevant sentence in your reasoning
+   3. Generate the question based ONLY on that quoted text
 
-**Source confidence:** MEDIUM -- Fremont demographics (230K residents, ethnic diversity, South Asian/Chinese communities) verified via [Fremont Wikipedia](https://en.wikipedia.org/wiki/Fremont,_California) and [About Fremont](https://www.fremont.gov/about). First Indian-American mayor verified via [Raj Salwan election news](https://tricityvoice.com/raj-salwan-elected-fremont-mayor/). Civic participation patterns are general multicultural civics knowledge applied to Fremont context.
+   If a fact is not in the sources, do NOT generate a question about it.
+   It is better to generate fewer questions than to hallucinate facts.
+   `;
+   ```
+
+2. **Structured fact verification:**
+   ```typescript
+   interface FactCheck {
+     question: string;
+     correctAnswer: string;
+     sourceCitation: string;
+     sourceQuote: string;
+   }
+
+   // Have the AI return this structure
+   // Then programmatically verify the source quote contains the answer
+   function verifyFactCheck(check: FactCheck, sources: string[]): boolean {
+     const sourceDoc = findSourceByUrl(check.sourceCitation, sources);
+     if (!sourceDoc) return false;
+
+     return sourceDoc.includes(check.sourceQuote) &&
+            check.sourceQuote.includes(check.correctAnswer);
+   }
+   ```
+
+3. **Human-in-the-loop for high-stakes content:**
+   ```typescript
+   // Flag questions for human review based on risk
+   if (question.difficulty === 'hard' ||
+       question.topicCategory === 'elections-voting' ||
+       !question.source.url.endsWith('.gov')) {
+     flagForHumanReview(question);
+   }
+   ```
+
+4. **Programmatic fact checking against trusted APIs:**
+   For verifiable facts (population, dates, officeholder names), check against authoritative APIs:
+   ```typescript
+   // Example: Verify population numbers
+   async function verifyPopulationClaim(question: Question): Promise<boolean> {
+     if (!question.text.includes('population')) return true;
+
+     const censusApi = `https://api.census.gov/data/...`;
+     const officialNumber = await fetchFromCensusAPI(censusApi);
+     const questionNumber = extractNumber(question.options[question.correctAnswer]);
+
+     return Math.abs(officialNumber - questionNumber) / officialNumber < 0.05; // 5% tolerance
+   }
+   ```
+
+**Detection:**
+- Quality validation failures spike
+- User reports of incorrect information
+- Subject matter expert review finds factual errors
+- Comparison with official sources reveals discrepancies
+
+**Phase assignment:** Phase 2 (Quality Rules) - Critical for educational content
+
+**Sources:**
+- [AI Hallucination Testing in 2026](https://medium.com/ai-in-quality-assurance/ai-hallucination-testing-in-2026-how-qa-engineers-detect-confidently-wrong-ai-answers-cb978ec6cc26)
+- [HKS Misinformation Review: Conceptual Framework for AI Hallucinations](https://misinforeview.hks.harvard.edu/article/new-sources-of-inaccuracy-a-conceptual-framework-for-studying-ai-hallucinations/)
+- [Addressing AI Hallucinations and Bias](https://mitsloanedtech.mit.edu/ai/basics/addressing-ai-hallucinations-and-bias/)
 
 ---
 
 ## Moderate Pitfalls
 
-Mistakes that cause delays, rework, or content quality issues (not critical failures).
+These mistakes cause delays, technical debt, or require significant rework.
 
-### 7. City Council Election System Change: Pre-2017 vs Post-2017
+### Pitfall 6: Batch Generation Without Intra-Batch Deduplication
 
-**What goes wrong:** Fremont switched from **at-large city council elections** to **district-based elections** on June 13, 2017. Historical questions about city council structure before 2017 have different correct answers than questions about current structure:
-- **Before 2017:** All council members elected city-wide (at-large)
-- **After 2017:** 6 council members elected by district, mayor elected city-wide
+**What goes wrong:**
+When generating questions in batches (e.g., 10 questions per API call), duplicates appear within the same batch. The AI generates questions sequentially and may repeat similar concepts:
+- Questions 3 and 8 in the same batch both ask about the same topic
+- No deduplication happens until AFTER the batch completes
 
-Questions asking "How are Fremont city council members elected?" must specify timeframe. Questions that don't specify default to "current" (post-2017 district-based system). But if a question cites a source from 2016 or earlier, it might describe the at-large system and create factual contradiction.
+**Why it happens:**
+Most deduplication systems run after generation completes. During generation, each question is independent, and the AI doesn't "remember" what it generated earlier in the batch (unless using explicit tracking).
 
-**Why it happens:** Historical sources (pre-2017 city documents, Wikipedia historical sections, news archives) describe the old at-large system. Current sources describe district-based system. Content generators pulling from mixed sources without checking publication dates produce questions with ambiguous or contradictory content.
+**Real-world evidence:**
+The codebase checks duplicates AFTER generation:
+```typescript
+// From generate-locale-questions.ts line 497
+const validationResult = await validateAndRetry(batchResult.questions, regenerateFn, {
+  maxRetries: 3,
+  skipUrlCheck: true,
+  duplicateDetector,
+});
+// Deduplication happens after generation, not during
+```
 
 **Consequences:**
-- **Factually ambiguous questions:** "How are city council members elected?" could mean at-large (pre-2017) or by district (post-2017)
-- **Quality rule violations:** Multiple answers could be correct depending on time period
-- **Wasted generation budget:** Questions generated, flagged for ambiguity, regenerated
-- **Resident confusion:** Long-time residents remember at-large elections; new residents only know district-based
-
-**Warning signs:**
-- Questions about city council election process without specifying "current" or "as of 2017"
-- Source URLs pointing to city documents dated before 2017
-- Answer options including both "at-large" and "by district" without timeframe clarity
-- Explanations citing sources from different eras without acknowledging system change
+- Wasted API calls generating duplicates
+- Lower first-pass success rate
+- Higher retry counts
+- Increased generation costs and time
 
 **Prevention:**
-- **Explicit timeframe for election questions:** Any question about city council elections should specify:
-  - "Under Fremont's CURRENT district-based system (adopted 2017)..."
-  - "Before 2017, how were Fremont city council members elected?" (historical question)
-- **Source date verification:** Flag any election-related question citing sources older than 2018 for human review
-- **Locale config documentation:** Add note in Fremont config: "City adopted district-based elections June 13, 2017 (previously at-large). Election questions must specify current vs historical system."
-- **Generation prompt guidance:** "Fremont switched to district-based city council elections in 2017. Current election questions should reference the 6-district system. Avoid questions that could be ambiguous about timeframe."
-- **Quality rule enforcement:** Any question containing "city council" + "elected" should trigger timeframe validation
+1. **Progressive deduplication during generation:**
+   ```typescript
+   // Instead of generating all 10 at once, generate iteratively
+   const batchSize = 10;
+   const questions = [];
 
-**Phase to address:** Generation prompt design -- include election system change note before generating
+   for (let i = 0; i < batchSize; i++) {
+     const prompt = `
+     Generate 1 question.
 
-**Source confidence:** HIGH -- District-based system adoption (June 13, 2017) verified via [Ballotpedia Fremont](https://ballotpedia.org/Fremont,_California) and [Fremont City Council District Maps](https://patch.com/california/fremont/fremont-city-council-approves-district-maps)
+     Already generated in this batch:
+     ${questions.map(q => `- ${q.text}`).join('\n')}
+
+     Do NOT generate a question similar to any of these.
+     `;
+
+     const newQuestion = await generateSingleQuestion(prompt);
+
+     // Check against batch so far
+     const isDuplicate = duplicateDetector.check(newQuestion);
+     if (!isDuplicate.passed) {
+       i--; // Retry this slot
+       continue;
+     }
+
+     questions.push(newQuestion);
+     duplicateDetector.add(newQuestion);
+   }
+   ```
+
+2. **Batch-aware prompting:**
+   ```typescript
+   const prompt = `
+   Generate ${batchSize} questions about ${topic}.
+
+   CRITICAL: All ${batchSize} questions must be about DIFFERENT aspects of ${topic}.
+   Do not generate multiple questions about the same fact.
+
+   Think of ${batchSize} distinct sub-topics within ${topic} first, then generate one question per sub-topic.
+   `;
+   ```
+
+3. **Post-generation dedup with smart replacement:**
+   ```typescript
+   // After batch generation
+   const deduplicated = removeDuplicatesFromBatch(batchResult.questions);
+   const missingCount = batchSize - deduplicated.length;
+
+   if (missingCount > 0) {
+     // Generate replacements with anti-patterns
+     const antiPatterns = deduplicated.map(q => q.text);
+     const replacements = await generateReplacements(missingCount, antiPatterns);
+     deduplicated.push(...replacements);
+   }
+   ```
+
+**Detection:**
+- Validation reports show duplicates within the same batch
+- High retry counts in generation logs
+- API costs higher than expected for delivered question count
+
+**Phase assignment:** Phase 3 (Generation Optimization) - After basic pipeline works
 
 ---
 
-### 8. Niles Film History: Interesting but Low Civic Utility
+### Pitfall 7: Prompt Drift Across Generation Runs
 
-**What goes wrong:** Niles district was the **birthplace of the American film industry** in the early 1900s. Charlie Chaplin filmed several movies in Niles, including "The Tramp." The Essanay Film Manufacturing Company operated there. This is fascinating local history and a point of pride. BUT: most film history facts fail the **civic utility test** ("Does this make you a more informed citizen?"):
-- "In what year did Charlie Chaplin film The Tramp in Niles?" (date lookup, not civic)
-- "What was the name of the film company that operated in Niles?" (Essanay -- name lookup, not civic)
-- "How many silent films were made in Niles?" (number lookup, not civic)
+**What goes wrong:**
+Quality and style vary between generation runs. Questions generated in week 1 have different characteristics than week 4:
+- Difficulty distribution changes
+- Topic distribution drifts
+- Quality rule violations increase over time
+- Style becomes inconsistent
 
-These questions pass the **dinner party test** (interesting trivia) but fail **civic utility** (don't help you understand government or participate civically). The existing quality philosophy prioritizes civic utility over "fun facts."
-
-**Why it happens:** Niles film history is prominent in Fremont tourism materials, Wikipedia, and local pride narratives. Content generators see "interesting local history" and produce questions. The film connection is unique to Fremont (unlike generic city government structures) so it feels like valuable content. But civic trivia game prioritizes civics over general local trivia.
+**Why it happens:**
+Prompts evolve iteratively as issues are discovered. Patches and adjustments accumulate without systematic testing. Different engineers run generation with slightly different configurations. No version control for prompts or generation configurations.
 
 **Consequences:**
-- **Quality rule failures:** Questions that pass "dinner party test" but fail "civic utility"
-- **Scope creep:** If film history is included, other non-civic local trivia becomes defensible ("Why did we exclude X when we included film history?")
-- **Wasted generation budget:** Film questions generated, flagged, regenerated with civic angle, still fail
-- **Resident confusion about quiz purpose:** Is this a civics quiz or a "Fremont fun facts" quiz?
-
-**Warning signs:**
-- Questions about film industry, Charlie Chaplin, Essanay, silent films, movie production
-- Answer options with early 1900s dates (film industry era) but no civic connection
-- Explanations citing film history sources (Essanay Silent Film Museum, film history sites) instead of city government sources
-- Topic categorization as "landmarks-culture" when content is entertainment history, not civic culture
+- Inconsistent user experience across collection updates
+- Quality metrics unstable
+- Difficult to diagnose issues ("was this generated with the old prompt or new?")
+- Regression in quality after prompt "improvements"
 
 **Prevention:**
-- **Civic angle requirement:** If including Niles film history, require civic connection:
-  - ✓ GOOD: "The Niles Essanay Silent Film Museum is operated by which type of organization?" (understanding civic vs non-profit entities)
-  - ✓ GOOD: "How does Fremont's city government preserve historic film sites in the Niles district?" (historic preservation as civic function)
-  - ✗ BAD: "What silent film did Charlie Chaplin make in Niles in 1915?" (pure entertainment trivia)
-- **Topic category restriction:** Film history questions ONLY in `civic-history` topic IF they have clear civic angle (historic preservation, cultural district designation, city museum support). NOT in `landmarks-culture` as "fun facts"
-- **Quality review filter:** Flag all questions containing "Chaplin", "film", "Essanay", "movie" for human review to verify civic angle
-- **Generation prompt explicit guidance:** "Niles district has famous film industry history (Chaplin, Essanay). This is interesting but avoid pure entertainment trivia. Only include if there's a civic angle: historic preservation, city cultural programs, or understanding Niles district identity."
-- **Alternative focus:** Instead of film trivia, focus on **how Fremont preserves historic districts** (civic process) with Niles as an example
+1. **Prompt versioning:**
+   ```typescript
+   interface PromptVersion {
+     version: string;
+     systemPrompt: string;
+     userPromptTemplate: string;
+     qualityGuidelines: string;
+     effectiveDate: Date;
+   }
 
-**Phase to address:** Generation prompt design AND quality review checklist -- establish civic angle requirement before generating
+   const CURRENT_PROMPT_VERSION = 'v2.1';
 
-**Source confidence:** HIGH -- Niles film history verified via [Fremont History](https://www.fremont.gov/about/history) and [Famous People from Fremont](https://playback.fm/born-in-city/fremont-ca) referencing Charlie Chaplin. Civic utility test confirmed via existing quality guidelines at `C:/Project Test/backend/src/scripts/content-generation/prompts/quality-guidelines.ts`
+   // Store in generation report
+   report.promptVersion = CURRENT_PROMPT_VERSION;
+   ```
+
+2. **Golden set testing:**
+   ```typescript
+   // Before deploying a new prompt version
+   const goldenSet = [
+     { topic: 'city-government', expectedDifficulty: 'medium', expectedCount: 5 },
+     { topic: 'elections-voting', expectedDifficulty: 'easy', expectedCount: 5 },
+   ];
+
+   async function testPromptAgainstGoldenSet(promptVersion: PromptVersion): Promise<TestResults> {
+     const results = [];
+
+     for (const test of goldenSet) {
+       const questions = await generateWithPrompt(promptVersion, test);
+       const actualDifficulty = analyzeDistribution(questions, 'difficulty');
+       const passesTest = validateDistribution(actualDifficulty, test.expectedDifficulty);
+       results.push({ test, passed: passesTest });
+     }
+
+     return results;
+   }
+   ```
+
+3. **Configuration lockfiles:**
+   ```typescript
+   // generation-config.lock.json
+   {
+     "version": "2.1",
+     "modelId": "claude-sonnet-4-5",
+     "temperature": 0,
+     "maxRetries": 3,
+     "batchSize": 10,
+     "promptVersion": "v2.1",
+     "qualityRulesVersion": "1.0",
+     "sha256": "abc123..." // Hash of all configs
+   }
+
+   // Verify before running
+   if (currentConfigHash !== lockedConfigHash) {
+     throw new Error('Configuration drift detected. Update lockfile after testing.');
+   }
+   ```
+
+**Detection:**
+- Quality metrics show temporal patterns (spike in violations after certain date)
+- Difficulty distribution changes over time
+- User feedback differs for content generated in different periods
+
+**Phase assignment:** Phase 3 (Generation Optimization) - Implement after several generation runs
 
 ---
 
-### 9. Budget/Fiscal Year Timeline: Fremont-Specific Schedule
+### Pitfall 8: RAG Context Window Degradation
 
-**What goes wrong:** Different cities have different budget processes and fiscal year calendars. Bloomington and LA have their own schedules. Fremont has a specific budget timeline:
-- **Mid-year report:** March (Fiscal Year 2025/26 mid-year presented March 2026)
-- **Proposed budget presented:** May
-- **Public hearing:** Early June
-- **Budget adoption:** Early June (FY 2025/26 adopted June 10, 2025)
+**What goes wrong:**
+As source documents grow, generation quality paradoxically decreases. The AI has more information but produces worse questions:
+- Hallucinations increase
+- Questions become vaguer
+- Source citations become less accurate
+- Generation cost increases without quality improvement
 
-Questions about "When does Fremont adopt its annual budget?" need the correct answer ("Early June"). If content generators copy Bloomington's budget timeline or default to federal fiscal year (Oct 1-Sep 30), they'll produce wrong answers.
+**Why it happens:**
+"In extremely long prompts, the model may lose focus or misinterpret earlier content" (source: RAG optimization research). The "lost in the middle" phenomenon: models struggle to use information from the middle of very long contexts. RAG becomes a ["noisy"](https://www.infoworld.com/article/4108159/how-to-build-rag-at-scale.html) retrieval system at scale.
 
-**Why it happens:** Budget timelines are not standardized across cities. Content generators assume "fiscal year" means the same thing everywhere or default to federal fiscal year. Source documents may reference "Fiscal Year 2025/26" without explicitly stating when it begins/ends. AI generation fills gaps with federal defaults.
+**Real-world evidence:**
+The codebase loads ALL source documents into every generation prompt:
+```typescript
+// From generate-locale-questions.ts line 164
+if (sourceDocuments.length > 0) {
+  const sourceContent: ContentBlockParam[] = [
+    {
+      type: 'text',
+      text: `Here are the authoritative source documents for ${config.name}. Use these to ensure factual accuracy:\n\n`,
+    },
+    ...sourceDocuments.map((doc, idx) => ({
+      type: 'text' as const,
+      text: doc,
+      // All sources loaded, regardless of topic relevance
+    })),
+  ];
+}
+```
+
+This works for small source sets but will degrade as more sources are added.
 
 **Consequences:**
-- **Factually wrong answers:** "When does Fremont's fiscal year begin?" shows wrong month
-- **Time-sensitive questions without expiration:** "What is Fremont's current fiscal year budget total?" needs expiration date when new budget is adopted (each June)
-- **Missed civic education:** Understanding city budget process is core civic knowledge, but wrong timeline misinforms residents
-
-**Warning signs:**
-- Questions asking "When does Fremont adopt its annual budget?" with answers other than "Early June"
-- References to "fiscal year" without specifying Fremont's specific FY calendar
-- Budget total questions without expiration dates (budget changes annually)
-- Source URLs pointing to state or federal budget sources instead of Fremont city budget documents
+- Declining quality metrics as content scales
+- Increased hallucination rate
+- Higher API costs (processing unused context)
+- Slower generation times
 
 **Prevention:**
-- **Verify Fremont fiscal year:** Check fremont.gov/government/financial-reports for current FY dates and adoption schedule BEFORE generating budget questions
-- **Document budget timeline:** Add to Fremont locale config reference:
-  - Fiscal year: [start/end dates]
-  - Budget adoption: [month/typical date]
-  - Mid-year review: [month]
-- **Expiration dates for budget amounts:** Any question asking "What is Fremont's FY 2025/26 budget?" should expire June 2026 (when FY 2026/27 is adopted)
-- **Source requirement:** Budget questions MUST cite fremont.gov budget documents or city council meeting minutes, not generic budget sources
-- **Quality review for budget questions:** All questions containing "fiscal year", "budget", "revenue", "spending" should be flagged for Fremont-specific timeline verification
+1. **Topic-filtered RAG:**
+   ```typescript
+   // Instead of loading all sources, filter by topic
+   async function getRelevantSources(
+     topic: string,
+     allSources: SourceDocument[]
+   ): Promise<SourceDocument[]> {
+     const topicEmbedding = await embedText(topic);
 
-**Phase to address:** Content generation setup phase -- document Fremont budget calendar BEFORE generating budget questions
+     const scoredSources = allSources.map(source => ({
+       source,
+       relevance: cosineSimilarity(topicEmbedding, source.embedding)
+     }));
 
-**Source confidence:** HIGH -- Fremont budget timeline (May presentation, early June adoption) verified via [Fremont FY 2025/26 Budget Message](https://www.fremont.gov/Home/Components/News/News/1320/1067) and [Budget Approval News](https://www.fremont.gov/Home/Components/News/News/1665/1067)
+     // Top 5 most relevant sources
+     return scoredSources
+       .sort((a, b) => b.relevance - a.relevance)
+       .slice(0, 5)
+       .map(s => s.source);
+   }
+
+   // Use in generation
+   const relevantSources = await getRelevantSources(
+     config.topicCategories[topic].description,
+     allSourceDocuments
+   );
+   ```
+
+2. **Chunked RAG with re-ranking:**
+   ```typescript
+   // Break sources into chunks, retrieve most relevant chunks
+   const chunks = await chunkSourceDocuments(allSources, { chunkSize: 500 });
+   const query = `Generate questions about ${topic}`;
+   const relevantChunks = await retrieveRelevantChunks(query, chunks, { topK: 10 });
+
+   // Only use top-ranked chunks in generation prompt
+   ```
+
+3. **Context window budgeting:**
+   ```typescript
+   const MAX_CONTEXT_TOKENS = 50000; // Reserve space for generation
+
+   let currentTokens = 0;
+   const includedSources = [];
+
+   for (const source of rankedSources) {
+     const sourceTokens = estimateTokens(source.content);
+     if (currentTokens + sourceTokens > MAX_CONTEXT_TOKENS) break;
+
+     includedSources.push(source);
+     currentTokens += sourceTokens;
+   }
+   ```
+
+4. **Source rotation strategy:**
+   ```typescript
+   // Don't use same sources repeatedly
+   const sourceUsageCount = new Map<string, number>();
+
+   function selectSourcesForBatch(
+     topic: string,
+     allSources: SourceDocument[]
+   ): SourceDocument[] {
+     const candidates = allSources.filter(s => s.topics.includes(topic));
+
+     // Prioritize least-used sources
+     const sorted = candidates.sort((a, b) => {
+       const usageA = sourceUsageCount.get(a.url) || 0;
+       const usageB = sourceUsageCount.get(b.url) || 0;
+       return usageA - usageB;
+     });
+
+     const selected = sorted.slice(0, 5);
+     selected.forEach(s => {
+       sourceUsageCount.set(s.url, (sourceUsageCount.get(s.url) || 0) + 1);
+     });
+
+     return selected;
+   }
+   ```
+
+**Detection:**
+- Quality metrics decline as source document count increases
+- Generation reports show increasing context sizes
+- API costs increase disproportionately to output quality
+- Hallucination rate increases
+
+**Phase assignment:** Phase 4 (Scaling & Performance) - Address when source count grows
+
+**Sources:**
+- [How to Optimize RAG Context Windows for Smarter Retrieval](https://medium.com/@ai.nishikant/how-to-optimize-rag-context-windows-b26859f03b2d)
+- [Debugging RAG Pipelines: Identifying Issues in Retrieval-Augmented Generation](https://www.getmaxim.ai/articles/rag-debugging-identifying-issues-in-retrieval-augmented-generation/)
+- [Seven Failure Points When Engineering a Retrieval Augmented Generation System](https://arxiv.org/html/2401.05856v1)
+
+---
+
+### Pitfall 9: Quality Degradation in High-Volume Generation
+
+**What goes wrong:**
+When scaling from 100 questions to 1000+ questions, quality metrics decline:
+- Pass rate on first attempt drops
+- Retry counts increase
+- Novel violation types emerge
+- Harder to maintain consistency
+
+**Why it happens:**
+"Quality degradation risks increase with extremely high volumes, with even sophisticated AI systems experiencing diminishing quality returns when pushed to generate thousands of unique variations" (source: AI Data Quality research). Statistical likelihood of edge cases and violations increases. Topic coverage becomes sparse (many topics with few questions each). AI starts generating more generic or repetitive content to fill quotas.
+
+**Real-world evidence:**
+The project targets 90+ questions per collection across 6 collections (540+ total). At this scale, maintaining uniqueness and quality becomes exponentially harder.
+
+**Consequences:**
+- Quality metrics unreliable at scale
+- Manual review burden increases
+- User experience degradation in later-generated content
+- Project timelines slip due to rework
+
+**Prevention:**
+1. **Quality-over-quantity with overshoot:**
+   ```typescript
+   // Generate 1.3x target, then filter to best quality
+   const targetQuestions = 90;
+   const overshoots = Math.ceil(targetQuestions * 1.3); // 117 questions
+
+   const allGenerated = await generateQuestions(overshoot);
+   const scored = allGenerated.map(q => ({
+     question: q,
+     qualityScore: calculateQualityScore(q)
+   }));
+
+   // Take top 90 by quality score
+   const final = scored
+     .sort((a, b) => b.qualityScore - a.qualityScore)
+     .slice(0, targetQuestions)
+     .map(s => s.question);
+   ```
+
+2. **Difficulty-aware generation:**
+   ```typescript
+   // Generate in multiple passes with different difficulty targets
+   const easyQuestions = await generateQuestions({
+     count: 30,
+     difficulty: 'easy',
+     complexityConstraint: 'low'
+   });
+
+   const mediumQuestions = await generateQuestions({
+     count: 40,
+     difficulty: 'medium',
+     complexityConstraint: 'medium',
+     existingQuestions: easyQuestions // Avoid duplication
+   });
+
+   const hardQuestions = await generateQuestions({
+     count: 20,
+     difficulty: 'hard',
+     complexityConstraint: 'high',
+     existingQuestions: [...easyQuestions, ...mediumQuestions]
+   });
+   ```
+
+3. **Quality sampling and early stopping:**
+   ```typescript
+   // Monitor quality during generation
+   const qualityThreshold = 0.85; // 85% first-pass success
+
+   let generatedCount = 0;
+   let passedCount = 0;
+
+   while (passedCount < targetQuestions) {
+     const batch = await generateBatch(batchSize);
+     generatedCount += batch.length;
+
+     const validated = await validateBatch(batch);
+     passedCount += validated.passed.length;
+
+     const currentSuccessRate = passedCount / generatedCount;
+
+     if (currentSuccessRate < qualityThreshold && generatedCount > 50) {
+       console.warn('Quality below threshold. Stopping to review.');
+       break; // Don't waste more API calls with poor-quality generation
+     }
+   }
+   ```
+
+4. **Topic distribution enforcement:**
+   ```typescript
+   // Ensure even distribution, not topic clustering
+   interface TopicQuota {
+     slug: string;
+     target: number;
+     generated: number;
+   }
+
+   const quotas: TopicQuota[] = Object.entries(config.topicDistribution)
+     .map(([slug, target]) => ({ slug, target, generated: 0 }));
+
+   // Generate until all quotas filled
+   while (quotas.some(q => q.generated < q.target)) {
+     const needsMore = quotas.filter(q => q.generated < q.target);
+     const topic = selectLeastGeneratedTopic(needsMore);
+
+     const question = await generateForTopic(topic);
+     topic.generated++;
+   }
+   ```
+
+**Detection:**
+- Success rate declining in later batches
+- Quality reports show worsening metrics over time
+- Topic distribution becomes uneven
+- User feedback quality declines for later-added questions
+
+**Phase assignment:** Phase 4 (Scaling & Performance) - Critical for reaching 90+ per collection
+
+**Sources:**
+- [AI Data Quality in 2026: Challenges & Best Practices](https://research.aimultiple.com/data-quality-ai/)
+- [How do AI content generation tools handle bulk content creation?](https://storyteq.com/blog/how-do-ai-content-generation-tools-handle-bulk-content-creation/)
+
+---
+
+### Pitfall 10: Database State Inconsistency During Migration
+
+**What goes wrong:**
+When retrofitting deduplication to existing systems, the database contains:
+- Active duplicates already in production
+- Questions with different status values (draft, active, archived)
+- Missing metadata (e.g., generation_version)
+- Orphaned records after deduplication
+
+Manual updates to fix these issues cause race conditions and data integrity violations.
+
+**Why it happens:**
+Production systems weren't designed for deduplication from the start. No migration strategy for handling existing duplicates. Scripts make assumptions about data state that don't hold in production. Manual interventions bypass validation.
+
+**Real-world evidence:**
+Git status shows extensive manual editing of data files:
+```
+M backend/src/data/bloomington-in-questions.json
+M backend/src/data/fremont-ca-questions.json
+M backend/src/data/los-angeles-ca-questions.json
+M backend/src/data/questions.json
+```
+
+Multiple ad-hoc scripts created to handle edge cases:
+```
+?? backend/src/scripts/check-db-duplicates.ts
+?? backend/src/scripts/archive-db-duplicates.ts
+?? backend/src/scripts/remove-duplicate-questions.ts
+?? backend/src/scripts/verify-no-active-dups.ts
+```
+
+**Consequences:**
+- Data integrity violations
+- Race conditions during updates
+- Production outages
+- Manual cleanup required
+- User-facing bugs (questions disappear mid-game)
+
+**Prevention:**
+1. **Idempotent migration scripts:**
+   ```typescript
+   // Migration script that can run multiple times safely
+   async function deduplicateCollection(collectionId: number) {
+     return db.transaction(async (tx) => {
+       // 1. Find duplicates
+       const duplicates = await findDuplicatesInCollection(tx, collectionId);
+
+       // 2. Determine canonical version (keep earliest created)
+       const toArchive = duplicates.filter(d => !d.isCanonical);
+
+       // 3. Archive duplicates atomically
+       await tx
+         .update(questions)
+         .set({
+           status: 'archived',
+           archivedReason: 'duplicate',
+           archivedAt: new Date()
+         })
+         .where(inArray(questions.id, toArchive.map(d => d.id)));
+
+       // 4. Log for audit trail
+       await tx.insert(migrationLogs).values({
+         operation: 'deduplicate',
+         collectionId,
+         affectedQuestions: toArchive.length,
+         timestamp: new Date()
+       });
+     });
+   }
+
+   // Can run multiple times - archived questions stay archived
+   ```
+
+2. **Two-phase migration:**
+   ```typescript
+   // Phase 1: Mark for archival (safe, reversible)
+   await markDuplicatesForArchival(collectionId);
+
+   // Manual review period
+   console.log('Review marked questions at /admin/review-duplicates');
+   console.log('Run Phase 2 when ready: npm run migrate:archive-confirmed');
+
+   // Phase 2: Actually archive after review
+   await archiveConfirmedDuplicates(collectionId);
+   ```
+
+3. **Dry-run mode for all scripts:**
+   ```typescript
+   const DRY_RUN = process.env.DRY_RUN === 'true';
+
+   if (DRY_RUN) {
+     console.log('[DRY RUN] Would archive questions:', toArchive);
+     console.log('[DRY RUN] No database changes made');
+     return;
+   }
+
+   // Actual changes only if not dry run
+   await tx.update(questions).set({ status: 'archived' })...
+   ```
+
+4. **Status field constraints:**
+   ```typescript
+   // In schema
+   status: text('status', { enum: ['draft', 'active', 'archived'] })
+     .notNull()
+     .default('draft'),
+
+   // Status transitions
+   const VALID_TRANSITIONS = {
+     draft: ['active', 'archived'],
+     active: ['archived'],
+     archived: [] // Terminal state
+   };
+
+   async function updateQuestionStatus(
+     questionId: number,
+     newStatus: QuestionStatus
+   ) {
+     const current = await getQuestionStatus(questionId);
+
+     if (!VALID_TRANSITIONS[current].includes(newStatus)) {
+       throw new Error(`Invalid status transition: ${current} -> ${newStatus}`);
+     }
+
+     await db
+       .update(questions)
+       .set({ status: newStatus })
+       .where(eq(questions.id, questionId));
+   }
+   ```
+
+**Detection:**
+- Database constraint violations in logs
+- Questions appearing/disappearing from collections
+- Duplicate active questions found by check scripts
+- Manual data fixes required repeatedly
+
+**Phase assignment:** Phase 1 (Dedup Architecture) - Critical for production system
 
 ---
 
 ## Minor Pitfalls
 
-Mistakes that cause minor issues but are easily fixable.
+These issues cause annoyance but are fixable without major rework.
 
-### 10. Sister City Partnerships: Unknown or Missing Information
+### Pitfall 11: Missing Generation Metadata
 
-**What goes wrong:** Many cities have "sister city" international partnerships (cultural/economic exchange programs). Questions about "Which city is Fremont's sister city?" are common civic trivia. BUT: Research did not find specific information about Fremont's current sister city partnerships as of 2026. The information may exist but wasn't in accessible sources.
+**What goes wrong:**
+Generated questions lack metadata for debugging and auditing:
+- No timestamp of generation
+- No model version used
+- No prompt version
+- No cost tracking
 
-If content generators assume Fremont has sister cities (because many cities do) and produce questions without verifying, they create factually wrong content. If Fremont doesn't have active sister city partnerships, questions become unanswerable.
-
-**Why it happens:** Sister city questions are common civic trivia templates. Content generators fill the template with guessed/assumed partnerships. Official city websites sometimes don't prominently list sister cities. Wikipedia may be outdated. AI generation hallucinates sister city relationships based on similar cities.
-
-**Consequences:**
-- **Factually wrong questions:** "Which city in Japan is Fremont's sister city?" when Fremont may not have a Japanese sister city
-- **Quality rule violations:** Questions with no verifiable correct answer
-- **Regeneration churn:** Questions flagged for unverifiable facts, regenerated, still fail
-
-**Warning signs:**
-- Questions about "sister city" without citing fremont.gov official source
-- Answer options listing cities that aren't verified sister cities
-- Explanations citing general sister city program info instead of Fremont-specific partnerships
-- Source URLs pointing to Sister Cities International general site, not Fremont's specific partnerships
+When quality issues emerge weeks later, impossible to correlate with generation conditions.
 
 **Prevention:**
-- **Verify before generating:** Check fremont.gov and official city documents for confirmed sister city partnerships BEFORE generating any sister city questions
-- **Skip if not found:** If sister city info is not readily available from official sources, SKIP this topic entirely. It's not core civic knowledge
-- **Alternative international connection questions:** If Fremont doesn't have prominent sister cities, focus on other international connections:
-  - "Fremont's high ethnic diversity includes residents from which regions?" (demographic civic knowledge)
-  - "What languages are spoken in Fremont's multilingual communities?" (understanding civic diversity)
-- **Source requirement:** Sister city questions MUST cite official city page or city council resolution establishing partnership
-- **Quality review flag:** Any question containing "sister city" should be flagged for verification of official partnership
+Add comprehensive metadata to each question:
+```typescript
+interface QuestionMetadata {
+  generatedAt: Date;
+  modelId: string;
+  promptVersion: string;
+  batchId: string;
+  generationCostUsd: number;
+  retryCount: number;
+  qualityScore: number;
+}
+```
 
-**Phase to address:** Content generation setup phase -- verify sister city partnerships (or lack thereof) before generating
-
-**Source confidence:** LOW -- Web search found general California sister city info but no Fremont-specific partnerships. This is a known gap that needs official source verification before generating content.
+**Phase assignment:** Phase 3 (Generation Optimization)
 
 ---
 
-### 11. Ohlone People and Indigenous History: Sensitivity and Accuracy
+### Pitfall 12: Hardcoded API Keys
 
-**What goes wrong:** The Ohlone people lived in the Fremont area for countless generations before Spanish colonization. Mission San Jose (1797) was built on Ohlone land. The Ohlone were converted to Christianity, their culture disrupted. This is important civic history. BUT: Indigenous history questions risk:
-- **Factual errors:** Overgeneralizing "the Ohlone" (there were multiple Ohlone groups with different languages/customs)
-- **Insensitive framing:** Presenting Spanish mission as "founding" without acknowledging displacement
-- **Past-tense erasure:** Describing Ohlone in past tense ("lived") when Ohlone descendants are alive today
-- **Romanticizing:** "Noble savage" tropes, overly simplistic descriptions
-
-**Why it happens:** Indigenous history is complex and poorly documented in many civic sources. AI generation trained on general knowledge may replicate outdated or insensitive framings. Content generators without Indigenous history expertise make well-intentioned mistakes. Sources may use past tense or overgeneralize.
-
-**Consequences:**
-- **Resident/community backlash:** Insensitive or inaccurate Indigenous history questions offend Ohlone community and allies
-- **Factual errors:** Questions that overgeneralize or use outdated terminology
-- **Quality rule violations:** Questions that are factually inaccurate or use loaded language
-- **Undermines civic education mission:** Getting Indigenous history wrong damages credibility
-
-**Warning signs:**
-- Questions using past tense exclusively ("The Ohlone lived...") without acknowledging present-day descendants
-- Questions describing Mission San Jose founding without acknowledging Ohlone displacement
-- Questions overgeneralizing "the Ohlone" without noting linguistic/cultural diversity
-- Romanticizing language ("peaceful", "in harmony with nature") instead of factual description
-- Source URLs not including Indigenous-authored or -reviewed sources
+**What goes wrong:**
+API keys in scripts or config files get committed to git. Security risk and makes key rotation difficult.
 
 **Prevention:**
-- **Sensitive framing requirement:** Indigenous history questions should:
-  - Acknowledge Ohlone presence before colonization ("The Ohlone people lived in what is now Fremont for thousands of years...")
-  - Use present-tense for ongoing cultural presence ("Ohlone descendants continue to...")
-  - Avoid romanticizing; use factual description of lifestyle (hunting, gathering, village structures)
-  - Acknowledge colonization impact when discussing Mission San Jose
-- **Source quality:** Prefer sources that include Indigenous perspectives (if available) or academic sources over general civic sources
-- **Limit scope:** Focus on verifiable civic history facts (Ohlone presence before colonization, Mission San Jose timeline, acknowledgment of land) rather than detailed cultural descriptions where errors are more likely
-- **Human review requirement:** ALL questions about Ohlone or Indigenous history should be flagged for human review by someone with Indigenous history knowledge
-- **Alternative framing for Mission San Jose:** Instead of "When was Mission San Jose founded?" (celebrating colonization), ask "What was present in the Fremont area before Mission San Jose was established?" (acknowledging prior presence)
+Environment variables for all secrets:
+```typescript
+if (!process.env.ANTHROPIC_API_KEY) {
+  throw new Error('ANTHROPIC_API_KEY environment variable not set');
+}
+```
 
-**Phase to address:** Generation prompt design AND mandatory human review for Indigenous content
-
-**Source confidence:** MEDIUM -- Ohlone presence and Mission San Jose history verified via [Mission San José Wikipedia](https://en.wikipedia.org/wiki/Mission_San_José_(California)) and [Fremont History](https://www.fremont.gov/about/history). Sensitivity guidance is general Indigenous history best practices applied to Fremont context.
+**Phase assignment:** Phase 0 (Setup) - Before any generation
 
 ---
 
-### 12. External ID Prefix Convention: State vs City
+### Pitfall 13: No Cost Monitoring
 
-**What goes wrong:** Existing collections use external ID prefixes:
-- Federal: `fed-`
-- Bloomington IN: `bli-`
-- Los Angeles CA: `lac-`
-- Indiana state: `ind-`
-- California state: `cal-`
-
-Fremont is a **city** in California, so prefix should follow city pattern. But what prefix? Options:
-- `fre-` (first 3 letters of Fremont)
-- `frm-` (consonant abbreviation)
-- `frem-` (4 letters)
-- `fremont-` (full name, longer)
-
-If content generators default to `fre-` but existing California state uses `cal-`, there's potential for confusion (California vs Fremont). Need clear prefix convention BEFORE generating content or questions will be inserted with wrong IDs and require migration.
-
-**Why it happens:** No documented prefix convention for new locales. Content generators guess based on existing patterns. Different developers might choose different conventions. ID prefix seems minor but causes migration work if changed later.
-
-**Consequences:**
-- **Database migration if changed:** If 100 Fremont questions are inserted with `fre-` prefix, then team decides to change to `frem-`, requires database UPDATE and regeneration report updates
-- **Confusion with California state:** `fre-` is close to `fed-` and might be confused with California (`cal-`)
-- **Inconsistent patterns:** Some cities use 3-char, others use 4-char, no clear rule
-
-**Warning signs:**
-- Locale config created without explicitly documenting `externalIdPrefix` choice
-- Multiple prefix options discussed but not documented in config
-- First batch of questions generated before prefix convention is finalized
+**What goes wrong:**
+Generation costs spiral without realizing. Retry loops consume budget. No per-collection cost tracking.
 
 **Prevention:**
-- **Document prefix convention FIRST:** Before generating ANY Fremont questions, add to locale config:
-  ```typescript
-  externalIdPrefix: 'frem', // 4-char to distinguish from 'fre' (too close to 'fed')
-  ```
-- **Verify uniqueness:** Check all existing prefixes (`fed`, `bli`, `lac`, `ind`, `cal`) to ensure new prefix doesn't conflict or create confusion
-- **Rationale in config comments:** Add comment explaining why this prefix was chosen (helps future locale additions)
-- **Schema validation:** Ensure external ID generation function validates prefix format before insertion
+Cost tracking in generation reports:
+```typescript
+const report = {
+  estimatedCostUsd: calculateCost(totalInputTokens, totalOutputTokens, totalCachedTokens),
+  costPerQuestion: totalCost / questionsGenerated,
+  budgetRemaining: monthlyBudget - totalSpentThisMonth
+};
+```
 
-**Phase to address:** Locale config creation phase -- FIRST decision before any content generation
-
-**Source confidence:** HIGH -- Existing prefix pattern (`bli`, `lac`, `ind`, `cal`) verified via direct analysis of locale configs at `C:/Project Test/backend/src/scripts/content-generation/locale-configs/`
-
----
-
-## Technical Debt Patterns
-
-Shortcuts that seem reasonable but create long-term problems.
-
-| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
-|----------|-------------------|----------------|-----------------|
-| Copy Bloomington locale config and find/replace names | Fast locale config creation | Misses Fremont-specific structures (five districts, district elections, diverse demographics) | Never -- Fremont needs custom config |
-| Skip sister city verification, assume partnerships exist | Faster generation, more content | Factually wrong questions if partnerships don't exist | Never -- verify or skip topic |
-| Generate Tesla/NUMMI trivia questions because they're prominent | High-profile content, local pride | Violates "no pure lookup" rule, wasted generation budget | Never -- require civic angle |
-| Use "Mission San Jose" without disambiguation | Simpler question text | Factually ambiguous (mission vs district) | Never -- always disambiguate |
-| Set all expiration dates to "4 years from now" for current officials | Simple formula | Wrong if Fremont has different term lengths or upcoming elections | Never -- verify Fremont election schedule |
-| Generate all "landmarks-culture" questions without civic angle filter | More content, interesting facts | Scope creep into non-civic trivia (film history, local celebrities) | Never -- enforce civic utility test |
-
-## Performance Considerations
-
-Fremont collection size and complexity.
-
-| Aspect | Target | Notes |
-|--------|--------|-------|
-| **Target questions** | ~100 | Consistent with existing city collections (Bloomington: 116, LA: 114) |
-| **Topic categories** | 8-10 | Standard city config PLUS `five-districts` for Fremont-specific identity |
-| **District coverage** | 5 districts | Centerville, Niles, Irvington, Mission San Jose, Warm Springs should each have 2-3 questions |
-| **Time-sensitive questions** | ~5-10 | Current mayor, council members, budget totals -- require expiration dates |
-| **Quality rule compliance rate** | Target 70%+ first-pass | With Fremont-specific filters (Tesla/NUMMI civic angle, Mission San Jose disambiguation), expect higher retry rate than Bloomington |
-
-## Integration Risks with Existing v1.3+ System
-
-Fremont collection interacts with existing architecture and collections.
-
-| Existing Component | Fremont Collection | Risk | Mitigation |
-|--------------------|-------------------|------|------------|
-| Quality rules engine (Phase 19) | Tesla/NUMMI questions likely to violate "no pure lookup" | High retry rate, wasted generation budget | Pre-filter Tesla/NUMMI for civic angle before generation |
-| Locale config pattern (Bloomington/LA city structure) | Fremont's five-district composite structure | Missing district identity content if using city template | Custom Fremont config with `five-districts` topic |
-| Expiration sweep cron (time-sensitive content) | 2026 election in November | Questions about current officials need correct expiration dates | Verify Fremont election schedule, set expiration to Dec 2026 for affected questions |
-| Topic category taxonomy | "Mission San Jose" spans both civic-history (1797 mission) and five-districts (modern district) | Content generators conflate the two | Explicit disambiguation in generation prompt and quality review |
-| External ID prefix convention | Need Fremont-specific prefix | If `fre-` chosen, might be too close to `fed-` (Federal) | Use `frem-` (4-char) for clarity |
-| Source URL verification | Fremont.gov as primary, but district-specific sources may be needed | Lower-quality sources if generators default to Wikipedia/tourism sites | Require fremont.gov citations, allowlist historic sources for Niles/Mission San Jose |
-| Partisan framing detection (advisory rule) | Bay Area tech/housing is politically contentious | Questions about tech boom or housing may trigger partisan framing flags | Neutral framing requirement in prompt, focus on civic mechanics not outcomes |
+**Phase assignment:** Phase 3 (Generation Optimization)
 
 ---
 
 ## Phase-Specific Warnings
 
-| Phase Topic | Likely Pitfall | Severity | Mitigation |
-|-------------|---------------|----------|------------|
-| Locale Config Design | Copying Bloomington config, missing five-district structure (#2) | CRITICAL | Create custom Fremont config with `five-districts` topic category |
-| Locale Config Design | Not documenting external ID prefix before generation (#12) | MINOR | Choose `frem-` prefix, document in config before any generation |
-| Generation Prompt Design | No Mission San Jose disambiguation guidance (#1) | CRITICAL | Add explicit disambiguation rule to prompt |
-| Generation Prompt Design | No Tesla/NUMMI civic angle filter (#3) | CRITICAL | Add civic angle requirement for factory content |
-| Generation Prompt Design | Copying city government templates, missing district election system (#7) | MODERATE | Document 2017 switch to district-based elections in prompt |
-| Content Generation Setup | Not verifying election schedule before generating time-sensitive questions (#4) | CRITICAL | Check fremont.gov for mayor/council terms and 2026 election dates |
-| Content Generation Setup | Not verifying budget fiscal year calendar (#9) | MODERATE | Document Fremont FY timeline (May presentation, June adoption) |
-| Content Generation Setup | Assuming sister city partnerships exist without verification (#10) | MINOR | Verify or skip sister city topic |
-| Quality Review | Niles film history questions without civic angle (#8) | MODERATE | Flag all film history questions for civic angle verification |
-| Quality Review | Indigenous history questions without sensitivity review (#11) | MODERATE | Mandatory human review for all Ohlone/Indigenous content |
-| Quality Review | Bay Area tech boom questions with partisan framing (#5) | MODERATE | Flag all tech/housing questions for neutral framing check |
-| Quality Review | Ethnic diversity representation (#6) | MODERATE | Review question set for demographic representation |
+| Phase Topic | Likely Pitfalls | Mitigation |
+|-------------|----------------|------------|
+| Phase 1: Dedup Architecture | Pitfalls 1, 2, 10 | Multi-level detection, global registry, migration scripts |
+| Phase 2: Quality Rules | Pitfalls 3, 4, 5 | Cross-question validation, source tracking, fact verification |
+| Phase 3: Generation Optimization | Pitfalls 6, 7, 11, 13 | Intra-batch dedup, prompt versioning, metadata, cost tracking |
+| Phase 4: Scaling & Performance | Pitfalls 8, 9 | RAG optimization, quality-over-quantity, early stopping |
 
-## "Looks Done But Isn't" Checklist
+---
 
-Things that appear complete but are missing critical Fremont-specific pieces.
+## Integration with Existing System
 
-- [ ] **Locale config created:** But copied from Bloomington without adding `five-districts` topic category -- district identity content will be missing
-- [ ] **Generation prompt written:** But no Mission San Jose disambiguation rule -- will conflate mission and district
-- [ ] **Tesla/NUMMI questions generated:** But no civic angle filter -- will violate "no pure lookup" rule
-- [ ] **Current official questions generated:** But expiration dates not verified against Fremont's 2026 election schedule -- will become outdated
-- [ ] **Budget questions generated:** But fiscal year timeline not verified -- may have wrong budget adoption month
-- [ ] **Sister city questions generated:** But partnerships not verified from official source -- may be factually wrong
-- [ ] **Niles film history questions generated:** But no civic angle required -- will fail civic utility test
-- [ ] **Ohlone history questions generated:** But no sensitivity review -- may have insensitive or inaccurate framing
-- [ ] **Tech boom questions generated:** But no partisan framing check -- may violate neutral framing rule
-- [ ] **External IDs assigned:** But prefix chosen without documenting rationale -- may need migration if changed later
+**CRITICAL:** This project has existing infrastructure that must be respected:
 
-## Recovery Strategies
+1. **Quality rules engine exists** (`backend/src/services/qualityRules/`)
+   - Extend, don't replace
+   - Add cross-question rules alongside existing single-question rules
 
-When pitfalls occur despite prevention, how to recover.
+2. **Generation pipeline exists** (`backend/src/scripts/content-generation/`)
+   - Enhance existing scripts
+   - Maintain backward compatibility with existing data files
 
-| Pitfall | Recovery Cost | Recovery Steps |
-|---------|---------------|----------------|
-| Mission San Jose conflation in generated questions | MEDIUM | Query all questions containing "Mission San Jose", manual review to identify mission vs district references, UPDATE text to disambiguate, re-validate |
-| Five-district identity missing from content | HIGH | Generate 10-15 new district-specific questions, rebalance topic distribution, may need to archive generic "Fremont" questions to maintain collection size |
-| Tesla/NUMMI pure lookup questions inserted | LOW | Archive violating questions, regenerate with civic angle filter, replace |
-| Wrong expiration dates on current official questions | MEDIUM | Verify correct term end dates, UPDATE expirationDate in database, audit for other time-sensitive content |
-| Niles film trivia without civic angle | LOW | Archive violating questions, regenerate with civic focus or skip topic entirely |
-| Sister city questions with unverified partnerships | LOW | Archive questions, verify from official source or skip topic |
-| Partisan framing in tech boom questions | MEDIUM | Manual review of all tech/housing questions, rewrite with neutral framing or archive, replace with civic mechanics questions |
-| External ID prefix conflict | HIGH | Database UPDATE to change prefix, regenerate external IDs, update all references in reports/logs |
-| Ohlone history insensitive framing | MEDIUM | Manual review by Indigenous history expert, rewrite or archive affected questions |
-| Budget fiscal year wrong timeline | LOW | Verify correct FY dates, UPDATE question text and answers, add source citation |
+3. **Database schema exists** with status management
+   - Use status field properly: draft → active → archived
+   - Don't bypass validation by direct DB edits
+
+4. **Active production collections**
+   - Migrations must be safe and reversible
+   - Test on non-production collections first
+
+---
+
+## Recommended Implementation Order
+
+Based on codebase analysis and research findings:
+
+### Phase 1: Core Deduplication (Weeks 1-2)
+- Implement semantic similarity detection (Pitfall 1)
+- Build global cross-collection registry (Pitfall 2)
+- Create safe migration scripts for existing data (Pitfall 10)
+- Validate with dry-run modes
+
+### Phase 2: Quality Enhancements (Weeks 3-4)
+- Add cross-question validation (Pitfalls 3, 4)
+- Implement source usage tracking (Pitfall 4)
+- Enhance fact verification (Pitfall 5)
+- Extend quality rules engine
+
+### Phase 3: Generation Improvements (Weeks 5-6)
+- Add intra-batch deduplication (Pitfall 6)
+- Implement prompt versioning (Pitfall 7)
+- Add generation metadata (Pitfall 11)
+- Implement cost tracking (Pitfall 13)
+
+### Phase 4: Scale to 90+ per Collection (Weeks 7-8)
+- Implement RAG optimization (Pitfall 8)
+- Add quality-over-quantity strategies (Pitfall 9)
+- Test at scale with monitoring
+- Validate all collections meet targets
+
+---
+
+## Success Metrics
+
+**Deduplication effectiveness:**
+- Zero cross-collection duplicates (text and semantic)
+- <1% within-collection semantic similarity >0.85
+- Zero answer leakage in explanations
+
+**Generation quality:**
+- >85% first-pass validation success rate
+- <2 retries average per question
+- Consistent difficulty distribution across batches
+
+**System reliability:**
+- Zero database integrity violations
+- 100% reversible migrations
+- No production outages during rollout
+
+**Cost efficiency:**
+- <$0.15 per final question (including retries)
+- >60% prompt cache hit rate
+- Cost per question stable as scale increases
+
+---
+
+## Conclusion
+
+Retrofitting semantic deduplication and scaled generation to existing systems requires careful attention to data integrity, quality consistency, and system integration. The pitfalls documented here are specific to adding these features to production systems with existing content—greenfield development faces different challenges.
+
+**Key insight:** Text-based deduplication catches only 50-60% of duplicates in AI-generated educational content. Semantic similarity detection and cross-question validation are not optional features—they are requirements for quality at scale.
+
+**Most critical pitfall:** Hallucination in educational content (Pitfall 5). This is the only pitfall that directly harms users. All other pitfalls cause operational issues, but teaching users incorrect information is catastrophic for an educational app.
+
+**Implementation strategy:** Phase 1 (dedup architecture) must be solid before scaling. Attempting to reach 90+ questions per collection without robust deduplication will result in collections filled with redundant content and poor user experience.
 
 ---
 
 ## Sources
 
-### Fremont-Specific Facts and Context (HIGH confidence)
+### AI Content Generation Quality (HIGH confidence)
+- [Scaling Proven Learning Practices with AI Tools for Education](https://chanzuckerberg.com/blog/scaling-proven-learning-practices/)
+- [AI in Education 2026: Adoption, Impact, and the Growing Governance Gap](https://www.worldteachpathways.com/news/ai-in-education-2026-adoption-impact-and-the-growing-governance-gap)
+- [How to avoid past edtech pitfalls as we begin using AI to scale impact in education | Brookings](https://www.brookings.edu/articles/how-to-avoid-past-edtech-pitfalls-as-we-begin-using-ai-to-scale-impact-in-education/)
 
-- [Fremont, California - Wikipedia](https://en.wikipedia.org/wiki/Fremont,_California) -- Five-district formation (1956), population (~230K), ethnic diversity
-- [Fremont History - Official City Website](https://www.fremont.gov/about/history) -- Five districts unified 1956, Ohlone presence, Mission San Jose, Niles film industry
-- [Historic Districts - Fremont Economic Development](https://www.fremont.gov/government/departments/economic-development/real-estate-development-investment/historic-districts) -- District identities, characteristics
-- [Mission San José Wikipedia](https://en.wikipedia.org/wiki/Mission_San_José_(California)) -- 1797 founding, Ohlone displacement, 1868 earthquake
-- [California Missions Foundation - Mission San Jose](https://californiamissionsfoundation.org/mission-san-jose/) -- Historical mission details
-- [Tesla Fremont Factory - Wikipedia](https://en.wikipedia.org/wiki/Tesla_Fremont_Factory) -- NUMMI history, 2010 Tesla purchase, current production
-- [NUMMI - Wikipedia](https://en.wikipedia.org/wiki/NUMMI) -- GM/Toyota joint venture, 1984-2010 timeline
-- [Fremont Mayor & City Council - Official City Website](https://www.fremont.gov/government/mayor-city-council) -- City structure, 6 districts + mayor
-- [Ballotpedia - Fremont, California](https://ballotpedia.org/Fremont,_California) -- District-based elections adopted June 13, 2017
-- [City elections in Fremont, California (2026) - Ballotpedia](https://ballotpedia.org/City_elections_in_Fremont,_California_(2026)) -- November 3, 2026 election, August 7 filing deadline
-- [Raj Salwan elected Fremont mayor](https://tricityvoice.com/raj-salwan-elected-fremont-mayor/) -- First Indian-American mayor, elected December 2024
-- [Fremont FY 2025/26 Budget Message](https://www.fremont.gov/Home/Components/News/News/1320/1067) -- Budget timeline (May presentation, June adoption)
+### Semantic Deduplication (HIGH confidence)
+- [Semantic Deduplication (SemDedup)](https://www.emergentmind.com/topics/semantic-deduplication-semdedup)
+- [GitHub - MinishLab/semhash: Fast Multimodal Semantic Deduplication & Filtering](https://github.com/MinishLab/semhash)
+- [Large-scale Near-deduplication Behind BigCode](https://huggingface.co/blog/dedup)
 
-### Quality Rules and Civic Utility (HIGH confidence)
+### AI Hallucination and Quality Control (HIGH confidence)
+- [AI Hallucination Testing in 2026: How QA Engineers Detect Confidently Wrong AI Answers](https://medium.com/ai-in-quality-assurance/ai-hallucination-testing-in-2026-how-qa-engineers-detect-confidently-wrong-ai-answers-cb978ec6cc26)
+- [New sources of inaccuracy? A conceptual framework for studying AI hallucinations | HKS Misinformation Review](https://misinforeview.hks.harvard.edu/article/new-sources-of-inaccuracy-a-conceptual-framework-for-studying-ai-hallucinations/)
+- [When AI Gets It Wrong: Addressing AI Hallucinations and Bias - MIT Sloan](https://mitsloanedtech.mit.edu/ai/basics/addressing-ai-hallucinations-and-bias/)
 
-- Direct analysis of `C:/Project Test/backend/src/scripts/content-generation/prompts/quality-guidelines.ts` -- Blocking rules (ambiguous answers, vague qualifiers, pure lookup trivia), advisory rules (partisan framing), civic utility test
-- Direct analysis of `C:/Project Test/backend/src/scripts/content-generation/utils/quality-validation.ts` -- Validation and retry loop, blocking vs advisory severity
-- Direct analysis of `C:/Project Test/backend/src/scripts/content-generation/locale-configs/bloomington-in.ts` -- Existing locale config pattern, topic categories, external ID prefix
+### RAG and Context Windows (HIGH confidence)
+- [How to Optimize RAG Context Windows for Smarter Retrieval](https://medium.com/@ai.nishikant/how-to-optimize-rag-context-windows-b26859f03b2d)
+- [Debugging RAG Pipelines: Identifying Issues in Retrieval-Augmented Generation](https://www.getmaxim.ai/articles/rag-debugging-identifying-issues-in-retrieval-augmented-generation/)
+- [Seven Failure Points When Engineering a Retrieval Augmented Generation System](https://arxiv.org/html/2401.05856v1)
+- [How to build RAG at scale | InfoWorld](https://www.infoworld.com/article/4108159/how-to-build-rag-at-scale.html)
 
-### Locale Collection Expansion Patterns (MEDIUM confidence)
+### Data Quality at Scale (MEDIUM confidence)
+- [AI Data Quality in 2026: Challenges & Best Practices](https://research.aimultiple.com/data-quality-ai/)
+- [How do AI content generation tools handle bulk content creation? | Storyteq](https://storyteq.com/blog/how-do-ai-content-generation-tools-handle-bulk-content-creation/)
+- [AI-generated data contamination erodes pathological variability](https://www.medrxiv.org/content/10.64898/2026.01.19.26344383v3.full.pdf)
 
-- Direct analysis of existing project PITFALLS.md (`C:/Project Test/.planning/research/PITFALLS.md`) -- Retroactive quality rules, content scaling, state vs city distinctions
-- [Trivia question fact-checking best practices](https://trivworks.com/2011/05/making-trivia-questions-bulletproof/) -- Verify multiple sources, avoid Wikipedia as sole source
-- [How to write fun trivia questions for adults](https://lastcalltrivia.com/bars/adult-questions/) -- Quality standards for trivia questions
-
-### General Civic Content Best Practices (MEDIUM confidence)
-
-- Indigenous history sensitivity: General best practices for respectful Indigenous history representation (present tense for ongoing presence, acknowledge colonization impact, avoid romanticizing)
-- Partisan framing detection: General content moderation patterns applied to Bay Area tech/housing as politically contentious topic
-- Multicultural civic participation: General multicultural civics knowledge applied to Fremont's demographic context
-
----
-
-## Metadata
-
-**Confidence breakdown:**
-- Fremont historical facts (five districts, Mission San Jose, NUMMI/Tesla, election system): HIGH -- Multiple authoritative sources cross-referenced
-- Quality rule integration (civic utility test, blocking vs advisory): HIGH -- Direct codebase analysis of existing rules
-- Locale config patterns: HIGH -- Direct analysis of Bloomington/LA configs
-- Time-sensitive content (2026 elections, budget timeline): HIGH -- Official city sources verified
-- Cultural sensitivity (Ohlone history, ethnic diversity): MEDIUM -- General best practices applied to Fremont context
-- Partisan framing risks: MEDIUM -- General content moderation patterns applied to local context
-
-**Research date:** 2026-02-20
-**Valid until:** 2026-05-20 (90 days -- Fremont facts stable; 2026 election date may update if schedule changes)
+### Codebase Analysis (HIGH confidence)
+- Direct analysis of `C:/Project Test/backend/src/services/qualityRules/rules/duplicate.ts`
+- Direct analysis of `C:/Project Test/backend/src/scripts/content-generation/utils/quality-validation.ts`
+- Direct analysis of `C:/Project Test/backend/src/scripts/content-generation/generate-locale-questions.ts`
+- Direct analysis of `C:/Project Test/backend/audit-report.md`
+- Direct analysis of existing quality guidelines and generation patterns

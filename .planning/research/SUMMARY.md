@@ -1,262 +1,260 @@
-# Project Research Summary: v1.5 Feedback Marks
+# Project Research Summary
 
-**Project:** Civic Trivia Championship - v1.5 Feedback Marks
-**Domain:** Trivia game question feedback/flagging system + content quality improvements
-**Researched:** 2026-02-21
+**Project:** Civic Trivia Championship v1.6 - Content Quality & Scale
+**Domain:** Educational trivia with AI-generated civic content
+**Researched:** 2026-02-22
 **Confidence:** HIGH
 
 ## Executive Summary
 
-The v1.5 Feedback Marks milestone adds player-driven quality control to Civic Trivia Championship through a two-part feedback system: inline thumbs-down during gameplay (low friction, captures dissatisfaction at the moment) and optional post-game elaboration (provides actionable context without interrupting flow). This pattern, validated by Duolingo and educational game research, follows the **progressive disclosure** principle that minimizes interruption while maximizing feedback quality.
+The v1.6 milestone addresses a critical quality gap: text-based duplicate detection catches only ~50% of duplicates in AI-generated content. Research shows that LA County's 52 questions contained nearly 50% duplicates/near-duplicates, including semantic paraphrases ("How many people does LA County serve?" vs "What is the LA County population?"), answer leakage in explanations, and same-source factoid clustering. Scaling to 90+ questions per collection (540+ total) without semantic deduplication would create a poor user experience and inflate perceived content volume.
 
-Research reveals a critical distinction: **dislike/thumbs-down is quality curation** (private, helps improve content), not "report" (policy enforcement, removes harmful content). Successful trivia and educational apps keep feedback private, restrict to authenticated users to prevent spam, and provide admins with efficient triage tools. The recommended architecture integrates cleanly with the existing game session management (Redis), admin UI (React + TanStack Table), and database (PostgreSQL + Drizzle ORM) — only one new dependency required (`express-rate-limit`).
+**Recommended approach:** Implement hybrid duplicate detection (text normalization + embedding-based semantic similarity) using OpenAI text-embedding-3-small with fast-cosine-similarity for in-memory vector comparison. Add quality rules for cross-question validation (answer leakage, source diversity) and integrate semantic checks into the existing quality validation pipeline. Use overshoot-and-curate strategy (generate 1.3x target, keep best quality) to maintain high standards at scale.
 
-The milestone also addresses technical debt: fixing 320 broken source.url Learn More links (identified across all collections) and adding ADMIN_EMAIL environment variable for admin promotion workflow. These are small scope additions that piggyback on the feedback feature's data migration and testing infrastructure.
-
-Key risks center on **flow interruption** (intrusive feedback UI destroys engagement), **feedback black hole** (players stop flagging if nothing happens), and **authentication bypass** (spam floods moderation queue). Each has well-established mitigation patterns from content moderation and educational game research.
+**Key risks:** (1) AI hallucination in factual civic content — requires RAG with source grounding and programmatic fact verification; (2) Cross-collection duplicates — city questions repeating state/federal facts; (3) Database state inconsistency during migration — existing 639 questions need safe, idempotent deduplication. All three mitigated through phased rollout with dry-run modes, manual review workflows, and human-in-the-loop for high-stakes changes.
 
 ## Key Findings
 
-### Recommended Stack (from STACK.md)
+### Recommended Stack
 
-The feedback system requires minimal new dependencies because the existing stack already provides authentication (JWT), validation (express-validator 7.3.1), database ORM (Drizzle 0.45.1), state management (Zustand), and PostgreSQL. The primary addition is rate limiting middleware to prevent feedback spam.
+The existing stack (Claude Sonnet 4.5 with RAG, Zod validation, quality rules engine) works well but needs semantic similarity detection. Research compared pgvector/vector databases vs lightweight in-memory approaches. **Recommendation: Add OpenAI text-embedding-3-small + fast-cosine-similarity for minimal complexity and zero production risk.**
 
 **Core technologies:**
-- **express-rate-limit (^7.4.1)**: Rate limiting middleware — prevents spam flags from malicious users. Industry standard with 10M+ weekly downloads, supports per-user limits and admin bypass.
-- **express-validator (existing)**: Input validation and XSS sanitization — `.escape()` sanitizer sufficient for free-text feedback (max 500 characters). No additional XSS libraries needed.
-- **Drizzle ORM (existing)**: Database schema extensions — new `question_flags` table with indexes on `questionId`, `userId`, `createdAt`. Denormalized `flag_count` column on questions table with trigger for fast admin queries.
+- **OpenAI text-embedding-3-small** (new): Semantic similarity detection — 1536-dim embeddings, $0.02/1M tokens ($0.01 batch), proven reliability, free $5 credit covers entire project
+- **fast-cosine-similarity** (new): Vector similarity computation — 3x faster than alternatives, TypeScript native, zero dependencies
+- **p-limit v7.3.0** (existing): Rate limit compliance — already installed, 80M+ weekly downloads, perfect for concurrent embedding API calls
+- **Existing quality validation pipeline**: Retry loop with blocking/advisory rules — extend with semantic duplicate rule, minimal disruption
 
-**What NOT to add:**
-- No axios (Fetch API sufficient for simple POST endpoints)
-- No react-hook-form (feedback form is simple, controlled inputs sufficient)
-- No separate XSS library (express-validator covers needs)
-- No rate-limit-redis (single-server deployment, memory store sufficient)
+**Anti-recommendations (avoid):**
+- **NO pgvector**: Overkill for one-time audit, requires schema changes, adds production risk
+- **NO vector databases**: Scale mismatch (639 questions << millions), external dependency, ongoing operational overhead
+- **NO LangChain**: Heavyweight abstraction, 100+ KB dependencies for simple embedding calls
 
-### Expected Features (from FEATURES-FEEDBACK-FLAGGING.md)
+### Expected Features
+
+Educational trivia platforms treat deduplication as pre-launch quality checks, not ongoing operations. Academic research shows automated detection + human curation is the sweet spot for quality at scale.
 
 **Must have (table stakes):**
-- **Inline flag button** — Thumbs-down icon on answer reveal screen. Must be discoverable but not intrusive. Authenticated users only.
-- **Visual confirmation** — Button state change (filled icon, color shift) without modal/popup. No interruption to game flow.
-- **Admin review queue** — Centralized list of flagged content with flag count, question text, player notes. One-click archive action.
-- **Flag count visibility** — Display count in review queue and question detail views for admin prioritization.
+- **Exact duplicate detection** — text normalization (already implemented via DuplicateDetector)
+- **Semantic duplicate detection** — embedding-based similarity, threshold 0.85-0.90 (GAP — needs implementation)
+- **Cross-collection duplicate detection** — prevent same questions across federal/state/city (GAP — currently siloed)
+- **Manual review workflow** — admin reviews flagged duplicates, makes final archival decisions (extend existing flag review queue)
+- **Batch content generation** — calculate gap, apply overshoot, retry with feedback (already implemented)
+- **Quality validation with blocking rules** — prevent low-quality content (already implemented with 8 rules)
 
-**Should have (competitive differentiators):**
-- **Post-game elaboration** — Show flagged questions in results screen with optional free-text input. Progressive disclosure pattern avoids flow interruption.
-- **Filter by flag count threshold** — Admin queue filter (e.g., 5+ flags) focuses on high-signal issues.
-- **Basic rate limiting** — Max 10 flags per 15 minutes per user. Prevents abuse while allowing legitimate heavy users.
-- **Inline flag context** — Display recent flags with player notes on existing question detail panel without navigating to separate queue.
+**Should have (competitive):**
+- **Inverse duplicate detection** — catch Q1 "What year did X happen?" + Q2 "Which governor signed X?" revealing each other (differentiator, medium complexity)
+- **Answer leakage detection** — Q2's explanation shouldn't contain Q1's answer (academic research confirms this is real problem)
+- **Same-source factoid clustering** — track which source paragraphs generate questions, enforce diversity (leverages existing source.url field)
+- **Duplicate metrics in collection health dashboard** — admin visibility into duplicate rates (easy addition to existing dashboard)
+- **Smart overshoot calculation** — dynamic adjustment based on historical pass rates and duplicate rates (data science best practice)
 
 **Defer (v2+):**
-- Flag reason categories (free text sufficient for MVP, patterns emerge from analysis)
-- Flag status tracking (under review / resolved — adds complexity)
-- Bulk archive actions (not needed at 639 question scale)
-- Curator reputation system (collect flags_submitted_count now, weight later)
-- Auto-weighting by curator quality (requires data collection first)
+- **Fully automated duplicate removal** — research shows false positives require human review (don't build)
+- **Real-time semantic search in production** — pgvector/vector DB only justified if building "find similar questions" feature
+- **Local embedding models** — OpenAI's quality is higher and free credits make cost a non-issue
 
-### Architecture Approach (from ARCHITECTURE.md)
+### Architecture Approach
 
-The feedback system integrates with existing game flow without breaking changes. Players flag questions during the answer reveal phase, session tracks flagged questionIds in Redis, post-game summary displays flagged questions with optional elaboration, and a new database table stores persistent feedback for admin review.
+The current generation pipeline (Locale Config → RAG Sources → Claude Generation → Zod Validation → Quality Validation → JSON Output → Database Seeding) has clean extension points. Add semantic similarity as a parallel check alongside text normalization during quality validation. Research shows embedding-based detection integrates cleanly with minimal disruption to existing retry loops and batch processing.
 
 **Major components:**
-1. **Game Session (Redis)** — Add `feedbackFlags: Set<string>` field to track which questions flagged during gameplay. Temporary storage, doesn't persist beyond 1-hour session TTL.
-2. **Answer Reveal Screen** — Thumbs-down button in bottom-left corner (24x24px, semi-transparent). Tap toggles visual state, updates session via existing POST /api/game/answer endpoint with optional `flagged: boolean`.
-3. **Post-Game Summary** — New "Flagged Questions" section above answer review accordion. Shows question text (truncated) with optional 500-char textarea per flagged question. Submit button POST /api/feedback/submit.
-4. **Database Schema** — New `question_flags` table (id, question_id, user_id, session_id, feedback_text, created_at) with indexes. Denormalized `flag_count` on questions table maintained by trigger.
-5. **Admin Integration** — Add `flag_count` column to QuestionTable with red badge if > 0. Question detail panel shows count + "View Flags" link. New FlagsReviewPage at `/admin/flags` lists all flagged questions with archive action.
+1. **SemanticDupDetector** — embedding-based similarity check using OpenAI + cosine similarity, integrated as optional parameter to validateAndRetry()
+2. **EmbeddingCache** — in-memory Map<externalId, embedding> for generation workflow, checks new questions against existing embeddings
+3. **Cross-question validation rules** — answer leakage detection, source diversity enforcement, fact extraction for same-source clustering
+4. **Dedup scanner CLI tool** — batch scan all collections, generate duplicate reports for manual review, idempotent with dry-run mode
+5. **Migration-safe archival workflow** — two-phase approach (mark for review → human confirms → archive), respects status field constraints
 
-**Key design decisions:**
-- Extend POST /api/game/answer (not new endpoint) — single request, matches mental model of "flag as part of answering"
-- Store flags in session first, persist to database post-game — consistent with existing answer pattern, allows player to change mind
-- Denormalized flag_count — fast admin queries without JOIN, trigger maintains consistency
-- Store DB ID in session alongside Question — avoids N queries per feedback submission when mapping frontend string IDs to database numeric IDs
+**Integration pattern:**
+Composition over replacement. DuplicateDetector keeps text normalization (fast, no API calls), SemanticDupDetector runs after as second layer (slower, catches paraphrases). Both violations surface in quality audit, unified retry loop handles regeneration.
 
-### Critical Pitfalls (from PITFALLS-FEEDBACK-FLAGGING.md)
+### Critical Pitfalls
 
-1. **Breaking Game Flow with Intrusive Feedback UI** — Modal dialogs during gameplay destroy engagement and cause abandonment. **Prevention:** Position thumbs-down as passive indicator during answer reveal (no modal), defer elaboration to post-game screen. Follow 2025 UX consensus: "timing and context are critical" for interruptions.
+Research identified 13 pitfalls; top 5 by severity:
 
-2. **The Feedback Black Hole - Not Closing the Loop** — Players stop flagging if they never learn what happened. **Prevention:** Send automated thank-you when flag submitted, notify flaggers when report led to action (archive/correction), show aggregate impact ("Your flags helped improve 12 questions this month"). Build loop closure into phase requirements, not post-launch.
+1. **Text-only deduplication misses semantic duplicates** — Simple normalization catches only 50% of AI-generated duplicates. LA had "How many people does LA County serve?" / "What population does LA County government serve?" / "What is the LA County population?" all passing text checks. Prevention: Multi-level pipeline (exact text → semantic similarity → answer overlap), cosine threshold 0.85-0.90, fact extraction for source-level dedup.
 
-3. **Data Model Can't Track Flag Lifecycle** — Initial schema stores flags as simple records without status tracking, timestamps, or resolution metadata. Later analytics and audit trails impossible without painful migration. **Prevention:** Design for lifecycle from start (pending → reviewing → resolved), include timestamp columns (created_at, reviewed_at, resolved_at), use soft delete (archived_at, archived_by), track question versions.
+2. **AI hallucination in factual content** — LLMs "optimized for fluency, not truth" generate plausible-sounding falsehoods (wrong dates, numbers, non-existent entities). Catastrophic for educational content. Prevention: RAG with explicit source grounding (quote relevant sentence in reasoning), programmatic fact verification against .gov APIs for verifiable claims, human-in-the-loop for high-stakes content (elections, hard difficulty).
 
-4. **Authentication Bypass Allows Anonymous Flag Spam** — Frontend hides UI but backend endpoint lacks auth check. Anonymous spam floods moderation queue. **Prevention:** Backend auth check on flag endpoint (reject unauthenticated), rate limiting per user ID, integration test attempting flag submission without auth token, monitor flag submission patterns.
+3. **Cross-collection duplicates ignored** — Federal/state facts appear in city collections. DuplicateDetector loads per-collection with no shared state. Prevention: Global duplicate registry across all collections, content specialization strategy (general facts at highest relevant hierarchy level), generation prompts with anti-patterns from other collections.
 
-5. **Stale Admin Dashboard Counts** — Admin sees "3 pending flags," clicks through, finds 15. Or resolves flag, refreshes, still shows old count. **Prevention:** Add "last updated" timestamp to dashboard, implement cache invalidation on flag status change, aggressive cache TTL (30 seconds max), visual indicator for live vs stale data.
+4. **Answer leakage in explanations** — Question B's explanation: "According to source, Y is the process that X uses to..." reveals answer to Question A about X. Quality validation runs per-question without cross-question checks. Prevention: Batch validation after generation, check if any question's correct answer appears in other explanations, regenerate with constraints if leakage found.
+
+5. **Database state inconsistency during migration** — Git status shows manual edits to data files and multiple ad-hoc dedup scripts. Production system wasn't designed for deduplication from start. Prevention: Idempotent migration scripts in transactions, two-phase migration (mark → review → archive), dry-run mode mandatory, status field transition constraints.
 
 ## Implications for Roadmap
 
-Based on research, v1.5 Feedback Marks milestone should follow a four-phase structure that prioritizes foundational data collection, then builds progressive disclosure UI, then admin triage tools:
+Based on research, suggested 4-phase structure prioritizing quality foundation before scaling:
 
-### Phase 1: Backend Foundation + Inline Flagging
-**Rationale:** Data collection is the foundation — without flags being stored, nothing else works. Backend schema and API must support flag lifecycle from the start (timestamps, status, soft delete) to avoid painful migration later. Inline flagging enables immediate capture of player dissatisfaction.
-
-**Delivers:**
-- Database schema: question_flags table + flag_count column with trigger
-- Session management: feedbackFlags field in GameSession
-- API endpoint: POST /api/game/answer accepts optional `flagged: boolean`
-- Feedback submission: POST /api/feedback/submit with validation
-- Rate limiting: express-rate-limit configured (10 flags per 15 min per user)
-
-**Addresses:**
-- Table stakes: inline flag button, authenticated-only, visual confirmation
-- Pitfall 3: data model supports flag lifecycle from start
-- Pitfall 4: auth check on backend endpoints before launch
-
-**Testing checkpoints:**
-- Session stores flagged questionIds correctly
-- Backend rejects unauthenticated flag submissions
-- Rate limiting triggers after 10 flags
-- Question ID mapping (frontend string → database numeric) works
-
-### Phase 2: Progressive Disclosure UI
-**Rationale:** Progressive disclosure minimizes flow interruption. Inline thumbs-down captures dissatisfaction in the moment (low friction), post-game elaboration collects rich context when player expects natural breakpoint. This pattern is validated by Duolingo, game flow research, and educational UX studies.
+### Phase 1: Semantic Deduplication Foundation (Week 1)
+**Rationale:** Must establish hybrid detection (text + semantic) before generating new content. Attempting to scale without semantic dedup will produce collections full of paraphrased duplicates.
 
 **Delivers:**
-- Frontend: FeedbackButton component on answer reveal screen
-- Frontend: FlaggedQuestionsSection component in ResultsScreen
-- UI: Optional 500-char textarea per flagged question
-- Integration: Wire POST /api/feedback/submit to frontend form
+- OpenAI embedding service + fast-cosine-similarity integration
+- SemanticDupDetector class with configurable thresholds
+- EmbeddingCache for generation workflow
+- Dedup scanner CLI tool with dry-run mode
 
 **Addresses:**
-- Table stakes: post-game flagged questions summary, optional elaboration
-- Differentiator: progressive disclosure pattern (research-backed best practice)
-- Pitfall 1: no modal interruption, defer elaboration to natural breakpoint
-- Pitfall 6: simple form (single optional text field), not complex survey
+- Semantic duplicate detection (FEATURES table stakes)
+- Cross-collection duplicate detection (FEATURES table stakes)
+- Text-only deduplication pitfall (PITFALLS #1)
+- Cross-collection duplicates pitfall (PITFALLS #3)
 
-**Testing checkpoints:**
-- Thumbs-down button renders during reveal phase only
-- Flagged questions appear in post-game results
-- Form submission persists to database
-- Mobile tap targets meet 48x48dp minimum (Pitfall 11)
+**Avoids:**
+- Database state inconsistency (idempotent scripts, dry-run first)
+- Production risk (no schema changes, in-memory only)
 
-### Phase 3: Admin Review Queue
-**Rationale:** Standard moderation pattern provides centralized triage workflow. Flag counts enable prioritization (5+ flags = likely real problem). Integration with existing question explorer contextualizes flags during normal admin workflows.
+### Phase 2: Existing Collection Audit & Cleanup (Week 1)
+**Rationale:** Must deduplicate existing 639 questions before generating new content. Otherwise new questions will duplicate existing ones that should have been archived.
 
 **Delivers:**
-- Frontend: FlagsReviewPage at `/admin/flags`
-- Backend: GET /api/admin/flags endpoint (paginated, sortable by flag count)
-- UI: Table listing flagged questions, counts, player notes
-- Admin actions: Archive button per question
+- Backfill embeddings for all existing questions
+- Run dedup scanner across all 6 collections
+- Generate duplicate reports with similarity scores
+- Manual review workflow (extend existing flag review queue)
+- Archive confirmed duplicates
 
 **Addresses:**
-- Table stakes: admin review queue, flag count visibility, archive action
-- Differentiator: filter by flag count threshold (focus on high-signal issues)
-- Pitfall 5: show "last updated" timestamp, cache invalidation on mutations
+- Manual review workflow (FEATURES table stakes)
+- Database migration safety (PITFALLS #5)
 
-**Testing checkpoints:**
-- Admin queue displays all flagged questions correctly
-- Flag count sort/filter works
-- Archive action removes question from active pool
-- Soft delete preserves audit trail (Pitfall 8)
+**Avoids:**
+- Fully automated removal (anti-feature, causes false positives)
+- Status field violations (two-phase migration with human review)
 
-### Phase 4: Admin Integration + Link Fixes
-**Rationale:** Integrate flag counts into existing admin UI so flags are visible during normal question management workflows (not just dedicated review page). Piggyback on database migration to fix 320 broken source.url links identified across collections.
+### Phase 3: Cross-Question Quality Rules (Week 2)
+**Rationale:** Before scaling content generation, add quality rules that detect cross-question issues (answer leakage, source over-mining). These violations are harder to fix post-generation.
 
 **Delivers:**
-- QuestionTable: flag_count column with badge (red if > 0)
-- QuestionDetailPanel: flag count badge + "View Flags" link
-- Backend: flag_count included in GET /api/admin/questions/explore
-- Technical debt: Fix broken source.url Learn More links (320 questions)
-- Environment: Add ADMIN_EMAIL env var for admin promotion
+- Answer leakage detection (check if correct answers appear in other explanations)
+- Source diversity enforcement (<20% from any single source)
+- Same-source factoid clustering detection
+- Batch-level validation (not just per-question)
+- Enhanced generation reports with cross-question stats
 
 **Addresses:**
-- Differentiator: inline flag context in question detail panel
-- Technical debt: source.url link quality (identified in scope)
-- Pitfall 2: close feedback loop by making flags visible to admins
+- Answer leakage detection (FEATURES differentiator)
+- Same-source factoid clustering (FEATURES differentiator)
+- Answer leakage pitfall (PITFALLS #4)
+- Same-source mining pitfall (PITFALLS #4 related)
 
-**Testing checkpoints:**
-- Flag counts display correctly in question table
-- "View Flags" link filters review queue to specific question
-- Verify all Learn More links are valid HTTPS
-- Admin email promotion works with new env var
+**Avoids:**
+- AI hallucination (source grounding reinforced through diversity rules)
+
+### Phase 4: Scale to 90+ Questions per Collection (Week 2-3)
+**Rationale:** With dedup and quality infrastructure in place, safe to scale. Use overshoot-and-curate strategy to maintain quality at volume.
+
+**Delivers:**
+- Calculate gaps per collection (90 target - current unique count)
+- Apply 1.3x overshoot multiplier
+- Generate new content with semantic dedup enabled
+- Quality-over-quantity filtering (keep best by quality score)
+- Difficulty-aware generation (separate passes for easy/medium/hard)
+- Early stopping if success rate drops below threshold
+
+**Addresses:**
+- Batch content generation (FEATURES table stakes, validate at scale)
+- Smart overshoot calculation (FEATURES differentiator)
+- Quality degradation in high-volume generation (PITFALLS #9)
+- RAG context window degradation (PITFALLS #8, use topic-filtered sources)
+
+**Avoids:**
+- Prompt drift (lock configuration, test against golden set before deploying)
+- Intra-batch duplicates (batch-aware prompting, progressive dedup)
 
 ### Phase Ordering Rationale
 
-1. **Backend foundation before frontend** — Database schema must support flag lifecycle from start to avoid migration. Rate limiting and auth checks prevent spam from day one.
+**Foundation → Cleanup → Rules → Scale** is the only safe order because:
 
-2. **Inline flagging before post-game elaboration** — Progressive disclosure pattern requires data collection layer first. Players must be able to flag before they can elaborate.
+1. **Foundation first:** Can't detect semantic duplicates without embedding infrastructure. Building on text-only dedup repeats existing failures.
 
-3. **Admin queue after data collection** — Can't build triage tool without flags to triage. Admin workflow depends on flags existing in database.
+2. **Cleanup before generation:** Generating new questions before deduplicating existing ones creates duplicates between old and new content. Wasted API costs regenerating questions similar to ones that should have been archived.
 
-4. **Admin integration last** — Polish on top of functional system. Flag counts enhance existing workflows but aren't blocking for core feature.
+3. **Rules before scale:** Cross-question quality rules are cheaper to enforce during generation than to fix post-generation. Answer leakage requires regenerating both questions involved.
 
-**Research flags:**
-- **No phases need deeper research** — Patterns are well-established in educational apps (Duolingo), content moderation tools (Stream, Kahoot), and game UX research. Implementation is straightforward given existing auth system, admin UI, and database.
+4. **Scale last:** Quality at volume requires mature infrastructure. Research shows generation quality degrades as scale increases without proper controls (overshoot-and-curate, early stopping, difficulty-aware passes).
 
-**Standard patterns (no research needed):**
-- Progressive disclosure (NN/g, educational game research)
-- Admin moderation queue (Stack Overflow, forum tools, Stream)
-- Rate limiting (express-rate-limit industry standard)
-- Soft delete (Microsoft Q&A, content moderation standards)
+**Dependencies from research:**
+- STACK.md: OpenAI embeddings needed before semantic detection works
+- ARCHITECTURE.md: validateAndRetry() hook point requires SemanticDupDetector implementation first
+- PITFALLS.md: Phase assignment tables explicitly call out Phase 1 for dedup architecture, Phase 2 for quality rules, Phase 4 for scaling
+
+### Research Flags
+
+**Phases likely needing deeper research during planning:**
+- **Phase 3 (Cross-Question Quality Rules):** Answer leakage detection algorithms not well-documented in trivia platforms. May need to prototype simple text-matching approach vs LLM-based analysis to balance accuracy and cost.
+- **Phase 4 (Scale to 90+):** Optimal overshoot multiplier (1.3x?) needs calibration based on actual pass rates. Golden set testing strategy needs definition before locking prompt versions.
+
+**Phases with standard patterns (skip research-phase):**
+- **Phase 1 (Semantic Dedup Foundation):** Embedding-based duplicate detection is well-established. OpenAI embeddings + cosine similarity is industry standard with extensive documentation.
+- **Phase 2 (Existing Collection Audit):** Database migration patterns well-understood. Idempotent scripts with dry-run modes are standard practice.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Existing stack provides all core capabilities. Only one new dependency (express-rate-limit) which is industry standard. |
-| Features | HIGH | Progressive disclosure pattern validated by multiple authoritative sources (NN/g, Duolingo, game UX research). Authenticated-only design strongly supported by content moderation best practices. |
-| Architecture | HIGH | Clean integration with existing game flow, session management, and admin UI. No breaking changes. Design decisions validated against existing patterns (answer submission, admin queue). |
-| Pitfalls | MEDIUM-HIGH | Flow interruption, feedback black hole, and auth bypass are well-documented with clear mitigation strategies. Stale dashboard and post-game survey complexity have established solutions. |
+| Stack | HIGH | OpenAI embeddings extensively documented, fast-cosine-similarity benchmarked, existing codebase analysis confirms integration points. Anti-recommendations (pgvector, vector DBs) justified with clear rationale. |
+| Features | MEDIUM | Table stakes features confirmed via academic research (semantic similarity thresholds, manual review workflows). Differentiators (inverse duplicates, answer leakage) found in academic papers but less common in commercial trivia platforms. |
+| Architecture | HIGH | Direct codebase analysis reveals clean extension points (validateAndRetry hook, DuplicateDetector composition pattern, quality rules engine). Hybrid detection approach proven in academic research. |
+| Pitfalls | HIGH | Top 5 pitfalls backed by codebase evidence (git status showing manual fixes, existing DuplicateDetector limitations, audit report violations). Prevention strategies validated against research sources and industry best practices. |
 
 **Overall confidence:** HIGH
 
+Research depth is excellent due to:
+1. **Direct codebase analysis:** ARCHITECTURE.md and PITFALLS.md cite specific files, line numbers, and existing patterns
+2. **Academic research validation:** Semantic similarity thresholds (0.85-0.90), manual review workflows, RAG optimization all backed by peer-reviewed sources
+3. **Real-world evidence:** LA duplicate audit (50% duplicates) provides concrete validation of the problem severity
+
 ### Gaps to Address
 
-**Rate limiting specifics:** Research shows authenticated users need higher limits than anonymous, but exact thresholds (10 per 15 min? 100 per day?) require experimentation. **Mitigation:** Start conservative (10 flags per 15 min), monitor data, adjust based on abuse patterns.
+**During planning/execution:**
 
-**Flag count filter thresholds:** Admin queue should filter by min flag count (3+? 5+? 10+?), but optimal threshold depends on question volume and player base size. **Mitigation:** Implement filter with adjustable threshold, monitor data to calibrate.
+1. **Semantic similarity threshold tuning (Phase 1):** Research recommends 0.85-0.90 but optimal threshold depends on Civic Trivia's specific content. **Resolution:** Start with 0.90 (stricter), generate duplicate report for existing questions, manually review 20-30 flagged pairs to measure precision. Adjust in 0.05 increments if false positive rate >10%.
 
-**Elaboration text length:** No research consensus on optimal character limit. **Mitigation:** Start with 500 characters (standard for feedback forms), adjust if players consistently hit limit or submit mostly short text.
+2. **Cross-collection policy (Phase 2):** Should any questions be allowed across collections? Example: "Who is the governor?" could legitimately appear in both state and city collections if framed differently. **Resolution:** Define collection hierarchy (federal > state > city) and content specialization policy before Phase 2. General civic facts belong at highest relevant level; collection-specific angles allowed.
 
-**Mobile testing:** Flag button placement and textarea usability critical on mobile (49% of gaming revenue). **Mitigation:** Test on real devices (iOS/Android) before launch, verify 48x48dp tap targets, thumb-friendly zone placement (lower third of screen).
+3. **Overshoot multiplier calibration (Phase 4):** Research suggests 1.3x but actual multiplier depends on quality pass rates and duplicate rates observed during execution. **Resolution:** Track stats during Phase 4 first batch, calculate optimal multiplier: `target * (1 / pass_rate) * (1 / (1 - dup_rate))`, cap at 2x to avoid cost explosion.
 
-**Loop closure timing:** Research emphasizes closing feedback loop, but specifics of notification timing and content need experimentation. **Mitigation:** Phase 2+ can add notification system after observing flag submission patterns and admin resolution times.
+4. **Answer leakage detection algorithm (Phase 3):** Not well-documented whether simple text matching ("does explanation contain answer?") is sufficient or if LLM-based analysis needed. **Resolution:** Prototype simple approach first (check if correct answer string appears in other explanations with fuzzy matching). If false positive rate >20%, escalate to LLM-based semantic analysis.
+
+5. **RAG source filtering strategy (Phase 4):** As source documents grow, existing "load all sources" approach will degrade quality. **Resolution:** Implement topic-filtered RAG (embed topic descriptions, use cosine similarity to select top 5 relevant sources per generation batch). Monitor hallucination rate; if it increases, implement chunk-level retrieval with re-ranking.
 
 ## Sources
 
 ### Primary (HIGH confidence)
 
-**Progressive Disclosure & Game Flow:**
-- [Progressive Disclosure - NN/G](https://www.nngroup.com/articles/progressive-disclosure/) — UX pattern definition
-- [The High Cost of Interruption: Re-evaluating the Modal Dialog in Modern UX (Medium, Dec 2025)](https://medium.com/@adamshriki/the-high-cost-of-interruption-re-evaluating-the-modal-dialog-in-modern-ux-e448fb7559ff) — Flow interruption research
-- [Flow State Design: Applying Game Psychology to Productivity Apps (UX Magazine)](https://uxmag.com/articles/flow-state-design-applying-game-psychology-to-productivity-apps) — Game engagement patterns
+**Codebase analysis:**
+- `backend/src/services/qualityRules/rules/duplicate.ts` — existing text normalization approach, integration points
+- `backend/src/scripts/content-generation/utils/quality-validation.ts` — validateAndRetry() hook, retry loop architecture
+- `backend/src/scripts/content-generation/generate-locale-questions.ts` — generation pipeline flow, DuplicateDetector initialization
+- `backend/audit-report.md` — quality violation evidence, LA duplicate audit findings
+- Git status showing manual data edits and ad-hoc dedup scripts — database migration challenges
 
-**Real-World Examples:**
-- [Duolingo Help - How do I report a problem](https://support.duolingo.com/hc/en-us/articles/204752124-How-do-I-report-a-problem-with-a-sentence-or-translation-) — Inline flag pattern after answer submission
-- [Kahoot - How to flag inappropriate content](https://support.kahoot.com/hc/en-us/articles/115001711568-How-to-flag-inappropriate-Kahoot-content) — Human moderators review within 24 hours
-- [TikTok Dislike Button Explained](https://deliveredsocial.com/tiktok-dislike-button-explained-will-it-change-the-algorithm/) — Dislike vs report distinction
-
-**Stack & Rate Limiting:**
-- [express-rate-limit npm package](https://www.npmjs.com/package/express-rate-limit) — Industry standard, 10M+ weekly downloads
-- [Rate Limiting in Express.js - Better Stack Community](https://betterstack.com/community/guides/scaling-nodejs/rate-limiting-express/) — Configuration patterns
-- [express-validator documentation](https://express-validator.github.io/) — Input validation and sanitization
-
-**Content Moderation Best Practices:**
-- [Content Moderation: Types, Tools & Best Practices (Stream)](https://getstream.io/blog/content-moderation/) — Moderation queue patterns
-- [Treating Online Abuse Like Spam (PEN America)](https://pen.org/report/treating-online-abuse-like-spam/) — "Most abuse reporting systems fail: they never close the feedback loop"
-- [Disruption and Harms in Online Gaming: Penalty and Reporting Systems (ADL)](https://www.adl.org/resources/report/disruption-and-harms-online-gaming-resource-penalty-and-reporting-systems) — "If players do not feel their reports matter, they will not report abuse"
+**Official documentation:**
+- [OpenAI Embeddings API Pricing](https://costgoat.com/pricing/openai-embeddings) — cost analysis, batch API
+- [fast-cosine-similarity npm](https://www.npmjs.com/package/fast-cosine-similarity) — performance benchmarks, TypeScript support
+- [Anthropic Embeddings Documentation](https://platform.claude.com/docs/en/build-with-claude/embeddings) — Voyage AI recommendation
 
 ### Secondary (MEDIUM confidence)
 
-**Database & Schema:**
-- [Drizzle ORM PostgreSQL Best Practices Guide (2025)](https://gist.github.com/productdevbook/7c9ce3bbeb96b3fabc3c7c2aa2abc717) — Index patterns, foreign keys
-- [Database Versioning Best Practices (Enterprise Craftsmanship)](https://enterprisecraftsmanship.com/posts/database-versioning-best-practices/) — "Every change should be stored explicitly; never edit deployed migrations"
-- [Should I Create an Index on Foreign Keys in PostgreSQL? - Percona](https://www.percona.com/blog/should-i-create-an-index-on-foreign-keys-in-postgresql/) — Foreign key indexing
+**Academic research:**
+- [Semantic Similarity Analysis for Examination Questions Classification](https://www.mdpi.com/2076-3417/13/14/8323) — threshold recommendations, educational content patterns
+- [How do I use embeddings for duplicate detection?](https://zilliz.com/ai-faq/how-do-i-use-embeddings-for-duplicate-detection) — cosine similarity 0.9 threshold, industry standard
+- [Deduplicating records in systematic reviews](https://www.sciencedirect.com/science/article/abs/pii/S0895435622002566) — manual review workflows, automated tools not perfect
+- [ACM publication on answer leakage in quiz generation](https://dl.acm.org/doi/pdf/10.1145/3626772.3657855) — volleyball championship example
 
-**Admin Dashboard:**
-- [From Data To Decisions: UX Strategies For Real-Time Dashboards (Smashing Magazine, Sept 2025)](https://www.smashingmagazine.com/2025/09/ux-strategies-real-time-dashboards/) — Real-time vs stale data
-- [Understanding How Reddit Moderators Use the Modqueue (arXiv, Sept 2025)](https://arxiv.org/html/2509.07314v1) — Moderator collision patterns
-- [Review Queues - Stack Overflow](https://internal.stackoverflow.help/en/articles/8075993-review-queues) — Queue structure patterns
+**Industry best practices:**
+- [AI Hallucination Testing in 2026](https://medium.com/ai-in-quality-assurance/ai-hallucination-testing-in-2026-how-qa-engineers-detect-confidently-wrong-ai-answers-cb978ec6cc26) — fact verification strategies
+- [How to Optimize RAG Context Windows for Smarter Retrieval](https://medium.com/@ai.nishikant/how-to-optimize-rag-context-windows-b26859f03b2d) — topic filtering, chunking strategies
+- [AI Data Quality in 2026: Challenges & Best Practices](https://research.aimultiple.com/data-quality-ai/) — quality degradation at high volume
 
-**Mobile UX:**
-- [How to Create a Seamless UI/UX in Mobile Games (AppSamurai, Feb 2025)](https://appsamurai.com/blog/how-to-create-a-seamless-ui-ux-in-mobile-games/) — "All UI components need thumb-friendly zones and proper button dimensions"
-- [Mobile Game Statistics 2025 (GameAnalytics)](https://www.gameanalytics.com/reports/2025-mobile-gaming-benchmarks) — Mobile gaming represents 49% of global gaming revenue
+### Tertiary (LOW confidence, needs validation)
 
-### Tertiary (LOW confidence)
-
-**Abuse Prevention:**
-- [Challenges in Moderating Disruptive Player Behavior (Frontiers, 2024)](https://www.frontiersin.org/journals/computer-science/articles/10.3389/fcomp.2024.1283735/full) — "Small group of players engages in disruptive behavior"
-- [The Complete Rate Limiting Handbook (SaaS Custom Domains)](https://saascustomdomains.com/blog/posts/the-complete-rate-limiting-handbook-prevent-abuse-and-optimize-performance) — General rate limiting patterns (not trivia-specific)
+- [Best AI quiz generator tools in 2026](https://blog.vocaliv.com/top-5-best-ai-quiz-generator-tools-in-2026) — general trivia platform trends
+- [Content curation strategy best practices](https://www.semrush.com/blog/content-curation/) — overshoot strategies (not specific to AI generation)
+- [Duplicate data management in ML](https://dagshub.com/blog/mastering-duplicate-data-management-in-machine-learning-for-optimal-model-performance/) — acceptable duplicate rates (10-30% in ML contexts, different domain)
 
 ---
-*Research completed: 2026-02-21*
+*Research completed: 2026-02-22*
 *Ready for roadmap: yes*

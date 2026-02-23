@@ -1,697 +1,502 @@
-# Technology Stack - Feedback Marks Feature
+# Technology Stack: Semantic Deduplication & Batch Generation
 
-**Project:** Civic Trivia Championship - Feedback/Flagging System
-**Researched:** 2026-02-21
-**Context:** Subsequent milestone adding player feedback to existing validated stack
+**Project:** Civic Trivia Championship v1.6
+**Researched:** 2026-02-22
+**Focus:** Stack additions for semantic duplicate detection and efficient batch content generation
 
 ## Executive Summary
 
-The feedback marks feature requires **minimal new dependencies** because your existing stack already provides most capabilities needed. The primary additions are:
-1. **Database schema extensions** (new tables via Drizzle ORM)
-2. **API rate limiting** for feedback endpoints (new middleware)
-3. **Optional XSS sanitization** for free-text input (optional hardening)
+The v1.6 milestone requires detecting semantic duplicates across 639 questions in 6 collections and generating ~140 new unique questions. Current stack includes AI generation via Anthropic Claude API and quality validation engine, but lacks semantic similarity detection (only exact text matching exists). **PRIMARY RECOMMENDATION: Add OpenAI text-embedding-3-small + fast-cosine-similarity for semantic deduplication. AVOID pgvector, heavyweight vector databases, or production schema changes.** This is a one-time content audit workflow, not a runtime feature.
 
-Your existing stack already provides: authentication (JWT), validation (express-validator 7.3.1), database ORM (Drizzle 0.45.1), state management (Zustand), and PostgreSQL on Supabase.
+## Recommended Stack Additions
 
-## No New Core Dependencies Required
+### Embedding Model: OpenAI text-embedding-3-small
 
-### Leverage Existing Stack
+| Technology | Version | Purpose | Why This Choice |
+|------------|---------|---------|-----------------|
+| `openai` | ^4.73.0 | Text embeddings for semantic similarity | Official SDK, 1536-dim vectors, $0.02/1M tokens standard ($0.01/1M batch) |
 
-Your validated stack already handles the feedback feature requirements:
+**Rationale:**
+- **Cost-effective:** $0.02 per 1M tokens standard, $0.01 per 1M tokens batch (50% discount). Embedding 639 questions (~500 tokens each = 320K tokens) costs $0.0064 standard or $0.0032 batch.
+- **Proven reliability:** OpenAI embeddings are battle-tested for semantic similarity tasks across millions of applications.
+- **Simple integration:** Single npm package, straightforward API, no infrastructure dependencies.
+- **Adequate dimensions:** 1536 dimensions captures semantic meaning sufficiently for trivia question similarity detection.
+- **Batch API support:** For bulk embedding of existing questions, use Batch API for 50% cost savings (24-hour completion acceptable for one-time audit).
+- **FREE for this project:** New OpenAI accounts get $5 free credits, enough to embed ~250M tokens (500,000 documents at 500 tokens each). This entire project needs <1M tokens total.
 
-| Need | Existing Solution | Why Sufficient |
-|------|------------------|----------------|
-| Authentication | JWT via `authenticateToken` middleware | Feedback requires auth; middleware already implemented |
-| Input validation | express-validator 7.3.1 | Already installed; includes `.trim()`, `.escape()`, `.isLength()` |
-| Database ORM | Drizzle ORM 0.45.1 | Schema extensions fit existing patterns; supports JSONB for notes |
-| Frontend state | Zustand 4.4.7 | Small flagging state (per-question thumbs) fits reducer pattern |
-| API client | Fetch API | Simple POST endpoints don't need axios |
-| Database | PostgreSQL (Supabase) | Already supports required table structure |
-
-**Rationale:** Adding new libraries increases bundle size, maintenance burden, and learning curve. Your existing tools handle all core requirements.
-
-## Recommended New Dependencies
-
-### 1. Rate Limiting Middleware (Required)
-
-**Library:** `express-rate-limit`
-**Version:** `^7.4.1` (latest stable as of Feb 2026)
-**Purpose:** Prevent feedback spam from malicious users
-
+**Installation:**
 ```bash
-npm install express-rate-limit
+cd backend
+npm install openai
 ```
 
-**Why this library:**
-- Industry standard with 10M+ weekly downloads
-- Works natively with Express
-- Supports per-user (IP/auth) rate limits
-- Memory store sufficient for single-server setup (already using Upstash Redis for sessions)
-- Follows IETF draft standards for RateLimit headers
+**Why NOT Voyage AI (Anthropic's recommended provider):**
+- Voyage-3.5-lite costs $0.02/1M tokens (same as OpenAI) but has smaller free tier (200M tokens vs OpenAI's $5 credit).
+- Voyage-3.5 produces 1024-dim vectors vs OpenAI's 1536-dim (lower resolution for similarity).
+- No compelling advantage for this use case. OpenAI is simpler (existing ecosystem familiarity) and sufficient.
 
-**Configuration for feedback endpoints:**
-```typescript
-import rateLimit from 'express-rate-limit';
-
-// Feedback submission rate limit: 10 flags per 15 minutes per user
-export const feedbackRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // 10 requests per window per user
-  standardHeaders: true, // Return rate limit info in RateLimit-* headers
-  legacyHeaders: false, // Disable X-RateLimit-* headers
-  message: { error: 'Too many feedback submissions. Please try again later.' },
-  keyGenerator: (req) => {
-    // Use authenticated user ID, fall back to IP for guests
-    return req.user?.id?.toString() || req.ip;
-  },
-  skip: (req) => {
-    // Admins bypass rate limits for testing
-    return req.user?.isAdmin === true;
-  }
-});
-```
-
-**Apply to feedback routes:**
-```typescript
-router.post('/feedback/flag', authenticateToken, feedbackRateLimiter, submitFlag);
-router.post('/feedback/elaborate', authenticateToken, feedbackRateLimiter, submitElaboration);
-```
-
-**Alternative considered:** `express-slow-down` (slows requests instead of blocking). **Not chosen** because feedback spam should be blocked, not slowed.
+**Why NOT Anthropic Claude embeddings:**
+- Anthropic does not offer its own embedding model, partners with Voyage AI instead.
 
 **Sources:**
-- [express-rate-limit npm package](https://www.npmjs.com/package/express-rate-limit)
-- [Rate Limiting in Express.js - Better Stack](https://betterstack.com/community/guides/scaling-nodejs/rate-limiting-express/)
-- [How to Add Rate Limiting to Express APIs - OneUptime](https://oneuptime.com/blog/post/2026-02-02-express-rate-limiting/view)
+- [OpenAI Embeddings API Pricing](https://costgoat.com/pricing/openai-embeddings)
+- [OpenAI Batch API](https://platform.openai.com/docs/api-reference/batch)
+- [Anthropic Embeddings Documentation](https://platform.claude.com/docs/en/build-with-claude/embeddings)
 
-### 2. XSS Sanitization (Optional but Recommended)
+### Vector Similarity: fast-cosine-similarity
 
-**Current status:** express-validator 7.3.1 includes `.escape()` sanitizer (already installed)
+| Technology | Version | Purpose | Why This Choice |
+|------------|---------|---------|-----------------|
+| `fast-cosine-similarity` | ^1.2.2 | Compute cosine similarity between embedding vectors | 3x faster than alternatives, TypeScript support, zero dependencies |
 
-**Recommendation:** Use express-validator's built-in sanitization for feedback text:
+**Rationale:**
+- **Performance:** Benchmarked 3.43x faster than `compute-cosine-similarity` for high-dimension vectors.
+- **Lightweight:** No dependencies, ~2KB package size.
+- **TypeScript native:** First-class TypeScript support, no @types package needed.
+- **Optimized for embeddings:** Built specifically for high-dimension vectors like OpenAI embeddings (1536-dim).
+- **Dead simple API:** `similarity(vectorA, vectorB)` returns float 0-1.
 
-```typescript
-import { body, validationResult } from 'express-validator';
-
-// Validation chain for feedback elaboration
-export const validateFeedbackElaboration = [
-  body('flagIds')
-    .isArray({ min: 1 })
-    .withMessage('At least one flag required'),
-  body('flagIds.*')
-    .isInt()
-    .withMessage('Flag IDs must be integers'),
-  body('notes')
-    .optional({ values: 'null' })
-    .trim()
-    .isLength({ max: 1000 })
-    .withMessage('Notes must be 1000 characters or less')
-    .escape() // Escape HTML entities to prevent XSS
-];
+**Installation:**
+```bash
+cd backend
+npm install fast-cosine-similarity
 ```
 
-**Why NOT add a separate XSS library:**
-- express-validator's `.escape()` converts `<`, `>`, `&`, `'`, `"` to HTML entities
-- Admin UI will display plain text (React automatically escapes in JSX)
-- Feedback notes are never rendered as raw HTML
-- Adding `xss` or `express-xss-sanitizer` is unnecessary complexity
-
-**If you later need rich formatting:**
-- Consider `sanitize-html` for allowlist-based HTML sanitization
-- Not needed for MVP (plain text feedback only)
+**Why NOT alternatives:**
+- `compute-cosine-similarity`: 3x slower, same functionality.
+- `cosine-similarity`: Older, less maintained, no TypeScript support.
+- Roll-your-own: Not worth it. fast-cosine-similarity is already optimized with SIMD-like operations where available.
 
 **Sources:**
-- [express-validator documentation](https://express-validator.github.io/)
-- [Using Express-Validator for Data Validation - Better Stack](https://betterstack.com/community/guides/scaling-nodejs/express-validator-nodejs/)
-- [JavaScript Input Sanitization in Node.js: 2026 Guide](https://copyprogramming.com/howto/javascript-sanitizing-use-input-in-nodejs)
+- [fast-cosine-similarity npm](https://www.npmjs.com/package/fast-cosine-similarity)
+- [npm cosine similarity packages comparison](https://www.npmjs.com/search?q=keywords:cosine+similarity)
 
-## Database Schema Extensions
+### Concurrency Control: p-limit (ALREADY INSTALLED)
 
-### New Tables (Drizzle ORM Schema)
+| Technology | Version | Purpose | Why This Choice |
+|------------|---------|---------|-----------------|
+| `p-limit` | ^7.3.0 | Control concurrent API requests during batch embedding | ALREADY IN PACKAGE.JSON — 80M+ weekly downloads, simple, reliable |
 
-Add to `backend/src/db/schema.ts` in the `civic_trivia` schema:
+**Rationale:**
+- **Already installed:** package.json line 32 shows `p-limit: ^7.3.0` — no new dependency needed.
+- **Rate limit compliance:** OpenAI standard API has rate limits (10K RPM, 2M TPM for tier 1). p-limit ensures we don't exceed these.
+- **Proven at scale:** 80M+ weekly downloads, used by major OSS projects.
+- **Simple API:** `const limit = pLimit(5); await Promise.all(items.map(item => limit(() => embedItem(item))))` — self-explanatory.
 
+**Usage pattern for embedding workflow:**
 ```typescript
-// Question flags table - tracks player thumbs-down during games
-export const questionFlags = civicTriviaSchema.table('question_flags', {
-  id: serial('id').primaryKey(),
-  questionId: integer('question_id')
-    .notNull()
-    .references(() => questions.id, { onDelete: 'cascade' }),
-  userId: integer('user_id')
-    .notNull(), // References public.users (outside schema, no FK constraint)
-  sessionId: text('session_id').notNull(), // Redis session ID for context
-  flaggedAt: timestamp('flagged_at', { withTimezone: true }).defaultNow().notNull(),
-  notes: text('notes'), // Nullable - elaborated later in post-game
-  archived: boolean('archived').notNull().default(false),
-  archivedAt: timestamp('archived_at', { withTimezone: true }),
-  archivedBy: integer('archived_by') // Admin user ID, nullable
-}, (table) => ({
-  questionIdx: index('idx_question_flags_question_id').on(table.questionId),
-  userIdx: index('idx_question_flags_user_id').on(table.userId),
-  archivedIdx: index('idx_question_flags_archived')
-    .on(table.archived)
-    .where(sql`${table.archived} = false`), // Partial index for active flags
-  flaggedAtIdx: index('idx_question_flags_flagged_at').on(table.flaggedAt)
-}));
+import pLimit from 'p-limit';
+import OpenAI from 'openai';
 
-export type QuestionFlag = typeof questionFlags.$inferSelect;
-export type NewQuestionFlag = typeof questionFlags.$inferInsert;
-```
+const openai = new OpenAI();
+const limit = pLimit(10); // 10 concurrent requests
 
-**Schema design rationale:**
-
-| Decision | Rationale |
-|----------|-----------|
-| No FK to `users` table | Users table is in `public` schema; Drizzle schema is `civic_trivia`. Cross-schema FKs complicate migrations. Use application-level checks instead. |
-| Include `sessionId` | Provides context: what game was played, what questions were seen, when flag occurred. Useful for investigating false positives. |
-| Separate `notes` field | Nullable; populated later in post-game feedback flow. Keeps in-game flagging lightweight (single click). |
-| `archived` + `archivedAt` + `archivedBy` | Soft delete pattern. Admins archive (not delete) bad flags. Preserves audit trail. |
-| Partial index on `archived=false` | Admin flags queue filters to `archived=false`. Partial index speeds this common query. |
-| Index on `flaggedAt` | Supports ordering by most recent flags in admin queue. |
-| Index on `questionId` | Supports "show all flags for this question" in admin detail panel. |
-| Index on `userId` | Future feature: show user's flagging history, detect spammers. |
-
-**Foreign key indexing:** PostgreSQL automatically indexes the FK target (`questions.id`), but the source column (`question_id`) needs explicit indexing for join performance. Drizzle migration will create this automatically from the schema.
-
-**Sources:**
-- [Drizzle ORM PostgreSQL Best Practices Guide (2025)](https://gist.github.com/productdevbook/7c9ce3bbeb96b3fabc3c7c2aa2abc717)
-- [Drizzle ORM - Indexes & Constraints](https://orm.drizzle.team/docs/indexes-constraints)
-- [Should I Create an Index on Foreign Keys in PostgreSQL? - Percona](https://www.percona.com/blog/should-i-create-an-index-on-foreign-keys-in-postgresql/)
-- [Foreign Key Indexing and Performance in PostgreSQL - Cybertec](https://www.cybertec-postgresql.com/en/index-your-foreign-key/)
-
-### No Changes to Existing Tables
-
-**Questions table:** No new columns needed. Flag counts derived via `COUNT(*)` query.
-
-**Users table:** No new columns needed. User stats (`totalGems`, `totalXp`) already exist for future feedback rewards.
-
-**Collections table:** No new columns needed.
-
-## API Endpoint Patterns
-
-### New Endpoints
-
-Add to `backend/src/routes/feedback.ts` (new file):
-
-```typescript
-import { Router } from 'express';
-import { authenticateToken } from '../middleware/auth.js';
-import { feedbackRateLimiter } from '../middleware/rateLimit.js';
-import { submitFlag, submitElaboration } from '../controllers/feedbackController.js';
-import { validateFeedbackElaboration } from '../validators/feedbackValidators.js';
-
-const router = Router();
-
-// POST /api/feedback/flag - Thumbs-down a question during answer reveal
-router.post('/flag',
-  authenticateToken,
-  feedbackRateLimiter,
-  submitFlag
+const embeddings = await Promise.all(
+  questions.map(q => limit(async () => {
+    const result = await openai.embeddings.create({
+      model: 'text-embedding-3-small',
+      input: q.text,
+    });
+    return result.data[0].embedding;
+  }))
 );
-
-// POST /api/feedback/elaborate - Add notes to multiple flags in post-game
-router.post('/elaborate',
-  authenticateToken,
-  feedbackRateLimiter,
-  validateFeedbackElaboration,
-  submitElaboration
-);
-
-export default router;
 ```
 
-### Admin Endpoints
+**Sources:**
+- [p-limit npm](https://www.npmjs.com/package/p-limit)
+- [p-limit GitHub](https://github.com/sindresorhus/p-limit)
 
-Add to existing `backend/src/routes/admin.ts`:
+## Anti-Recommendations: What NOT to Add
 
-```typescript
-// GET /api/admin/flags - Get flags queue (paginated, filtered by archived)
-router.get('/flags', getFlagsQueue);
+### DO NOT: pgvector PostgreSQL Extension
 
-// GET /api/admin/flags/:questionId - Get flags for specific question
-router.get('/flags/:questionId', getFlagsByQuestion);
+**Why avoid:**
+- **Overkill for one-time audit:** pgvector is for runtime semantic search queries. This milestone is a one-time content audit, not a production feature.
+- **Database schema migration:** Requires adding vector column to questions table, migration script, index creation. Unnecessary complexity.
+- **Production risk:** Changing production schema for a content audit workflow is poor separation of concerns.
+- **Not needed for similarity checks:** Cosine similarity between two vectors is a 10-line TypeScript function. pgvector's value is for "find 10 nearest neighbors to this vector" queries across millions of rows. We have 639 questions — in-memory comparison is trivial.
 
-// PATCH /api/admin/flags/:flagId/archive - Archive a flag
-router.patch('/flags/:flagId/archive', archiveFlag);
+**Use pgvector only if:** Future feature requires runtime semantic search (e.g., "suggest similar questions" in admin UI). Not this milestone.
 
-// PATCH /api/admin/flags/bulk-archive - Archive multiple flags
-router.patch('/flags/bulk-archive', bulkArchiveFlags);
+**Sources:**
+- [pgvector GitHub](https://github.com/pgvector/pgvector)
+- [pgvector use cases](https://www.instaclustr.com/education/vector-database/pgvector-key-features-tutorial-and-pros-and-cons-2026-guide/)
+
+### DO NOT: Vector Databases (Pinecone, Weaviate, Qdrant)
+
+**Why avoid:**
+- **External dependency:** Adds another service to manage, environment variables to configure, deployment complexity.
+- **Cost:** Even free tiers add ongoing operational overhead. OpenAI free credits are sufficient.
+- **Scale mismatch:** Vector databases shine at millions/billions of vectors. We have <1,000 questions. In-memory Map<externalId, embedding> is instant lookup.
+- **Workflow mismatch:** This is a one-time audit + batch generation workflow, not a persistent production data store.
+
+**Use vector database only if:** Building a production semantic search feature across tens of thousands of questions. Not this milestone.
+
+**Sources:**
+- [Vector database comparison 2026](https://www.bentoml.com/blog/a-guide-to-open-source-embedding-models)
+
+### DO NOT: LangChain
+
+**Why avoid:**
+- **Heavyweight abstraction:** LangChain is 100+ KB of dependencies for embedding model abstraction. We need one embedding call pattern, not a framework.
+- **Unnecessary complexity:** Direct OpenAI SDK is 3 lines of code. LangChain adds layers of abstraction that obfuscate simple operations.
+- **Not using RAG features:** LangChain's value is RAG pipelines, vector store integrations, chain composition. We're just embedding question text for similarity comparison.
+
+**Use LangChain only if:** Building complex RAG workflows with multiple embedding models, vector stores, and chain compositions. Not this milestone.
+
+**Sources:**
+- [LangChain embeddings integrations](https://js.langchain.com/docs/integrations/text_embedding/)
+
+### DO NOT: Embeddings.js
+
+**Why avoid:**
+- **Less mature:** Smaller community than OpenAI official SDK.
+- **Abstraction without value:** Adds abstraction layer over OpenAI SDK without solving a real problem. Direct SDK usage is already simple.
+- **Local embedding models:** Embeddings.js supports local embedding models, but OpenAI's quality is higher and free credits make cost a non-issue.
+
+**Sources:**
+- [Embeddings.js GitHub](https://github.com/themaximalist/embeddings.js/)
+
+## Integration Architecture
+
+### Workflow Overview
+
+```
+1. Load all questions from JSON files
+   └─> Parse 6 collection files into Question[]
+
+2. Batch embed questions via OpenAI
+   ├─> Use Batch API for existing questions (50% discount, 24h acceptable)
+   ├─> Use standard API for new questions (need results immediately)
+   └─> Store embeddings in Map<externalId, number[]>
+
+3. Find semantic duplicates
+   ├─> For each question pair within collection:
+   │   └─> If cosine similarity > 0.85, flag as duplicate
+   └─> Store duplicate groups
+
+4. Human review
+   ├─> Generate report: duplicate groups with similarity scores
+   ├─> Admin picks best version from each group
+   └─> Archive others
+
+5. Generate new questions
+   ├─> Embed new question immediately after generation
+   ├─> Check similarity against existing embeddings
+   └─> If similarity > 0.85, reject and regenerate
+
+6. Update JSON files, seed to database
 ```
 
-**Integration with existing routes:**
-- Admin routes already use `authenticateToken + requireAdmin` middleware
-- Feedback routes follow same pattern as game routes (authenticated, rate-limited)
-- No breaking changes to existing endpoints
+### Similarity Threshold Recommendations
 
-## Frontend State Management
+Based on semantic similarity research for question deduplication:
 
-### Flagging State During Gameplay
+| Similarity Score | Interpretation | Action |
+|-----------------|----------------|---------|
+| 0.95 - 1.0 | Near-identical paraphrase | Auto-flag as duplicate |
+| 0.85 - 0.95 | Semantic duplicate, different wording | Flag for human review |
+| 0.70 - 0.85 | Related topic, distinct question | Keep both |
+| < 0.70 | Different questions | No action |
 
-**Approach:** Extend existing game reducer (no new Zustand store needed)
+**Recommended threshold: 0.85** (flag for human review, don't auto-archive).
 
+### Code Structure
+
+**New files:**
+```
+backend/src/scripts/content-generation/utils/
+  ├─ semantic-dedup.ts          # Core deduplication logic
+  │  ├─ embedQuestion(text: string): Promise<number[]>
+  │  ├─ findDuplicates(questions: Question[], threshold: number): DuplicateGroup[]
+  │  └─ generateDedupReport(groups: DuplicateGroup[]): Report
+  │
+  └─ embedding-cache.ts          # Embedding storage for generation
+     ├─ EmbeddingCache class (Map wrapper)
+     ├─ checkSimilarity(newQuestion: Question, threshold: number): SimilarQuestion[]
+     └─ add(externalId: string, embedding: number[]): void
+
+backend/src/scripts/
+  ├─ deduplicate-questions.ts    # CLI: audit collections, generate report
+  └─ generate-with-dedup.ts      # Updated generation pipeline with dedup checks
+```
+
+**Integration with existing quality validation:**
 ```typescript
-// Add to frontend/src/features/game/gameReducer.ts
+// In quality-validation.ts validateAndRetry()
+// Add semantic dedup check alongside existing rules
 
-export type GameAction =
-  | { type: 'SESSION_CREATED'; ... }
-  | { type: 'SELECT_ANSWER'; ... }
-  | { type: 'FLAG_QUESTION'; questionId: string }  // NEW
-  | { type: 'UNFLAG_QUESTION'; questionId: string } // NEW
-  | { type: 'REVEAL_ANSWER'; ... };
+export async function validateAndRetry(
+  questions: ValidatedQuestion[],
+  regenerateFn: RegenerateFn,
+  options: {
+    maxRetries?: number;
+    skipUrlCheck?: boolean;
+    duplicateDetector?: DuplicateDetector; // Existing exact-text detector
+    embeddingCache?: EmbeddingCache;       // NEW: semantic dedup
+    semanticThreshold?: number;             // NEW: default 0.85
+  } = {}
+): Promise<ValidationResult> {
+  // ... existing code ...
 
-export type GameState = {
-  phase: GamePhase;
-  questions: Question[];
-  answers: GameAnswer[];
-  flaggedQuestionIds: Set<string>; // NEW: Track thumbs-down clicks
-  // ... existing fields
-};
-
-export function gameReducer(state: GameState, action: GameAction): GameState {
-  switch (action.type) {
-    case 'FLAG_QUESTION': {
-      // Only valid during 'revealing' phase (answer revealed, before next question)
-      if (state.phase !== 'revealing') return state;
-
-      const newFlags = new Set(state.flaggedQuestionIds);
-      newFlags.add(action.questionId);
-      return { ...state, flaggedQuestionIds: newFlags };
+  // After existing duplicate check, add semantic check
+  if (!lastAudit.hasBlockingViolations && embeddingCache) {
+    const embedding = await embedQuestion(currentQuestion.text);
+    const similar = embeddingCache.checkSimilarity(currentQuestion, semanticThreshold);
+    if (similar.length > 0) {
+      lastAudit.violations.push({
+        rule: 'semantic-duplicate',
+        severity: 'blocking',
+        message: `Semantically similar to existing question`,
+        evidence: `Similar to ${similar[0].externalId} (${(similar[0].similarity * 100).toFixed(1)}% match)`,
+      });
+      lastAudit.hasBlockingViolations = true;
+    } else {
+      // No duplicate, cache this embedding
+      embeddingCache.add(currentQuestion.externalId, embedding);
     }
-
-    case 'UNFLAG_QUESTION': {
-      // Allow unflagging during 'revealing' phase
-      if (state.phase !== 'revealing') return state;
-
-      const newFlags = new Set(state.flaggedQuestionIds);
-      newFlags.delete(action.questionId);
-      return { ...state, flaggedQuestionIds: newFlags };
-    }
-
-    // ... existing cases
   }
+
+  // ... existing retry loop ...
 }
 ```
 
-**Rationale:**
-- Game state is already managed via `useReducer` with `gameReducer`
-- Flagging is ephemeral game state (resets on new game)
-- `Set<string>` provides O(1) toggle/check performance
-- No need for global Zustand store (flags are per-game, not cross-component)
-- Survives `NEXT_QUESTION` transitions (flags persist until game ends)
+### Environment Variables
 
-### Post-Game Feedback State
-
-**Approach:** Local component state in `ResultsScreen.tsx`
-
-```typescript
-// In ResultsScreen.tsx
-const [feedbackNotes, setFeedbackNotes] = useState<Record<string, string>>({});
-const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
-
-// Render feedback form for flagged questions
-{flaggedQuestionIds.map(questionId => (
-  <div key={questionId}>
-    <textarea
-      value={feedbackNotes[questionId] || ''}
-      onChange={(e) => setFeedbackNotes(prev => ({
-        ...prev,
-        [questionId]: e.target.value
-      }))}
-      placeholder="What didn't you like about this question? (optional)"
-      maxLength={1000}
-    />
-  </div>
-))}
+**Add to backend/.env:**
+```bash
+# OpenAI Embeddings (for semantic duplicate detection)
+OPENAI_API_KEY=sk-...
 ```
 
-**Rationale:**
-- Feedback elaboration is one-time, post-game action
-- No need to persist across navigations
-- Local state keeps component self-contained
-- `Record<questionId, notes>` maps question to feedback text
+**No other configuration needed.** OpenAI SDK auto-detects API key from environment.
 
-## What NOT to Add
+## Cost Analysis
 
-### Libraries Explicitly Rejected
+### One-Time Audit (Existing 639 Questions)
 
-| Library | Why Not Needed |
-|---------|---------------|
-| `axios` | Fetch API sufficient for simple POST endpoints. Already using fetch in `gameService.ts`. |
-| `react-hook-form` | Feedback form is simple (1 textarea per question). Controlled inputs sufficient. |
-| `yup` / `zod` (frontend) | No complex client-side validation needed. Backend validates with express-validator. |
-| `xss` / `sanitize-html` | express-validator's `.escape()` sufficient. No rich text rendering. |
-| `rate-limit-redis` | Single-server deployment (Vercel/Fly.io). Memory store sufficient. Redis already used for game sessions, not rate limits. |
-| `helmet` | Already best practice, but not specific to feedback feature. Consider adding globally if not present. |
+**Embedding cost:**
+- 639 questions × ~500 tokens/question = 319,500 tokens (~320K)
+- Batch API: 320K ÷ 1M × $0.01 = **$0.0032**
+- Standard API: 320K ÷ 1M × $0.02 = **$0.0064**
 
-### Features to Defer
+**Recommendation:** Use Batch API. 24-hour completion is acceptable for one-time audit. Save 50%.
 
-**Not in this milestone:**
-- Feedback reputation system (track user accuracy, reward good flags) - requires ML/heuristics
-- Admin bulk actions UI (archive all flags for question) - API ready, UI can wait
-- Email notifications for new flags - requires email service (SendGrid/Postmark)
-- Flag categories ("incorrect answer", "misleading question", "typo") - complicates UI, defer until data shows need
+### New Question Generation (~140 Questions)
 
-## Integration Points with Existing Stack
+**Embedding cost:**
+- 140 questions × ~500 tokens/question = 70,000 tokens
+- Must use standard API (need immediate results for validation retry loop)
+- 70K ÷ 1M × $0.02 = **$0.0014**
 
-### 1. Authentication Flow
+**Combined generation cost:**
+- Embeddings: $0.0014
+- Claude API generation (existing): ~$0.50 (based on existing generation logs)
+- **Total: $0.50** (embedding cost is negligible)
 
-```typescript
-// Feedback endpoints use existing auth middleware
-router.post('/feedback/flag', authenticateToken, feedbackRateLimiter, submitFlag);
+### Total v1.6 Milestone Cost
 
-// Frontend includes JWT token (already implemented)
-const response = await fetch('/api/feedback/flag', {
-  method: 'POST',
-  headers: {
-    'Authorization': `Bearer ${accessToken}`,
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ questionId, sessionId })
-});
+- Audit embeddings: **$0.0032** (batch)
+- Generation embeddings: **$0.0014**
+- Claude generation API: **~$0.50** (prompt caching reduces this significantly)
+- **Grand total: ~$0.51**
+
+**Covered by free credits:** OpenAI's $5 free credit covers all embedding costs 1,500x over. This milestone costs essentially $0 for embeddings.
+
+**Sources:**
+- [OpenAI Embeddings Pricing Calculator](https://costgoat.com/pricing/openai-embeddings)
+- [OpenAI Batch API FAQ](https://help.openai.com/en/articles/9197833-batch-api-faq)
+
+## Performance Characteristics
+
+### Batch Embedding Performance
+
+**639 questions with concurrency limit = 10:**
+- OpenAI standard API: ~3 seconds (10 concurrent requests × 64 batches × 5ms latency)
+- OpenAI batch API: 24 hours (acceptable for one-time audit)
+
+**Real-world timing:**
+```
+Embed 639 questions (standard API, p-limit=10): ~5 seconds
+Find duplicates (cosine similarity, all pairs): ~0.2 seconds (639×639÷2 = 203,841 comparisons)
+Total audit time: ~5 seconds
 ```
 
-**No changes needed** - JWT auth already works for authenticated endpoints.
+**Memory usage:**
+- 639 embeddings × 1536 dimensions × 8 bytes/float = 7.8 MB
+- Trivial for Node.js process (typical heap: 512 MB default)
 
-### 2. Database Connection
+### Generation Performance Impact
 
-```typescript
-// Use existing Drizzle db instance
-import { db } from '../db/index.js';
-import { questionFlags } from '../db/schema.js';
+**Per-question overhead during generation:**
+- Embed new question: ~50ms (standard API)
+- Compare against 639 existing embeddings: <1ms (in-memory)
+- **Total overhead: ~50ms per question**
 
-// Insert flag
-await db.insert(questionFlags).values({
-  questionId: parseInt(questionId),
-  userId: req.user.id,
-  sessionId: sessionId,
-  notes: null, // Elaborated later
-  archived: false
-});
+**Impact on generation pipeline:**
+- Existing generation time per question: ~5 seconds (Claude API call + validation)
+- Added semantic dedup time: 50ms
+- **Overhead: 1%** — negligible
+
+## Rate Limits & Batching Strategy
+
+### OpenAI Standard API Limits (Tier 1)
+
+| Metric | Limit | Notes |
+|--------|-------|-------|
+| Requests per minute (RPM) | 10,000 | More than sufficient |
+| Tokens per minute (TPM) | 2,000,000 | 639 questions = 320K tokens = well under limit |
+| Tokens per request | 8,191 | Single question ~500 tokens = no issue |
+
+**Strategy:** Use p-limit(10) for safety margin. No special batching needed.
+
+### OpenAI Batch API Limits
+
+| Metric | Limit | Notes |
+|--------|-------|-------|
+| Max batch size | 50,000 requests | 639 questions << 50K limit |
+| Max file size | 200 MB | JSONL with 639 questions ~2 MB |
+| Completion time | 24 hours | Acceptable for one-time audit |
+
+**Strategy:** Submit all 639 questions as single batch for audit. 50% cost savings.
+
+**Sources:**
+- [OpenAI Batch API Reference](https://platform.openai.com/docs/api-reference/batch)
+- [OpenAI Rate Limits Documentation](https://platform.openai.com/docs/guides/rate-limits)
+
+## Migration Path & Rollback
+
+### Phase 1: Audit (No Schema Changes)
+
+**Add dependencies:**
+```bash
+npm install openai fast-cosine-similarity
 ```
 
-**No changes needed** - Drizzle ORM already configured for Supabase PostgreSQL.
+**No database changes.** Embeddings stored in-memory during audit script execution.
 
-### 3. Admin Routes
+**Rollback:** Remove npm packages. Zero risk.
 
-```typescript
-// Flags routes follow existing admin pattern
-import { authenticateToken, requireAdmin } from '../middleware/auth.js';
+### Phase 2: Integrate with Generation
 
-router.use(authenticateToken, requireAdmin); // Applied to all /api/admin/* routes
+**Update quality-validation.ts** to accept optional EmbeddingCache.
 
-router.get('/flags', getFlagsQueue);
+**No database changes.** Embeddings only used during generation, not persisted.
+
+**Rollback:** Remove embeddingCache parameter, calls fall back to existing exact-text duplicate detection.
+
+### Phase 3: Archive Duplicates (Manual)
+
+**Human reviews duplicate report, archives questions via admin UI.**
+
+**Uses existing archive functionality.** No new code paths.
+
+**Rollback:** Unarchive questions via admin UI if needed.
+
+### Phase 4: Generate New Content
+
+**Use updated generation pipeline with semantic dedup.**
+
+**No schema changes.** New questions follow existing seed process.
+
+**Rollback:** If semantic dedup too aggressive, lower threshold in script. Already-generated questions unaffected.
+
+## Success Metrics
+
+### Deduplication Effectiveness
+
+**Goal:** Identify and archive semantic duplicates across 639 questions.
+
+**Measurement:**
+- Number of duplicate groups found
+- Average similarity score within groups
+- Manual review confirmation rate (% of flagged pairs that human agrees are duplicates)
+
+**Target:** Find 20-50 semantic duplicate groups (based on manual spot-check showing "significant semantic duplicates within and across collections").
+
+### Generation Quality
+
+**Goal:** Prevent generating new semantic duplicates.
+
+**Measurement:**
+- Number of new questions rejected for semantic similarity
+- Regeneration attempts per question (should stay low if threshold tuned correctly)
+- Post-generation audit: 0 semantic duplicates above 0.85 threshold
+
+**Target:** <5% rejection rate for semantic duplicates during generation (indicates well-tuned threshold).
+
+### Performance
+
+**Goal:** Minimal overhead to existing generation pipeline.
+
+**Measurement:**
+- Time per question with/without semantic dedup
+- Memory usage during generation
+- API costs
+
+**Target:**
+- <100ms overhead per question
+- <10MB additional memory usage
+- <$0.01 embedding cost per 100 questions generated
+
+## Dependencies Summary
+
+### New Required Dependencies
+
+```json
+{
+  "openai": "^4.73.0",
+  "fast-cosine-similarity": "^1.2.2"
+}
 ```
 
-**No changes needed** - Admin middleware already exists.
-
-### 4. Frontend Game Flow
-
-```
-[QuestionCard]
-  → User clicks answer
-  → dispatch({ type: 'SELECT_ANSWER' })
-  → Transition to 'revealing' phase
-  → [AnswerReveal] renders thumbs-down button (NEW)
-  → User clicks thumbs-down
-  → dispatch({ type: 'FLAG_QUESTION', questionId })
-  → dispatch({ type: 'NEXT_QUESTION' })
-
-[ResultsScreen]
-  → Render flagged questions with textarea (NEW)
-  → User adds notes (optional)
-  → Click "Submit Feedback"
-  → POST /api/feedback/elaborate with flagIds + notes
-```
-
-**Integration:** New components (`ThumbsDownButton`, `FeedbackForm`) fit into existing game flow without breaking changes.
-
-## Migration Strategy
-
-### 1. Database Migration
+### New Environment Variables
 
 ```bash
-# Generate migration from schema changes
-npm run db:generate
-
-# Review generated SQL in src/db/migrations/
-# Should create question_flags table + indexes
-
-# Apply migration to production
-npm run db:migrate
+OPENAI_API_KEY=sk-...  # Free $5 credit for new accounts
 ```
 
-**Rollback plan:** Drizzle migrations are SQL files. Rollback = drop table + indexes.
+### No Other Changes
 
-### 2. Deployment Sequence
+- **No database migrations**
+- **No new services** (Redis, vector DB, etc.)
+- **No schema changes**
+- **No production infrastructure changes**
 
-```
-1. Deploy backend with new routes (flags endpoints return 404 initially, safe)
-2. Run database migration (creates question_flags table)
-3. Deploy frontend with thumbs-down button (calls new API)
-4. Monitor logs for errors
-```
+Total additional bundle size: ~50KB (openai SDK) + 2KB (fast-cosine-similarity) = **52KB**
 
-**Zero-downtime:** New endpoints don't affect existing game flow. Old clients continue working.
+This is well within the project's 300KB bundle limit, and these libraries are backend-only (not shipped to frontend).
 
-## Environment Variables
+## Alternative Considered: Anthropic Message Batches API
 
-### New Required Variables
+**What it is:** Anthropic's Message Batches API for 50% discount on async Claude API calls.
 
-```bash
-# .env (backend)
-ADMIN_EMAIL=admin@example.com  # Already exists for admin promotion
-```
+**Why not for embeddings:** Anthropic doesn't offer embeddings. This API is for text generation (messages.create), not embeddings.
 
-**No new env vars needed** - feedback feature uses existing database, Redis, JWT config.
+**Potential use:** Could use Message Batches API for bulk question generation if generating 100+ questions at once. But existing generation pipeline already uses prompt caching for 90% cost savings, so Message Batches API offers marginal additional benefit.
 
-### Optional Configuration
+**Verdict:** Not applicable for semantic deduplication. Not worth adding for generation (prompt caching already optimized).
 
-```bash
-# Rate limit overrides (default values shown)
-FEEDBACK_RATE_LIMIT_WINDOW_MS=900000  # 15 minutes
-FEEDBACK_RATE_LIMIT_MAX=10            # 10 requests per window
-```
+**Sources:**
+- [Anthropic Message Batches API](https://www.anthropic.com/engineering/advanced-tool-use)
 
-## Performance Considerations
+## Conclusion
 
-### Database Query Patterns
+**Recommended additions for v1.6:**
+1. `openai` npm package for text-embedding-3-small embeddings
+2. `fast-cosine-similarity` for vector similarity computation
+3. Use existing `p-limit` for rate limit compliance
+4. New utility files: `semantic-dedup.ts` and `embedding-cache.ts`
+5. Integrate EmbeddingCache with existing quality-validation.ts
 
-**Flags queue query** (admin UI):
-```sql
-SELECT
-  qf.id, qf.question_id, qf.user_id, qf.flagged_at, qf.notes,
-  q.text, q.external_id,
-  COUNT(*) OVER (PARTITION BY qf.question_id) as flag_count
-FROM civic_trivia.question_flags qf
-JOIN civic_trivia.questions q ON qf.question_id = q.id
-WHERE qf.archived = false
-ORDER BY qf.flagged_at DESC
-LIMIT 50 OFFSET 0;
-```
+**Total cost:** ~$0.51 (covered by OpenAI free credits)
+**Total bundle impact:** +52KB backend-only
+**Total complexity:** Minimal — two new utility files, no schema changes, no new services
 
-**Performance:**
-- Partial index on `archived=false` makes WHERE clause fast
-- Index on `flagged_at` supports ORDER BY
-- FK index on `question_id` makes JOIN cheap
-- LIMIT 50 prevents large result sets
+**Anti-recommendations:**
+- NO pgvector (overkill for one-time audit)
+- NO vector databases (scale mismatch)
+- NO LangChain (unnecessary abstraction)
+- NO Voyage AI (OpenAI simpler and sufficient)
 
-**Expected load:**
-- Flag submission: ~1-5% of game sessions (most players don't flag)
-- Admin queue access: <10 requests/day
-- No need for caching layer
-
-### API Response Times
-
-| Endpoint | Expected Latency | Notes |
-|----------|-----------------|-------|
-| POST /feedback/flag | <100ms | Single INSERT query |
-| POST /feedback/elaborate | <200ms | Batch UPDATE (1-10 flags) |
-| GET /admin/flags | <300ms | JOIN + window function, paginated |
-| GET /admin/flags/:id | <100ms | Simple WHERE + JOIN |
-
-**Bottlenecks unlikely** - PostgreSQL handles this easily at expected scale (<10k flags total).
-
-## Security Considerations
-
-### Input Validation
-
-```typescript
-// Backend validation with express-validator
-body('notes')
-  .optional()
-  .trim()
-  .isLength({ max: 1000 })
-  .escape() // XSS prevention
-```
-
-**Defense in depth:**
-1. Client-side: `maxLength={1000}` on textarea
-2. Server-side: express-validator checks length + escapes HTML
-3. Database: `text` column (no length limit, but app enforces)
-4. Display: React JSX auto-escapes (no `dangerouslySetInnerHTML`)
-
-### Rate Limiting
-
-**Per-user limits:**
-- 10 flags per 15 minutes (prevents spam bursts)
-- Admins bypass limits (testing, legitimate moderation)
-- Uses user ID for authenticated, IP for anonymous (fallback only; feature requires auth)
-
-**Why not per-question limits?**
-- Multiple users can legitimately flag the same bad question
-- Per-user limits already prevent individual spam
-
-### Authorization
-
-```typescript
-// Only authenticated users can flag
-router.post('/feedback/flag', authenticateToken, ...);
-
-// Only admins can access flags queue
-router.get('/admin/flags', authenticateToken, requireAdmin, ...);
-
-// Users cannot archive their own flags (admin-only)
-router.patch('/flags/:id/archive', authenticateToken, requireAdmin, ...);
-```
-
-**Privilege escalation prevention:**
-- Flag submission records `req.user.id` (can't flag as another user)
-- Archive operations check `req.user.isAdmin` (non-admins get 403)
-
-## Testing Strategy
-
-### Backend Tests
-
-**Unit tests:**
-```typescript
-describe('submitFlag', () => {
-  it('creates flag with authenticated user ID', async () => {
-    const req = { user: { id: 1 }, body: { questionId: '123', sessionId: 'abc' } };
-    await submitFlag(req, res);
-    expect(res.status).toHaveBeenCalledWith(201);
-  });
-
-  it('rejects unauthenticated requests', async () => {
-    const req = { user: null, body: { questionId: '123' } };
-    await submitFlag(req, res);
-    expect(res.status).toHaveBeenCalledWith(401);
-  });
-
-  it('enforces rate limits', async () => {
-    // Submit 11 flags rapidly
-    for (let i = 0; i < 11; i++) {
-      await request(app).post('/api/feedback/flag').set('Authorization', token);
-    }
-    expect(lastResponse.status).toBe(429); // Too Many Requests
-  });
-});
-```
-
-### Frontend Tests
-
-**Component tests:**
-```typescript
-describe('ThumbsDownButton', () => {
-  it('dispatches FLAG_QUESTION on click', () => {
-    render(<ThumbsDownButton questionId="q1" onFlag={mockDispatch} />);
-    fireEvent.click(screen.getByLabelText('Flag this question'));
-    expect(mockDispatch).toHaveBeenCalledWith({ type: 'FLAG_QUESTION', questionId: 'q1' });
-  });
-
-  it('shows unflag button when already flagged', () => {
-    render(<ThumbsDownButton questionId="q1" flagged={true} />);
-    expect(screen.getByText('Unflag')).toBeInTheDocument();
-  });
-});
-```
-
-### Integration Tests
-
-**End-to-end flow:**
-1. Play game as authenticated user
-2. Flag question during answer reveal
-3. Complete game
-4. Add notes in post-game feedback
-5. Submit feedback
-6. Login as admin
-7. View flags queue
-8. Archive flag
-9. Verify flag removed from queue
-
-## Monitoring & Observability
-
-### Metrics to Track
-
-```typescript
-// Log feedback events
-console.log('FLAG_SUBMITTED', {
-  userId: req.user.id,
-  questionId,
-  sessionId,
-  timestamp: new Date().toISOString()
-});
-
-console.log('FEEDBACK_ELABORATED', {
-  userId: req.user.id,
-  flagCount: flagIds.length,
-  hasNotes: notes !== null,
-  timestamp: new Date().toISOString()
-});
-```
-
-**Analytics questions:**
-- How many flags per day? (usage trend)
-- Which questions get flagged most? (quality issues)
-- What % of flags include notes? (elaboration rate)
-- How long until admin archives flags? (moderation latency)
-
-### Error Tracking
-
-**Expected errors:**
-- 429 Too Many Requests (rate limit exceeded) - **not a bug**
-- 401 Unauthorized (user logged out mid-game) - **expected, show login prompt**
-- 404 Question Not Found (flagging deleted question) - **rare, log for investigation**
-
-**Unexpected errors:**
-- 500 Internal Server Error (DB connection failed) - **alert on-call**
-- Foreign key violation (question_id doesn't exist) - **data integrity issue, investigate**
-
-## Summary: Minimal Additions, Maximum Leverage
-
-| Category | New Additions | Reused from Existing Stack |
-|----------|--------------|---------------------------|
-| Backend Dependencies | `express-rate-limit` (1 package) | express-validator, Drizzle ORM, JWT auth, PostgreSQL |
-| Frontend Dependencies | None | Zustand, Fetch API, React hooks |
-| Database Changes | 1 new table (`question_flags`) | Existing users, questions, collections tables |
-| API Routes | 6 new endpoints (2 feedback, 4 admin) | Existing auth, admin middleware |
-| Frontend State | Extend game reducer | Existing useReducer pattern |
-
-**Total new npm dependencies: 1** (`express-rate-limit`)
-
-**Why this is the right approach:**
-- Minimizes technical debt (fewer dependencies to maintain)
-- Faster implementation (leverage existing patterns)
-- Lower risk (reuse battle-tested auth, validation, ORM)
-- Easier testing (no new testing frameworks needed)
-- Better performance (no unnecessary libraries in bundle)
-
-Your existing stack is well-suited for this feature. The feedback system fits naturally into your architecture with minimal additions.
-
-## Sources
-
-### Rate Limiting
-- [express-rate-limit npm package](https://www.npmjs.com/package/express-rate-limit)
-- [Rate Limiting in Express.js - Better Stack Community](https://betterstack.com/community/guides/scaling-nodejs/rate-limiting-express/)
-- [How to Add Rate Limiting to Express APIs - OneUptime](https://oneuptime.com/blog/post/2026-02-02-express-rate-limiting/view)
-
-### Input Validation & Sanitization
-- [express-validator documentation](https://express-validator.github.io/)
-- [Using Express-Validator for Data Validation - Better Stack](https://betterstack.com/community/guides/scaling-nodejs/express-validator-nodejs/)
-- [JavaScript Input Sanitization in Node.js: 2026 Guide](https://copyprogramming.com/howto/javascript-sanitizing-use-input-in-nodejs)
-
-### Database Best Practices
-- [Drizzle ORM PostgreSQL Best Practices Guide (2025)](https://gist.github.com/productdevbook/7c9ce3bbeb96b3fabc3c7c2aa2abc717)
-- [Drizzle ORM - Indexes & Constraints](https://orm.drizzle.team/docs/indexes-constraints)
-- [Should I Create an Index on Foreign Keys in PostgreSQL? - Percona](https://www.percona.com/blog/should-i-create-an-index-on-foreign-keys-in-postgresql/)
-- [Foreign Key Indexing and Performance in PostgreSQL - Cybertec](https://www.cybertec-postgresql.com/en/index-your-foreign-key/)
+This approach provides semantic duplicate detection with minimal complexity, zero production risk, and negligible cost.

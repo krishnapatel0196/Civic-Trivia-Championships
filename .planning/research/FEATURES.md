@@ -1,528 +1,477 @@
-# Feature Landscape: Question Quality, Admin Tools, Content Telemetry, and AI Pipelines
+# Feature Landscape: Content Deduplication & Scaling
 
-**Domain:** Civic education trivia -- content quality management and authoring tools
-**Researched:** 2026-02-19
-**Overall Confidence:** MEDIUM-HIGH
+**Domain:** Trivia/Educational Content Platforms
+**Researched:** 2026-02-22
+**Confidence:** MEDIUM (industry patterns well-researched, civic trivia niche less documented)
 
 ## Executive Summary
 
-This milestone adds the internal tooling layer that transforms content management from "scripts and SQL queries" to "structured quality framework with admin visibility." The existing system has 320 questions across 3 collections, AI generation scripts, Zod schema validation, and basic admin routes for expiration management. What it lacks: a codified definition of "good question," a way to browse and assess content without SQL, telemetry on how questions perform in the wild, and quality gates in the AI pipeline beyond structural validation.
+This research examines how trivia and educational content platforms handle duplicate detection and content scaling. Based on analysis of existing platforms, academic research, and the current Civic Trivia Championship implementation, this document categorizes features into table stakes (must-have), differentiators (competitive advantage), and anti-features (things to avoid).
 
-The key insight from research: **question quality is not one thing.** It has three distinct dimensions that are assessed at different times:
-
-1. **Static quality** (assessed at authoring time) -- Does the question follow item-writing rules? Are distractors plausible? Is the source real?
-2. **Perceived quality** (assessed by human review) -- Does it pass the "dinner party test"? Is it civically useful? Is it fun?
-3. **Empirical quality** (assessed after gameplay) -- Do players get it right at expected rates? Do all distractors attract selections? Is it too easy or too hard?
-
-Most platforms conflate these. The best ones separate them because they require different tools: static quality needs automated rules, perceived quality needs a review UI, and empirical quality needs gameplay telemetry.
-
----
+**Key insight:** Most trivia platforms treat deduplication as a pre-launch content quality check, not an ongoing operational concern. Educational assessment platforms have more sophisticated approaches due to regulatory compliance needs. The sweet spot for civic trivia is automated detection + human curation — leveraging AI for scale while maintaining editorial standards.
 
 ## Table Stakes
 
-Features that any content quality management system for a trivia/quiz platform should have. Missing these means operating blind.
+Features users/stakeholders expect. Missing these makes the feature feel incomplete or broken.
 
-### TS-1: Question Quality Rules Engine (Static Analysis)
+### 1. Exact Duplicate Detection
+**Why expected:** Players immediately notice when the exact same question appears twice. This breaks immersion and feels like a quality control failure.
 
-**What:** A codified set of rules that can be run against any question to produce a quality score and list of violations. Rules operate on the question data structure without requiring gameplay data.
-**Why expected:** The project already has Zod schema validation (structural correctness). But structural validity is not quality -- a question can pass Zod and still be terrible. Every serious quiz platform has quality rules beyond "is the JSON valid." The existing system prompt encodes quality philosophy in prose but nothing enforces it post-generation.
-**Complexity:** MEDIUM
-**Dependencies:** Existing question schema in `backend/src/db/schema.ts`
+**Complexity:** Low
+
+**Implementation:**
+- Text normalization (lowercase, whitespace collapse, punctuation stripping)
+- Hash-based or map-based lookups for O(1) detection
+- Works at both file level (pre-seed) and database level (post-seed)
+
 **Notes:**
+- Already implemented in `DuplicateDetector` class (HIGH confidence)
+- Civic Trivia has this via `normalizeText()` function
+- Industry standard: normalize → hash → compare
 
-**Rule categories to codify (derived from item-writing research and project quality philosophy):**
+**Sources:**
+- [How do I use embeddings for duplicate detection?](https://zilliz.com/ai-faq/how-do-i-use-embeddings-for-duplicate-detection)
+- Existing implementation: `backend/src/services/qualityRules/rules/duplicate.ts`
 
-| Category | Rule | Automated? | Example |
-|----------|------|------------|---------|
-| **Stem clarity** | Question text must end with "?" | YES | Flag "The mayor of Bloomington" (not a question) |
-| **Stem clarity** | Question should be answerable without seeing options | PARTIAL (heuristic) | Flag fill-in-the-blank stems like "_____ is the capital" |
-| **Stem clarity** | No negatives in stem ("Which is NOT...") | YES (regex) | These confuse players and test reading, not knowledge |
-| **Distractor quality** | All 4 options similar in length (within 2x) | YES | Flag when correct answer is 3x longer than others |
-| **Distractor quality** | No "All of the above" / "None of the above" | YES | These are item-writing anti-patterns |
-| **Distractor quality** | Options should not share a common prefix/suffix | YES (heuristic) | If 3 start with "The City of..." that is a stem issue |
-| **Source quality** | Source URL must be HTTPS | YES | Flag HTTP sources |
-| **Source quality** | Source URL domain should be .gov/.edu/.us | YES (warning) | .com sources are lower authority for civic content |
-| **Source quality** | Explanation must contain "According to" | YES | Already enforced by Zod, keep it |
-| **Civic quality** | No partisan language (list of flagged terms) | YES (keyword) | Flag "liberal," "conservative," "Democrat," "Republican" in stem/options |
-| **Civic quality** | Question should not reference phone numbers, addresses, or zip codes | YES (regex) | Per project philosophy -- these are lookup facts, not knowledge |
-| **Civic quality** | No "pure date" questions | PARTIAL (heuristic) | Flag questions where answer options are all years/dates |
-| **Difficulty calibration** | Easy questions should have shorter stems | PARTIAL (heuristic) | Flag easy questions with >40 words |
-| **Expiration** | Time-sensitive questions must have expiresAt | PARTIAL (keyword) | Flag "current" or "currently" in stem without expiresAt |
+### 2. Semantic Duplicate Detection
+**Why expected:** Players experience "I've seen this before" when questions ask the same fact with different wording. Example: "What is LA County's population?" vs "How many people live in Los Angeles County?"
 
-**Implementation recommendation:** A `validateQuestionQuality(question)` function returning `{ score: number, violations: Violation[], warnings: Warning[] }`. Run it in the AI generation pipeline (reject/flag questions) AND in the admin UI (show quality badges). This is the foundation everything else builds on.
+**Complexity:** Medium
 
-**Confidence:** HIGH for the rule categories. These are well-established in item-writing literature (Haladyna et al.) and align with the project's stated quality philosophy.
+**Implementation:**
+- Embedding models (BERT, Sentence-BERT, Universal Sentence Encoder)
+- Cosine similarity threshold (typically 0.85-0.95 for "near duplicate")
+- Vector database for efficient similarity search at scale (FAISS, Annoy)
 
-### TS-2: Admin Question Explorer UI
-
-**What:** A web-based interface for browsing, filtering, and inspecting all questions across collections. Not for editing (that stays in code/scripts), but for assessment and review.
-**Why expected:** The current admin route (`/admin/questions`) only surfaces expired/expiring questions. There is no way to browse active content, filter by topic, see quality scores, or inspect individual questions without SQL queries. Any content platform needs a browse interface for its content authors.
-**Complexity:** MEDIUM-HIGH
-**Dependencies:** Existing admin routes, TS-1 (quality rules for score display)
 **Notes:**
+- Not currently implemented in Civic Trivia (GAP)
+- Academic research shows this is standard for educational question banks
+- Threshold tuning critical: too low = false positives, too high = misses actual duplicates
+- Recommended: Start with 0.9 threshold, adjust based on manual review
 
-**Core capabilities (based on quiz CMS patterns from Moodle, LiveLike, and content management best practices):**
+**Sources:**
+- [Semantic Similarity Analysis for Examination Questions Classification](https://www.mdpi.com/2076-3417/13/14/8323)
+- [Finding the Duplicate Questions in Stack Overflow using Word Embeddings](https://www.sciencedirect.com/science/article/pii/S1877050920312898)
+- [Measuring Similarity and Distance between Embeddings](https://www.dataquest.io/blog/measuring-similarity-and-distance-between-embeddings/)
 
-| Capability | Description | Priority |
-|------------|-------------|----------|
-| **List view** | Paginated table of all questions with key columns | P1 |
-| **Filter by collection** | Dropdown to scope to one collection | P1 |
-| **Filter by status** | Active / expired / archived | P1 |
-| **Filter by difficulty** | Easy / medium / hard | P1 |
-| **Filter by topic** | Topic category within collection | P2 |
-| **Search by text** | Full-text search on question stem | P2 |
-| **Sort by columns** | Sort by difficulty, date, quality score | P1 |
-| **Question detail view** | Expand to see full question, options, explanation, source, quality score | P1 |
-| **Quality score badge** | Visual indicator of static quality score per question | P2 |
-| **Bulk actions** | Select multiple questions for archive/status change | P3 |
-| **Export** | CSV/JSON export of filtered results | P3 |
+### 3. Cross-Collection Duplicate Detection
+**Why expected:** When a player plays multiple collections (e.g., "California State" then "Fremont, CA"), seeing the exact same question in both feels lazy. Stakeholders expect collection boundaries to be respected.
 
-**Key columns for list view:**
-- External ID
-- Question text (truncated)
-- Collection
-- Topic
-- Difficulty
-- Status
-- Expires at (if set)
-- Quality score (from TS-1)
-- Created date
+**Complexity:** Medium
 
-**UX pattern:** This is an internal dev/author tool. Use a data table component, not a fancy consumer UI. Something like a React Table or TanStack Table. Prioritize density and filterability over visual polish.
+**Implementation:**
+- Scan across all collection files/DB tables
+- Flag questions appearing in multiple collections
+- Decision workflow: Keep in most-specific collection (city > county > state > federal)
 
-### TS-3: Question Detail Inspector
-
-**What:** A detail view for a single question showing everything: the question as players see it, the correct answer highlighted, explanation, source link (clickable to verify), quality rule results, and (eventually) telemetry data.
-**Why expected:** Content authors need to assess questions holistically. Seeing a question in a table row does not convey whether it "feels right." A detail view lets a reviewer quickly decide "this is good" or "this needs work."
-**Complexity:** LOW-MEDIUM
-**Dependencies:** TS-2 (explorer), TS-1 (quality rules)
 **Notes:**
+- Currently not checked (GAP identified in milestone context)
+- Business rule needed: Should some questions be allowed across collections? (e.g., "Who is the current governor?" in both state and city collections)
+- Requires policy decision before implementation
 
-**Detail view sections:**
-1. **Preview** -- Render the question as it appears in-game (stem, 4 options, correct answer highlighted)
-2. **Metadata** -- Collection, topic, difficulty, status, external ID, created/updated dates, expiration
-3. **Quality assessment** -- Score, list of rule violations/warnings with severity
-4. **Source verification** -- Source name, clickable URL, last-verified date (future)
-5. **Learning content** -- If present, show paragraphs and per-option corrections
-6. **Telemetry** (future) -- Correct rate, distractor selection distribution, skip rate
+**Sources:**
+- [Collection statistics for fast duplicate document detection](https://dl.acm.org/doi/10.1145/506309.506311)
+- [Partial duplicate detection for large book collections](https://dl.acm.org/doi/10.1145/2063576.2063647)
 
-### TS-4: Collection Health Dashboard (Enhanced)
+### 4. Manual Review Workflow for Flagged Duplicates
+**Why expected:** Automated detection produces false positives. Human review is table stakes for editorial content quality.
 
-**What:** Expansion of the existing collection health concept (D-2 from prior research) to include quality distribution, not just expiration counts.
-**Why expected:** Knowing "you have 100 active questions" is incomplete. Knowing "you have 100 active questions, 15 have quality warnings, and 8 have no learning content" is actionable.
-**Complexity:** LOW-MEDIUM
-**Dependencies:** TS-1 (quality rules), existing collection/question schema
+**Complexity:** Low-Medium
+
+**Implementation:**
+- Generate duplicate report (groups of suspected duplicates)
+- Admin UI to review each group
+- Actions: Keep all (false positive), Archive all but one, Merge (if explanations differ)
+- Audit log of decisions
+
 **Notes:**
+- Civic Trivia already has flag review queue (v1.5) — can extend this pattern
+- Academic research: "automatic tools are not perfect, so both methods should be used for accurate deduplication"
+- Recommended: Generate CSV/JSON report → admin reviews → applies batch actions
 
-**Health metrics per collection:**
+**Sources:**
+- [Deduplicating records in systematic reviews](https://www.sciencedirect.com/science/article/abs/pii/S0895435622002566)
+- [Automation of duplicate record detection for systematic reviews](https://systematicreviewsjournal.biomedcentral.com/articles/10.1186/s13643-024-02619-9)
+- Existing feature: Admin flag review queue (v1.5)
 
-| Metric | Why It Matters |
-|--------|---------------|
-| Total / active / expired / archived counts | Basic inventory |
-| Difficulty distribution (easy/medium/hard %) | Balance check against 40/40/20 target |
-| Questions with quality warnings | Content maintenance backlog |
-| Questions with quality violations (score < threshold) | Urgent fixes needed |
-| Questions without learning content | Completeness gap |
-| Questions expiring in 30/60/90 days | Upcoming content needs |
-| Average quality score | Overall collection health indicator |
-| Topic coverage distribution | Identify over/under-represented topics |
+### 5. Batch Content Generation to Target Count
+**Why expected:** When collections need 90+ questions and currently have 52-84, stakeholders expect a scalable generation process, not one-at-a-time creation.
 
----
+**Complexity:** Medium
+
+**Implementation:**
+- Calculate gap: `target_count - current_unique_count`
+- Apply overshoot multiplier (e.g., 1.3x to account for quality failures)
+- Generate in batches (10-30 questions per API call)
+- Validate against quality rules + duplicate detector
+- Retry failed questions with feedback
+
+**Notes:**
+- Already implemented in Civic Trivia generation pipeline (HIGH confidence)
+- Overshoot-and-curate strategy is industry best practice
+- Current system: 130% overshoot, quality validation retry loop, max 3 retries
+- Cost consideration: Monitor token usage to avoid budget overruns
+
+**Sources:**
+- [Best AI quiz generator tools in 2026](https://blog.vocaliv.com/top-5-best-ai-quiz-generator-tools-in-2026/)
+- [The 12 Best AI Quiz Generators in 2026](https://www.ispringsolutions.com/blog/ai-quiz-generators)
+- Existing implementation: `backend/src/scripts/content-generation/utils/quality-validation.ts`
+
+### 6. Quality Validation with Blocking Rules
+**Why expected:** Generating content at scale without quality gates produces garbage. Users expect all questions to meet minimum standards.
+
+**Complexity:** Low (infrastructure exists)
+
+**Implementation:**
+- Run each generated question through quality rules engine
+- Blocking violations → retry with feedback or discard
+- Advisory violations → flag but allow
+- Track violation rates in generation reports
+
+**Notes:**
+- Civic Trivia has 8 quality rules with blocking/advisory severity (HIGH confidence)
+- Duplicate detection should be integrated as a quality rule (partially done)
+- Generation report tracks violation rates by rule type
+
+**Sources:**
+- [How to Automate Student Grading in 2025](https://www.flowforma.com/demo-library/how-to-automate-student-grading)
+- Existing implementation: `backend/src/services/qualityRules/index.ts`
 
 ## Differentiators
 
-Features that go beyond basic content management and create real quality advantages.
+Features that set this implementation apart from typical trivia platforms. Not expected, but highly valued.
 
-### D-1: Content Telemetry System (Empirical Quality)
+### 1. Inverse Duplicate Detection
+**Why valuable:** Civic trivia often has question pairs where Q1 asks "What office was established in 1850?" and Q2 asks "When was the office of X established?" These are distinct questions but reveal each other's answers if shown in the same game.
 
-**What:** Track per-question gameplay metrics to measure empirical quality: how hard is it actually (not just the author's label), how well do distractors work, and how engaging is it.
-**Why valuable:** This is the gap between "we think this is a good question" and "data shows this is a good question." Classical Test Theory (CTT) provides the framework -- it has been used in educational assessment for decades. The key metrics map directly to question quality:
+**Complexity:** High
 
-**Core metrics (from CTT item analysis):**
+**Implementation:**
+- Parse question structure (entity-date, entity-location, entity-name patterns)
+- Build semantic graph of question relationships
+- Flag pairs where Q1's answer appears in Q2's text or vice versa
+- More sophisticated: Use LLM to detect "if player knows answer to Q1, can they deduce Q2?"
 
-| Metric | Definition | What It Tells You | Good Range |
-|--------|-----------|-------------------|------------|
-| **P-value (difficulty index)** | % of players who answer correctly | Actual difficulty | 0.30 - 0.90 (too low = too hard, too high = too easy) |
-| **Discrimination index** | Correlation between getting this question right and overall game score | Whether the question separates skilled from unskilled players | > 0.20 (below = poor discriminator) |
-| **Distractor selection rate** | % choosing each wrong answer | Whether distractors are plausible | Each distractor > 5% (below = non-functioning distractor) |
-| **Skip/timeout rate** | % of players who run out of time | Whether the question is confusing or too long | < 15% (above = question may be unclear) |
-| **Response time distribution** | Average time to answer | Cognitive load indicator | Varies by difficulty |
-
-**Complexity:** MEDIUM-HIGH
-**Dependencies:** Game session data (already captured in sessions), new analytics table(s)
 **Notes:**
+- Not found in commercial trivia platform docs (DIFFERENTIATOR confirmed)
+- Medium confidence: Pattern exists in academic settings (exam question rotation)
+- Recommended: Start with simple text overlap detection, evolve to LLM-based analysis
 
-The existing game flow already records which answers players select and timing data (the plausibility threshold system in `plausibilityThresholds.ts` proves timing is tracked). The missing piece is aggregation: storing per-question tallies that accumulate over many game sessions.
+**Sources:**
+- [Identifying Duplicate Questions: A Machine Learning Case Study](https://medium.springboard.com/identifying-duplicate-questions-a-machine-learning-case-study-37117723844)
+- Milestone context mentions "inverse duplicates" as a discovered problem type
 
-**Implementation approach:** After each game session completes, write per-question outcome records (question_id, selected_option, correct, response_time_ms) to an analytics table. A periodic aggregation job (or materialized view) computes the CTT metrics. The admin detail view (TS-3) displays them.
+### 2. Answer Leakage Detection
+**Why valuable:** One question's text shouldn't contain another question's answer. Example: "The mayor elected in 2024 oversees 8 departments" → leaks answer to "How many departments does Fremont have?"
 
-**Data volume consideration:** At 320 questions and moderate play volume, this is small data. No need for a separate analytics database. PostgreSQL handles this easily with proper indexing.
+**Complexity:** Medium-High
 
-**Confidence:** HIGH for the metrics (well-established in psychometrics literature). MEDIUM for implementation approach (depends on how game session data is currently stored and what is already captured).
+**Implementation:**
+- For each question, extract key facts from text and explanation
+- Cross-reference against all other questions' correct answers
+- Flag if Question A's text contains Question B's answer
+- Requires NLP entity extraction or LLM-based analysis
 
-### D-2: Difficulty Calibration Feedback Loop
-
-**What:** Use empirical P-values to flag questions whose actual difficulty diverges from their labeled difficulty. A question labeled "easy" that only 20% of players get right is miscalibrated.
-**Why valuable:** Difficulty labels drive the game's progression feel (Q1=easy, Q10=hard). If labels are wrong, the difficulty curve feels random. Calibration flags surface the worst offenders for relabeling.
-**Complexity:** LOW (once D-1 exists)
-**Dependencies:** D-1 (telemetry system)
 **Notes:**
+- Academic research confirms this is a real problem in educational content
+- Example from research: Question about 2018 volleyball championship with hint "Their official language is Polish" → leaks answer
+- Not implemented in most trivia platforms (DIFFERENTIATOR)
 
-**Calibration rules:**
+**Sources:**
+- [ACM publication on answer leakage in quiz generation](https://dl.acm.org/doi/pdf/10.1145/3626772.3657855)
 
-| Labeled | Expected P-value | Flag If |
-|---------|-----------------|---------|
-| Easy | 0.70 - 0.95 | P < 0.50 (too hard for "easy") |
-| Medium | 0.40 - 0.70 | P < 0.25 or P > 0.85 |
-| Hard | 0.20 - 0.50 | P > 0.70 (too easy for "hard") |
+### 3. Same-Source Factoid Clustering
+**Why valuable:** Two questions mined from the same Wikipedia paragraph often have overlapping knowledge. Grouping these helps avoid information redundancy.
 
-Show these as amber/red flags in the admin question detail and in the collection health dashboard. Do NOT auto-relabel -- a human should decide if the label is wrong or if the question needs rewriting.
+**Complexity:** Medium
 
-### D-3: AI Content Pipeline with Quality Gates
+**Implementation:**
+- Track source URL for each question
+- Group questions by source
+- Calculate semantic similarity within source groups
+- Flag high-similarity pairs from same source
+- Editorial decision: Space these questions out (different game sessions) or rewrite one
 
-**What:** Enhance the existing AI generation pipeline (`generate-locale-questions.ts`) to run quality rules (TS-1) as a post-generation validation step, rejecting or flagging questions that fail quality checks before they reach the database.
-**Why valuable:** The current pipeline validates structural correctness via Zod but does not check semantic quality. The QUEST framework research (Springer, 2025) found that LLM-generated MCQs commonly have weak distractors that can be eliminated through simple logic. Catching these automatically reduces the human review burden.
-**Complexity:** MEDIUM
-**Dependencies:** TS-1 (quality rules engine), existing generation pipeline
 **Notes:**
+- Leverages existing `source.url` field in question schema
+- Aligns with "civic utility" quality principle (each question should teach something new)
+- Could inform question rotation logic in future multiplayer mode
 
-**Proposed pipeline stages:**
+**Sources:**
+- Milestone context: "same-source factoid pairs" identified as duplicate type
+- [Advanced duplicate content detection methods](https://www.lumar.io/blog/best-practice/advanced-duplicate-content/)
 
-```
-1. AI Generation (existing)
-   |
-2. Structural Validation (existing Zod schema)
-   |
-3. Quality Rules Check (NEW - TS-1 rules engine)
-   |-- PASS (score >= threshold) --> 4. Database insert as 'draft'
-   |-- WARN (score borderline) ----> 4. Insert as 'draft' with quality_warnings flag
-   |-- FAIL (critical violations) -> Log and skip (or retry with feedback)
-   |
-4. Human Review Queue
-   |-- Approve --> status: 'active'
-   |-- Reject  --> status: 'archived' with reason
-   |-- Edit    --> modify and re-run quality check
-```
+### 4. Duplicate Metrics in Collection Health Dashboard
+**Why valuable:** Admin visibility into duplicate rates by collection helps prioritize content work. Most trivia platforms don't surface these metrics.
 
-**Retry with feedback (advanced):** When a question fails quality checks, include the violation in a follow-up prompt to the LLM asking it to fix the specific issue. The QUEST framework research shows iterative refinement (generate -> assess -> revise) significantly improves quality. This is a natural extension of the existing multi-turn conversation capability but adds API cost.
+**Complexity:** Low
 
-**Recommendation:** Start with gate-and-flag (stages 1-4 without retry). Add iterative refinement as an optional `--refine` flag on the generation script if initial rejection rates are high.
+**Implementation:**
+- Add to existing `/api/admin/collections/health` endpoint
+- Metrics: duplicate groups count, semantic similarity clusters, cross-collection overlap
+- Visualization: Show duplicate % alongside quality score and question count
+- Actionable: Link to duplicate review workflow
 
-### D-4: Human Review Workflow
-
-**What:** A structured review status on questions (draft -> review -> active / rejected) with the ability for reviewers to approve, reject with reason, or flag for revision in the admin UI.
-**Why valuable:** The generation pipeline currently seeds questions as "draft" status but there is no workflow to move them to active. The admin routes only handle expiration (renew/archive). A review workflow closes the gap between "AI generated it" and "a human verified it."
-**Complexity:** MEDIUM
-**Dependencies:** TS-2 (admin explorer), TS-3 (detail view)
 **Notes:**
+- Civic Trivia already has collection health dashboard (v1.3+)
+- Easy addition: Extend `CollectionHealth` type with duplicate stats
+- HIGH confidence this is a differentiator (not found in commercial platforms)
 
-**Status lifecycle:**
+**Sources:**
+- [Crowdpurr dashboard analytics](https://www.crowdpurr.com/trivia)
+- Existing feature: `frontend/src/pages/admin/CollectionsPage.tsx`
 
-```
-draft --> in_review --> active
-  |          |            |
-  |          +-> rejected  +-> expired --> archived
-  |                              |
-  +------------------------------+-> archived
-```
+### 5. Generation Report with Duplicate Stats
+**Why valuable:** Post-generation analysis shows how many duplicates were caught during creation, informing prompt engineering and quality improvements.
 
-**Review actions in admin UI:**
-- **Approve** -- Move to active (available for gameplay)
-- **Reject** -- Move to rejected with required reason text
-- **Flag** -- Keep in review, add a note for another reviewer
-- **Edit + Approve** -- For minor fixes (typo in explanation, adjust difficulty label)
+**Complexity:** Low (infrastructure exists)
 
-**Important:** Keep this lightweight. This is a dev tool for a small team, not an enterprise workflow engine. No approval chains, no role-based permissions (everyone with admin access can review), no email notifications. Just status transitions with timestamps and optional notes.
+**Implementation:**
+- Extend existing `GenerationReport` type
+- Track: duplicate violations caught, duplicate retry attempts, final duplicate rate
+- Include examples of caught duplicates in failure report
+- Compare duplicate rates across generation runs to measure prompt improvements
 
-### D-5: Source URL Verification
-
-**What:** Automated or semi-automated checking that question source URLs are still accessible and return relevant content.
-**Why valuable:** Source URLs rot. Government websites reorganize. A question citing `bloomington.in.gov/city-council` that now 404s undermines trust. The existing RAG pipeline (`fetch-sources.ts`) already has URL fetching infrastructure that could be repurposed.
-**Complexity:** LOW-MEDIUM
-**Dependencies:** Existing source URL field on questions
 **Notes:**
+- Civic Trivia already generates structured reports (HIGH confidence)
+- Simple extension: Add duplicate-specific breakdown to existing report schema
+- Supports continuous improvement of generation pipeline
 
-**Two levels:**
-1. **Link check** (automated, run weekly) -- HTTP HEAD request. Flag 404s, 301s (redirects), and timeouts. LOW complexity.
-2. **Content check** (semi-automated, run on demand) -- Fetch page, check if key terms from the question/explanation appear. MEDIUM complexity, builds on existing `fetch-sources.ts` cheerio parsing.
+**Sources:**
+- Existing implementation: `backend/src/scripts/content-generation/utils/quality-validation.ts` (lines 19-73)
 
-**Recommendation:** Start with link checks only. Display last-checked date and status in the question detail view (TS-3). A cron job runs weekly, similar to the existing `expirationSweep.ts` pattern.
+### 6. Smart Overshoot Calculation
+**Why valuable:** Instead of fixed 130% overshoot, dynamically adjust based on historical quality pass rates and duplicate detection rates.
 
-### D-6: Quality Score Trend Tracking
+**Complexity:** Medium
 
-**What:** Track how a collection's overall quality metrics change over time as questions are added, reviewed, and receive gameplay data.
-**Why valuable:** Answers "is our content getting better?" Without trends, you only see a snapshot. With trends, you can see if new AI-generated batches are improving or degrading average quality.
-**Complexity:** LOW (once D-1 and TS-1 exist)
-**Dependencies:** D-1 (telemetry), TS-1 (quality rules), TS-4 (health dashboard)
-**Notes:** Store periodic snapshots of collection health metrics (daily or weekly). Display as a simple line chart on the collection health dashboard. Not a priority for initial implementation but trivial to add once the data infrastructure exists.
+**Implementation:**
+- Track historical stats: quality pass rate, duplicate rate by collection
+- Calculate: `overshoot = base_target * (1 / pass_rate) * (1 / (1 - dup_rate))`
+- Example: 80% pass rate, 10% dup rate → overshoot = 1.39x
+- Cap at reasonable max (e.g., 2x) to avoid cost explosion
 
----
+**Notes:**
+- Not found in trivia platform docs (DIFFERENTIATOR)
+- Medium confidence based on data science best practices
+- Requires tracking stats over multiple generation runs
+
+**Sources:**
+- [Content curation strategy best practices](https://www.semrush.com/blog/content-curation/)
 
 ## Anti-Features
 
-Features to explicitly NOT build. These are common in content management platforms but wrong for this project's scale and philosophy.
+Features to explicitly NOT build. Common mistakes in this domain.
 
-### AF-1: Full CMS with Inline Question Editing
+### 1. Fully Automated Duplicate Removal (No Human Review)
+**Why avoid:** Automated duplicate detection has false positives. Questions that seem similar may test different civic concepts. Example: "Who appoints the city manager?" vs "Who hires city department heads?" — similar but distinct.
 
-**What:** Edit question text, options, explanations, and metadata directly in the admin web UI.
-**Why avoid:** Questions live in the database, seeded from AI generation scripts. The source of truth for content creation is the generation pipeline, not a web form. Adding web-based editing creates two paths to modify content (UI and scripts), leading to inconsistency. At 320 questions across 3 collections, the team does not need a WordPress-style editor.
-**What to do instead:** The admin UI is read-only for question content. Status changes (approve, reject, archive) are the only write operations. Content corrections go through the generation pipeline or direct database scripts with proper review.
+**What to do instead:**
+- Automated detection → generates report
+- Human reviews report → makes final decision
+- System archives based on human input
 
-### AF-2: Real-Time Analytics Dashboard
+**Consequences if built:**
+- Accidentally archive valid questions
+- Reduce question diversity
+- Erode trust in quality process
 
-**What:** Live-updating charts showing player engagement, question performance, and collection metrics updating in real-time.
-**Why avoid:** Real-time adds WebSocket complexity for data that changes slowly. Question telemetry aggregates are meaningful over days and weeks, not seconds. No content author needs to watch a P-value change in real-time.
-**What to do instead:** Batch-computed analytics refreshed daily (or on-demand via admin button). Static charts that load the latest computed data. This is orders of magnitude simpler and provides the same value.
+**Sources:**
+- [Deduplication in systematic reviews: manual and automatic tools both needed](https://systematicreviewsjournal.biomedcentral.com/articles/10.1186/s13643-024-02619-9)
 
-### AF-3: A/B Testing for Question Variants
+### 2. Cross-Collection Deduplication Without Policy
+**Why avoid:** Blanket "no duplicates across collections" rule may be wrong. Some questions (e.g., "What is the state capital?") may legitimately appear in both state and city collections if framed differently.
 
-**What:** Show different versions of the same question to different players to test which wording performs better.
-**Why avoid:** Requires session-level experiment tracking, variant management, statistical significance calculations, and careful question pool management to avoid showing both variants to the same player. Massive complexity for a product with 320 questions. This is a feature for platforms with millions of users, not hundreds.
-**What to do instead:** Use telemetry data (D-1) to identify poorly performing questions. Rewrite them based on the data. Test the rewrite by deploying it and checking the next batch of telemetry.
+**What to do instead:**
+- Define collection hierarchy (federal > state > county > city)
+- Policy: General civic questions belong at highest relevant level
+- Allow intentional duplicates with different framing/difficulty
+- Manual review for edge cases
 
-### AF-4: AI Auto-Improvement of Questions
+**Consequences if built:**
+- Remove questions players expect (e.g., "Who is the governor?" missing from city collection)
+- Create artificial scarcity in smaller collections
+- Confuse content strategy
 
-**What:** Automatically feed telemetry data back into an LLM to rewrite underperforming questions without human review.
-**Why avoid:** Removes human judgment from civic education content. A question about who the mayor is cannot be "improved" by an LLM if the answer changed -- it needs a human who knows the current political landscape. Auto-modification of educational content without review is an anti-pattern for trust.
-**What to do instead:** AI can SUGGEST improvements (e.g., "This question has a non-functioning distractor. Consider replacing Option C."). Humans decide whether to accept. This is the "copilot not autopilot" pattern.
+**Sources:**
+- Project context: Collection structure already hierarchical (federal, state, city)
 
-### AF-5: Complex Role-Based Access Control
+### 3. Semantic Similarity Threshold <0.8 or >0.95
+**Why avoid:**
+- <0.8: Too many false positives, flags questions that are clearly different
+- >0.95: Misses actual duplicates, only catches near-exact text matches
 
-**What:** Multiple admin roles (content author, reviewer, editor-in-chief, super-admin) with different permission levels.
-**Why avoid:** The team is small. Everyone who has admin access should be able to do everything. RBAC adds complexity to every admin endpoint and UI component. Premature for a team of 1-5 content contributors.
-**What to do instead:** Single admin role. If the team grows to need role separation, add it then. The existing JWT auth with `authenticateToken` middleware is sufficient.
+**What to do instead:**
+- Start with 0.9 threshold
+- Measure precision (false positive rate) and recall (missed duplicates)
+- Adjust in 0.05 increments based on manual review
+- Consider different thresholds per collection (smaller collections = stricter)
 
-### AF-6: Question Difficulty Prediction via ML
+**Consequences if built:**
+- Waste admin time on false positives
+- Miss obvious duplicates that frustrate players
+- Undermine trust in automation
 
-**What:** Train a machine learning model on question features (word count, topic, readability score) to predict difficulty before gameplay data exists.
-**Why avoid:** Requires training data you do not have yet. The author's difficulty label plus the quality rules heuristics (TS-1) are sufficient for initial calibration. Once enough gameplay data accumulates (D-1), empirical difficulty is more reliable than any prediction model.
-**What to do instead:** Author labels difficulty at creation. Quality rules flag obvious mismatches (easy question with complex vocabulary). Telemetry eventually provides ground truth. Relabel manually when data shows miscalibration (D-2).
+**Sources:**
+- [How to use embeddings for duplicate detection: threshold of 0.9 recommended](https://zilliz.com/ai-faq/how-do-i-use-embeddings-for-duplicate-detection)
+- [Measuring similarity and distance: threshold tuning based on data type](https://www.dataquest.io/blog/measuring-similarity-and-distance-between-embeddings/)
 
-### AF-7: Multi-Language Question Support
+### 4. Deduplication as Blocking Step in Generation Loop
+**Why avoid:** If duplicate check is synchronous during generation, it slows down the pipeline and increases API costs (embedding calls per question).
 
-**What:** Translating questions into Spanish, Mandarin, etc.
-**Why avoid:** Translation of civic education content requires domain expertise, not just language fluency. Legal terminology, government structure names, and civic concepts do not translate 1:1. This is a content strategy decision, not a feature decision, and it is premature.
-**What to do instead:** Focus on English-language content quality first. If multilingual becomes a goal, it deserves its own milestone with proper research into civic education translation patterns.
+**What to do instead:**
+- In-batch duplicate detection (check within current generation batch)
+- Post-generation duplicate scan (after questions are generated but before seeding)
+- Duplicate check as validation rule (blocking) during retry loop
+- Periodic cross-collection scans (offline process, not per-generation)
 
----
+**Consequences if built:**
+- 10x slower generation (embedding API latency)
+- Higher costs (embedding model calls for every generated question)
+- Doesn't prevent duplicates from previous batches anyway
+
+**Sources:**
+- [Deduplication in distributed systems: async processing recommended](https://www.architecture-weekly.com/p/deduplication-in-distributed-systems)
+- Existing Civic Trivia pattern: Quality validation is batched, not per-question
+
+### 5. Merging Duplicate Questions Automatically
+**Why avoid:** Duplicates often have different explanations, sources, or difficulty levels. Automated merging picks arbitrarily, losing editorial value.
+
+**What to do instead:**
+- Archive all but one (best explanation or source)
+- Or: Human reviews and manually merges best elements
+- Track which question was kept in audit log
+
+**Consequences if built:**
+- Lose better explanations/sources
+- Create inconsistent difficulty ratings
+- Make content authorship unclear
+
+**Sources:**
+- [Content curation best practices: editorial judgment is core](https://www.convinceandconvert.com/content-marketing/guide-to-content-curation/)
+
+### 6. Aiming for Zero Duplicates
+**Why avoid:** Perfect deduplication is impossible and wasteful. Some semantic overlap is acceptable and even valuable (reinforcement learning, spaced repetition).
+
+**What to do instead:**
+- Target: <5% duplicate rate per collection
+- Accept: Questions covering same topic from different angles (different enough to feel distinct)
+- Measure: Player "seen this before" flags as ground truth
+
+**Consequences if built:**
+- Endless content churn trying to eliminate edge cases
+- Over-index on novelty, under-index on civic utility
+- Spend resources on diminishing returns
+
+**Sources:**
+- [Duplicate data management in ML: 10-30% duplicate rate is normal](https://dagshub.com/blog/mastering-duplicate-data-management-in-machine-learning-for-optimal-model-performance/)
 
 ## Feature Dependencies
 
 ```
-TS-1 (Quality Rules Engine) [FOUNDATION]
-  |
-  +-- TS-2 (Admin Question Explorer)
-  |     |
-  |     +-- TS-3 (Question Detail Inspector)
-  |     |     |
-  |     |     +-- D-4 (Human Review Workflow)
-  |     |     +-- D-5 (Source URL Verification) [display in detail view]
-  |     |
-  |     +-- TS-4 (Collection Health Dashboard)
-  |           |
-  |           +-- D-6 (Quality Score Trends)
-  |
-  +-- D-3 (AI Pipeline Quality Gates)
+Batch Content Generation
+  ↓ requires
+Quality Validation Rules
+  ↓ includes
+Exact Duplicate Detection
+  ↓ blocks generation if duplicate found
 
-D-1 (Content Telemetry) [INDEPENDENT - needs game session data]
-  |
-  +-- D-2 (Difficulty Calibration Feedback)
-  |
-  +-- TS-3 (enhanced with telemetry data display)
-  |
-  +-- TS-4 (enhanced with empirical metrics)
-  |
-  +-- D-6 (enhanced with telemetry trends)
+Semantic Duplicate Detection
+  ↓ generates
+Duplicate Report
+  ↓ feeds
+Manual Review Workflow
+  ↓ updates
+Database (archives duplicates)
 
-D-5 (Source URL Verification) [SEMI-INDEPENDENT - needs existing fetch infrastructure]
+Cross-Collection Duplicate Detection
+  ↓ requires
+Collection Hierarchy Policy
+  ↓ informs
+Manual Review Decisions
 ```
 
-### Dependency Notes
-
-- **TS-1 is the keystone.** Quality rules feed into the admin UI (display), the AI pipeline (gates), and the health dashboard (aggregates). Build this first.
-- **D-1 (telemetry) is independent of the admin UI.** It depends on game session data that already exists. Can be built in parallel with the admin UI.
-- **D-4 (review workflow) requires TS-2 and TS-3.** You need a place to see questions before you can review them.
-- **D-3 (pipeline gates) only requires TS-1.** It is a backend-only enhancement to existing scripts.
-
----
-
-## Quality Rule Categories (Detailed Specification)
-
-These are the specific, actionable rule categories that should be codified in TS-1. Organized by what they catch.
-
-### Category 1: Stem Quality
-
-Rules about the question text itself.
-
-| Rule ID | Rule | Severity | Check Type | Rationale |
-|---------|------|----------|------------|-----------|
-| SQ-01 | Ends with question mark | ERROR | Regex | Non-questions confuse players |
-| SQ-02 | No negative phrasing ("NOT", "EXCEPT", "NEVER") | WARNING | Keyword | Negatives test reading comprehension, not knowledge |
-| SQ-03 | Length between 15-200 characters | WARNING | Length | Too short = vague; too long = reading test |
-| SQ-04 | No "fill in the blank" style | WARNING | Regex (`___`) | Incomplete stems are harder to parse |
-| SQ-05 | No leading articles that give away answer | WARNING | Heuristic | "An ____" reveals answer starts with vowel |
-
-### Category 2: Distractor Quality
-
-Rules about the answer options.
-
-| Rule ID | Rule | Severity | Check Type | Rationale |
-|---------|------|----------|------------|-----------|
-| DQ-01 | Exactly 4 options | ERROR | Count | Already enforced by Zod, keep |
-| DQ-02 | No option is empty or whitespace-only | ERROR | Trim + length | Data integrity |
-| DQ-03 | No "All of the above" / "None of the above" | WARNING | Keyword | Item-writing anti-pattern |
-| DQ-04 | Options similar in length (max 3x ratio) | WARNING | Length comparison | Longest option is often correct (test-taking cue) |
-| DQ-05 | No duplicate options | ERROR | String comparison | Data integrity |
-| DQ-06 | Correct answer index is valid (0-3) | ERROR | Range check | Already enforced by Zod |
-| DQ-07 | Options should not all share a long common prefix | WARNING | String prefix | Indicates the prefix belongs in the stem |
-
-### Category 3: Civic Content Quality
-
-Rules specific to the civic education domain and the project's quality philosophy.
-
-| Rule ID | Rule | Severity | Check Type | Rationale |
-|---------|------|----------|------------|-----------|
-| CQ-01 | No partisan political terms | WARNING | Keyword list | Neutrality requirement |
-| CQ-02 | No phone numbers in stem or options | WARNING | Regex | "Dinner party test" -- not worth sharing |
-| CQ-03 | No street addresses in stem or options | WARNING | Regex | Lookup fact, not knowledge |
-| CQ-04 | No ZIP codes as answers | WARNING | Regex | Lookup fact |
-| CQ-05 | Explanation references source ("According to") | ERROR | Keyword | Already enforced by Zod |
-| CQ-06 | Source URL is HTTPS | WARNING | Regex | Authority signal |
-| CQ-07 | Source URL domain is .gov, .edu, or .us | INFO | Regex | Preferred civic sources |
-| CQ-08 | Time-sensitive keywords require expiresAt | WARNING | Keyword + null check | "current," "currently," "as of" without expiration |
-
-### Category 4: Difficulty Consistency
-
-Rules that flag potential difficulty label mismatches.
-
-| Rule ID | Rule | Severity | Check Type | Rationale |
-|---------|------|----------|------------|-----------|
-| DC-01 | Easy questions: stem < 40 words | INFO | Word count | Easy should be quick to read |
-| DC-02 | Hard questions: stem > 15 words | INFO | Word count | Hard questions should require thought |
-| DC-03 | Easy questions: no multi-clause stems | INFO | Heuristic | Simple structure for simple questions |
-
-### Scoring Model
-
-Each question gets a quality score from 0-100:
-- Start at 100
-- ERROR violations: -25 each (question should not be published)
-- WARNING violations: -10 each (question needs review)
-- INFO violations: -3 each (suggestion, not blocking)
-
-**Thresholds:**
-- 80-100: GOOD (publishable)
-- 60-79: FAIR (review recommended)
-- 0-59: POOR (should not be published without fixes)
-
----
+**Key insight:** Semantic duplicate detection is independent of exact duplicate detection. Both can operate in parallel. Manual review is the final gate for both.
 
 ## MVP Recommendation
 
-### Phase 1: Quality Foundation (Build First)
+For v1.6 Content Quality & Scale milestone, prioritize:
 
-1. **TS-1** Quality rules engine -- The foundation everything depends on
-2. **D-3** AI pipeline quality gates -- Immediate value on next content generation run
+### Phase 1: Deduplication (Week 1)
+1. **Exact duplicate detection across all collections** (extend existing `DuplicateDetector`)
+2. **Cross-collection duplicate report** (scan all JSON files, output CSV)
+3. **Manual review workflow** (extend flag review queue or use CSV + bulk actions)
 
-### Phase 2: Admin Visibility
+### Phase 2: Scaling (Week 1-2)
+4. **Batch generation to target count** (already implemented, validate)
+5. **Integrate duplicate check into validation loop** (extend quality rules)
+6. **Generation reports with duplicate stats** (extend existing reports)
 
-3. **TS-2** Admin question explorer -- Browse and filter all content
-4. **TS-3** Question detail inspector -- Deep-dive on individual questions
-5. **TS-4** Collection health dashboard -- Collection-level quality view
+### Phase 3: Quality Enhancement (Week 2, if time permits)
+7. **Semantic duplicate detection** (BERT embeddings + cosine similarity, threshold 0.9)
+8. **Duplicate metrics in collection health dashboard** (add to existing UI)
 
-### Phase 3: Workflow and Telemetry
+### Defer to Post-MVP
 
-6. **D-4** Human review workflow -- Structured draft-to-active process
-7. **D-1** Content telemetry -- Start collecting gameplay data per question
-8. **D-5** Source URL verification -- Automated link checking
+- **Inverse duplicate detection** — high complexity, requires more research
+- **Answer leakage detection** — medium complexity, lower priority than semantic dups
+- **Same-source factoid clustering** — nice-to-have, not blocking
+- **Smart overshoot calculation** — optimization, not MVP requirement
 
-### Phase 4: Feedback Loops (After Data Accumulates)
+## Success Metrics
 
-9. **D-2** Difficulty calibration -- Requires telemetry data from D-1
-10. **D-6** Quality score trends -- Requires history from TS-1 + D-1
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+| Duplicate rate per collection | <5% | (duplicate_groups / total_questions) * 100 |
+| Questions per collection | 90+ unique | Count after deduplication |
+| Generation efficiency | >70% pass rate | (passed_validation / total_generated) * 100 |
+| Admin review time | <10 min per collection | Time to review duplicate report |
+| Cross-collection overlap | <2% | Questions appearing in 2+ collections |
 
-### Estimated Scope
+## Open Questions
 
-| Feature | Effort | Risk |
-|---------|--------|------|
-| TS-1 (quality rules) | 2-3 days | LOW -- rules are well-defined |
-| D-3 (pipeline gates) | 1-2 days | LOW -- extends existing pipeline |
-| TS-2 (explorer UI) | 3-4 days | MEDIUM -- new frontend surface |
-| TS-3 (detail view) | 1-2 days | LOW -- builds on TS-2 |
-| TS-4 (health dashboard) | 1-2 days | LOW -- aggregation queries |
-| D-4 (review workflow) | 2-3 days | LOW -- status transitions |
-| D-1 (telemetry) | 3-4 days | MEDIUM -- new data pipeline |
-| D-5 (source verification) | 1-2 days | LOW -- reuses fetch-sources |
-| D-2 (calibration) | 1 day | LOW -- once D-1 exists |
-| D-6 (trends) | 1 day | LOW -- once data exists |
+1. **Should any questions be allowed across collections?** (e.g., "Who is the governor?" in both state and city)
+2. **What's the acceptable semantic similarity threshold?** (Need to test with Civic Trivia data, recommendation: start at 0.9)
+3. **How often to run cross-collection scans?** (Per generation? Weekly batch? On-demand?)
+4. **Should duplicate detection be retroactive?** (Scan existing 639 questions or only new generations?)
 
-**Total: ~16-24 days of development work across 4 phases.**
+## Implementation Notes
 
----
+**Leverage existing infrastructure:**
+- Quality rules engine → add semantic duplicate rule
+- Flag review queue → extend for duplicate review
+- Collection health dashboard → add duplicate metrics
+- Generation reports → add duplicate breakdown
 
-## Competitor/Domain Feature Analysis
+**New dependencies needed:**
+- Sentence-BERT or similar embedding model (recommend `sentence-transformers` Python library)
+- Vector similarity library (recommend `scikit-learn` for cosine similarity)
+- Optional: FAISS for large-scale similarity search (only if collections grow >1000 questions each)
 
-| Feature | Moodle Question Bank | Kahoot | LiveLike Trivia CMS | Our Approach |
-|---------|---------------------|--------|---------------------|--------------|
-| Question browsing | Full bank with tag filters | Library search | CSV upload + manual entry | TS-2: Data table with multi-filter |
-| Quality scoring | Item analysis reports (post-exam) | None visible | None visible | TS-1: Static rules + D-1: empirical telemetry |
-| Content review | Teacher approval | Creator-only | Admin-only | D-4: Draft -> review -> active workflow |
-| Difficulty data | CTT statistics | None visible | None visible | D-1: P-value and discrimination index |
-| AI generation | Plugins available | AI question generation | GenAI option | D-3: Pipeline with quality gates |
-| Source verification | Not applicable | Not applicable | Not applicable | D-5: Automated link checks (civic-specific need) |
-| Distractor analysis | Point-biserial on each option | None | None | D-1: Per-distractor selection rates |
-| Bulk operations | Import/export, batch edit | Duplicate/share | CSV upload | TS-2: Bulk status changes |
-
-Key takeaway: Most trivia platforms do not invest in question quality tooling because their content is crowdsourced or disposable. Educational assessment platforms (Moodle, standardized testing) have deep quality tooling. This project sits in between -- it needs assessment-grade quality tools but at trivia-platform scale.
-
----
+**Cost considerations:**
+- Embedding API calls: ~$0.0001 per question (if using hosted)
+- Local embeddings (Sentence-BERT): Free, ~100ms per question
+- Recommend: Use local embeddings for <10k questions
 
 ## Sources
 
-### Item Writing and Question Quality
-- [Haladyna et al. - MC Item Writing Guidelines](https://www.tandfonline.com/doi/abs/10.1207/S15324818AME1503_5) -- Foundational taxonomy of 31 item-writing rules organized by content, stem, and option categories (HIGH confidence, peer-reviewed)
-- [UF Pharmacy - MCQ Writing Checklist](https://cpe.pharmacy.ufl.edu/wordpress/files/2022/09/Checklist-for-Writing-MCQs.pdf) -- Practical checklist derived from Haladyna's taxonomy (HIGH confidence, academic institution)
-- [ACS MC Item Writing Guidelines](https://www.facs.org/for-medical-professionals/education/cme-resources/test-writing/) -- Medical education item-writing standards (HIGH confidence, professional organization)
+### High Confidence (Context7 or Official Docs)
+- Existing Civic Trivia implementation (backend/src/services/qualityRules/rules/duplicate.ts)
+- Existing quality validation pipeline (backend/src/scripts/content-generation/utils/quality-validation.ts)
+- Collection health dashboard (frontend/src/pages/admin/CollectionsPage.tsx)
 
-### Classical Test Theory and Item Analysis
-- [Assessment Systems - CTT Item Statistics](https://assess.com/item-statistics-classical-test-theory/) -- P-value, discrimination index definitions and thresholds (HIGH confidence, assessment industry)
-- [Assessment Systems - Distractor Analysis](https://assess.com/distractor-analysis-test-items/) -- Non-functioning distractor identification, point-biserial correlation (HIGH confidence)
-- [BYU - Item Analysis Basics](https://open.byu.edu/Assessment_Basics/item_analsyis) -- Educational assessment statistics reference (HIGH confidence, academic institution)
-- [PMC - Distractor Efficiency Impact](https://pmc.ncbi.nlm.nih.gov/articles/PMC11040895/) -- Empirical study on distractor efficiency, difficulty, and discrimination (HIGH confidence, peer-reviewed)
+### Medium Confidence (Academic Research + Multiple Web Sources)
+- [Semantic Similarity Analysis for Examination Questions Classification](https://www.mdpi.com/2076-3417/13/14/8323)
+- [How do I use embeddings for duplicate detection?](https://zilliz.com/ai-faq/how-do-i-use-embeddings-for-duplicate-detection)
+- [Finding the Duplicate Questions in Stack Overflow using Word Embeddings](https://www.sciencedirect.com/science/article/pii/S1877050920312898)
+- [Measuring Similarity and Distance between Embeddings](https://www.dataquest.io/blog/measuring-similarity-and-distance-between-embeddings/)
+- [Deduplicating records in systematic reviews](https://www.sciencedirect.com/science/article/abs/pii/S0895435622002566)
+- [Automation of duplicate record detection for systematic reviews](https://systematicreviewsjournal.biomedcentral.com/articles/10.1186/s13643-024-02619-9)
 
-### AI-Generated Question Quality
-- [QUEST Framework - Springer 2025](https://link.springer.com/chapter/10.1007/978-3-031-95627-0_20) -- Quality, Uniqueness, Effort, Structure, Transparency dimensions for evaluating LLM-generated MCQs (HIGH confidence, peer-reviewed)
-- [LLM-Generated Q&A Evaluation - AIED 2025](https://arxiv.org/abs/2505.06591) -- Student-centered study finding generated items exhibit strong discrimination and appropriate difficulty (MEDIUM confidence, preprint)
-- [AI-Generated Exam Quality Field Study](https://arxiv.org/html/2508.08314v1) -- Large-scale field evaluation of AI-generated assessment items (MEDIUM confidence, preprint)
+### Low Confidence (Web Search Only, Needs Verification)
+- [Best AI quiz generator tools in 2026](https://blog.vocaliv.com/top-5-best-ai-quiz-generator-tools-in-2026) — general trivia platform trends
+- [The 12 Best AI Quiz Generators in 2026](https://www.ispringsolutions.com/blog/ai-quiz-generators) — quality vs AI concerns
+- [Content curation strategy best practices](https://www.semrush.com/blog/content-curation/) — overshoot strategies
+- [Duplicate data management in ML](https://dagshub.com/blog/mastering-duplicate-data-management-in-machine-learning-for-optimal-model-performance/) — acceptable duplicate rates
 
-### Quiz/Trivia CMS Patterns
-- [LiveLike Trivia CMS Docs](https://docs.livelike.com/docs/trivia) -- CMS features: CSV upload, manual, GenAI creation; timer config; result customization (HIGH confidence, official docs)
-- [Moodle Question Bank Tag Filter](https://github.com/crs4/moodle.qbank-tag-filter) -- Tag-based filtering for question bank management (MEDIUM confidence, official plugin)
-
-### Item Response Theory
-- [Wikipedia - Item Response Theory](https://en.wikipedia.org/wiki/Item_response_theory) -- IRT fundamentals, 1PL/2PL/3PL models (HIGH confidence)
-- [Assessment Systems - IRT Difficulty Parameter](https://assess.com/irt-item-difficulty-parameter/) -- Difficulty parameter interpretation (HIGH confidence)
-- [Assessment Systems - IRT Discrimination Parameter](https://assess.com/irt-item-discrimination-parameter/) -- Discrimination parameter interpretation (HIGH confidence)
-
----
-
-## Confidence Assessment
-
-| Area | Confidence | Notes |
-|------|-----------|-------|
-| Quality rule categories | HIGH | Well-established in item-writing literature (Haladyna), maps directly to project philosophy |
-| Admin UI feature set | HIGH | Standard CMS/data-table patterns; no novel UI problems |
-| CTT telemetry metrics | HIGH | Decades of psychometric research; well-defined formulas |
-| AI pipeline quality gates | MEDIUM-HIGH | QUEST framework is recent (2025) but well-supported; iterative refinement is newer |
-| Implementation complexity estimates | MEDIUM | Based on existing codebase structure; actual effort depends on team velocity |
-| Review workflow design | MEDIUM | Adapted from enterprise CMS patterns; may need simplification for small team |
-
-## Research Gaps
-
-- **Minimum gameplay sessions for reliable telemetry:** How many times must a question be played before P-value and discrimination index are statistically meaningful? CTT literature suggests 30+ responses per item for stable estimates, but civic trivia may have lower play volume. Needs investigation during D-1 implementation.
-- **Quality rule threshold tuning:** The scoring model (100-point scale, -25/-10/-3 penalties) is a starting proposal. Actual thresholds should be calibrated by running rules against the existing 320 questions and examining the distribution.
-- **Admin UI framework choice:** The research does not specify whether to use the existing frontend framework or a separate admin-only framework. This is a stack decision for the STACK.md research.
-
----
-*Research completed: 2026-02-19*
-*Researcher: GSD Project Researcher (Features dimension)*
-*Confidence: MEDIUM-HIGH overall*
+**Flag for validation:** Inverse duplicate detection and answer leakage detection are theoretically sound but not widely documented in trivia platforms. Recommend prototype + manual testing before committing to full implementation.
