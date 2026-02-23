@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-21)
+See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study
-**Current focus:** v1.5 Feedback Marks — ALL PHASES COMPLETE
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 30 of 30 (Admin Integration & Tech Debt)
-Plan: 4 of 4 complete
-Status: Phase complete — milestone complete
-Last activity: 2026-02-22 — Completed Phase 30 (Admin Integration & Tech Debt)
+Phase: 30 of 30 — all milestones through v1.5 complete
+Plan: N/A
+Status: Ready for next milestone
+Last activity: 2026-02-22 — v1.5 Feedback Marks milestone complete
 
-Progress: [███████████████████████] 97% (88 plans complete)
+Progress: [████████████████████████] 100% (86 plans complete across 30 phases)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -34,65 +34,28 @@ Progress: [███████████████████████
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 88 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 13 v1.5)
+- Total plans completed: 86 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 11 v1.5)
 - Quick tasks completed: 10
 - Milestones shipped: 6 (v1.0 through v1.5)
-- Total execution time: ~10 days (2026-02-13 → 2026-02-23)
+- Total execution time: ~10 days (2026-02-13 → 2026-02-22)
 
 **By Milestone:**
 
-| Milestone | Phases | Plans | Duration |
-|-----------|--------|-------|----------|
+| Milestone | Phases | Plans | Shipped |
+|-----------|--------|-------|---------|
 | v1.0 MVP | 1-7 | 26 | 2026-02-13 |
 | v1.1 Production Hardening | 8-12 | 11 | 2026-02-18 |
 | v1.2 Community Collections | 13-17 | 15 | 2026-02-19 |
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
-| v1.5 Feedback Marks | 27-30 | 13 | 2026-02-23 |
+| v1.5 Feedback Marks | 27-30 | 11 | 2026-02-22 |
 
 ## Accumulated Context
 
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting v1.5 work:
-
-- Phase 27-01: Rate limiter only on POST /flag, not DELETE — allow unrestricted unflagging
-- Phase 27-01: Fail-open rate limiting on Redis errors — availability over abuse prevention
-- Phase 27-01: Denormalize flag_count on questions table — avoid COUNT(*) queries
-- Phase 27-02: Independent tooltip implementation for FlagButton — CSS hover tooltip
-- Phase 27-02: Optimistic UI updates for flag state — immediate local state change with rollback
-- Phase 28-01: No rate limiter on batch elaboration endpoint — infrequent post-game action
-- Phase 28-01: Null for empty elaborations — database normalization
-- Phase 28-01: Equal visual weight for Skip/Submit buttons — no dark patterns
-- Phase 28-02: Elaboration after results, not before — user requested interactive flags on results screen
-- Phase 28-02: pendingAction pattern — intercept Play Again/Home with elaboration before executing
-- Phase 29-01: Denormalized flag_count for sorting — avoid expensive COUNT(*) aggregations
-- Phase 29-01: Raw SQL for cross-schema JOIN — auth.users not in Drizzle schema
-- Phase 29-01: Hard delete flags on dismiss — simpler, no audit trail needed
-- Phase 29-01: Limit 20 flags in detail view — performance consideration
-- Phase 29-02: Headless UI TabGroup for tabs — accessible, clean state management
-- Phase 29-02: Flag count color-coding by severity — red >5, orange >2, gray default
-- Phase 29-02: Default sort flag_count desc — highest severity first
-- Phase 29-02: Reuse /api/admin/collections/health for filter — avoid duplicate endpoint
-- Phase 29-02: Reason chips with semantic colors — confusing=amber, outdated=blue, wrong=red, boring=gray
-- Phase 29-03: Custom undo toast vs library — 50-line custom hook avoids 3KB dependency
-- Phase 29-03: Dismiss no undo — hard delete requires confirm, archive has undo
-- Phase 29-03: Optimistic UI with refreshKey fallback — instant feedback with error recovery
-- Phase 29-03: Elaboration truncation at 100 chars — Show more/less toggle for long text
-- Phase 29-03: Close panel after action — snappy workflow, no stale content
-- Phase 30-01: Simple regex validation for ADMIN_EMAIL vs Zod schema — kept env.ts minimal
-- Phase 30-01: flagged=true filter uses gt(questions.flagCount, 0) for consistency
-- Phase 30-02: Use id param (?id=X) instead of search for Question Explorer deep-linking
-- Phase 30-02: Blue filter banner UI for question ID filter consistency
-- Phase 30-02: Close panel on Edit in Explorer click for smooth navigation flow
-- Phase 30-03: Color scheme matches Phase 29 flag severity — red >5, orange >2, gray >0
-- Phase 30-03: Deep-link opens panel on mount only (not on every URL change)
-- Phase 30-03: 4-column filter grid accommodates flagged checkbox inline
-- Phase 30-04: AI suggestions limited to .gov/.edu/civic orgs for authoritative sources
-- Phase 30-04: Null source URL for unrepairable links rather than keeping broken URLs
-- Phase 30-04: Two-phase operation (scan + apply) for safe bulk repairs at scale
-- Phase 30-04: Batch processing with 1-second AI call delays to avoid rate limits
+All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 
 ### Pending Todos
 
@@ -109,7 +72,7 @@ Recent decisions affecting v1.5 work:
 
 ### Blockers/Concerns
 
-None. All v1.5 phases complete — milestone ready for audit.
+None. v1.5 shipped. Ready for next milestone.
 
 ### Quick Tasks Completed
 
@@ -122,11 +85,11 @@ None. All v1.5 phases complete — milestone ready for audit.
 ## Session Continuity
 
 Last session: 2026-02-22
-Topic: Phase 30 execution complete — v1.5 Feedback Marks milestone complete
-Stopped at: Phase 30 verified ✓ — 20/20 must-haves verified, all requirements delivered
-Resume file: None — Phase 30 complete
+Topic: v1.5 Feedback Marks — milestone completed and archived
+Stopped at: Milestone complete — ready for next milestone
+Resume file: None
 
-Next action: `/gsd:audit-milestone` to verify v1.5 requirements, cross-phase integration, E2E flows
+Next action: `/gsd:new-milestone` to start next version (questioning -> research -> requirements -> roadmap)
 
 ---
-*v1.5 Feedback Marks — ALL PHASES COMPLETE (4/4 phases in milestone)*
+*v1.5 Feedback Marks — SHIPPED (6 milestones complete)*

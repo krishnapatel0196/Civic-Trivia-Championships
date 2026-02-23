@@ -1,5 +1,31 @@
 # Project Milestones: Civic Trivia Championship
 
+## v1.5 Feedback Marks (Shipped: 2026-02-22)
+
+**Delivered:** Player-driven quality curation system — in-game flagging with post-game elaboration, admin flag review queue with archive/dismiss/restore actions, question explorer flag integration, and AI-powered repair of 107 broken source URLs.
+
+**Phases completed:** 27-30 (11 plans total)
+
+**Key accomplishments:**
+- In-game flagging with optimistic UI, rate limiting (10/15min), and idempotent storage for authenticated players
+- Post-game elaboration flow with reason chips and free-text feedback, batch submitted after results review
+- Admin flag review queue with Active/Archived tabs, sortable flag counts, archive/dismiss/restore with undo toast
+- Question explorer flag integration with severity badges, flagged filter, and bidirectional cross-navigation
+- AI-powered broken link repair tool fixed 107 broken source URLs across 320 original questions
+- ADMIN_EMAIL environment variable with validation for production admin configuration
+
+**Stats:**
+- 61 files created/modified (10,038 insertions, 152 deletions)
+- ~26,576 lines of TypeScript (cumulative: 11,418 frontend + 15,158 backend)
+- 4 phases, 11 plans, 23 requirements delivered
+- 2 days from start to ship (2026-02-21 → 2026-02-22)
+
+**Git range:** `feat(27-01)` → `feat(30-04)`
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v1.4 Fremont, CA Collection (Shipped: 2026-02-21)
 
 **Delivered:** Fremont, CA community collection with 92 culturally-validated questions, enhanced AI generation pipeline with quality validation retry loop, and comprehensive production verification.

@@ -41,20 +41,16 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Fremont topics (city government, Alameda County, California state, civic history, local services, elections, landmarks, budget/finance) — v1.4
 - ✓ Fremont collection card with Mission Peak banner image — v1.4
 - ✓ Collection seeded, activated, and playable in production — v1.4
+- ✓ In-game flagging with optimistic UI, rate limiting, idempotent storage — v1.5
+- ✓ Post-game elaboration with reason chips and free-text feedback — v1.5
+- ✓ Admin flag review queue with archive/dismiss/restore actions — v1.5
+- ✓ Question explorer flag integration with severity badges and cross-navigation — v1.5
+- ✓ AI-powered repair of 107 broken source URLs across 320 questions — v1.5
+- ✓ ADMIN_EMAIL environment variable with validation — v1.5
 
 ### Active
 
-**Current Milestone: v1.5 Feedback Marks**
-
-**Goal:** Let authenticated players flag questions they dislike during gameplay, provide optional elaboration post-game, and give admins a review queue to triage flagged content — turning players into quality curators.
-
-**Target features:**
-- Thumbs-down button on answer reveal screen (authenticated players only)
-- Post-game summary shows flagged questions with optional free-text feedback
-- Admin flag count visible on question list + dedicated flags review queue
-- Admin can archive flagged questions directly from review queue
-- Fix broken source.url Learn More links on original 320 questions
-- Add ADMIN_EMAIL environment variable to production backend
+(No active milestone — run `/gsd:new-milestone` to start next)
 
 ### Out of Scope
 
@@ -77,12 +73,15 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v1.4 shipped 2026-02-21):**
+**Current state (v1.5 shipped 2026-02-22):**
 - 639 playable questions across 6 collections (Federal 119, Bloomington IN 116, Los Angeles CA 114, Indiana 100, California 98, Fremont CA 92)
 - Quality rules engine with 8 rules, blocking/advisory severity, 0-100 scoring
-- Admin UI with question explorer, collection health dashboard, inline editing
+- Admin UI with question explorer, collection health dashboard, inline editing, flag review queue
 - Quality-gated AI generation pipeline with overshoot-and-curate strategy, quality validation retry loop, and cultural sensitivity framework
+- Player-driven quality curation: in-game flagging, post-game elaboration, admin triage
 - Gameplay telemetry tracking encounter/correct counts per question
+- Bidirectional admin cross-navigation between question explorer and flag review
+- 107 broken source URLs repaired; all remaining Learn More links valid or null
 - Production verification script for automated deployment validation
 
 **Question quality philosophy:**
@@ -95,8 +94,8 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - Quality rules codified as TypeScript functions with blocking/advisory severity
 
 **Tech stack:** React 18, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, PostgreSQL (Supabase), Redis (Upstash), JWT
-- Frontend: ~12,000 LOC TypeScript/React
-- Backend: ~8,000 LOC TypeScript/Express
+- Frontend: ~11,400 LOC TypeScript/React
+- Backend: ~15,200 LOC TypeScript/Express
 - Live: civic-trivia-frontend.onrender.com / civic-trivia-backend.onrender.com
 
 **Design principles (from design doc):**
@@ -129,7 +128,7 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - **Tech stack**: React 18+, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, PostgreSQL, Redis, JWT — specified in design doc
 - **Performance**: FCP <1.5s, TTI <3s, bundle <300KB gzipped
 - **Accessibility**: WCAG AA compliance required
-- **Content**: 639 questions across 6 collections (minimum 50 per collection for gameplay)
+- **Content**: 639 questions across 6 collections (minimum 50 per collection for gameplay), all source URLs validated
 
 ## Key Decisions
 
@@ -157,6 +156,16 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Quality guidelines in all locale system prompts | Embed Phase 21 quality rules in generation prompts to reduce validation retries | Good — benefits all future generation |
 | Status-filtered question exports | Export only active questions, not drafts — applied to all collections | Good — data integrity improvement |
 | Accept 92 questions (below 95 target) | Quality over quantity, all 8 topics represented with minimum 10 each | Good — within acceptable range |
+| Fail-open rate limiting on Redis errors | Rate limiting is abuse prevention not security; allow users through if Redis down | Good — availability preserved |
+| Denormalize flag_count on questions table | Avoid COUNT(*) aggregation queries on every question fetch | Good — efficient sorting/filtering |
+| No rate limiter on batch elaboration | Infrequent post-game action, not an abuse vector | Good — simplicity |
+| Equal Skip/Submit button weight | No dark pattern pushing Submit; respect user choice equally | Good — matches brand principles |
+| Elaboration after results, not before | User-directed: flag on results screen, elaborate when leaving | Good — better UX flow |
+| pendingAction pattern for navigation intercept | Capture Play Again/Home intent, show elaboration, then execute | Good — clean flow control |
+| Custom undo toast over Sonner library | 50-line hook avoids 3KB dependency for single use case | Good — minimal bundle impact |
+| Hard delete flags on dismiss | Simpler than soft delete; no audit trail needed for dismissed flags | Good — simplicity |
+| AI URL suggestions limited to .gov/.edu/civic orgs | Authoritative sources only for civic content | Good — source quality |
+| Null source URL for unrepairable links | Better than displaying broken "Learn More" link to users | Good — clean UX |
 
 ---
-*Last updated: 2026-02-21 after v1.5 milestone started*
+*Last updated: 2026-02-22 after v1.5 milestone completion*
