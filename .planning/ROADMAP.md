@@ -321,11 +321,11 @@ Plans:
   2. SemanticDupDetector class generates similarity scores for question pairs using cosine similarity
   3. Dedup scanner CLI tool can scan all 6 collections and generate duplicate reports with dry-run mode
   4. Cross-collection duplicate detection works (Federal/State/City questions compared globally)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 31-01: TBD
-- [ ] 31-02: TBD
+- [ ] 31-01-PLAN.md — Core embedding, similarity, and clustering services
+- [ ] 31-02-PLAN.md — CLI scanner tool with dual JSON/markdown reports
 
 #### Phase 32: Existing Collection Audit
 **Goal**: All 639 existing questions scanned for duplicates, duplicates reviewed and archived
@@ -382,7 +382,7 @@ Phases execute in numeric order: 31 → 32 → 33 → 34
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 31. Semantic Deduplication Infrastructure | 0/TBD | Not started | - |
+| 31. Semantic Deduplication Infrastructure | 0/2 | Planned | - |
 | 32. Existing Collection Audit | 0/TBD | Not started | - |
 | 33. Generation Pipeline Enhancement | 0/TBD | Not started | - |
 | 34. Scale to 90+ Questions | 0/TBD | Not started | - |
