@@ -18,7 +18,7 @@ export interface AdvancedFlag {
 }
 
 interface ClusterResolution {
-  keepId: string;
+  keepIds: string[];
   archivedIds: string[];
   resolvedAt: Date;
   archivedDbIds: number[];
@@ -39,7 +39,11 @@ export class DuplicateReviewService {
    * Load the most recent scanner report from .planning/dedup-reports/
    */
   async loadReport(reportPath?: string): Promise<void> {
-    const reportsDir = path.join(process.cwd(), '.planning', 'dedup-reports');
+    // Resolve project root: go up from backend/src/services/ or from process.cwd()
+    const projectRoot = path.resolve(process.cwd(), '..');
+    const reportsDir = fs.existsSync(path.join(process.cwd(), '.planning', 'dedup-reports'))
+      ? path.join(process.cwd(), '.planning', 'dedup-reports')
+      : path.join(projectRoot, '.planning', 'dedup-reports');
 
     let filePath: string;
     if (reportPath) {
@@ -91,12 +95,34 @@ export class DuplicateReviewService {
 
     if (allExternalIds.size > 0) {
       const dbQuestions = await db
-        .select({ id: questions.id, externalId: questions.externalId })
+        .select({ id: questions.id, externalId: questions.externalId, status: questions.status })
         .from(questions)
         .where(inArray(questions.externalId, Array.from(allExternalIds)));
 
+      const archivedExternalIds = new Set<string>();
       for (const q of dbQuestions) {
         this.externalIdToDbId.set(q.externalId, q.id);
+        if (q.status === 'archived') {
+          archivedExternalIds.add(q.externalId);
+        }
+      }
+
+      // Detect already-resolved clusters from DB state
+      // A cluster is resolved if ANY question in it is archived
+      for (const cluster of clusters) {
+        const clusterArchived = cluster.questions.filter(q => archivedExternalIds.has(q.externalId));
+        const clusterKept = cluster.questions.filter(q => !archivedExternalIds.has(q.externalId));
+
+        if (clusterArchived.length > 0) {
+          this.resolutions.set(cluster.clusterId, {
+            keepIds: clusterKept.map(q => q.externalId),
+            archivedIds: clusterArchived.map(q => q.externalId),
+            resolvedAt: new Date(),
+            archivedDbIds: clusterArchived
+              .map(q => this.externalIdToDbId.get(q.externalId))
+              .filter((id): id is number => id !== undefined),
+          });
+        }
       }
     }
   }
@@ -156,23 +182,28 @@ export class DuplicateReviewService {
   }
 
   /**
-   * Resolve a cluster by archiving all questions except the keeper
+   * Resolve a cluster by archiving all questions except the keepers
    */
-  async resolveCluster(clusterId: string, keepExternalId: string): Promise<string[]> {
+  async resolveCluster(clusterId: string, keepExternalIds: string | string[]): Promise<string[]> {
+    // Normalize to array for backward compat (auto-resolve still sends single)
+    const keepIds = Array.isArray(keepExternalIds) ? keepExternalIds : [keepExternalIds];
+    const keepSet = new Set(keepIds);
+
     // Find cluster
     const cluster = this.clusters.find(c => c.clusterId === clusterId);
     if (!cluster) {
       throw new Error(`Cluster ${clusterId} not found`);
     }
 
-    // Validate keeper exists in cluster
-    const keeperQuestion = cluster.questions.find(q => q.externalId === keepExternalId);
-    if (!keeperQuestion) {
-      throw new Error(`Keeper ${keepExternalId} not found in cluster ${clusterId}`);
+    // Validate all keepers exist in cluster
+    for (const keepId of keepIds) {
+      if (!cluster.questions.find(q => q.externalId === keepId)) {
+        throw new Error(`Keeper ${keepId} not found in cluster ${clusterId}`);
+      }
     }
 
-    // Get questions to archive
-    const toArchive = cluster.questions.filter(q => q.externalId !== keepExternalId);
+    // Get questions to archive (everything not kept — if keepIds empty, archive all)
+    const toArchive = cluster.questions.filter(q => !keepSet.has(q.externalId));
     const archiveExternalIds = toArchive.map(q => q.externalId);
     const archiveDbIds = toArchive
       .map(q => this.externalIdToDbId.get(q.externalId))
@@ -203,7 +234,7 @@ export class DuplicateReviewService {
 
     // Track resolution
     this.resolutions.set(clusterId, {
-      keepId: keepExternalId,
+      keepIds: keepIds,
       archivedIds: archiveExternalIds,
       resolvedAt: new Date(),
       archivedDbIds: archiveDbIds,

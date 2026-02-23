@@ -20,8 +20,8 @@ const COLLECTION_TO_FILE_MAP: Record<string, string> = {
   'Federal Civics': 'questions.json',
   'Bloomington, IN': 'bloomington-in-questions.json',
   'Los Angeles, CA': 'los-angeles-ca-questions.json',
-  'Indiana': 'indiana-state-questions.json',
-  'California': 'california-state-questions.json',
+  'Indiana State': 'indiana-state-questions.json',
+  'California State': 'california-state-questions.json',
   'Fremont, CA': 'fremont-ca-questions.json',
 };
 
@@ -29,11 +29,17 @@ export class JSONSyncService {
   private dataDir: string;
 
   constructor() {
-    this.dataDir = path.join(process.cwd(), 'backend', 'src', 'data');
+    // Handle both cwd=project-root and cwd=backend/
+    const candidateA = path.join(process.cwd(), 'backend', 'src', 'data');
+    const candidateB = path.join(process.cwd(), 'src', 'data');
+    this.dataDir = fs.existsSync(candidateA) ? candidateA : candidateB;
   }
 
   /**
-   * Remove archived questions from JSON source files
+   * Remove archived questions from JSON source files.
+   * Handles two formats:
+   *   - Bare array: questions.json = [{ id, text, ... }, ...]
+   *   - Topic-based: locale files = { topics: [{ slug, questions: [{ id, ... }] }] }
    */
   syncAfterArchive(archivedExternalIds: string[]): SyncSummary[] {
     const summaries: SyncSummary[] = [];
@@ -44,31 +50,46 @@ export class JSONSyncService {
     for (const fileName of jsonFiles) {
       const filePath = path.join(this.dataDir, fileName);
 
-      // Check if file exists
       if (!fs.existsSync(filePath)) {
         continue;
       }
 
-      // Read and parse
       const raw = fs.readFileSync(filePath, 'utf-8');
-      const questionsArray = JSON.parse(raw);
+      const parsed = JSON.parse(raw);
 
-      // Filter out archived questions
-      const originalCount = questionsArray.length;
-      const filtered = questionsArray.filter(
-        (q: any) => !archivedSet.has(q.id)
-      );
-      const removedCount = originalCount - filtered.length;
+      let removedCount = 0;
+      let remainingCount = 0;
 
-      // Only write back if changes were made
+      if (Array.isArray(parsed)) {
+        // Bare array format (questions.json)
+        const originalCount = parsed.length;
+        const filtered = parsed.filter((q: any) => !archivedSet.has(q.id));
+        removedCount = originalCount - filtered.length;
+        remainingCount = filtered.length;
+
+        if (removedCount > 0) {
+          fs.writeFileSync(filePath, JSON.stringify(filtered, null, 2) + '\n', 'utf-8');
+        }
+      } else if (parsed && parsed.topics && Array.isArray(parsed.topics)) {
+        // Topic-based format ({ topics: [{ questions: [...] }] })
+        for (const topic of parsed.topics) {
+          if (!Array.isArray(topic.questions)) continue;
+          const before = topic.questions.length;
+          topic.questions = topic.questions.filter((q: any) => !archivedSet.has(q.id));
+          removedCount += before - topic.questions.length;
+          remainingCount += topic.questions.length;
+        }
+
+        if (removedCount > 0) {
+          fs.writeFileSync(filePath, JSON.stringify(parsed, null, 2) + '\n', 'utf-8');
+        }
+      }
+
       if (removedCount > 0) {
-        const formatted = JSON.stringify(filtered, null, 2) + '\n';
-        fs.writeFileSync(filePath, formatted, 'utf-8');
-
         summaries.push({
           file: fileName,
           removed: removedCount,
-          remaining: filtered.length,
+          remaining: remainingCount,
         });
       }
     }
@@ -140,27 +161,40 @@ export class JSONSyncService {
 
       const filePath = path.join(this.dataDir, fileName);
 
-      // Read existing file
-      let existingQuestions: any[] = [];
-      if (fs.existsSync(filePath)) {
-        const raw = fs.readFileSync(filePath, 'utf-8');
-        existingQuestions = JSON.parse(raw);
-      }
+      if (!fs.existsSync(filePath)) continue;
 
-      // Merge new questions (avoid duplicates)
-      const existingIds = new Set(existingQuestions.map((q: any) => q.id));
-      const toAdd = newQuestions.filter(q => !existingIds.has(q.id));
+      const raw = fs.readFileSync(filePath, 'utf-8');
+      const parsed = JSON.parse(raw);
 
-      if (toAdd.length > 0) {
-        const merged = [...existingQuestions, ...toAdd];
-        const formatted = JSON.stringify(merged, null, 2) + '\n';
-        fs.writeFileSync(filePath, formatted, 'utf-8');
+      if (Array.isArray(parsed)) {
+        // Bare array format (questions.json)
+        const existingIds = new Set(parsed.map((q: any) => q.id));
+        const toAdd = newQuestions.filter(q => !existingIds.has(q.id));
 
-        summaries.push({
-          file: fileName,
-          added: toAdd.length,
-          remaining: merged.length,
-        });
+        if (toAdd.length > 0) {
+          const merged = [...parsed, ...toAdd];
+          fs.writeFileSync(filePath, JSON.stringify(merged, null, 2) + '\n', 'utf-8');
+          summaries.push({ file: fileName, added: toAdd.length, remaining: merged.length });
+        }
+      } else if (parsed && parsed.topics && Array.isArray(parsed.topics)) {
+        // Topic-based format — add to first matching topic or first topic
+        const allExistingIds = new Set<string>();
+        for (const topic of parsed.topics) {
+          if (Array.isArray(topic.questions)) {
+            for (const q of topic.questions) allExistingIds.add(q.id);
+          }
+        }
+
+        const toAdd = newQuestions.filter(q => !allExistingIds.has(q.id));
+        if (toAdd.length > 0 && parsed.topics.length > 0) {
+          // Add to the first topic (best-effort; questions were removed from somewhere in the file)
+          if (!Array.isArray(parsed.topics[0].questions)) parsed.topics[0].questions = [];
+          parsed.topics[0].questions.push(...toAdd);
+          fs.writeFileSync(filePath, JSON.stringify(parsed, null, 2) + '\n', 'utf-8');
+
+          const totalRemaining = parsed.topics.reduce((sum: number, t: any) => sum + (t.questions?.length || 0), 0);
+          summaries.push({ file: fileName, added: toAdd.length, remaining: totalRemaining });
+        }
       }
     }
 

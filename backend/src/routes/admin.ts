@@ -1145,19 +1145,20 @@ router.get('/duplicates', async (req: Request, res: Response) => {
     const enrichedClusters = duplicateReviewService.getClusters(filter);
     const advancedFlags = duplicateReviewService.getAdvancedFlags();
 
-    // Build summary
-    const total = enrichedClusters.length;
-    const resolved = enrichedClusters.filter(c => c.resolved).length;
-    const pending = total - resolved;
-    const autoResolvable = enrichedClusters.filter(c => c.autoResolvable && !c.resolved).length;
+    // Build summary (field names match frontend DuplicateSummary type)
+    const allClusters = duplicateReviewService.getClusters();
+    const totalClusters = allClusters.length;
+    const resolved = allClusters.filter(c => c.resolved).length;
+    const pendingReview = totalClusters - resolved;
+    const autoResolvable = allClusters.filter(c => c.autoResolvable && !c.resolved).length;
 
     res.json({
       clusters: enrichedClusters,
       advancedFlags,
       summary: {
-        total,
+        totalClusters,
+        pendingReview,
         resolved,
-        pending,
         autoResolvable,
       },
     });
@@ -1177,7 +1178,7 @@ router.post('/duplicates/resolve', async (req: Request, res: Response) => {
     // Validate body with Zod
     const ResolveSchema = z.object({
       clusterId: z.string(),
-      keepExternalId: z.string(),
+      keepExternalIds: z.array(z.string()),
     }).strict();
 
     const validation = ResolveSchema.safeParse(req.body);
@@ -1192,7 +1193,7 @@ router.post('/duplicates/resolve', async (req: Request, res: Response) => {
       });
     }
 
-    const { clusterId, keepExternalId } = validation.data;
+    const { clusterId, keepExternalIds } = validation.data;
 
     // Ensure service is loaded
     if (!duplicateReviewService) {
@@ -1200,8 +1201,8 @@ router.post('/duplicates/resolve', async (req: Request, res: Response) => {
       await duplicateReviewService.loadReport();
     }
 
-    // Resolve cluster
-    const archivedIds = await duplicateReviewService.resolveCluster(clusterId, keepExternalId);
+    // Resolve cluster (archive everything not in keepExternalIds)
+    const archivedIds = await duplicateReviewService.resolveCluster(clusterId, keepExternalIds);
 
     // Sync JSON files
     const jsonSyncService = new JSONSyncService();
@@ -1209,7 +1210,7 @@ router.post('/duplicates/resolve', async (req: Request, res: Response) => {
 
     res.json({
       success: true,
-      archived: archivedIds,
+      archivedIds,
       jsonSync,
     });
   } catch (error: any) {
