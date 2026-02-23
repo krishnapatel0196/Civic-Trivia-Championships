@@ -6,6 +6,8 @@ import { eq, and, or, lte, gt, isNotNull, sql, inArray, ilike, desc, asc } from 
 import { auditQuestion } from '../services/qualityRules/index.js';
 import type { QuestionInput } from '../services/qualityRules/types.js';
 import { z } from 'zod';
+import { DuplicateReviewService } from '../services/DuplicateReviewService.js';
+import { JSONSyncService } from '../services/JSONSyncService.js';
 
 const router = Router();
 
@@ -1101,6 +1103,256 @@ router.patch('/flags/:questionId/restore', async (req: Request, res: Response) =
   } catch (error: any) {
     console.error('Error restoring question:', error);
     res.status(500).json({ error: 'Failed to restore question', detail: error?.message || String(error) });
+  }
+});
+
+// ============================================================================
+// Duplicate Review Endpoints
+// ============================================================================
+
+// Singleton service instance (persists across requests for in-memory resolution state)
+let duplicateReviewService: DuplicateReviewService | null = null;
+
+/**
+ * GET /duplicates - Load and return duplicate clusters with advanced flags
+ * Query params:
+ *   - tier: 'exact' | 'near-duplicate' | 'possible' (optional)
+ *   - resolved: 'true' | 'false' (optional)
+ * Returns: { clusters, advancedFlags, summary }
+ */
+router.get('/duplicates', async (req: Request, res: Response) => {
+  try {
+    // Lazy-initialize singleton service
+    if (!duplicateReviewService) {
+      duplicateReviewService = new DuplicateReviewService();
+      await duplicateReviewService.loadReport();
+    }
+
+    // Parse filters
+    const tierFilter = req.query.tier as string | undefined;
+    const resolvedFilter = req.query.resolved === 'true' ? true : req.query.resolved === 'false' ? false : undefined;
+
+    // Build filter object
+    const filter: any = {};
+    if (tierFilter && ['exact', 'near-duplicate', 'possible'].includes(tierFilter)) {
+      filter.tier = tierFilter;
+    }
+    if (resolvedFilter !== undefined) {
+      filter.resolved = resolvedFilter;
+    }
+
+    // Get clusters and advanced flags
+    const enrichedClusters = duplicateReviewService.getClusters(filter);
+    const advancedFlags = duplicateReviewService.getAdvancedFlags();
+
+    // Build summary
+    const total = enrichedClusters.length;
+    const resolved = enrichedClusters.filter(c => c.resolved).length;
+    const pending = total - resolved;
+    const autoResolvable = enrichedClusters.filter(c => c.autoResolvable && !c.resolved).length;
+
+    res.json({
+      clusters: enrichedClusters,
+      advancedFlags,
+      summary: {
+        total,
+        resolved,
+        pending,
+        autoResolvable,
+      },
+    });
+  } catch (error: any) {
+    console.error('Error fetching duplicates:', error);
+    res.status(500).json({ error: 'Failed to fetch duplicates', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * POST /duplicates/resolve - Resolve a single cluster
+ * Body: { clusterId: string, keepExternalId: string }
+ * Returns: { success: true, archived: string[], jsonSync: SyncSummary[] }
+ */
+router.post('/duplicates/resolve', async (req: Request, res: Response) => {
+  try {
+    // Validate body with Zod
+    const ResolveSchema = z.object({
+      clusterId: z.string(),
+      keepExternalId: z.string(),
+    }).strict();
+
+    const validation = ResolveSchema.safeParse(req.body);
+    if (!validation.success) {
+      const details = validation.error.issues.map((err: any) => ({
+        field: err.path.join('.'),
+        message: err.message,
+      }));
+      return res.status(400).json({
+        error: 'Validation failed',
+        details,
+      });
+    }
+
+    const { clusterId, keepExternalId } = validation.data;
+
+    // Ensure service is loaded
+    if (!duplicateReviewService) {
+      duplicateReviewService = new DuplicateReviewService();
+      await duplicateReviewService.loadReport();
+    }
+
+    // Resolve cluster
+    const archivedIds = await duplicateReviewService.resolveCluster(clusterId, keepExternalId);
+
+    // Sync JSON files
+    const jsonSyncService = new JSONSyncService();
+    const jsonSync = jsonSyncService.syncAfterArchive(archivedIds);
+
+    res.json({
+      success: true,
+      archived: archivedIds,
+      jsonSync,
+    });
+  } catch (error: any) {
+    console.error('Error resolving cluster:', error);
+    res.status(500).json({ error: 'Failed to resolve cluster', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * POST /duplicates/auto-resolve - Auto-resolve all 90%+ clusters
+ * Returns: { success: true, clustersResolved: number, totalArchived: number, jsonSync: SyncSummary[] }
+ */
+router.post('/duplicates/auto-resolve', async (req: Request, res: Response) => {
+  try {
+    // Ensure service is loaded
+    if (!duplicateReviewService) {
+      duplicateReviewService = new DuplicateReviewService();
+      await duplicateReviewService.loadReport();
+    }
+
+    // Auto-resolve all eligible clusters
+    const result = await duplicateReviewService.autoResolveAll();
+
+    // Sync JSON files
+    const jsonSyncService = new JSONSyncService();
+    const jsonSync = jsonSyncService.syncAfterArchive(result.archivedExternalIds);
+
+    res.json({
+      success: true,
+      clustersResolved: result.clustersResolved,
+      totalArchived: result.totalArchived,
+      jsonSync,
+    });
+  } catch (error: any) {
+    console.error('Error auto-resolving clusters:', error);
+    res.status(500).json({ error: 'Failed to auto-resolve clusters', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * POST /duplicates/undo - Undo a cluster resolution
+ * Body: { clusterId: string }
+ * Returns: { success: true, restored: string[] } or { error: 'Undo window expired' } with 400 status
+ */
+router.post('/duplicates/undo', async (req: Request, res: Response) => {
+  try {
+    // Validate body with Zod
+    const UndoSchema = z.object({
+      clusterId: z.string(),
+    }).strict();
+
+    const validation = UndoSchema.safeParse(req.body);
+    if (!validation.success) {
+      const details = validation.error.issues.map((err: any) => ({
+        field: err.path.join('.'),
+        message: err.message,
+      }));
+      return res.status(400).json({
+        error: 'Validation failed',
+        details,
+      });
+    }
+
+    const { clusterId } = validation.data;
+
+    // Ensure service is loaded
+    if (!duplicateReviewService) {
+      duplicateReviewService = new DuplicateReviewService();
+      await duplicateReviewService.loadReport();
+    }
+
+    // Undo resolution
+    const restoredIds = await duplicateReviewService.undoResolve(clusterId);
+
+    // Sync JSON files
+    const jsonSyncService = new JSONSyncService();
+    await jsonSyncService.syncAfterRestore(restoredIds);
+
+    res.json({
+      success: true,
+      restored: restoredIds,
+    });
+  } catch (error: any) {
+    console.error('Error undoing cluster resolution:', error);
+
+    // Check if it's an undo window expiration
+    if (error.message && error.message.includes('Undo window expired')) {
+      return res.status(400).json({ error: 'Undo window expired' });
+    }
+
+    res.status(500).json({ error: 'Failed to undo resolution', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * GET /duplicates/summary - Quick stats without loading full clusters
+ * Returns: { collections: [...], totalClusters: number, totalDuplicates: number }
+ */
+router.get('/duplicates/summary', async (req: Request, res: Response) => {
+  try {
+    // Ensure service is loaded
+    if (!duplicateReviewService) {
+      duplicateReviewService = new DuplicateReviewService();
+      await duplicateReviewService.loadReport();
+    }
+
+    const allClusters = duplicateReviewService.getClusters();
+
+    // Build collection-level stats
+    const collectionStats = new Map<string, { questionCount: number; duplicateCount: number }>();
+
+    for (const cluster of allClusters) {
+      for (const question of cluster.questions) {
+        for (const collectionName of question.collections) {
+          if (!collectionStats.has(collectionName)) {
+            collectionStats.set(collectionName, { questionCount: 0, duplicateCount: 0 });
+          }
+          const stats = collectionStats.get(collectionName)!;
+          stats.questionCount++;
+
+          // Only count as duplicate if not the keeper
+          if (question.externalId !== cluster.recommendation.keep) {
+            stats.duplicateCount++;
+          }
+        }
+      }
+    }
+
+    // Convert to array
+    const collectionsArray = Array.from(collectionStats.entries()).map(([name, stats]) => ({
+      name,
+      questionCount: stats.questionCount,
+      duplicateCount: stats.duplicateCount,
+    }));
+
+    res.json({
+      collections: collectionsArray,
+      totalClusters: allClusters.length,
+      totalDuplicates: allClusters.reduce((sum, c) => sum + (c.questions.length - 1), 0),
+    });
+  } catch (error: any) {
+    console.error('Error fetching duplicate summary:', error);
+    res.status(500).json({ error: 'Failed to fetch duplicate summary', detail: error?.message || String(error) });
   }
 });
 
