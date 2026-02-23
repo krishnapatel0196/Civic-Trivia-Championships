@@ -7,7 +7,7 @@
 - ✅ **v1.2 Community Collections** — Phases 13-17 (shipped 2026-02-19)
 - ✅ **v1.3 Question Quality & Admin Tools** — Phases 18-22 (shipped 2026-02-20)
 - ✅ **v1.4 Fremont, CA Collection** — Phases 23-26 (shipped 2026-02-21)
-- 📋 **v1.5 Feedback Marks** — Phases 27-30 (planned)
+- ✅ **v1.5 Feedback Marks** — Phases 27-30 (shipped 2026-02-22)
 
 ## Phases
 
@@ -66,7 +66,7 @@ Add a Fremont, CA community collection with 92 quality questions, proper expirat
 
 </details>
 
-### 📋 v1.5 Feedback Marks (Planned)
+### ✅ v1.5 Feedback Marks (Shipped 2026-02-22)
 
 **Milestone Goal:** Let authenticated players flag questions they dislike during gameplay, provide optional elaboration post-game, and give admins a review queue to triage flagged content — turning players into quality curators.
 
@@ -156,10 +156,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 30-01-PLAN.md — Backend: flagCount in explore/detail endpoints, flag_count sort/filter, ADMIN_EMAIL env var
-- [ ] 30-02-PLAN.md — Cross-link navigation: questionId filter on FlagReviewPage, "Edit in Explorer" on FlagDetailPanel
-- [ ] 30-03-PLAN.md — Frontend flag integration: Flags column in QuestionTable, flag badge + View Flags in detail panel, flagged filter
-- [ ] 30-04-PLAN.md — Link repair tool: AI-assisted broken URL discovery, validation, and batch repair of 320 questions
+- [x] 30-01-PLAN.md — Backend: flagCount in explore/detail endpoints, flag_count sort/filter, ADMIN_EMAIL env var
+- [x] 30-02-PLAN.md — Cross-link navigation: questionId filter on FlagReviewPage, "Edit in Explorer" on FlagDetailPanel
+- [x] 30-03-PLAN.md — Frontend flag integration: Flags column in QuestionTable, flag badge + View Flags in detail panel, flagged filter
+- [x] 30-04-PLAN.md — Link repair tool: AI-assisted broken URL discovery, validation, and batch repair of 320 questions
 
 ## Progress
 
@@ -176,9 +176,9 @@ Phases execute in numeric order: 27 → 28 → 29 → 30
 | 27. Backend Foundation & Inline Flagging | v1.5 | 2/2 | Complete | 2026-02-22 |
 | 28. Progressive Disclosure UI | v1.5 | 2/2 | Complete | 2026-02-22 |
 | 29. Admin Review Queue | v1.5 | 3/3 | Complete | 2026-02-22 |
-| 30. Admin Integration & Tech Debt | v1.5 | 0/4 | Not started | - |
+| 30. Admin Integration & Tech Debt | v1.5 | 4/4 | Complete | 2026-02-22 |
 
-**Total:** 6 milestones, 30 phases, 83 plans complete + 4 remaining (Phase 30)
+**Total:** 6 milestones, 30 phases, 87 plans complete
 
 ---
-*Last updated: 2026-02-22 after Phase 30 planning complete*
+*Last updated: 2026-02-22 after Phase 30 execution complete*

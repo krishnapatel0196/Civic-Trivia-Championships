@@ -9,21 +9,21 @@ Requirements for Feedback Marks milestone. Each maps to roadmap phases.
 
 ### In-Game Flagging
 
-- [ ] **FLAG-01**: Authenticated player can thumbs-down a question on the answer reveal screen
-- [ ] **FLAG-02**: Anonymous players do not see the flag button
-- [ ] **FLAG-03**: Player can toggle flag off before moving to the next question
-- [ ] **FLAG-04**: Flag button provides immediate visual feedback (icon state change)
-- [ ] **FLAG-05**: One flag per user per question per session (no duplicate submissions)
-- [ ] **FLAG-06**: Flagging does not interrupt game flow or affect scoring/timer
+- [x] **FLAG-01**: Authenticated player can thumbs-down a question on the answer reveal screen
+- [x] **FLAG-02**: Anonymous players do not see the flag button
+- [x] **FLAG-03**: Player can toggle flag off before moving to the next question
+- [x] **FLAG-04**: Flag button provides immediate visual feedback (icon state change)
+- [x] **FLAG-05**: One flag per user per question per session (no duplicate submissions)
+- [x] **FLAG-06**: Flagging does not interrupt game flow or affect scoring/timer
 
 ### Post-Game Elaboration
 
-- [ ] **ELAB-01**: Post-game summary shows list of flagged questions from that session
-- [ ] **ELAB-02**: Each flagged question offers predefined reason chips (confusing wording, outdated info, wrong answer, not interesting)
-- [ ] **ELAB-03**: Each flagged question offers optional free-text field (max 500 characters)
-- [ ] **ELAB-04**: Player can select multiple predefined reasons per question
-- [ ] **ELAB-05**: Player can submit all feedback at once after reviewing flagged questions
-- [ ] **ELAB-06**: Feedback is persisted to database with user, question, session, reasons, and text
+- [x] **ELAB-01**: Post-game summary shows list of flagged questions from that session
+- [x] **ELAB-02**: Each flagged question offers predefined reason chips (confusing wording, outdated info, wrong answer, not interesting)
+- [x] **ELAB-03**: Each flagged question offers optional free-text field (max 500 characters)
+- [x] **ELAB-04**: Player can select multiple predefined reasons per question
+- [x] **ELAB-05**: Player can submit all feedback at once after reviewing flagged questions
+- [x] **ELAB-06**: Feedback is persisted to database with user, question, session, reasons, and text
 
 ### Admin Review
 
@@ -31,19 +31,19 @@ Requirements for Feedback Marks milestone. Each maps to roadmap phases.
 - [x] **ADMN-02**: Review page shows list of flagged questions sorted by flag count (most flagged first)
 - [x] **ADMN-03**: Each flagged question shows aggregate flag count and individual player feedback (reasons + text)
 - [x] **ADMN-04**: Admin can archive a question directly from the review queue
-- [ ] **ADMN-05**: Flag count badge visible on existing question table in admin UI
-- [ ] **ADMN-06**: Flag count and feedback notes visible on existing question detail panel
+- [x] **ADMN-05**: Flag count badge visible on existing question table in admin UI
+- [x] **ADMN-06**: Flag count and feedback notes visible on existing question detail panel
 
 ### Backend Infrastructure
 
-- [ ] **INFR-01**: Database table for question flags with user, question, session, reasons, text, and timestamps
-- [ ] **INFR-02**: Rate limiting on feedback submission endpoint (prevent spam)
-- [ ] **INFR-03**: Flag count denormalized on questions table for efficient sorting
+- [x] **INFR-01**: Database table for question flags with user, question, session, reasons, text, and timestamps
+- [x] **INFR-02**: Rate limiting on feedback submission endpoint (prevent spam)
+- [x] **INFR-03**: Flag count denormalized on questions table for efficient sorting
 
 ### Tech Debt
 
-- [ ] **DEBT-01**: Fix broken source.url Learn More links on original 320 questions
-- [ ] **DEBT-02**: Add ADMIN_EMAIL environment variable to production backend
+- [x] **DEBT-01**: Fix broken source.url Learn More links on original 320 questions
+- [x] **DEBT-02**: Add ADMIN_EMAIL environment variable to production backend
 
 ## Future Requirements
 
@@ -94,13 +94,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADMN-02 | Phase 29 | Complete |
 | ADMN-03 | Phase 29 | Complete |
 | ADMN-04 | Phase 29 | Complete |
-| ADMN-05 | Phase 30 | Pending |
-| ADMN-06 | Phase 30 | Pending |
+| ADMN-05 | Phase 30 | Complete |
+| ADMN-06 | Phase 30 | Complete |
 | INFR-01 | Phase 27 | Complete |
 | INFR-02 | Phase 27 | Complete |
 | INFR-03 | Phase 27 | Complete |
-| DEBT-01 | Phase 30 | Pending |
-| DEBT-02 | Phase 30 | Pending |
+| DEBT-01 | Phase 30 | Complete |
+| DEBT-02 | Phase 30 | Complete |
 
 **Coverage:**
 - v1.5 requirements: 23 total
@@ -109,4 +109,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-21*
-*Last updated: 2026-02-22 after Phase 29 completion*
+*Last updated: 2026-02-22 after Phase 30 completion — all v1.5 requirements complete*
