@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 
 ## Current Position
 
-Phase: 32 of 34 (Existing Collection Audit) — COMPLETE
-Plan: 4 of 4 complete (32-01, 32-02, 32-03, 32-04)
-Status: Phase 32 complete, ready for Phase 33
-Last activity: 2026-02-23 — Phase 32 complete: 268 duplicates archived, 386 active questions remain
+Phase: 33 of 34 (Generation Pipeline Enhancement) — IN PROGRESS
+Plan: 1 of 2 complete (33-01)
+Status: In progress
+Last activity: 2026-02-23 — Completed 33-01-PLAN.md (generation service modules)
 
-Progress: [███████████████████░░░░░] 91/TBD plans complete (86 from v1.0-v1.5, 5 from v1.6)
+Progress: [███████████████████░░░░░] 92/TBD plans complete (86 from v1.0-v1.5, 6 from v1.6)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -35,7 +35,7 @@ Progress: [███████████████████░░░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 91 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 11 v1.5 + 5 v1.6)
+- Total plans completed: 92 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 11 v1.5 + 6 v1.6)
 - Quick tasks completed: 10
 - Milestones shipped: 6 (v1.0 through v1.5)
 - Total execution time: ~10 days (2026-02-13 → 2026-02-23)
@@ -50,7 +50,7 @@ Progress: [███████████████████░░░░
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
 | v1.5 Feedback Marks | 27-30 | 11 | 2026-02-22 |
-| v1.6 Content Quality & Scale | 31-34 | 9/TBD | In progress |
+| v1.6 Content Quality & Scale | 31-34 | 10/TBD | In progress |
 
 ## Accumulated Context
 
@@ -74,13 +74,15 @@ All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 
 ### Blockers/Concerns
 
-**Phase 32 COMPLETE:**
-- All 4 plans executed: backend services (32-01), review UI (32-02), full audit (32-03), advanced detection (32-04)
-- 268 questions archived across 6 collections, 386 active remain
-- Cross-collection duplicates handled: same question text + different answer = NOT a duplicate
-- Admin review UI enhanced with multi-keep checkboxes and persistent resolution state
+**Phase 33 IN PROGRESS:**
+- Plan 33-01 COMPLETE: Generation service modules (gap analysis, source tracking, hierarchy-aware dedup)
+- 40/35/25 difficulty distribution updated from 30/40/30 to support Easy Steps mode
+- Adaptive source caps (15%/20%/25%) based on source availability
+- Next: Plan 33-02 (generateQuestions.ts orchestrator)
 
-**Next:** Phase 33 (Generation Pipeline Enhancement) or Phase 34 (Scale to 90+)
+**Phase 32 COMPLETE:**
+- 268 questions archived across 6 collections, 386 active remain
+- Cross-collection duplicates handled using hierarchy policy
 
 ### Quick Tasks Completed
 
@@ -93,11 +95,11 @@ All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 ## Session Continuity
 
 Last session: 2026-02-23
-Topic: Phase 32 — Existing Collection Audit (COMPLETE)
-Stopped at: Phase 32 fully complete, all duplicates reviewed and archived
+Topic: Phase 33 — Generation Pipeline Enhancement (IN PROGRESS)
+Stopped at: Completed 33-01-PLAN.md (generation service modules)
 Resume file: None
 
-Next action: /gsd:plan-phase 33 (Generation Pipeline Enhancement)
+Next action: /gsd:execute-phase 33 (continue with Plan 33-02)
 
 ---
 *v1.6 Content Quality & Scale — ROADMAP COMPLETE*
