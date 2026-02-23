@@ -11,6 +11,7 @@ import { join } from 'path';
 import { auditQuestion } from '../../../services/qualityRules/index.js';
 import type { ValidatedQuestion } from '../question-schema.js';
 import type { AuditResult, Violation } from '../../../services/qualityRules/types.js';
+import { DuplicateDetector } from '../../../services/qualityRules/rules/duplicate.js';
 
 /**
  * Structured report for generation runs
@@ -123,9 +124,11 @@ export async function validateAndRetry(
   options: {
     maxRetries?: number;
     skipUrlCheck?: boolean;
+    /** Optional duplicate detector pre-loaded with existing questions */
+    duplicateDetector?: DuplicateDetector;
   } = {}
 ): Promise<ValidationResult> {
-  const { maxRetries = 3, skipUrlCheck = true } = options;
+  const { maxRetries = 3, skipUrlCheck = true, duplicateDetector } = options;
 
   const passed: ValidatedQuestion[] = [];
   const failed: Array<{
@@ -153,8 +156,21 @@ export async function validateAndRetry(
       // Validate with quality rules (skip URL check during generation for speed)
       lastAudit = await auditQuestion(currentQuestion, { skipUrlCheck });
 
+      // Also check for duplicate text if detector is provided
+      if (!lastAudit.hasBlockingViolations && duplicateDetector) {
+        const dupResult = duplicateDetector.check(currentQuestion);
+        if (!dupResult.passed) {
+          // Merge duplicate violations into the audit result
+          lastAudit.violations.push(...dupResult.violations);
+          lastAudit.hasBlockingViolations = true;
+        }
+      }
+
       if (!lastAudit.hasBlockingViolations) {
-        // Success!
+        // Success! Track in detector to prevent intra-batch duplicates
+        if (duplicateDetector) {
+          duplicateDetector.add(currentQuestion);
+        }
         passed.push(currentQuestion);
         validated = true;
 

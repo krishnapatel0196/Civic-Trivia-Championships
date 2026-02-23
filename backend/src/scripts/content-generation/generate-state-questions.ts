@@ -8,7 +8,7 @@
 // Requires DATABASE_URL in .env for database seeding (not needed with --dry-run).
 //
 // Generates state-level civic trivia questions using Claude AI with quality validation.
-// Questions are validated with Phase 19 quality rules and inserted with status='active'.
+// Questions are validated with Phase 19 quality rules and seeded with status='draft'.
 
 import 'dotenv/config';
 import { join } from 'path';
@@ -21,6 +21,7 @@ import { buildStateSystemPrompt } from './prompts/state-system-prompt.js';
 import { fetchSources } from './rag/fetch-sources.js';
 import { loadSourceDocuments } from './rag/parse-sources.js';
 import { validateAndRetry, createReport, saveReport } from './utils/quality-validation.js';
+import { DuplicateDetector } from '../../services/qualityRules/rules/duplicate.js';
 import type { LocaleConfig } from './locale-configs/bloomington-in.js';
 
 // ─── CLI argument parsing ─────────────────────────────────────────────────────
@@ -336,49 +337,6 @@ Return ONLY the JSON object for the single replacement question.
   return validated;
 }
 
-// ─── Collection creation helper ───────────────────────────────────────────────
-
-async function ensureStateCollection(
-  collectionSlug: string,
-  stateName: string
-): Promise<number> {
-  const { db } = await import('../../db/index.js');
-  const { collections } = await import('../../db/schema.js');
-  const { eq } = await import('drizzle-orm');
-
-  // Check if collection exists
-  const [existing] = await db
-    .select({ id: collections.id })
-    .from(collections)
-    .where(eq(collections.slug, collectionSlug))
-    .limit(1);
-
-  if (existing) {
-    console.log(`  Collection exists: ${collectionSlug} (id: ${existing.id})`);
-    return existing.id;
-  }
-
-  // Create new state collection
-  console.log(`  Creating new collection: ${collectionSlug}`);
-  const [created] = await db
-    .insert(collections)
-    .values({
-      name: `${stateName} State`,
-      slug: collectionSlug,
-      description: `State-level civic trivia questions for ${stateName} — covers government structure, civic processes, and broader civics.`,
-      localeCode: `${stateName.toLowerCase()}-state`,
-      localeName: `${stateName} State`,
-      iconIdentifier: 'state',
-      themeColor: '#1E3A8A', // Blue for state collections
-      isActive: true,
-      sortOrder: 1000, // State collections sorted after city collections
-    })
-    .returning({ id: collections.id });
-
-  console.log(`  Collection created: ${collectionSlug} (id: ${created.id})`);
-  return created.id;
-}
-
 // ─── Main orchestrator ────────────────────────────────────────────────────────
 
 async function main(): Promise<void> {
@@ -449,20 +407,21 @@ async function main(): Promise<void> {
   let topicIdMap: Record<string, number> = {};
 
   if (!args.dryRun) {
-    console.log(`\n[Step 3] Setting up database collection and topics...`);
-
-    // Ensure collection exists
-    collectionId = await ensureStateCollection(
-      config.collectionSlug,
-      config.name
-    );
-
-    // Ensure topics
+    console.log(`\n[Step 3] Setting up database topics...`);
     const { ensureLocaleTopics } = await import('./utils/seed-questions.js');
     topicIdMap = await ensureLocaleTopics(
       config.collectionSlug,
       config.topicCategories
     );
+
+    // Get collection ID (must exist via db:seed)
+    const { db } = await import('../../db/index.js');
+    const { collections } = await import('../../db/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [col] = await db.select({ id: collections.id }).from(collections).where(eq(collections.slug, config.collectionSlug)).limit(1);
+    if (!col) throw new Error(`Collection not found: ${config.collectionSlug}. Run db:seed first.`);
+    collectionId = col.id;
+    console.log(`  Collection ID: ${collectionId}`);
   }
 
   // Step 4: Generate and validate questions in batches
@@ -492,6 +451,20 @@ async function main(): Promise<void> {
   let totalCacheReadTokens = 0;
   let totalApiCalls = 0;
 
+  // Initialize duplicate detector with existing questions from the data file
+  const duplicateDetector = new DuplicateDetector();
+  try {
+    const { readFileSync } = await import('fs');
+    const dataFilePath = join(process.cwd(), 'src/data', `${config.collectionSlug}-questions.json`);
+    const existingData = JSON.parse(readFileSync(dataFilePath, 'utf-8'));
+    if (existingData.questions && Array.isArray(existingData.questions)) {
+      duplicateDetector.loadExisting(existingData.questions);
+      console.log(`  Loaded ${duplicateDetector.size} existing questions for duplicate detection`);
+    }
+  } catch {
+    console.log(`  No existing data file found — duplicate detection will only check within batch`);
+  }
+
   for (const batchIndex of batchesToRun) {
     try {
       // Generate batch
@@ -516,7 +489,7 @@ async function main(): Promise<void> {
         batchQuestions,
         (failedQ, violations) =>
           regenerateWithFeedback(config, stateFeatures, failedQ, violations),
-        { maxRetries: 3, skipUrlCheck: true }
+        { maxRetries: 3, skipUrlCheck: true, duplicateDetector }
       );
 
       // Track passed/failed
@@ -536,66 +509,12 @@ async function main(): Promise<void> {
         `\n  Batch ${batchIndex + 1} results: ${validationResult.passed.length} passed, ${validationResult.failed.length} failed after retries`
       );
 
-      // Seed passing questions to database (status='active')
+      // Seed passing questions to database (status='draft')
       if (!args.dryRun && collectionId !== null) {
-        console.log(`  Seeding ${validationResult.passed.length} passing questions to database...`);
-
-        for (const question of validationResult.passed) {
-          const topicId = topicIdMap[question.topicCategory];
-
-          if (!topicId) {
-            console.warn(
-              `  Warning: No topicId found for category "${question.topicCategory}" — skipping ${question.externalId}`
-            );
-            totalSkipped++;
-            continue;
-          }
-
-          // Import db modules
-          const { db } = await import('../../db/index.js');
-          const { questions, collectionQuestions } = await import('../../db/schema.js');
-
-          // Insert question with status='active'
-          const newQuestion = {
-            externalId: question.externalId,
-            text: question.text,
-            options: question.options,
-            correctAnswer: question.correctAnswer,
-            explanation: question.explanation,
-            difficulty: question.difficulty,
-            topicId,
-            subcategory: question.topicCategory,
-            source: question.source,
-            learningContent: null,
-            expiresAt: question.expiresAt ? new Date(question.expiresAt) : null,
-            status: 'active' as const, // Auto-insert as active (quality-validated)
-            expirationHistory: [],
-          };
-
-          const inserted = await db
-            .insert(questions)
-            .values(newQuestion)
-            .onConflictDoNothing()
-            .returning({ id: questions.id });
-
-          if (!inserted || inserted.length === 0) {
-            console.log(`  Skipped (duplicate): ${question.externalId}`);
-            totalSkipped++;
-            continue;
-          }
-
-          const questionId = inserted[0].id;
-
-          // Link question to collection
-          await db
-            .insert(collectionQuestions)
-            .values({ collectionId, questionId })
-            .onConflictDoNothing();
-
-          totalSeeded++;
-        }
-
-        console.log(`  Seeded: ${totalSeeded} questions`);
+        const { seedQuestionBatch } = await import('./utils/seed-questions.js');
+        const result = await seedQuestionBatch(validationResult.passed, collectionId, topicIdMap);
+        totalSeeded += result.seeded;
+        totalSkipped += result.skipped;
       }
 
       // Brief pause between batches
@@ -674,10 +593,10 @@ async function main(): Promise<void> {
   console.log(`Batches with errors: ${totalErrors}`);
 
   if (!args.dryRun) {
-    console.log(`Seeded to database: ${totalSeeded} (status='active')`);
+    console.log(`Seeded to database: ${totalSeeded} (status='draft')`);
     console.log(`Skipped (duplicates): ${totalSkipped}`);
     console.log(
-      `\nQuestions are ACTIVE — they will appear in gameplay immediately.`
+      `\nQuestions are in 'draft' status — activate via admin panel or activate-collections script.`
     );
   } else {
     console.log(`\n[DRY RUN] No questions were seeded to database.`);

@@ -23,6 +23,7 @@ import { fetchSources } from './rag/fetch-sources.js';
 import { loadSourceDocuments } from './rag/parse-sources.js';
 import type { LocaleConfig } from './locale-configs/bloomington-in.js';
 import { validateAndRetry, createReport, saveReport, type RegenerateFn } from './utils/quality-validation.js';
+import { DuplicateDetector } from '../../services/qualityRules/rules/duplicate.js';
 
 // ─── CLI argument parsing ─────────────────────────────────────────────────────
 
@@ -362,6 +363,20 @@ async function main(): Promise<void> {
   const violationsByRule: Record<string, number> = {};
   const successByAttempt: Record<number, number> = {};
 
+  // Initialize duplicate detector with existing questions from the data file
+  const duplicateDetector = new DuplicateDetector();
+  try {
+    const { readFileSync } = await import('fs');
+    const dataFilePath = join(process.cwd(), 'src/data', `${config.collectionSlug}-questions.json`);
+    const existingData = JSON.parse(readFileSync(dataFilePath, 'utf-8'));
+    if (existingData.questions && Array.isArray(existingData.questions)) {
+      duplicateDetector.loadExisting(existingData.questions);
+      console.log(`  Loaded ${duplicateDetector.size} existing questions for duplicate detection`);
+    }
+  } catch {
+    console.log(`  No existing data file found — duplicate detection will only check within batch`);
+  }
+
   // Performance tracking for report
   const performanceStart = Date.now();
   let totalInputTokens = 0;
@@ -483,6 +498,7 @@ Return ONLY a JSON object with a "questions" array containing exactly 1 question
       const validationResult = await validateAndRetry(batchResult.questions, regenerateFn, {
         maxRetries: 3,
         skipUrlCheck: true, // Skip URL checks during generation for speed
+        duplicateDetector,
       });
 
       // Track stats

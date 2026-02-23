@@ -1,7 +1,8 @@
 import { db } from '../../../db/index.js';
 import { questions, collectionQuestions, topics, collections, collectionTopics } from '../../../db/schema.js';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, inArray } from 'drizzle-orm';
 import type { ValidatedQuestion } from '../question-schema.js';
+import { DuplicateDetector, normalizeText } from '../../../services/qualityRules/rules/duplicate.js';
 
 export interface TopicCategoryInput {
   slug: string;
@@ -88,6 +89,7 @@ export async function ensureLocaleTopics(
  * Seeds a batch of validated questions to the database.
  * Questions are inserted with status='draft' for admin review before activation.
  * Skips questions with duplicate externalIds (ON CONFLICT DO NOTHING).
+ * Also checks for duplicate question text against existing questions in the collection.
  *
  * @param batch - Array of validated questions from AI generation
  * @param collectionId - Database ID of the target collection
@@ -97,15 +99,45 @@ export async function seedQuestionBatch(
   batch: ValidatedQuestion[],
   collectionId: number,
   topicIdMap: Record<string, number>
-): Promise<{ seeded: number; skipped: number }> {
+): Promise<{ seeded: number; skipped: number; duplicateTexts: number }> {
   let seeded = 0;
   let skipped = 0;
+  let duplicateTexts = 0;
+
+  // Load existing questions for this collection to detect duplicate text
+  const existingQuestionLinks = await db
+    .select({ questionId: collectionQuestions.questionId })
+    .from(collectionQuestions)
+    .where(eq(collectionQuestions.collectionId, collectionId));
+
+  const detector = new DuplicateDetector();
+
+  if (existingQuestionLinks.length > 0) {
+    const existingQIds = existingQuestionLinks.map(l => l.questionId);
+    const existingQuestions = await db
+      .select({ externalId: questions.externalId, text: questions.text })
+      .from(questions)
+      .where(inArray(questions.id, existingQIds));
+
+    detector.loadExisting(existingQuestions);
+    console.log(`  Loaded ${existingQuestions.length} existing questions for duplicate text detection`);
+  }
 
   for (const question of batch) {
     const topicId = topicIdMap[question.topicCategory];
 
     if (!topicId) {
       console.warn(`  Warning: No topicId found for category "${question.topicCategory}" — skipping ${question.externalId}`);
+      skipped++;
+      continue;
+    }
+
+    // Check for duplicate question text against existing questions
+    const dupResult = detector.check(question);
+    if (!dupResult.passed) {
+      const dupViolation = dupResult.violations[0];
+      console.warn(`  Rejected (duplicate text): ${question.externalId} — ${dupViolation.message}`);
+      duplicateTexts++;
       skipped++;
       continue;
     }
@@ -148,9 +180,11 @@ export async function seedQuestionBatch(
       .values({ collectionId, questionId })
       .onConflictDoNothing();
 
+    // Track this question for duplicate detection within the batch
+    detector.add(question);
     seeded++;
   }
 
-  console.log(`  Seeded: ${seeded} questions, Skipped: ${skipped} duplicates`);
-  return { seeded, skipped };
+  console.log(`  Seeded: ${seeded} questions, Skipped: ${skipped} (${duplicateTexts} duplicate text, ${skipped - duplicateTexts} duplicate externalId)`);
+  return { seeded, skipped, duplicateTexts };
 }

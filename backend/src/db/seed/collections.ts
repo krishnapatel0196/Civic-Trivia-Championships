@@ -44,5 +44,27 @@ export const collectionsData: NewCollection[] = [
     themeColor: '#0369A1', // ocean blue - California
     isActive: true,
     sortOrder: 4 // Updated from 3 to accommodate Fremont
+  },
+  {
+    name: 'Indiana State',
+    slug: 'indiana-state',
+    description: 'How well do you know the Crossroads of America?',
+    localeCode: 'en-US',
+    localeName: 'Indiana State',
+    iconIdentifier: 'state',
+    themeColor: '#1E3A8A', // deep blue - state
+    isActive: true,
+    sortOrder: 5
+  },
+  {
+    name: 'California State',
+    slug: 'california-state',
+    description: 'The Golden State awaits — test your California civics!',
+    localeCode: 'en-US',
+    localeName: 'California State',
+    iconIdentifier: 'state',
+    themeColor: '#92400E', // golden brown - California
+    isActive: true,
+    sortOrder: 6
   }
 ];

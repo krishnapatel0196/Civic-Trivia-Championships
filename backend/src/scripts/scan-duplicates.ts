@@ -135,7 +135,7 @@ function generateJsonReport(clusters: DuplicateCluster[], advancedFlags: Advance
  * Determine which question to keep in a cluster (used by splitCrossCollectionClusters)
  * Duplicates the logic from ClusterBuilder.recommendKeep
  */
-function recommendKeepForCluster(clusterQuestions: QuestionForDedupFull[]): {
+function recommendKeepForCluster(clusterQuestions: QuestionForDedup[]): {
   keep: string;
   archive: string[];
   reason: string;
@@ -270,7 +270,7 @@ function splitCrossCollectionClusters(
 
     // Multi-collection cluster - group by correct answer
     const normalizeAnswer = (text: string) => text.toLowerCase().trim();
-    const answerGroups = new Map<string, QuestionForDedupFull[]>();
+    const answerGroups = new Map<string, QuestionForDedup[]>();
 
     for (const q of cluster.questions) {
       const answerText = q.options[q.correctAnswer];
