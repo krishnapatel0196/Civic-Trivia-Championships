@@ -946,7 +946,7 @@ router.get('/flags/:questionId/detail', async (req: Request, res: Response) => {
       userId: row.user_id,
       username: row.username || 'Unknown User',
       reasons: row.reasons || [],
-      elaborationText: row.elaboration_text,
+      elaboration: row.elaboration_text,
       createdAt: row.created_at
     }));
 
