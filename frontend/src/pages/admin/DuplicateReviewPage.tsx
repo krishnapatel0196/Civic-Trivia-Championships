@@ -144,7 +144,7 @@ export function DuplicateReviewPage() {
   };
 
   // Handle resolve
-  const handleResolve = async (clusterId: string, keepExternalId: string) => {
+  const handleResolve = async (clusterId: string, keepExternalIds: string[]) => {
     if (!accessToken) return;
 
     try {
@@ -154,14 +154,16 @@ export function DuplicateReviewPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ clusterId, keepExternalId }),
+        body: JSON.stringify({ clusterId, keepExternalIds }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to resolve cluster');
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.detail || errData.error || 'Failed to resolve cluster');
       }
 
       const result = await response.json();
+      const keepSet = new Set(keepExternalIds);
 
       // Update local state
       setClusters((prev) =>
@@ -171,8 +173,8 @@ export function DuplicateReviewPage() {
                 ...c,
                 resolved: true,
                 resolution: {
-                  keepId: keepExternalId,
-                  archivedIds: result.archivedIds || c.questions.filter(q => q.externalId !== keepExternalId).map(q => q.externalId),
+                  keepIds: keepExternalIds,
+                  archivedIds: result.archivedIds || c.questions.filter(q => !keepSet.has(q.externalId)).map(q => q.externalId),
                   resolvedAt: new Date().toISOString(),
                 },
               }
@@ -181,7 +183,7 @@ export function DuplicateReviewPage() {
       );
 
       // Show undo toast
-      const archivedCount = result.archivedIds?.length || (clusters.find(c => c.clusterId === clusterId)?.questions.length || 1) - 1;
+      const archivedCount = result.archivedIds?.length || (clusters.find(c => c.clusterId === clusterId)?.questions.length || 0) - keepExternalIds.length;
       showToast(`Cluster resolved. ${archivedCount} ${archivedCount === 1 ? 'question' : 'questions'} archived.`, clusterId);
 
       // Update summary

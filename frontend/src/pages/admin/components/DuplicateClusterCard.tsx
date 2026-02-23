@@ -4,7 +4,7 @@ import { EnrichedCluster, AdvancedFlag } from '../../../types/duplicates';
 
 interface DuplicateClusterCardProps {
   cluster: EnrichedCluster;
-  onResolve: (clusterId: string, keepExternalId: string) => Promise<void>;
+  onResolve: (clusterId: string, keepExternalIds: string[]) => Promise<void>;
   onUndo: (clusterId: string) => Promise<void>;
   advancedFlags?: AdvancedFlag[];
 }
@@ -15,7 +15,8 @@ export function DuplicateClusterCard({
   onUndo,
   advancedFlags = [],
 }: DuplicateClusterCardProps) {
-  const [selectedKeepId, setSelectedKeepId] = useState<string>(cluster.recommendation.keep);
+  // Initialize with recommended keep checked, rest unchecked
+  const [keepIds, setKeepIds] = useState<Set<string>>(() => new Set([cluster.recommendation.keep]));
   const [isResolving, setIsResolving] = useState(false);
 
   // Filter flags for questions in this cluster
@@ -62,12 +63,29 @@ export function DuplicateClusterCard({
   const minScore = Math.min(...scores);
   const maxScore = Math.max(...scores);
 
+  // At least one must be archived (keeping none is allowed — archives all)
+  const archiveCount = cluster.questions.length - keepIds.size;
+  const canResolve = archiveCount > 0;
+
+  // Toggle a question's keep status
+  const toggleKeep = (externalId: string) => {
+    setKeepIds(prev => {
+      const next = new Set(prev);
+      if (next.has(externalId)) {
+        next.delete(externalId);
+      } else {
+        next.add(externalId);
+      }
+      return next;
+    });
+  };
+
   // Handle resolve
   const handleResolve = async () => {
-    if (!selectedKeepId || isResolving) return;
+    if (!canResolve || isResolving) return;
     setIsResolving(true);
     try {
-      await onResolve(cluster.clusterId, selectedKeepId);
+      await onResolve(cluster.clusterId, Array.from(keepIds));
     } finally {
       setIsResolving(false);
     }
@@ -125,9 +143,9 @@ export function DuplicateClusterCard({
             <ClusterQuestionItem
               key={question.externalId}
               question={question}
-              isSelected={selectedKeepId === question.externalId}
-              onSelect={() => !cluster.resolved && setSelectedKeepId(question.externalId)}
-              isKept={cluster.resolved && cluster.resolution?.keepId === question.externalId}
+              isSelected={keepIds.has(question.externalId)}
+              onSelect={() => !cluster.resolved && toggleKeep(question.externalId)}
+              isKept={cluster.resolved && cluster.resolution?.keepIds?.includes(question.externalId)}
               isArchived={cluster.resolved && cluster.resolution?.archivedIds.includes(question.externalId)}
               flags={getFlagsForQuestion(question.externalId)}
             />
@@ -168,7 +186,7 @@ export function DuplicateClusterCard({
         {cluster.resolved && cluster.resolution && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-3">
             <p className="text-xs text-green-900">
-              <span className="font-semibold">Resolved:</span> {cluster.resolution.archivedIds.length} {cluster.resolution.archivedIds.length === 1 ? 'question' : 'questions'} archived on {new Date(cluster.resolution.resolvedAt).toLocaleString()}
+              <span className="font-semibold">Resolved:</span> {cluster.resolution.archivedIds.length} archived, {cluster.resolution.keepIds?.length || 1} kept — {new Date(cluster.resolution.resolvedAt).toLocaleString()}
             </p>
           </div>
         )}
@@ -185,13 +203,18 @@ export function DuplicateClusterCard({
             {isResolving ? 'Undoing...' : 'Undo'}
           </button>
         ) : (
-          <button
-            onClick={handleResolve}
-            disabled={!selectedKeepId || isResolving}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isResolving ? 'Resolving...' : 'Resolve Cluster'}
-          </button>
+          <>
+            <span className="text-xs text-gray-500">
+              Keep {keepIds.size}, archive {archiveCount}
+            </span>
+            <button
+              onClick={handleResolve}
+              disabled={!canResolve || isResolving}
+              className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isResolving ? 'Resolving...' : `Archive ${archiveCount}`}
+            </button>
+          </>
         )}
       </div>
     </div>

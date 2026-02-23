@@ -97,13 +97,13 @@ export function ClusterQuestionItem({
       }`}
     >
       <div className="flex items-start gap-3">
-        {/* Radio button */}
+        {/* Checkbox - keep selected questions, archive unchecked */}
         <input
-          type="radio"
+          type="checkbox"
           checked={isSelected}
           onChange={onSelect}
           disabled={isKept || isArchived}
-          className="mt-1 w-4 h-4 text-red-600 focus:ring-red-500 disabled:opacity-50"
+          className="mt-1 w-4 h-4 text-red-600 focus:ring-red-500 rounded disabled:opacity-50"
         />
 
         <div className="flex-1 min-w-0">

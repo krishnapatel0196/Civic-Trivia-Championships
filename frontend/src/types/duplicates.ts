@@ -34,7 +34,7 @@ export interface EnrichedCluster {
   autoResolvable: boolean;
   resolved: boolean;
   resolution?: {
-    keepId: string;
+    keepIds: string[];
     archivedIds: string[];
     resolvedAt: string;
   };
