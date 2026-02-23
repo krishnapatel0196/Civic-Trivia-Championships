@@ -1,0 +1,340 @@
+/**
+ * Semantic Duplicate Scanner Script
+ *
+ * Scans all active questions across collections for semantic duplicates using OpenAI embeddings.
+ * Generates JSON and markdown reports showing duplicate clusters with recommendations.
+ *
+ * Usage:
+ *   npm run scan-duplicates                        # Default: all collections, min-tier possible
+ *   npm run scan-duplicates -- --dry-run           # Explicit dry-run mode
+ *   npm run scan-duplicates -- --collections=Federal,Indiana
+ *   npm run scan-duplicates -- --skip-cache        # Regenerate all embeddings
+ *   npm run scan-duplicates -- --min-tier=exact    # Only show exact matches
+ */
+
+import '../env.js';
+import { db } from '../db/index.js';
+import { sql } from 'drizzle-orm';
+import { OpenAIEmbeddingService } from '../services/embeddings/OpenAIEmbeddingService.js';
+import { SemanticDupDetector } from '../services/embeddings/SemanticDupDetector.js';
+import { ClusterBuilder } from '../services/embeddings/ClusterBuilder.js';
+import {
+  QuestionForDedup,
+  SimilarityResult,
+  DuplicateCluster,
+  SimilarityTier,
+} from '../services/embeddings/types.js';
+import { writeFileSync, mkdirSync, existsSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+interface Flags {
+  dryRun: boolean;
+  collections: string[] | null;
+  skipCache: boolean;
+  minTier: SimilarityTier;
+}
+
+/**
+ * Parse CLI flags
+ */
+function parseFlags(): Flags {
+  const args = process.argv.slice(2);
+
+  return {
+    dryRun: args.includes('--dry-run') || args.length === 0, // Default to dry-run
+    collections: args.find(arg => arg.startsWith('--collections='))
+      ?.split('=')[1]
+      .split(',')
+      .map(c => c.trim()) || null,
+    skipCache: args.includes('--skip-cache'),
+    minTier: (args.find(arg => arg.startsWith('--min-tier='))
+      ?.split('=')[1] as SimilarityTier) || 'possible',
+  };
+}
+
+/**
+ * Fetch all active questions with collection memberships
+ */
+async function fetchQuestions(collectionFilter: string[] | null): Promise<QuestionForDedup[]> {
+  console.log('Fetching active questions from database...');
+
+  let query;
+  if (collectionFilter && collectionFilter.length > 0) {
+    query = sql`
+      SELECT
+        q.external_id as "externalId",
+        q.text,
+        q.options,
+        q.correct_answer as "correctAnswer",
+        q.quality_score as "qualityScore",
+        array_agg(c.name ORDER BY c.name) as "collections"
+      FROM civic_trivia.questions q
+      JOIN civic_trivia.collection_questions cq ON q.id = cq.question_id
+      JOIN civic_trivia.collections c ON cq.collection_id = c.id
+      WHERE q.status = 'active' AND c.name = ANY(${collectionFilter})
+      GROUP BY q.id, q.external_id, q.text, q.options, q.correct_answer, q.quality_score
+      ORDER BY q.external_id
+    `;
+  } else {
+    query = sql`
+      SELECT
+        q.external_id as "externalId",
+        q.text,
+        q.options,
+        q.correct_answer as "correctAnswer",
+        q.quality_score as "qualityScore",
+        array_agg(c.name ORDER BY c.name) as "collections"
+      FROM civic_trivia.questions q
+      JOIN civic_trivia.collection_questions cq ON q.id = cq.question_id
+      JOIN civic_trivia.collections c ON cq.collection_id = c.id
+      WHERE q.status = 'active'
+      GROUP BY q.id, q.external_id, q.text, q.options, q.correct_answer, q.quality_score
+      ORDER BY q.external_id
+    `;
+  }
+
+  const result = await db.execute(query);
+  const rows = result.rows as any[];
+
+  return rows.map(row => ({
+    externalId: row.externalId,
+    text: row.text,
+    options: row.options,
+    correctAnswer: row.correctAnswer,
+    collections: row.collections,
+    qualityScore: row.qualityScore,
+  }));
+}
+
+/**
+ * Generate JSON report
+ */
+function generateJsonReport(clusters: DuplicateCluster[]): string {
+  return JSON.stringify(clusters, null, 2);
+}
+
+/**
+ * Generate markdown report
+ */
+function generateMarkdownReport(
+  clusters: DuplicateCluster[],
+  totalQuestions: number,
+  collectionsScanned: string[],
+  cacheStats: { hits: number; misses: number }
+): string {
+  const timestamp = new Date().toISOString();
+
+  // Calculate tier statistics
+  const tierStats = {
+    exact: 0,
+    'near-duplicate': 0,
+    possible: 0,
+  };
+
+  const questionsInClusters = new Set<string>();
+  for (const cluster of clusters) {
+    tierStats[cluster.tier as keyof typeof tierStats]++;
+    for (const q of cluster.questions) {
+      questionsInClusters.add(q.externalId);
+    }
+  }
+
+  let md = '# Duplicate Detection Report\n\n';
+  md += `**Generated:** ${timestamp}\n`;
+  md += `**Questions Scanned:** ${totalQuestions}\n`;
+  md += `**Collections:** ${collectionsScanned.join(', ')}\n`;
+  md += `**Duplicate Clusters Found:** ${clusters.length}\n\n`;
+
+  // Summary table
+  md += '## Summary\n\n';
+  md += '| Tier | Clusters | Questions Affected |\n';
+  md += '|------|----------|--------------------|\\n';
+  md += `| Exact (>0.95) | ${tierStats.exact} | ${Array.from(questionsInClusters).filter(id => clusters.some(c => c.tier === 'exact' && c.questions.some(q => q.externalId === id))).length} |\n`;
+  md += `| Near-duplicate (>0.85) | ${tierStats['near-duplicate']} | ${Array.from(questionsInClusters).filter(id => clusters.some(c => c.tier === 'near-duplicate' && c.questions.some(q => q.externalId === id))).length} |\n`;
+  md += `| Possible (>0.75) | ${tierStats.possible} | ${Array.from(questionsInClusters).filter(id => clusters.some(c => c.tier === 'possible' && c.questions.some(q => q.externalId === id))).length} |\n\n`;
+
+  md += `**Embedding Cache:** ${cacheStats.hits} hits, ${cacheStats.misses} new embeddings\n\n`;
+
+  // Clusters
+  md += '## Clusters\n\n';
+
+  if (clusters.length === 0) {
+    md += '*No duplicate clusters found.*\n';
+  } else {
+    for (let i = 0; i < clusters.length; i++) {
+      const cluster = clusters[i];
+      const clusterNum = i + 1;
+
+      // Find highest similarity score in cluster
+      const maxScore = Math.max(...cluster.similarities.map(s => s.score));
+      const tierLabel = cluster.tier === 'exact' ? 'Exact Match' :
+                       cluster.tier === 'near-duplicate' ? 'Near-Duplicate' :
+                       'Possible Duplicate';
+
+      md += `### Cluster ${clusterNum} — ${tierLabel} (score: ${maxScore.toFixed(2)})\n\n`;
+      md += `**Recommendation:** Keep \`${cluster.recommendation.keep}\`, archive ${cluster.recommendation.archive.map(id => `\`${id}\``).join(', ')}\n`;
+      md += `**Reason:** ${cluster.recommendation.reason}\n\n`;
+
+      // Show each question in cluster
+      for (const question of cluster.questions) {
+        md += `#### ${question.externalId} (${question.collections.join(', ')})\n`;
+        md += `**Question:** ${question.text}\n`;
+        md += `**Answers:**\n`;
+
+        for (let optIdx = 0; optIdx < question.options.length; optIdx++) {
+          const isCorrect = optIdx === question.correctAnswer;
+          const marker = isCorrect ? '  ✓' : '   ';
+          md += `${marker} ${optIdx + 1}. ${question.options[optIdx]}\n`;
+        }
+
+        const qualityStr = question.qualityScore !== null ? question.qualityScore.toString() : 'N/A';
+        md += `**Quality Score:** ${qualityStr}\n\n`;
+      }
+
+      // Pairwise similarities table
+      md += '**Pairwise Similarities:**\n';
+      md += '| Pair | Score | Tier |\n';
+      md += '|------|-------|------|\n';
+
+      for (const sim of cluster.similarities) {
+        md += `| ${sim.questionA} vs ${sim.questionB} | ${sim.score.toFixed(2)} | ${sim.tier} |\n`;
+      }
+
+      md += '\n';
+    }
+  }
+
+  return md;
+}
+
+/**
+ * Main execution
+ */
+async function main() {
+  const flags = parseFlags();
+
+  // Print banner
+  console.log('=== Semantic Duplicate Scanner ===');
+  console.log(`Mode: DRY RUN (report only, no changes)`);
+  console.log(`Collections: ${flags.collections ? flags.collections.join(', ') : 'all'}`);
+  console.log(`Minimum tier: ${flags.minTier}`);
+  console.log('');
+
+  try {
+    // 1. Fetch questions
+    const questions = await fetchQuestions(flags.collections);
+    const uniqueCollections = Array.from(new Set(questions.flatMap(q => q.collections))).sort();
+    console.log(`Fetched ${questions.length} active questions across ${uniqueCollections.length} collections`);
+
+    // 2. Validate OpenAI API key
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('Error: OPENAI_API_KEY not set. Add it to backend/.env');
+      process.exit(1);
+    }
+
+    // 3. Create embedding service
+    const cacheDir = flags.skipCache
+      ? resolve(__dirname, '..', '..', '.embedding-cache-temp')
+      : resolve(__dirname, '..', '..', '.embedding-cache');
+
+    const embeddingService = new OpenAIEmbeddingService({
+      apiKey: process.env.OPENAI_API_KEY,
+      cacheDir,
+    });
+
+    // 4. Prepare texts for embedding
+    const textsToEmbed = questions.map(q => ({
+      id: q.externalId,
+      text: SemanticDupDetector.prepareTextForEmbedding(q),
+    }));
+
+    // 5. Embed all questions with progress tracking
+    console.log('Embedding questions...');
+    const embeddings = await embeddingService.embedBatch(textsToEmbed, (done: number, total: number) => {
+      if (done % 50 === 0 || done === total) {
+        const stats = embeddingService.getCacheStats();
+        console.log(`  ${done}/${total} (${stats.hits} cache hits)`);
+      }
+    });
+
+    // 6. Save cache
+    embeddingService.saveCache();
+    const cacheStats = embeddingService.getCacheStats();
+
+    // 7. Find similar pairs
+    const pairs = SemanticDupDetector.findAllPairs(
+      questions,
+      embeddings,
+      flags.minTier
+    );
+    console.log(`Found ${pairs.length} similar pairs above ${flags.minTier} threshold`);
+
+    // 8. Build clusters
+    const clusterBuilder = new ClusterBuilder();
+    const questionMap = new Map(questions.map(q => [q.externalId, q]));
+    const clusters = clusterBuilder.buildClusters(pairs, questionMap);
+    console.log(`Grouped into ${clusters.length} duplicate clusters`);
+
+    // 9. Generate reports
+    const projectRoot = resolve(__dirname, '..', '..', '..');
+    const reportsDir = resolve(projectRoot, '.planning', 'dedup-reports');
+
+    if (!existsSync(reportsDir)) {
+      mkdirSync(reportsDir, { recursive: true });
+    }
+
+    const timestamp = new Date().toISOString()
+      .replace(/:/g, '')
+      .replace(/\..+/, '')
+      .replace('T', '-');
+
+    const jsonPath = resolve(reportsDir, `duplicates-${timestamp}.json`);
+    const mdPath = resolve(reportsDir, `duplicates-${timestamp}.md`);
+
+    const jsonReport = generateJsonReport(clusters);
+    const mdReport = generateMarkdownReport(
+      clusters,
+      questions.length,
+      uniqueCollections,
+      cacheStats
+    );
+
+    writeFileSync(jsonPath, jsonReport);
+    writeFileSync(mdPath, mdReport);
+
+    // 10. Print summary
+    const tierCounts = {
+      exact: clusters.filter(c => c.tier === 'exact').length,
+      'near-duplicate': clusters.filter(c => c.tier === 'near-duplicate').length,
+      possible: clusters.filter(c => c.tier === 'possible').length,
+    };
+
+    console.log('\n=== Scan Complete ===\n');
+    console.log(`Questions scanned: ${questions.length}`);
+    console.log(`Collections covered: ${uniqueCollections.join(', ')}`);
+    console.log(`Similar pairs found: ${pairs.length}`);
+    console.log(`Duplicate clusters: ${clusters.length}`);
+    console.log(`  - Exact (>0.95): ${tierCounts.exact} clusters`);
+    console.log(`  - Near-duplicate (>0.85): ${tierCounts['near-duplicate']} clusters`);
+    console.log(`  - Possible (>0.75): ${tierCounts.possible} clusters`);
+    console.log('');
+    console.log(`Embedding cache: ${cacheStats.hits} hits, ${cacheStats.misses} new embeddings`);
+    console.log('');
+    console.log('Reports saved:');
+    console.log(`  JSON: ${jsonPath}`);
+    console.log(`  Markdown: ${mdPath}`);
+    console.log('');
+    console.log('DRY RUN: No changes made. Review reports before proceeding.');
+
+    process.exit(0);
+  } catch (error) {
+    console.error('\nScan failed:', error);
+    process.exit(1);
+  }
+}
+
+main();
