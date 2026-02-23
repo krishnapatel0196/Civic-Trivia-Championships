@@ -9,9 +9,9 @@ Requirements for content deduplication and scaling all collections to 90+ unique
 
 ### Deduplication
 
-- [ ] **DEDUP-01**: Semantic duplicate detection using embeddings identifies question pairs testing the same fact with different wording
-- [ ] **DEDUP-02**: Cross-collection duplicate scanning detects shared questions across all 6 collection JSON files
-- [ ] **DEDUP-03**: Duplicate report generated with grouped pairs/clusters, similarity scores, and recommended action (keep/archive)
+- [x] **DEDUP-01**: Semantic duplicate detection using embeddings identifies question pairs testing the same fact with different wording
+- [x] **DEDUP-02**: Cross-collection duplicate scanning detects shared questions across all 6 collection JSON files
+- [x] **DEDUP-03**: Duplicate report generated with grouped pairs/clusters, similarity scores, and recommended action (keep/archive)
 - [ ] **DEDUP-04**: Manual review workflow allows human to approve/reject duplicate findings before archival
 - [ ] **DEDUP-05**: Answer leakage detection flags questions where one question's text contains another's answer
 - [ ] **DEDUP-06**: Same-source factoid clustering identifies questions mined from the same sentence/paragraph whose explanations reveal each other's answers

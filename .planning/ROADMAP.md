@@ -312,15 +312,16 @@ Plans:
 
 **Milestone Goal:** Deduplicate all question collections and generate enough new content so every collection has 90+ unique, high-quality questions.
 
-#### Phase 31: Semantic Deduplication Infrastructure
+#### ✅ Phase 31: Semantic Deduplication Infrastructure
 **Goal**: Hybrid duplicate detection (text + embeddings) operational with tooling to scan collections
 **Depends on**: Phase 30
 **Requirements**: DEDUP-01, DEDUP-02, DEDUP-03
+**Completed**: 2026-02-23
 **Success Criteria** (what must be TRUE):
-  1. OpenAI embedding service integrated with rate-limiting and caching
-  2. SemanticDupDetector class generates similarity scores for question pairs using cosine similarity
-  3. Dedup scanner CLI tool can scan all 6 collections and generate duplicate reports with dry-run mode
-  4. Cross-collection duplicate detection works (Federal/State/City questions compared globally)
+  1. ✓ OpenAI embedding service integrated with rate-limiting and caching
+  2. ✓ SemanticDupDetector class generates similarity scores for question pairs using cosine similarity
+  3. ✓ Dedup scanner CLI tool can scan all 6 collections and generate duplicate reports with dry-run mode
+  4. ✓ Cross-collection duplicate detection works (Federal/State/City questions compared globally)
 **Plans**: 2 plans
 
 Plans:
