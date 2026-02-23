@@ -17,6 +17,7 @@ import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { QuestionsPage } from './pages/admin/QuestionsPage';
 import { CollectionsPage } from './pages/admin/CollectionsPage';
 import { FlagReviewPage } from './pages/admin/FlagReviewPage';
+import { DuplicateReviewPage } from './pages/admin/DuplicateReviewPage';
 
 // AdminGuard component: checks for admin role
 function AdminGuard() {
@@ -60,6 +61,7 @@ function App() {
                 <Route path="questions" element={<QuestionsPage />} />
                 <Route path="collections" element={<CollectionsPage />} />
                 <Route path="flags" element={<FlagReviewPage />} />
+                <Route path="duplicates" element={<DuplicateReviewPage />} />
               </Route>
             </Route>
           </Routes>

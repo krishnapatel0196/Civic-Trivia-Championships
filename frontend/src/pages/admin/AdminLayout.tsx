@@ -12,6 +12,7 @@ export function AdminLayout() {
     { name: 'Questions', href: '/admin/questions', icon: QuestionIcon },
     { name: 'Collections', href: '/admin/collections', icon: CollectionIcon },
     { name: 'Flag Review', href: '/admin/flags', icon: FlagIcon },
+    { name: 'Duplicate Review', href: '/admin/duplicates', icon: DuplicateIcon },
   ];
 
   const isActive = (href: string) => {
@@ -153,6 +154,14 @@ function FlagIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-11m0 0V8a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2z" />
+    </svg>
+  );
+}
+
+function DuplicateIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
     </svg>
   );
 }
