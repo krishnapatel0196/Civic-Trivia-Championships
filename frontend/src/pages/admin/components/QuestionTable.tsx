@@ -7,6 +7,7 @@ export interface QuestionRow {
   difficulty: string;
   qualityScore: number | null;
   violationCount: number | null;
+  flagCount: number;
   status: string;
   encounterCount: number;
   correctCount: number;
@@ -56,6 +57,13 @@ export function QuestionTable({
     return badges[status as keyof typeof badges] || badges.active;
   };
 
+  const getFlagCountBadge = (count: number) => {
+    if (count > 5) return 'bg-red-100 text-red-600 font-bold';
+    if (count > 2) return 'bg-orange-100 text-orange-600 font-bold';
+    if (count > 0) return 'bg-gray-100 text-gray-600';
+    return '';
+  };
+
   // Loading skeleton
   if (!questions) {
     return (
@@ -90,6 +98,9 @@ export function QuestionTable({
               <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                 Violations
               </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                Flags
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -118,6 +129,9 @@ export function QuestionTable({
                 </td>
                 <td className="px-6 py-4">
                   <div className="h-4 bg-gray-200 rounded w-20"></div>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="h-4 bg-gray-200 rounded w-8"></div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="h-4 bg-gray-200 rounded w-8"></div>
@@ -176,6 +190,12 @@ export function QuestionTable({
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
               Violations
+            </th>
+            <th
+              className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-red-800"
+              onClick={() => onSortChange('flag_count')}
+            >
+              Flags {renderSortIcon('flag_count')}
             </th>
           </tr>
         </thead>
@@ -249,6 +269,15 @@ export function QuestionTable({
                     }`}
                   >
                     {question.violationCount}
+                  </span>
+                ) : (
+                  <span className="text-sm text-gray-400">-</span>
+                )}
+              </td>
+              <td className="px-6 py-4 text-center">
+                {question.flagCount > 0 ? (
+                  <span className={`px-2 py-1 text-xs rounded-full ${getFlagCountBadge(question.flagCount)}`}>
+                    {question.flagCount}
                   </span>
                 ) : (
                   <span className="text-sm text-gray-400">-</span>
