@@ -54,6 +54,8 @@ const LOCALES = [
   { slug: 'bloomington-in', file: 'bloomington-in-questions.json' },
   { slug: 'los-angeles-ca', file: 'los-angeles-ca-questions.json' },
   { slug: 'fremont-ca', file: 'fremont-ca-questions.json' },
+  { slug: 'indiana-state', file: 'indiana-state-questions.json' },
+  { slug: 'california-state', file: 'california-state-questions.json' },
 ];
 
 function loadDataFile(filename: string): DataFile {
