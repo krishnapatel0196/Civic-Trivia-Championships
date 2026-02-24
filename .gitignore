@@ -38,6 +38,9 @@ redis-data
 
 # Generated content artifacts
 backend/generated-content-*.json
+backend/generated-questions-*.json
+backend/generation-report-*.json
+backend/generation-archives/
 
 # Embedding cache (Phase 31 dedup tooling)
 backend/.embedding-cache/
