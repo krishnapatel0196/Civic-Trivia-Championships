@@ -1390,6 +1390,25 @@
         "name": "State of California"
       },
       "expiresAt": null
+    },
+    {
+      "externalId": "fre-083",
+      "text": "Which historic park in Fremont preserves the site of California's oldest surviving pioneer settlement?",
+      "options": [
+        "Mission San José State Historic Park",
+        "Ardenwood Historic Farm",
+        "Niles Canyon Railway Park",
+        "Don Edwards San Francisco Bay National Wildlife Refuge"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Ardenwood Historic Farm in Fremont preserves a Victorian-era working farm dating to the 1850s Patterson family homestead, offering visitors a living history experience of 19th-century California agricultural life. It is operated by the East Bay Regional Park District.",
+      "difficulty": "medium",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "East Bay Regional Park District – Ardenwood Historic Farm",
+        "url": "https://www.ebparks.org/parks/ardenwood"
+      },
+      "expiresAt": null
     }
   ]
 }

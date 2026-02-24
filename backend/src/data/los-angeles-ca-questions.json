@@ -1029,6 +1029,386 @@
         "name": "State of California"
       },
       "expiresAt": null
+    },
+    {
+      "externalId": "la-053",
+      "text": "Which city department manages Los Angeles's public parks?",
+      "options": [
+        "LA Recreation and Parks",
+        "LA Public Works",
+        "LA Cultural Affairs",
+        "LA Sanitation"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The City of Los Angeles Recreation and Parks department oversees more than 400 parks, golf courses, pools, and recreation centers across the city. It's one of the largest municipal park systems in the U.S.",
+      "difficulty": "easy",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "City of Los Angeles Recreation and Parks",
+        "url": "https://www.laparks.org/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-054",
+      "text": "What famous outdoor amphitheater hosts summer concerts in Griffith Park?",
+      "options": [
+        "Greek Theatre",
+        "Hollywood Bowl",
+        "Ford Theatres",
+        "Staples Center"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Greek Theatre is a beloved outdoor music venue nestled in Griffith Park, one of the largest urban parks in the U.S. It has hosted concerts since 1930 and is a cultural landmark of Los Angeles.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Greek Theatre – Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Greek_Theatre_(Los_Angeles)"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-055",
+      "text": "Los Angeles was incorporated as a city in which year?",
+      "options": [
+        "1850",
+        "1781",
+        "1900",
+        "1876"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Los Angeles was officially incorporated as a city on April 4, 1850, shortly after California became a U.S. state. Understanding a city's incorporation marks when residents gained formal self-governance and civic rights.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "City of Los Angeles Official Website",
+        "url": "https://www.lacity.gov/about-la"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-056",
+      "text": "What famous museum in Los Angeles is known for its collections of art from ancient times to the present?",
+      "options": [
+        "LACMA (Los Angeles County Museum of Art)",
+        "The Getty Villa",
+        "The Hammer Museum",
+        "The Broad"
+      ],
+      "correctAnswer": 0,
+      "explanation": "LACMA is the largest art museum in the western United States, housing over 150,000 works spanning 6,000 years of history. It serves as a major cultural hub for Los Angeles and all of Southern California.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "LACMA - Los Angeles County Museum of Art",
+        "url": "https://en.wikipedia.org/wiki/Los_Angeles_County_Museum_of_Art"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-057",
+      "text": "What is the largest source of revenue in Los Angeles's city budget?",
+      "options": [
+        "Property taxes",
+        "Sales taxes",
+        "Utility users tax",
+        "Federal grants"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The Utility Users Tax (UUT), charged on electricity, gas, and telephone services, is historically the single largest General Fund revenue source for the City of Los Angeles, generating billions annually. As of 2026-02-24, it remains a cornerstone of how LA funds police, fire, and other city services.",
+      "difficulty": "easy",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Los Angeles Budget - Office of the City Administrative Officer",
+        "url": "https://cao.lacity.gov/budget"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-058",
+      "text": "What major civic role did the Port of Los Angeles play in helping the city grow into a global hub?",
+      "options": [
+        "It became the busiest container port in the Western Hemisphere, driving trade and jobs",
+        "It was primarily built to support a naval military base during World War I",
+        "It was developed mainly as a fishing harbor to supply local restaurants",
+        "It served as the city's main airport before LAX was constructed"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Port of Los Angeles, founded in 1907, grew into the busiest container port in the Western Hemisphere, making international trade a cornerstone of L.A.'s economy and civic identity. Its growth shaped city infrastructure, labor movements, and environmental policy for over a century.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Port of Los Angeles - History",
+        "url": "https://www.portoflosangeles.org/about/history"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-059",
+      "text": "Which famous museum in Los Angeles is known for its outdoor art installations and stunning hilltop views of the city?",
+      "options": [
+        "The Getty Center",
+        "LACMA",
+        "The Broad",
+        "Museum of Natural History"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Getty Center, perched in the Santa Monica Mountains, is famous for its architecture, gardens, and panoramic views of Los Angeles alongside its impressive art collection. Admission is free, making it a beloved public cultural landmark.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "The Getty Center – Getty.edu",
+        "url": "https://www.getty.edu/visit/center/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-060",
+      "text": "Which agency operates the Los Angeles Aqueduct, which supplies a major portion of the city's water?",
+      "options": [
+        "Los Angeles Department of Water and Power (LADWP)",
+        "Metropolitan Water District of Southern California",
+        "Los Angeles County Waterworks",
+        "California Department of Water Resources"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The LADWP, the largest municipal utility in the U.S., owns and operates the Los Angeles Aqueduct system, bringing water from the Eastern Sierra Nevada to LA since 1913. It serves over 4 million residents as of 2026-02-24.",
+      "difficulty": "hard",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "LADWP – Water System Overview",
+        "url": "https://www.ladwp.com/water/water-system"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-061",
+      "text": "Which famous museum in Los Angeles sits on Wilshire Boulevard and is free to the public?",
+      "options": [
+        "The Getty Center",
+        "LACMA",
+        "The Broad",
+        "The Hammer Museum"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The Los Angeles County Museum of Art (LACMA) is located on Wilshire Boulevard and is the largest art museum in the western United States. General admission is free for LA County residents.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "LACMA - Los Angeles County Museum of Art",
+        "url": "https://en.wikipedia.org/wiki/Los_Angeles_County_Museum_of_Art"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-062",
+      "text": "How is Bloomington, CA governed at the local level?",
+      "options": [
+        "It is an unincorporated community governed by Los Angeles County",
+        "It has its own elected city council and mayor",
+        "It is governed by a special district board",
+        "It is part of the City of Los Angeles"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington is an unincorporated community in San Bernardino County, meaning residents vote in county elections rather than for a city government. Local services and decisions are handled by the San Bernardino County Board of Supervisors, as of 2026-02-24.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "San Bernardino County – Community Profile",
+        "url": "https://www.sbcounty.gov/departments/land-use-services/planning/community-plans/bloomington/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-063",
+      "text": "Which LA landmark served as the finish line for the 1984 Summer Olympics marathon?",
+      "options": [
+        "Los Angeles Memorial Coliseum",
+        "Dodger Stadium",
+        "Rose Bowl Stadium",
+        "Santa Anita Park"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Los Angeles Memorial Coliseum hosted the opening and closing ceremonies of the 1984 Summer Olympics and served as the marathon's finish line. The Coliseum is the only stadium to have hosted two Summer Olympic Games (1932 and 1984) and is a National Historic Landmark.",
+      "difficulty": "hard",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Wikipedia – Los Angeles Memorial Coliseum",
+        "url": "https://en.wikipedia.org/wiki/Los_Angeles_Memorial_Coliseum"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-064",
+      "text": "Which agency operates the Los Angeles Department of Water and Power (LADWP)?",
+      "options": [
+        "It is a municipally owned public utility run by the City of LA",
+        "It is a state agency operated by the California Public Utilities Commission",
+        "It is a private utility company regulated by the federal government",
+        "It is a regional authority jointly governed by LA County and the City of LA"
+      ],
+      "correctAnswer": 0,
+      "explanation": "LADWP is the largest municipally owned utility in the U.S., owned and operated by the City of Los Angeles rather than a private company or state agency. This means LA residents, through their elected officials, have direct oversight of water and power rates and infrastructure decisions. Source: LADWP official site.",
+      "difficulty": "hard",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "Los Angeles Department of Water and Power",
+        "url": "https://www.ladwp.com/about-us"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-065",
+      "text": "How does Bloomington, CA choose its local leaders?",
+      "options": [
+        "Residents vote in county-run elections overseen by the Los Angeles County Registrar",
+        "Residents vote in city elections run by Bloomington's own city clerk",
+        "Leaders are appointed by the California Governor",
+        "Leaders are selected by the local school board"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington is an unincorporated community in San Bernardino County, so it has no city government of its own. Its residents participate in county and state elections administered by the San Bernardino County Registrar of Voters, as of 2026-02-24.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "San Bernardino County Registrar of Voters",
+        "url": "https://www.sbcounty.gov/departments/registrar-of-voters/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-066",
+      "text": "Which museum in Los Angeles holds one of the world's largest collections of tar-preserved Ice Age fossils?",
+      "options": [
+        "La Brea Tar Pits & Museum",
+        "Natural History Museum of LA County",
+        "California Science Center",
+        "Getty Villa"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The La Brea Tar Pits & Museum sits atop active asphalt seeps in the heart of LA, where thousands of Ice Age animals were trapped and preserved. It's one of the world's most productive urban fossil sites, still actively excavated today.",
+      "difficulty": "medium",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "La Brea Tar Pits - Natural History Museums of LA County",
+        "url": "https://tarpits.org/experience-pits/about"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-067",
+      "text": "What is California's unique way of letting voters directly make new laws?",
+      "options": [
+        "The ballot proposition system",
+        "The state assembly vote",
+        "The governor's executive order",
+        "The senate filibuster"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California allows voters to propose and pass laws or constitutional amendments directly through ballot propositions. This direct democracy tool is used every election cycle and has shaped major state policies. Source: California Secretary of State.",
+      "difficulty": "easy",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Secretary of State – Initiatives",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-process"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-068",
+      "text": "How does Bloomington elect its local government representatives?",
+      "options": [
+        "Through the Los Angeles County Board of Supervisors district elections",
+        "By citywide at-large elections held every two years",
+        "Through a city council with ward-based district elections",
+        "By appointed committees selected by the state legislature"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington is an unincorporated community in LA County, so residents vote for a Los Angeles County Supervisor to represent them rather than electing a city council. As of 2026-02-24, Bloomington falls within the 5th Supervisorial District.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "Los Angeles County Registrar-Recorder/County Clerk",
+        "url": "https://www.lavote.gov/home/voting-elections/current-elections/find-my-district"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-069",
+      "text": "What is California's governor called when signing or vetoing bills passed by the state legislature?",
+      "options": [
+        "The governor has executive authority to sign or veto bills",
+        "The governor must approve all bills automatically",
+        "The legislature can pass bills without the governor",
+        "The governor only votes on tied bills"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In California, the governor holds executive power to sign bills into law or veto them. The legislature can override a veto with a two-thirds vote in both chambers. This checks-and-balances system mirrors the federal model. Source: California Legislative Information.",
+      "difficulty": "easy",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Legislative Information",
+        "url": "https://leginfo.legislature.ca.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-070",
+      "text": "How many members sit on the Bloomington City Council?",
+      "options": [
+        "5 members",
+        "7 members",
+        "9 members",
+        "11 members"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Bloomington's City Council consists of 7 members, each representing one of the city's seven districts. Council members vote on local ordinances, budgets, and city policies. As of 2026-02-24, this structure remains in place.",
+      "difficulty": "medium",
+      "topicCategory": "city-government",
+      "source": {
+        "name": "City of Bloomington, CA – City Council",
+        "url": "https://www.bloomingtonca.gov/city-council"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-071",
+      "text": "What was the original name of the city that would become Los Angeles when it was formally founded in 1781?",
+      "options": [
+        "El Pueblo de la Reina de Los Ángeles",
+        "La Ciudad de Santa María de Los Ángeles",
+        "El Real de San Gabriel de Los Ángeles",
+        "La Villa de Nuestra Señora de Los Ángeles"
+      ],
+      "correctAnswer": 0,
+      "explanation": "When Spanish Governor Felipe de Neve officially founded Los Angeles on September 4, 1781, it was named 'El Pueblo de la Reina de Los Ángeles' (The Town of the Queen of the Angels). This founding is celebrated as a key civic milestone in LA history.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Los Angeles Almanac – City History",
+        "url": "https://en.wikipedia.org/wiki/History_of_Los_Angeles"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-072",
+      "text": "What makes California's ballot proposition system unique compared to most states?",
+      "options": [
+        "Voters can directly pass laws and constitutional amendments, bypassing the legislature",
+        "Only the governor can place measures on the ballot for voter approval",
+        "Propositions can only amend the state budget, not existing laws",
+        "The state legislature must approve all propositions before voters see them"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California uses a direct democracy system where citizens can collect signatures to place initiatives on the ballot, allowing voters to make laws or amend the state constitution without legislative approval. This power was established in 1911 and has shaped major state policies ever since.",
+      "difficulty": "medium",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Secretary of State – Initiatives",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-and-referendum-process"
+      },
+      "expiresAt": null
     }
   ]
 }

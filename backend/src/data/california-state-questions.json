@@ -1,0 +1,1949 @@
+{
+  "topics": [
+    {
+      "slug": "legislature",
+      "name": "State Legislature",
+      "description": "California State Legislature — Senate and Assembly composition, powers, and processes",
+      "questions": [
+        {
+          "id": "cas-066",
+          "text": "What is Same Day Voter Registration called in California state law?",
+          "options": [
+            "Emergency Registration",
+            "Conditional Voter Registration",
+            "Provisional Registration",
+            "Late Registration"
+          ],
+          "correctAnswer": 1,
+          "explanation": "According to the California Secretary of State, Same Day Voter Registration is known as Conditional Voter Registration in state law. This safety net allows Californians who miss the registration deadline to still register and vote during the early voting period or on Election Day.",
+          "difficulty": "hard",
+          "topic": "Unknown",
+          "topicCategory": "ballot-initiatives",
+          "source": {
+            "url": "https://www.sos.ca.gov/elections",
+            "name": "California Secretary of State"
+          },
+          "learningContent": null
+        }
+      ]
+    },
+    {
+      "slug": "governor-executive",
+      "name": "Governor & Executive Branch",
+      "description": "Governor, constitutional officers, and executive departments"
+    },
+    {
+      "slug": "state-courts",
+      "name": "State Courts & Judiciary",
+      "description": "California court system, judiciary selection, and judicial review"
+    },
+    {
+      "slug": "elections-voting",
+      "name": "Elections & Voting",
+      "description": "State election procedures, voting rights, and election administration"
+    },
+    {
+      "slug": "ballot-initiatives",
+      "name": "Ballot Propositions & Direct Democracy",
+      "description": "Initiative, referendum, and recall processes — California's direct democracy mechanisms"
+    },
+    {
+      "slug": "civic-history",
+      "name": "California Civic History",
+      "description": "Statehood, constitutional conventions, civic movements, and historical milestones"
+    },
+    {
+      "slug": "state-constitution",
+      "name": "California Constitution",
+      "description": "State constitution provisions, amendments, and relationship to U.S. Constitution"
+    },
+    {
+      "slug": "policy-civics",
+      "name": "Policy & Governance",
+      "description": "State policy areas, budget processes, taxation, local government with civic context"
+    }
+  ],
+  "questions": [
+    {
+      "externalId": "cas-001",
+      "text": "How many members serve in the California State Assembly?",
+      "options": [
+        "40 members",
+        "80 members",
+        "100 members",
+        "120 members"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's legislative structure, the State Assembly has 80 members who serve 2-year terms. This makes it one of the largest state legislative chambers in the United States.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.legislature.ca.gov",
+        "name": "California State Legislature"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-002",
+      "text": "How many senators serve in the California State Senate?",
+      "options": [
+        "30 senators",
+        "40 senators",
+        "50 senators",
+        "60 senators"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's legislative structure, the State Senate has 40 members who serve 4-year terms. Together with the 80-member Assembly, this creates California's bicameral legislature.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.legislature.ca.gov",
+        "name": "California State Legislature"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-003",
+      "text": "What is the term length for a California State Assembly member?",
+      "options": [
+        "1 year",
+        "2 years",
+        "4 years",
+        "6 years"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's legislative structure, State Assembly members serve 2-year terms. This shorter term length means Assembly members face re-election more frequently than their Senate counterparts.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.legislature.ca.gov",
+        "name": "California State Legislature"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-004",
+      "text": "What is the term length for a California State Senator?",
+      "options": [
+        "2 years",
+        "4 years",
+        "6 years",
+        "8 years"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's legislative structure, State Senators serve 4-year terms. This longer term provides more stability compared to the 2-year terms of Assembly members.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.legislature.ca.gov",
+        "name": "California State Legislature"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-005",
+      "text": "What is the maximum number of years a California legislator can serve across both chambers combined?",
+      "options": [
+        "8 years",
+        "10 years",
+        "12 years",
+        "16 years"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to California's term limit rules, legislators can serve a maximum of 12 years total across both the Senate and Assembly. This allows for various combinations, such as 12 years in one chamber or split time between both.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.legislature.ca.gov",
+        "name": "California State Legislature"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-006",
+      "text": "How many votes are required in the California State Senate to pass a constitutional amendment?",
+      "options": [
+        "21 votes (simple majority)",
+        "24 votes (three-fifths)",
+        "27 votes (two-thirds)",
+        "30 votes (three-fourths)"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to California's legislative process, constitutional amendments require a two-thirds vote in each chamber. In the 40-member Senate, this means 27 votes are needed to pass a constitutional amendment.",
+      "difficulty": "hard",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.legislature.ca.gov",
+        "name": "California State Legislature"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-007",
+      "text": "How many votes are required in the California State Assembly to pass a constitutional amendment?",
+      "options": [
+        "41 votes (simple majority)",
+        "48 votes (three-fifths)",
+        "54 votes (two-thirds)",
+        "60 votes (three-fourths)"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to California's legislative process, constitutional amendments require a two-thirds vote in each chamber. In the 80-member Assembly, this means 54 votes are needed to pass a constitutional amendment.",
+      "difficulty": "hard",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.legislature.ca.gov",
+        "name": "California State Legislature"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-008",
+      "text": "What type of legislature does California have?",
+      "options": [
+        "Part-time citizen legislature",
+        "Full-time professional legislature",
+        "Hybrid legislature",
+        "Volunteer legislature"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's legislative structure, California has a full-time professional legislature, one of only a few states with this model. This means legislators work year-round and receive full-time salaries for their service.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.legislature.ca.gov",
+        "name": "California State Legislature"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-009",
+      "text": "Which structure describes California's state legislature?",
+      "options": [
+        "Unicameral with one chamber",
+        "Bicameral with two chambers",
+        "Tricameral with three chambers",
+        "Multicameral with four chambers"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's legislative structure, California has a bicameral legislature consisting of two chambers: the State Senate and the State Assembly. This two-chamber system is used by most U.S. states.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.legislature.ca.gov",
+        "name": "California State Legislature"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-010",
+      "text": "What percentage of signatures from the last gubernatorial vote is required to place a statute initiative on the California ballot?",
+      "options": [
+        "3 percent",
+        "5 percent",
+        "8 percent",
+        "10 percent"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's direct democracy system, citizens need signatures equal to 5 percent of the votes cast in the last gubernatorial election to place a statute initiative on the ballot. This is lower than the 8 percent required for constitutional amendments.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-011",
+      "text": "What percentage of signatures from the last gubernatorial vote is required to place a constitutional amendment initiative on the California ballot?",
+      "options": [
+        "5 percent",
+        "8 percent",
+        "10 percent",
+        "15 percent"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's direct democracy system, citizens need signatures equal to 8 percent of the votes cast in the last gubernatorial election to place a constitutional amendment on the ballot. This higher threshold reflects the greater significance of constitutional changes.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-012",
+      "text": "Which forms of direct democracy are available to California citizens?",
+      "options": [
+        "Initiative only",
+        "Initiative and referendum only",
+        "Initiative, referendum, and recall",
+        "Referendum and recall only"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to California's civic participation system, citizens have access to all three forms of direct democracy: initiative (proposing new laws), referendum (approving or rejecting laws passed by the legislature), and recall (removing elected officials from office).",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-014",
+      "text": "Who is the current Governor of California?",
+      "options": [
+        "Jerry Brown",
+        "Gavin Newsom",
+        "Arnold Schwarzenegger",
+        "Gray Davis"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to ca.gov, Gavin Newsom is the current Governor of California. Governors serve 4-year terms and can serve a maximum of two terms.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California Governor's Office"
+      },
+      "expiresAt": "2027-01-04T00:00:00.000Z"
+    },
+    {
+      "externalId": "cas-015",
+      "text": "What is the term length for the Governor of California?",
+      "options": [
+        "2 years",
+        "4 years",
+        "6 years",
+        "8 years"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's executive structure, the Governor serves a 4-year term. Governors can serve a maximum of two terms, meaning they can hold office for up to 8 years total.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California Governor's Office"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-016",
+      "text": "What is the maximum number of terms a California Governor can serve?",
+      "options": [
+        "One term",
+        "Two terms",
+        "Three terms",
+        "No term limit"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California's executive structure, the Governor can serve a maximum of two 4-year terms. This term limit ensures regular turnover in the state's highest executive office.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California Governor's Office"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-017",
+      "text": "Who is the current Lieutenant Governor of California?",
+      "options": [
+        "Eleni Kounalakis",
+        "Gavin Newsom",
+        "Alex Padilla",
+        "Betty Yee"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to ca.gov, Eleni Kounalakis is the current Lieutenant Governor of California. The Lieutenant Governor is separately elected and serves as the second-highest executive officer in the state.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California Lieutenant Governor's Office"
+      },
+      "expiresAt": "2027-01-04T00:00:00.000Z"
+    },
+    {
+      "externalId": "cas-018",
+      "text": "How many separately elected constitutional officers does California have in its executive branch?",
+      "options": [
+        "3 officers",
+        "5 officers",
+        "8 officers",
+        "12 officers"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to California's executive structure, California has 8 separately elected constitutional officers: Governor, Lieutenant Governor, Attorney General, Secretary of State, Treasurer, Controller, Superintendent of Public Instruction, and Insurance Commissioner. This plural executive structure distributes power across multiple elected officials.",
+      "difficulty": "hard",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California State Government"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-019",
+      "text": "Which of these is NOT one of California's separately elected constitutional officers?",
+      "options": [
+        "Attorney General",
+        "Secretary of State",
+        "Chief of Staff",
+        "Insurance Commissioner"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to California's executive structure, the Chief of Staff is appointed by the Governor, not separately elected. California's 8 elected constitutional officers include Governor, Lieutenant Governor, Attorney General, Secretary of State, Treasurer, Controller, Superintendent of Public Instruction, and Insurance Commissioner.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California State Government"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-020",
+      "text": "What is the name of California's online system for tracking vote-by-mail ballots?",
+      "options": [
+        "TrackMyVote",
+        "Where's My Ballot?",
+        "BallotTracker",
+        "VoteStatus"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, Where's My Ballot? is the official system that allows voters to track and receive notifications about the status of their vote-by-mail ballot. Voters can sign up at WheresMyBallot.sos.ca.gov.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.sos.ca.gov",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-021",
+      "text": "Which state agency oversees voter registration and elections in California?",
+      "options": [
+        "Department of Motor Vehicles",
+        "Secretary of State",
+        "Attorney General's Office",
+        "State Controller"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, the California Secretary of State oversees voter registration, elections, and ballot measures. This constitutional officer is separately elected and serves as the state's chief elections official.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.sos.ca.gov",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-022",
+      "text": "How many state departments does California have?",
+      "options": [
+        "Approximately 50 departments",
+        "Approximately 100 departments",
+        "Approximately 200 departments",
+        "Approximately 300 departments"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to ca.gov/agencies, California has approximately 200 state departments and agencies serving various functions from public health to motor vehicles to corrections. This extensive bureaucracy reflects California's size and the scope of state services.",
+      "difficulty": "hard",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.ca.gov/agencies",
+        "name": "California State Agencies"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-023",
+      "text": "What is the name of California's confidential address program for victims of domestic violence and stalking?",
+      "options": [
+        "Safe Harbor",
+        "Safe At Home",
+        "Address Protection",
+        "Secure Address"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, Safe At Home is California's confidential address program that helps protect victims of domestic violence, stalking, and other serious crimes. Participants use a substitute address to keep their actual address confidential.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.sos.ca.gov",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-024",
+      "text": "Which California executive officer is responsible for overseeing the Department of Motor Vehicles?",
+      "options": [
+        "Lieutenant Governor",
+        "Secretary of State",
+        "Governor through appointed officials",
+        "State Controller"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to ca.gov, the Department of Motor Vehicles is overseen by the Governor through appointed officials in the executive branch. While California has many separately elected constitutional officers, most state departments are managed through the Governor's cabinet structure.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California State Government"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-026",
+      "text": "Who is the current Chief Justice of California?",
+      "options": [
+        "Patricia Guerrero",
+        "Tani Cantil-Sakauye",
+        "Ronald George",
+        "Rose Bird"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to courts.ca.gov, Chief Justice Patricia Guerrero is the 29th Chief Justice of California, making history as the first Latina to serve in the position.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-027",
+      "text": "What is the minimum age requirement to register to vote in California?",
+      "options": [
+        "16 years old",
+        "17 years old",
+        "18 years old",
+        "21 years old"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov, to register to vote in California, you must be 18 years old or older on Election Day. However, 16 and 17 year olds can pre-register, and their registration becomes active when they turn 18.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-028",
+      "text": "What is the name of California's centralized voter registration database?",
+      "options": [
+        "VoteCal",
+        "CalVote",
+        "VoterHub",
+        "ElectionTrack"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to sos.ca.gov, VoteCal is California's centralized voter registration database that provides benefits to voters and election officials, allowing voters to register, update their information, and check ballot status.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-029",
+      "text": "What is the policymaking body of the California courts called?",
+      "options": [
+        "The Court Commission",
+        "The Judicial Council",
+        "The Supreme Court Board",
+        "The Judiciary Committee"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to courts.ca.gov, the Judicial Council is the policymaking body of the California courts, fulfilling its mission through committees and task forces that address judicial administration.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-030",
+      "text": "When is California's Primary Election scheduled for 2026?",
+      "options": [
+        "May 5, 2026",
+        "June 2, 2026",
+        "July 7, 2026",
+        "August 4, 2026"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, the Primary Election is scheduled for June 2, 2026, with voter registration closing on May 18, 2026.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": "2026-06-03T00:00:00.000Z"
+    },
+    {
+      "externalId": "cas-031",
+      "text": "What type of court system does California have?",
+      "options": [
+        "The smallest in the nation",
+        "The second-largest in the nation",
+        "The largest in the nation",
+        "A medium-sized system"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to courts.ca.gov, California has the largest judicial system in the country, bringing equal access to justice for all Californians.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-032",
+      "text": "What must a California voter NOT be currently doing to be eligible to register?",
+      "options": [
+        "Living outside their home county",
+        "Serving a state or federal prison term for a felony conviction",
+        "Working for the state government",
+        "Attending college out of state"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, to register to vote in California, you must not be currently serving a state or federal prison term for the conviction of a felony. Voting rights are restored after completing the prison term.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-033",
+      "text": "What is the name of the initiative that educates the public about California's judicial branch?",
+      "options": [
+        "Justice for All",
+        "Power of Democracy Civic Learning",
+        "Courts in the Community",
+        "Judicial Awareness Program"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to courts.ca.gov, the Power of Democracy Civic Learning initiative is a statewide effort that aims to educate the public about the judicial branch through local court outreach.",
+      "difficulty": "hard",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-034",
+      "text": "What service allows California voters to track their vote-by-mail ballot?",
+      "options": [
+        "BallotWatch",
+        "Where's My Ballot?",
+        "VoteTracker",
+        "MyBallotStatus"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, the California Secretary of State offers voters a way to track and receive notifications on the status of their vote-by-mail ballot through the Where's My Ballot? service at WheresMyBallot.sos.ca.gov.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-035",
+      "text": "What type of courts take a team approach to decision making in California?",
+      "options": [
+        "Appellate Courts",
+        "Collaborative Justice Courts",
+        "Municipal Courts",
+        "District Courts"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to courts.ca.gov, Collaborative Justice Courts take a team approach to decision making, integrating social, judicial, and community resources to address cases.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-036",
+      "text": "At what age can California residents pre-register to vote?",
+      "options": [
+        "14 years old",
+        "15 years old",
+        "16 years old",
+        "17 years old"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov, online pre-registration is available for eligible 16 and 17 year olds. Their registration becomes active once they turn 18 years old.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-037",
+      "text": "What resource does California provide for people representing themselves in court?",
+      "options": [
+        "Legal Aid Portal",
+        "Self-Help Guide",
+        "Pro Se Handbook",
+        "Court Navigator"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to courts.ca.gov, the Self-Help Guide provides Californians with step-by-step instructions, court forms, and other resources for those representing themselves in court.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-038",
+      "text": "What is the last day to register to vote for California's June 2, 2026 Primary Election?",
+      "options": [
+        "May 4, 2026",
+        "May 11, 2026",
+        "May 18, 2026",
+        "May 25, 2026"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov, the last day to register to vote for the June 2, 2026 Primary Election is May 18, 2026, which is 15 days before Election Day.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": "2026-06-03T00:00:00.000Z"
+    },
+    {
+      "externalId": "cas-039",
+      "text": "What is the name of California's confidential address program for victims of abuse?",
+      "options": [
+        "Safe Harbor",
+        "Safe At Home",
+        "Secure Address",
+        "Protected Residence"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, Safe At Home is California's confidential address program. Enrollees should not apply to register to vote online and should instead contact the program directly.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-040",
+      "text": "What do California courts offer to help families and children navigate the court system?",
+      "options": [
+        "Family Court Services",
+        "Programs for Families & Children",
+        "Youth Justice Initiative",
+        "Child Advocacy Services"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to courts.ca.gov, California courts offer Programs for Families & Children that serve the diverse needs of children, youth, parents, families, and other users of the California courts.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-041",
+      "text": "What legislation established the California Voter's Choice Act?",
+      "options": [
+        "Assembly Bill 100",
+        "Senate Bill 450",
+        "Proposition 14",
+        "Initiative 2016-A"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, the California Voter's Choice Act was established by Senate Bill 450 in 2016, modernizing elections by allowing counties to provide greater flexibility and convenience for voters.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-042",
+      "text": "What type of voting system allows voters to mark selections using their own technology at home?",
+      "options": [
+        "Electronic Voting System",
+        "Remote Accessible Vote-by-Mail",
+        "Online Ballot System",
+        "Digital Democracy Platform"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, a Remote Accessible Vote by Mail (RAVBM) system allows voters to mark their selections using their own compatible technology to vote independently and privately in the comfort of their own home.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-043",
+      "text": "What office oversees voting system examination and certification in California?",
+      "options": [
+        "Office of Election Integrity",
+        "Office of Voting Systems Technology Assessment",
+        "Bureau of Voting Technology",
+        "Division of Election Systems"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, the Office of Voting Systems Technology Assessment (OVSTA) was created in September 2005 and is responsible for voting system examination, testing, and certification for use in California elections.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-044",
+      "text": "What is the minimum grade point average required for high school students to work as student poll workers?",
+      "options": [
+        "2.0",
+        "2.5",
+        "3.0",
+        "3.5"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, high school students who are U.S. citizens must maintain a 2.5-grade point average, along with having consent from their parent or guardian and school, to be eligible to work as student poll workers.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-045",
+      "text": "What program helps California courts manage criminal justice initiatives?",
+      "options": [
+        "Justice Reform Programs",
+        "Criminal Justice Programs",
+        "Court Safety Initiative",
+        "Judicial Enforcement Services"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to courts.ca.gov, Criminal Justice Programs manage criminal justice initiatives for the benefit of California courts, justice partners, and the public.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-046",
+      "text": "When do High School Voter Education Weeks occur in California?",
+      "options": [
+        "January and June",
+        "March and September",
+        "April and September",
+        "May and October"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov, the California Education Code designates the last two full weeks in April and September as High School Voter Education Weeks, when schools promote civic education and participation.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-047",
+      "text": "What must vote-by-mail ballots be to count if received after Election Day?",
+      "options": [
+        "Notarized by Election Day",
+        "Postmarked on or before Election Day",
+        "Delivered to a drop box by Election Day",
+        "Signed by a witness on Election Day"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, vote-by-mail ballots must be postmarked on or before Election Day and can be received up to 7 days after the election to be counted.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-048",
+      "text": "What is Same Day Voter Registration officially called in California state law?",
+      "options": [
+        "Emergency Voter Registration",
+        "Conditional Voter Registration",
+        "Provisional Voter Registration",
+        "Late Voter Registration"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, Same Day Voter Registration is known as Conditional Voter Registration in state law and serves as a safety net for Californians who miss the deadline to register or update their information.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-049",
+      "text": "What resource provides step-by-step instructions for court cases in California?",
+      "options": [
+        "Court Procedures Manual",
+        "Self-Help Guide",
+        "Legal Process Handbook",
+        "Citizen's Court Guide"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to courts.ca.gov, the Self-Help Guide provides Californians looking for information on case types or to represent themselves in court with step-by-step instructions, court forms, and other resources.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-050",
+      "text": "What program was created in 2016 to elevate college student voices in elections?",
+      "options": [
+        "Campus Vote Initiative",
+        "Students Vote Project",
+        "College Democracy Program",
+        "Youth Voter Engagement"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, Students Vote Project (SVP) is a nonpartisan program established in 2016 that aims to elevate college student voices, promote civic engagement, and empower students to participate in the democratic process statewide.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-053",
+      "text": "What civic power allows California voters to remove an elected official from office before their term ends?",
+      "options": [
+        "Referendum",
+        "Initiative",
+        "Recall",
+        "Veto"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the California Secretary of State, the recall is the direct democracy mechanism that allows voters to remove elected officials from office before their term expires. California famously used this power in 2003 to recall Governor Gray Davis, demonstrating how citizens can hold officials accountable between regular elections.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections/recalls",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-054",
+      "text": "Which form of direct democracy allows California voters to remove elected officials from office before their term ends?",
+      "options": [
+        "Initiative",
+        "Referendum",
+        "Recall",
+        "Proposition"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the California Secretary of State, the recall process allows voters to remove elected officials and justices of the State Supreme Court from office. California voters approved this power in 1911 as part of the state's direct democracy system.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-055",
+      "text": "What significant change did California's admission as a state in 1850 represent for the balance of power in the United States?",
+      "options": [
+        "It entered as a free state, shifting the balance against slavery expansion",
+        "It entered as a slave state, expanding slavery to the West Coast",
+        "It entered as a territory without voting rights in Congress",
+        "It entered with a requirement to hold a slavery referendum every decade"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the California State Library, California was admitted to the Union on September 9, 1850 as a free state under the Compromise of 1850, which was a pivotal moment in the national debate over slavery expansion and helped set the stage for the Civil War.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.library.ca.gov/california-history/",
+        "name": "California State Library"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-056",
+      "text": "What is California's state motto?",
+      "options": [
+        "The Golden State",
+        "Eureka",
+        "In God We Trust",
+        "Liberty and Prosperity"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to California state records, the state motto is 'Eureka,' which means 'I have found it' in Greek. This motto references the discovery of gold in California and appears on the state seal.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California State Government"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-057",
+      "text": "How can California voters propose changes to state law through the ballot initiative process?",
+      "options": [
+        "Only through the legislature",
+        "By collecting voter signatures",
+        "By petitioning the governor",
+        "Through county boards of supervisors"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, citizens can propose statutes or constitutional amendments by collecting the required number of voter signatures. This direct democracy mechanism allows Californians to bypass the legislature and place measures directly on the ballot.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-058",
+      "text": "What is a referendum in California's election system?",
+      "options": [
+        "A citizen-proposed new law",
+        "A vote to approve or reject a law passed by the legislature",
+        "A recall of an elected official",
+        "A constitutional amendment"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, a referendum allows voters to approve or reject laws that have already been passed by the state legislature. This gives citizens a check on legislative action and is part of California's direct democracy system.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-059",
+      "text": "Who is the current Chief Justice of the California Supreme Court?",
+      "options": [
+        "Tani Cantil-Sakauye",
+        "Patricia Guerrero",
+        "Rose Bird",
+        "Ronald George"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Courts website, Chief Justice Patricia Guerrero is the 29th Chief Justice of California, making history as the first Latina to serve in this position. She leads the largest judicial system in the country.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": "2027-01-01T00:00:00.000Z"
+    },
+    {
+      "externalId": "cas-060",
+      "text": "What historic first does Chief Justice Patricia Guerrero represent in California's judicial system?",
+      "options": [
+        "First woman Chief Justice",
+        "First Latina Chief Justice",
+        "First Asian American Chief Justice",
+        "First Chief Justice from Southern California"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Courts website, Chief Justice Patricia Guerrero made history as the first Latina to serve as Chief Justice of California. She is the 29th person to hold this position in the state's history.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-063",
+      "text": "How many residents call California home?",
+      "options": [
+        "25 million",
+        "32 million",
+        "39 million",
+        "45 million"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the California state government website, California is home to nearly 40 million residents, making it the most populous state in the nation. One in four Californians is born overseas, reflecting the state's diversity.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California State Government"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-064",
+      "text": "What percentage of the United States GDP does California contribute?",
+      "options": [
+        "8%",
+        "11%",
+        "15%",
+        "20%"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the California state government website, California contributes almost 15% to the US GDP and is the world's fifth-largest economy. This economic strength makes California a significant force in both national and global markets.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California State Government"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-065",
+      "text": "How many national parks does California have?",
+      "options": [
+        "5",
+        "7",
+        "9",
+        "12"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the California state government website, California has 9 national parks, the most of any state in the US. The state also boasts 87 state parks and 63 state beaches, reflecting California's commitment to preserving natural resources.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California State Government"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-066",
+      "text": "What is Same Day Voter Registration called in California state law?",
+      "options": [
+        "Emergency Registration",
+        "Conditional Voter Registration",
+        "Provisional Registration",
+        "Late Registration"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, Same Day Voter Registration is known as Conditional Voter Registration in state law. This safety net allows Californians who miss the registration deadline to still register and vote during the early voting period or on Election Day.",
+      "difficulty": "hard",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-069",
+      "text": "What does California's ballot initiative system allow citizens to do?",
+      "options": [
+        "Only suggest ideas to legislators",
+        "Propose and vote on laws directly",
+        "Recall judges only",
+        "Approve the state budget"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, the ballot initiative system allows citizens to propose and vote on laws directly, bypassing the legislature. Citizens can propose both statutes and constitutional amendments by collecting the required signatures.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-070",
+      "text": "What is the minimum age to pre-register to vote in California?",
+      "options": [
+        "14 years old",
+        "16 years old",
+        "17 years old",
+        "18 years old"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, eligible 16 and 17 year olds can pre-register to vote online. Their registration becomes active once they turn 18 years old, helping to build lifelong voting habits.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-071",
+      "text": "What is the Judicial Council of California?",
+      "options": [
+        "A group of trial judges",
+        "The policymaking body of the California courts",
+        "The state bar association",
+        "A legislative committee"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Courts website, the Judicial Council is the policymaking body of the California courts. It fulfills its mission through committees and task forces that address judicial administration issues.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-072",
+      "text": "What does California's Voter's Choice Act do?",
+      "options": [
+        "Requires voter ID at polls",
+        "Allows counties to offer more flexible voting options",
+        "Eliminates vote-by-mail",
+        "Reduces early voting periods"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, the Voter's Choice Act (established by Senate Bill 450 in 2016) modernizes elections by allowing counties to conduct elections under a model that provides greater flexibility and convenience. Voters can choose how, when, and where to cast their ballot.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-073",
+      "text": "How do all active registered California voters receive their ballots for statewide elections?",
+      "options": [
+        "They must request them online",
+        "They are automatically mailed to all active voters",
+        "They must pick them up at polling places",
+        "They are delivered by county officials"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, all California active registered voters receive a vote-by-mail ballot for statewide elections. County elections officials automatically mail these ballots to voters, who can return them by mail, at drop-off locations, or at vote centers.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-074",
+      "text": "What is the California Student Mock Election?",
+      "options": [
+        "A required civics test for graduation",
+        "A program where students practice voting on real ballot measures",
+        "A competition between schools",
+        "A voter registration drive"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, the California Student Mock Election is a program held every two years where high school and middle school students practice voting. The program aims to encourage lifelong voting habits and active citizenship among young people.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-075",
+      "text": "What are High School Voter Education Weeks in California?",
+      "options": [
+        "The first two weeks of the school year",
+        "The last two full weeks in April and September",
+        "The two weeks before Election Day",
+        "The first two weeks in January and June"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, the California Education Code designates the last two full weeks in April and September as High School Voter Education Weeks. During these weeks, high schools work with county elections officials to promote civic education and participation on campus.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-082",
+      "text": "What is the minimum grade point average required for high school students to work as student poll workers in California?",
+      "options": [
+        "2.0 GPA",
+        "2.5 GPA",
+        "3.0 GPA",
+        "3.5 GPA"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, high school students who are U.S. citizens must maintain a 2.5-grade point average to be eligible to work as student poll workers. They also need consent from their parent or guardian and the school.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-084",
+      "text": "What distinguishes California's recall process from most other states?",
+      "options": [
+        "California requires a two-thirds vote to recall an official",
+        "California allows recalls of statewide elected officials including the governor",
+        "California only allows recalls during election years",
+        "California requires court approval before a recall election"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, California is one of only 19 states that allow recall elections, and it permits recalls of all elected officials including statewide officers like the governor. This was demonstrated in 2003 when Governor Gray Davis was successfully recalled, making California one of only two states to ever recall a governor.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections/recalls",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-087",
+      "text": "What percentage of the US GDP does California contribute?",
+      "options": [
+        "10%",
+        "15%",
+        "20%",
+        "25%"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to ca.gov, California contributes almost 15% to the US GDP and is the world's fifth-largest economy. This economic strength reflects California's diverse industries and large population of nearly 40 million residents.",
+      "difficulty": "medium",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-088",
+      "text": "What is the name of the system that allows California voters to mark their ballot selections using their own compatible technology at home?",
+      "options": [
+        "Home Voting System",
+        "Remote Accessible Vote-by-Mail",
+        "Digital Ballot Access",
+        "Electronic Home Voting"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, Remote Accessible Vote by Mail (RAVBM) is a system that allows voters to mark their selections using their own compatible technology to vote independently and privately in the comfort of their own home. This particularly benefits voters with disabilities.",
+      "difficulty": "hard",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-089",
+      "text": "Which California state office was created in September 2005 to oversee voting system examination and certification?",
+      "options": [
+        "Office of Election Integrity",
+        "Office of Voting Systems Technology Assessment",
+        "Bureau of Voting Technology",
+        "Division of Election Systems"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, the Office of Voting Systems Technology Assessment (OVSTA) was created in September 2005. It is responsible for voting system examination, testing, and certification for use in California elections, as well as overseeing ballot printers and voting technologies.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-090",
+      "text": "What is the name of the legislation that established California's Voter's Choice Act?",
+      "options": [
+        "Assembly Bill 450",
+        "Senate Bill 450",
+        "Proposition 450",
+        "Initiative 450"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, the California Voter's Choice Act (VCA) was established by Senate Bill 450 in 2016. This act modernizes elections in California by allowing counties to conduct elections under a model which provides greater flexibility and convenience for voters.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-091",
+      "text": "When do county elections offices begin mailing ballots for the June 2, 2026 Primary Election?",
+      "options": [
+        "April 4, 2026",
+        "April 23, 2026",
+        "May 4, 2026",
+        "May 18, 2026"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov, county elections offices will begin mailing ballots by May 4, 2026 for the June 2, 2026 Primary Election. All California active registered voters will receive a vote-by-mail ballot.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": "2026-06-03T00:00:00.000Z"
+    },
+    {
+      "externalId": "cas-092",
+      "text": "What is the minimum age at which California residents can pre-register to vote?",
+      "options": [
+        "14 years old",
+        "15 years old",
+        "16 years old",
+        "17 years old"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov, online pre-registration is available for eligible 16 and 17 year olds. California youth who pre-register to vote will have their registration become active once they turn 18 years old.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-093",
+      "text": "Which months are designated as High School Voter Education Weeks in California?",
+      "options": [
+        "March and September",
+        "April and October",
+        "April and September",
+        "May and November"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov, the California Education Code designates the last two full weeks in April and September as High School Voter Education Weeks. During these weeks, high schools work with county elections officials to promote civic education and participation.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-094",
+      "text": "What is the name of the policymaking body of the California courts?",
+      "options": [
+        "California Court Commission",
+        "Judicial Council",
+        "Supreme Court Board",
+        "Court Administration Panel"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to courts.ca.gov, the Judicial Council is the policymaking body of the California courts. The Judicial Council fulfills its mission through committees and task forces that address various aspects of judicial administration.",
+      "difficulty": "medium",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-095",
+      "text": "What is the name of the program that allows California college students to compete in registering voters?",
+      "options": [
+        "Campus Vote Challenge",
+        "California University and College Ballot Bowl",
+        "Student Democracy Derby",
+        "College Voter Registration Race"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, the California University and College Ballot Bowl is a friendly competition where higher education campuses compete to register the most students to vote and showcase civic engagement efforts. The Ballot Bowl occurs only during even numbered years ahead of the general election.",
+      "difficulty": "hard",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-096",
+      "text": "What is California's population?",
+      "options": [
+        "29 million",
+        "34 million",
+        "39 million",
+        "44 million"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to ca.gov, California is home to nearly 40 million residents (39 million). This makes California the most populous state in the United States, with one in four Californians born overseas.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "California State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-097",
+      "text": "How many days after Election Day does California accept vote-by-mail ballots that were postmarked on or before Election Day?",
+      "options": [
+        "Same day only",
+        "7 days",
+        "14 days",
+        "30 days"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, vote-by-mail ballots postmarked on or before Election Day are counted if they arrive within 7 days after the election. This policy ensures that ballots mailed on time are not disqualified due to postal delays.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections/voter-registration/vote-mail",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-098",
+      "text": "What is the name of the initiative that aims to educate the public about California's judicial branch?",
+      "options": [
+        "Courts for Citizens",
+        "Power of Democracy Civic Learning",
+        "Judicial Education Project",
+        "Democracy in Action"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to courts.ca.gov, the Power of Democracy Civic Learning initiative is a statewide effort that aims to educate the public about the judicial branch. This initiative works alongside local court outreach efforts to promote civic understanding.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.courts.ca.gov",
+        "name": "California Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-099",
+      "text": "What is the primary purpose of California's Student Voter Registration Week, established by state law?",
+      "options": [
+        "To require all high schools to register students to vote during a designated week",
+        "To encourage high schools to provide voter registration opportunities to eligible students",
+        "To mandate that all 18-year-old students must register before graduation",
+        "To allow students under 18 to vote in school board elections only"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, Student Voter Registration Week encourages California high schools to provide voter registration opportunities to eligible students during a designated week each year. The program is voluntary for schools and focuses on making registration accessible to students who are eligible to vote, promoting civic engagement among young Californians.",
+      "difficulty": "hard",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections/voter-registration",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cas-100",
+      "text": "Which article of the California Constitution allows people to recall elected officials?",
+      "options": [
+        "Article I",
+        "Article II",
+        "Article III",
+        "Article IV"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov, Article II of the California Constitution allows people to recall and remove elected officials and justices of the State Supreme Court from office. This provision was approved by California voters in 1911 as part of Progressive Era reforms.",
+      "difficulty": "medium",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-084",
+      "text": "What is the minimum number of signatures needed to place a citizen initiative on the California ballot?",
+      "options": [
+        "5% of votes cast in the last gubernatorial election",
+        "10% of registered voters statewide",
+        "1 million signatures from any California residents",
+        "25,000 signatures verified by the Secretary of State"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In California, a citizen initiative statute requires signatures from at least 5% of voters in the last governor's race. Constitutional amendments require 8%. This threshold balances accessibility with ensuring serious public support before a measure reaches the ballot.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "name": "California Secretary of State – Initiative Process",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/how-qualify-initiative"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-085",
+      "text": "Which document must the California Constitution never conflict with?",
+      "options": [
+        "The U.S. Constitution",
+        "The California Civil Code",
+        "The Governor's Executive Orders",
+        "The California Penal Code"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California has its own constitution, but it must always follow the U.S. Constitution — the supreme law of the land. Under the Supremacy Clause, federal law and the U.S. Constitution override any conflicting state rules.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "California Legislative Information - California Constitution",
+        "url": "https://leginfo.legislature.ca.gov/faces/codes.xhtml?tocCode=CONS"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-086",
+      "text": "What is the main source of revenue for California's state budget?",
+      "options": [
+        "Personal income tax",
+        "Sales and use tax",
+        "Corporate tax",
+        "Property tax"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California relies on personal income tax for the largest share of its General Fund revenue — typically over 60%. This makes the state budget sensitive to the earnings of high-income residents. California Department of Finance, 2024-25 Budget.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "California Department of Finance",
+        "url": "https://www.ebudget.ca.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-087",
+      "text": "What is the highest court in California?",
+      "options": [
+        "California Supreme Court",
+        "California Court of Appeal",
+        "California Superior Court",
+        "U.S. Ninth Circuit Court"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The California Supreme Court is the top court in the state, with seven justices who have the final say on matters of California law. The U.S. Ninth Circuit, while based in California, is a federal court and separate from the state system.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "name": "California Courts - About California Courts",
+        "url": "https://www.courts.ca.gov/2113.htm"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-088",
+      "text": "What allows California voters to remove an elected official from office before their term ends?",
+      "options": [
+        "A recall election",
+        "A referendum vote",
+        "An initiative petition",
+        "A veto override"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A recall election lets voters decide whether to remove an elected official early. California's recall process requires gathering enough signatures — a percentage of votes cast in the last election for that office — before a recall vote is triggered.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "name": "California Secretary of State – Recalls",
+        "url": "https://www.sos.ca.gov/elections/recalls"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-089",
+      "text": "Which document takes precedence if the California Constitution conflicts with the U.S. Constitution?",
+      "options": [
+        "The U.S. Constitution",
+        "The California Constitution",
+        "The decision is left to the California Supreme Court",
+        "Whichever constitution was amended most recently"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Under the Supremacy Clause of the U.S. Constitution (Article VI), federal law and the U.S. Constitution are the supreme law of the land, overriding any conflicting state constitution or law.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Khan Academy – Supremacy Clause",
+        "url": "https://www.khanacademy.org/humanities/ap-us-government-and-politics/foundations-of-american-democracy/federalism-ap/a/the-supremacy-clause"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-090",
+      "text": "Which branch of California government is responsible for approving the state's annual budget?",
+      "options": [
+        "The Governor alone",
+        "The California Legislature",
+        "The State Supreme Court",
+        "The California Board of Equalization"
+      ],
+      "correctAnswer": 1,
+      "explanation": "California's annual budget must be passed by the Legislature (both the Assembly and Senate) and then signed by the Governor. The Legislature holds the power of the purse under the California Constitution. See California Legislative Analyst's Office.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "California Legislative Analyst's Office",
+        "url": "https://lao.ca.gov/Education/EdBudget/Details/30"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-091",
+      "text": "How do most California judges reach the bench for the first time?",
+      "options": [
+        "They are appointed by the Governor",
+        "They are elected by popular vote statewide",
+        "They are chosen by the State Legislature",
+        "They are selected by the State Bar Association"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Most California judges are first appointed by the Governor, then face voters in retention elections. This blend of appointment and accountability is unique to many state court systems. Source: California Courts official website.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "name": "California Courts - Judicial Selection",
+        "url": "https://www.courts.ca.gov/2113.htm"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-092",
+      "text": "Which right does the California Constitution explicitly guarantee that the U.S. Constitution does not?",
+      "options": [
+        "The right to privacy",
+        "The right to bear arms",
+        "Freedom of speech",
+        "The right to a jury trial"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California's Constitution explicitly lists privacy as an inalienable right in Article I, Section 1. The U.S. Constitution does not mention privacy by name, though courts have interpreted it to exist in other amendments.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "California Constitution, Article I – California Legislative Information",
+        "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CONS&sectionNum=ARTICLE_I."
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-093",
+      "text": "Who is the Governor of California as of 2026-02-24?",
+      "options": [
+        "Gavin Newsom",
+        "Kamala Harris",
+        "Jerry Brown",
+        "Kevin de León"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Gavin Newsom has served as California's Governor since January 2019. The Governor leads the state's executive branch and is responsible for signing bills into law, managing the state budget, and commanding the National Guard.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "name": "Office of Governor Gavin Newsom",
+        "url": "https://www.gov.ca.gov/about/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-094",
+      "text": "What year did California become the 31st state of the United States?",
+      "options": [
+        "1850",
+        "1848",
+        "1863",
+        "1876"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California was admitted to the Union on September 9, 1850, following the Mexican-American War and the Gold Rush, which rapidly grew its population. It skipped territorial status and went straight to statehood.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "California State Library - California History",
+        "url": "https://www.library.ca.gov/california-history/state-history/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-095",
+      "text": "Can California's state constitution give residents MORE rights than the U.S. Constitution?",
+      "options": [
+        "Yes, states can expand rights beyond federal minimums",
+        "No, state constitutions must mirror the U.S. Constitution exactly",
+        "No, only the federal government can grant individual rights",
+        "Yes, but only if Congress approves the expansion"
+      ],
+      "correctAnswer": 0,
+      "explanation": "State constitutions can grant broader rights than the U.S. Constitution, but never fewer. California's constitution, for example, provides stronger privacy protections than the federal baseline. States serve as 'laboratories of democracy' in this way.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Khan Academy – Federalism",
+        "url": "https://www.khanacademy.org/humanities/ap-government-and-politics/foundations-of-american-democracy/federalism/a/federalism-in-the-united-states"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-096",
+      "text": "California's budget must be passed by a simple majority vote — but what threshold is required to raise taxes?",
+      "options": [
+        "Two-thirds supermajority of the Legislature",
+        "Simple majority of the Legislature",
+        "A statewide ballot measure only",
+        "Three-fourths supermajority of the Legislature"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Under Proposition 13 (1978) and reinforced by Proposition 26 (2010), California requires a two-thirds supermajority in both legislative chambers to raise state taxes, even though the annual budget itself only needs a simple majority. This gives the minority party significant leverage in tax debates.",
+      "difficulty": "hard",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "California Legislature - Proposition 13 Overview",
+        "url": "https://lao.ca.gov/Publications/Report/3497"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-097",
+      "text": "How many chambers make up the California State Legislature?",
+      "options": [
+        "Two — the Senate and the Assembly",
+        "One — the Senate only",
+        "Three — the Senate, Assembly, and a Review Board",
+        "Two — the House and the Senate"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Like the U.S. Congress, California has a bicameral (two-chamber) legislature: the State Senate and the State Assembly. Most states use this two-chamber system to allow laws to be reviewed from two different angles before passing.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "name": "California Legislature Official Website",
+        "url": "https://www.legislature.ca.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-098",
+      "text": "Which California constitutional officer manages the state's investments and serves as its banker?",
+      "options": [
+        "State Treasurer",
+        "State Controller",
+        "Secretary of State",
+        "Superintendent of Public Instruction"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The State Treasurer manages California's investments, sells bonds, and acts as the state's banker. The Controller (a common mix-up) handles payments and audits, while the Treasurer focuses on managing the state's financial assets and debt.",
+      "difficulty": "hard",
+      "topicCategory": "governor-executive",
+      "source": {
+        "name": "California State Treasurer - About",
+        "url": "https://www.treasurer.ca.gov/about/index.asp"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-099",
+      "text": "Unlike the U.S. Constitution, California's Constitution allows citizens to directly amend it without the legislature. What is this process called?",
+      "options": [
+        "Direct initiative",
+        "Popular referendum",
+        "Constitutional convention",
+        "Legislative referral"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California allows citizens to place constitutional amendments on the ballot by collecting enough signatures — this is called a direct initiative. It bypasses the legislature entirely, a power not available at the federal level. Source: California Secretary of State.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "California Secretary of State – Initiatives",
+        "url": "https://www.sos.ca.gov/elections/voter-registration/initiatives"
+      },
+      "expiresAt": null
+    }
+  ]
+}

@@ -1827,6 +1827,158 @@
         "url": "https://iga.in.gov/legislative/laws/2023/ic/titles/020"
       },
       "expiresAt": null
+    },
+    {
+      "externalId": "ind-096",
+      "text": "How many votes in the Indiana General Assembly are required to propose an amendment to the Indiana Constitution?",
+      "options": [
+        "A simple majority in both chambers in two consecutive sessions",
+        "Two-thirds of both chambers in a single session",
+        "Three-fourths of both chambers in two consecutive sessions",
+        "A simple majority in one session, then ratified by a statewide convention"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Under Article 16 of the Indiana Constitution, an amendment must pass both chambers by a simple majority in two successive General Assemblies, then be approved by voters at a general election. This two-session requirement helps prevent hasty changes to the state's foundational law.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Indiana Constitution – Article 16, Indiana General Assembly",
+        "url": "https://iga.in.gov/laws/indiana-constitution"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-097",
+      "text": "How many votes does the Indiana General Assembly need to override a governor's veto?",
+      "options": [
+        "A simple majority in each chamber",
+        "A two-thirds majority in each chamber",
+        "Three-fifths majority in each chamber",
+        "A three-fourths majority in the Senate only"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Indiana's Constitution (Article 5, Section 14) allows the General Assembly to override a governor's veto with a majority of all elected members in each chamber — notably easier than the two-thirds supermajority required in many other states and by the U.S. Constitution.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Indiana Constitution – Indiana General Assembly",
+        "url": "https://iga.in.gov/legislative/laws/const/article/5"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-098",
+      "text": "What is the title of Indiana's second-highest executive officer?",
+      "options": [
+        "Lieutenant Governor",
+        "Secretary of State",
+        "Attorney General",
+        "State Treasurer"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's Lieutenant Governor is first in line to succeed the Governor and also serves as a key member of the executive branch. As of 2026-02-24, the Lt. Governor chairs several state agencies and boards.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "name": "Indiana Lieutenant Governor's Office",
+        "url": "https://www.in.gov/lgov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-099",
+      "text": "Indiana requires photo ID to vote. Which document is NOT accepted as valid voter ID at Indiana polls?",
+      "options": [
+        "A utility bill with your name and address",
+        "An Indiana driver's license",
+        "A U.S. military ID card",
+        "An Indiana state-issued photo ID card"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's photo ID law, upheld by the Supreme Court in Crawford v. Marion County (2008), requires a government-issued photo ID. A utility bill, even with your address, does not qualify because it lacks a photo. Accepted IDs include driver's licenses, state photo IDs, military IDs, and U.S. passports.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "Indiana Election Division - Voter ID",
+        "url": "https://www.in.gov/sos/elections/voter-information/voter-id/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-100",
+      "text": "How can Indiana citizens propose a change to the state constitution?",
+      "options": [
+        "Only through the state legislature passing a measure twice across two sessions",
+        "By collecting signatures from 5% of voters and submitting a petition",
+        "The governor can propose amendments directly to voters",
+        "A single majority vote in the General Assembly is sufficient"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana does not allow citizen-initiated constitutional amendments. Changes must pass both chambers of the General Assembly in two consecutive legislative sessions, then be approved by voters at a general election. This two-session requirement gives Hoosiers time to debate proposed changes.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "name": "Indiana General Assembly – Indiana Constitution Article 16",
+        "url": "https://iga.in.gov/legislative/laws/const/#article-16"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-101",
+      "text": "Indiana's 1816 constitution was drafted at a convention in which town, chosen as a temporary meeting place before a permanent capital was established?",
+      "options": [
+        "Corydon",
+        "Vincennes",
+        "Madison",
+        "New Albany"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Delegates met in Corydon in June 1816 to draft Indiana's first state constitution. Corydon served as Indiana's first state capital until 1825, when the capital moved to the newly founded Indianapolis. Indiana Statehouse records document this founding milestone.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Indiana State Library - Indiana Constitution History",
+        "url": "https://www.in.gov/history/2468.htm"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-102",
+      "text": "Which branch of government does the Indiana Constitution establish first?",
+      "options": [
+        "Legislative",
+        "Executive",
+        "Judicial",
+        "Military"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Like the U.S. Constitution, Indiana's constitution places the legislative branch first, reflecting the founders' view that lawmaking power is closest to the people. Article 4 of the Indiana Constitution establishes the General Assembly.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Indiana General Assembly - Indiana Constitution",
+        "url": "https://iga.in.gov/legislative/laws/2023/ic/titles/0001"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-103",
+      "text": "How does Indiana fund its public K-12 schools under the state's tuition support formula?",
+      "options": [
+        "Per-pupil funding follows the student to whichever accredited school they attend, including charter and private voucher schools",
+        "Each school district receives a flat block grant based on its geographic size, not enrollment",
+        "Local property taxes are the sole source of K-12 funding, with no state contribution",
+        "The state funds only teachers' salaries, while districts must raise all other costs locally"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana uses a student-centered funding model: state tuition support dollars are allocated on a per-pupil basis and can follow students to charter schools or private schools through the Choice Scholarship (voucher) program. This makes Indiana's school finance system one of the most expansive choice-based models in the U.S. See Indiana Department of Education school funding overview.",
+      "difficulty": "hard",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "Indiana Department of Education – School Funding",
+        "url": "https://www.in.gov/doe/schools/school-funding/"
+      },
+      "expiresAt": null
     }
   ]
 }

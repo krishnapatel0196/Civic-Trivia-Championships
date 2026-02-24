@@ -1201,6 +1201,424 @@
         "name": "Indiana Election Division"
       },
       "expiresAt": null
+    },
+    {
+      "externalId": "bloom-062",
+      "text": "What is the name of Indiana's state legislature?",
+      "options": [
+        "Indiana General Assembly",
+        "Indiana State Congress",
+        "Indiana Legislative Council",
+        "Indiana House of Representatives"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's state legislature is called the General Assembly. It has two chambers: the Senate (50 members) and the House of Representatives (100 members), and meets each year in Indianapolis.",
+      "difficulty": "easy",
+      "topicCategory": "indiana-state",
+      "source": {
+        "name": "Indiana General Assembly",
+        "url": "https://iga.in.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-063",
+      "text": "What major university calls Bloomington, IN home?",
+      "options": [
+        "Indiana University",
+        "Purdue University",
+        "Butler University",
+        "Ball State University"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana University's main campus (IU Bloomington) has been located in Bloomington since 1820, making it a cornerstone of the city's culture, economy, and identity.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Indiana University – About IU Bloomington",
+        "url": "https://bloomington.iu.edu/about/index.html"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-064",
+      "text": "Which local tax is Bloomington's largest source of general fund revenue?",
+      "options": [
+        "Property tax",
+        "Income tax",
+        "Sales tax",
+        "Hotel tax"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Like most Indiana cities, Bloomington relies heavily on the local option income tax (LOIT) as its primary general fund revenue source, reflecting Indiana's tax structure where property tax caps limit local property tax collections. As of 2026-02-24.",
+      "difficulty": "easy",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Bloomington Budget Documents",
+        "url": "https://bloomington.in.gov/finance/budget"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-065",
+      "text": "What famous bicycle race inspired the classic film 'Breaking Away,' set in Bloomington?",
+      "options": [
+        "The Little 500",
+        "The Hoosier 400",
+        "The Indiana Classic",
+        "The Limestone Sprint"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Little 500 is an annual student bicycle race at Indiana University in Bloomington. The 1979 film 'Breaking Away' was inspired by the race and helped put Bloomington on the cultural map. The race is still held each spring.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Indiana University Little 500 – Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Little_500"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-066",
+      "text": "Which local government body approves Bloomington's annual city budget?",
+      "options": [
+        "The Bloomington City Council",
+        "The Monroe County Commissioners",
+        "The Bloomington Board of Works",
+        "The Indiana State Legislature"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Bloomington City Council reviews and votes to approve the city's annual budget, giving elected representatives direct control over how public funds are spent. This is how most U.S. city governments manage local finances.",
+      "difficulty": "easy",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Bloomington – City Council",
+        "url": "https://bloomington.in.gov/council"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-067",
+      "text": "Which city department manages Bloomington's public parks and trails?",
+      "options": [
+        "Parks and Recreation Department",
+        "Department of Public Works",
+        "City Planning Department",
+        "Utilities Services Division"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington's Parks and Recreation Department oversees the city's parks, trails, sports facilities, and community programs, helping residents enjoy outdoor spaces year-round. As of 2026-02-24.",
+      "difficulty": "easy",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "City of Bloomington Parks and Recreation",
+        "url": "https://bloomington.in.gov/parks"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-068",
+      "text": "What famous limestone cave system is located just south of Bloomington?",
+      "options": [
+        "Mammoth Cave",
+        "Wyandotte Caves",
+        "Bluespring Caverns",
+        "Crystal Cave"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Bluespring Caverns, located near Bedford just south of Bloomington, is one of the largest navigable underground rivers in the U.S. and a popular regional attraction that reflects the unique karst geology of southern Indiana.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Wikipedia – Bluespring Caverns",
+        "url": "https://en.wikipedia.org/wiki/Bluespring_Caverns"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-069",
+      "text": "What is the primary source of revenue for Bloomington's city government?",
+      "options": [
+        "Property taxes",
+        "Income taxes",
+        "Federal grants",
+        "Utility fees"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Like most Indiana cities, Bloomington relies heavily on local income taxes (county option income taxes) as its primary revenue source, rather than property taxes, which are capped under Indiana law. This shapes how the city funds services like public safety and infrastructure.",
+      "difficulty": "easy",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Bloomington Annual Budget",
+        "url": "https://bloomington.in.gov/finance/budget"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-070",
+      "text": "What is the primary source of funding for Bloomington's public transit system (Bloomington Transit)?",
+      "options": [
+        "Federal grants and local property/income taxes",
+        "Passenger fares collected on routes",
+        "Indiana state fuel tax revenue",
+        "University of Indiana student fees"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Like most U.S. public transit systems, Bloomington Transit relies heavily on federal formula grants (FTA Section 5307) and local tax revenues rather than fares, which typically cover only a small fraction of operating costs. This funding mix is why local budget decisions and federal transit policy directly affect service levels. (as of 2026-02-24)",
+      "difficulty": "hard",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "Bloomington Transit – About BT",
+        "url": "https://bloomingtontransit.com/about/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-071",
+      "text": "What historic Bloomington theater, built in 1922, is listed on the National Register of Historic Places and hosts IU cinema events?",
+      "options": [
+        "The Buskirk-Chumley Theater",
+        "The Waldron Arts Center",
+        "The Von Lee Cinema",
+        "The Monroe Convention Center"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Buskirk-Chumley Theater, originally built as a vaudeville and silent film house in 1922, is a beloved Bloomington landmark listed on the National Register of Historic Places. It continues to serve the community as a performing arts venue and partner with IU Cinema.",
+      "difficulty": "hard",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Buskirk-Chumley Theater – Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Buskirk-Chumley_Theater"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-072",
+      "text": "How many members make up Indiana's General Assembly in total?",
+      "options": [
+        "150 members (100 House, 50 Senate)",
+        "200 members (150 House, 50 Senate)",
+        "124 members (100 House, 24 Senate)",
+        "175 members (125 House, 50 Senate)"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's bicameral General Assembly consists of 100 members in the House of Representatives and 50 members in the Senate, totaling 150 legislators who meet at the State Capitol in Indianapolis. This structure balances representation across the state's districts.",
+      "difficulty": "hard",
+      "topicCategory": "indiana-state",
+      "source": {
+        "name": "Indiana General Assembly Official Website",
+        "url": "https://iga.in.gov/information/about"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-073",
+      "text": "Which department manages Bloomington's public parks and recreation programs?",
+      "options": [
+        "Bloomington Parks and Recreation Department",
+        "Monroe County Public Works",
+        "Indiana Department of Natural Resources",
+        "Bloomington Community Services Division"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The City of Bloomington Parks and Recreation Department oversees the city's parks, trails, community programs, and recreational facilities. It is a dedicated municipal department separate from county or state agencies.",
+      "difficulty": "easy",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "City of Bloomington Parks and Recreation",
+        "url": "https://bloomington.in.gov/parks"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-074",
+      "text": "How many members make up the Indiana State Senate?",
+      "options": [
+        "50",
+        "100",
+        "25",
+        "75"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's General Assembly is bicameral: the Senate has 50 members serving 4-year terms, while the House has 100 members serving 2-year terms. Senators represent roughly twice as many constituents as House members. Indiana General Assembly, iga.in.gov.",
+      "difficulty": "hard",
+      "topicCategory": "indiana-state",
+      "source": {
+        "name": "Indiana General Assembly",
+        "url": "https://iga.in.gov/legislative/2024/info/about"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-075",
+      "text": "What does Bloomington's 'CFC' utility program help residents do?",
+      "options": [
+        "Reduce energy and water use through conservation rebates",
+        "Connect to city fiber-optic internet service",
+        "Apply for community flood control infrastructure grants",
+        "Register for curbside composting pickup"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington's Conservation, Flexibility, and Choice (CFC) program offers rebates and incentives to help residents reduce water and energy consumption, supporting the city's sustainability goals. As of 2026-02-24, it is administered through City of Bloomington Utilities.",
+      "difficulty": "medium",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "City of Bloomington Utilities",
+        "url": "https://bloomington.in.gov/utilities"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-076",
+      "text": "What famous bicycle race takes place annually in Bloomington, IN?",
+      "options": [
+        "The Little 500",
+        "The Hoosier Gran Fondo",
+        "The IU Classic",
+        "The Monroe County Century"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Little 500 is a beloved student bicycle race held at Indiana University each spring, made famous by the 1979 film 'Breaking Away.' It draws thousands of spectators and is a cornerstone of Bloomington's culture.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Indiana University Little 500 – Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Little_500"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-077",
+      "text": "How many chambers make up the Indiana General Assembly?",
+      "options": [
+        "One (a unicameral legislature)",
+        "Two (Senate and House of Representatives)",
+        "Three (Senate, House, and Executive Council)",
+        "Four (divided by region)"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Indiana's legislature, the General Assembly, has two chambers: the Senate (50 members) and the House of Representatives (100 members). This bicameral structure is standard across most U.S. states. Source: Indiana General Assembly website.",
+      "difficulty": "easy",
+      "topicCategory": "indiana-state",
+      "source": {
+        "name": "Indiana General Assembly",
+        "url": "https://iga.in.gov/legislative/2024/info/about"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-078",
+      "text": "What is the primary funding mechanism for Bloomington's stormwater management and flood control infrastructure?",
+      "options": [
+        "A dedicated stormwater utility fee charged to property owners based on impervious surface area",
+        "A portion of the city's general property tax levy allocated annually by the Common Council",
+        "Federal EPA grants administered through Indiana's Department of Environmental Management",
+        "A special assessment district tax applied only to properties in flood-prone zones"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington funds stormwater infrastructure through a utility fee tied to impervious surface area (like rooftops and pavement) on a property — the more hard surface, the higher the fee. This user-pays model is common in cities seeking dedicated, stable funding for stormwater systems outside the general budget. See: City of Bloomington Utilities.",
+      "difficulty": "hard",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "City of Bloomington Utilities - Stormwater",
+        "url": "https://bloomington.in.gov/utilities/stormwater"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-079",
+      "text": "Which fund is Bloomington's largest single source of revenue for its annual operating budget?",
+      "options": [
+        "General Fund (property and income taxes)",
+        "Cumulative Capital Development Fund",
+        "Stormwater Utility Fund",
+        "Motor Vehicle Highway Fund"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington's General Fund, supported primarily by local income tax and property tax revenues, is the city's largest operating fund and covers core services like police, parks, and administration. As of 2026-02-24, this structure is outlined in the city's annual budget documents published by the Controller's Office.",
+      "difficulty": "hard",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Bloomington Budget Documents",
+        "url": "https://bloomington.in.gov/finance/budget"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-080",
+      "text": "Who serves as the chief executive of Bloomington's city government?",
+      "options": [
+        "The Mayor",
+        "The City Manager",
+        "The Council President",
+        "The County Commissioner"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington operates under a strong-mayor form of government, meaning the Mayor serves as the chief executive, overseeing city departments and operations. As of 2026-02-24, Kerry Thomson holds this office.",
+      "difficulty": "easy",
+      "topicCategory": "city-government",
+      "source": {
+        "name": "City of Bloomington – Mayor's Office",
+        "url": "https://bloomington.in.gov/mayor"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-081",
+      "text": "Which department manages Bloomington's city-owned electric and water utilities?",
+      "options": [
+        "Bloomington Utilities",
+        "Indiana American Water",
+        "Duke Energy",
+        "Monroe County REMC"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington Utilities is a city-owned department providing both electric and water services to residents, making Bloomington one of the few Indiana cities with a municipally operated electric utility. As of 2026-02-24.",
+      "difficulty": "medium",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "City of Bloomington Utilities",
+        "url": "https://bloomington.in.gov/utilities"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-082",
+      "text": "How are Bloomington City Council members elected?",
+      "options": [
+        "By district, with voters only choosing their own district's representative",
+        "In at-large elections, where all city voters choose all council seats",
+        "Through a hybrid system with both district and at-large seats on the same council",
+        "By ranked-choice voting across the entire city"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington's nine City Council members are each elected by voters within one of nine geographic districts, meaning residents only vote for their own district's representative. This district-based system is meant to ensure neighborhood-level representation across the city.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "City of Bloomington - City Council",
+        "url": "https://bloomington.in.gov/council"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "bloom-083",
+      "text": "What famous limestone quarry region surrounds Bloomington, IN?",
+      "options": [
+        "Indiana Limestone District",
+        "Hoosier Stone Belt",
+        "Monroe Granite Corridor",
+        "Bedford Rock Basin"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Indiana Limestone District around Bloomington supplied stone for iconic U.S. buildings like the Empire State Building and the Pentagon, making the region world-famous for its fine oolitic limestone.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Wikipedia – Indiana Limestone",
+        "url": "https://en.wikipedia.org/wiki/Indiana_limestone"
+      },
+      "expiresAt": null
     }
   ]
 }
