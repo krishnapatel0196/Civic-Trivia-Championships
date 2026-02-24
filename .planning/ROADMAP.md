@@ -250,7 +250,7 @@ Plans:
 
 Plans:
 - [x] 24-01: Fremont locale configuration with cultural sensitivity framework
-- [x] 24-02: Generate and curate Fremont questions (123 → 92)
+- [x] 24-02: Generate and curate Fremont questions (123 -> 92)
 
 ### Phase 25: Collection Deployment
 **Goal**: Fremont collection seeded, activated, and playable in production
@@ -373,12 +373,14 @@ Plans:
   3. All collections re-seeded to database with correct active status
   4. Quality score distribution maintained (no degradation from high-volume generation)
   5. Total question bank expanded to 540+ unique questions across 6 collections
-**Plans**: 3 plans
+**Plans**: 5 plans
 
 Plans:
-- [ ] 34-01-PLAN.md — Prep pipeline: update model, extend seeding, create merge utility
-- [ ] 34-02-PLAN.md — Generate all 5 collections, merge to source JSON, seed to database
-- [ ] 34-03-PLAN.md — Verify counts, quality sanity check, commit and clean up
+- [x] 34-01-PLAN.md — Prep pipeline: update model, extend seeding, create merge utility
+- [x] 34-02-PLAN.md — Generate all 5 collections, merge to source JSON, seed to database
+- [x] 34-03-PLAN.md — Verify counts, quality sanity check, commit and clean up
+- [ ] 34-04-PLAN.md — Gap closure: re-activate archived Phase 32 questions that pass quality audit
+- [ ] 34-05-PLAN.md — Gap closure: generate remaining deficit questions, seed, and final verification
 
 ## Progress
 
@@ -390,4 +392,4 @@ Phases execute in numeric order: 31 → 32 → 33 → 34
 | 31. Semantic Deduplication Infrastructure | 2/2 | Complete | 2026-02-23 |
 | 32. Existing Collection Audit | 4/4 | Complete | 2026-02-23 |
 | 33. Generation Pipeline Enhancement | 2/2 | Complete | 2026-02-23 |
-| 34. Scale to 90+ Questions | 0/3 | Not started | - |
+| 34. Scale to 90+ Questions | 3/5 | Gap closure in progress | - |
