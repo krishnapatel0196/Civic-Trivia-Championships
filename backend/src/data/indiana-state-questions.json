@@ -1,0 +1,1832 @@
+{
+  "topics": [
+    {
+      "slug": "legislature",
+      "name": "State Legislature",
+      "description": "Indiana General Assembly — composition, powers, and legislative processes"
+    },
+    {
+      "slug": "governor-executive",
+      "name": "Governor & Executive Branch",
+      "description": "Governor, lieutenant governor, and executive agencies"
+    },
+    {
+      "slug": "state-courts",
+      "name": "State Courts & Judiciary",
+      "description": "Indiana court system, judiciary selection, and judicial powers"
+    },
+    {
+      "slug": "elections-voting",
+      "name": "Elections & Voting",
+      "description": "State election procedures, voting rights, and election administration"
+    },
+    {
+      "slug": "ballot-initiatives",
+      "name": "Ballot Measures & Civic Participation",
+      "description": "Constitutional amendment process, referendums, and direct citizen engagement"
+    },
+    {
+      "slug": "civic-history",
+      "name": "Indiana Civic History",
+      "description": "Statehood, founding, constitutional conventions, and civic milestones"
+    },
+    {
+      "slug": "state-constitution",
+      "name": "Indiana Constitution",
+      "description": "State constitution provisions, amendments, and relationship to U.S. Constitution"
+    },
+    {
+      "slug": "policy-civics",
+      "name": "Policy & Governance",
+      "description": "State policy areas, budget processes, taxation, education governance with civic context"
+    }
+  ],
+  "questions": [
+    {
+      "externalId": "ins-001",
+      "text": "How many members serve in the Indiana House of Representatives?",
+      "options": [
+        "50",
+        "100",
+        "150",
+        "200"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana General Assembly, the Indiana House of Representatives has 100 members who serve 2-year terms. This makes it twice the size of the Indiana Senate, which has 50 members.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-002",
+      "text": "How many members serve in the Indiana Senate?",
+      "options": [
+        "25",
+        "50",
+        "75",
+        "100"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana General Assembly, the Indiana Senate has 50 members who serve 4-year terms. This is half the size of the Indiana House of Representatives.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-003",
+      "text": "What is the term length for an Indiana State Senator?",
+      "options": [
+        "2 years",
+        "4 years",
+        "6 years",
+        "8 years"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana General Assembly, Indiana State Senators serve 4-year terms. This is longer than the 2-year terms served by members of the Indiana House of Representatives.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-004",
+      "text": "What is the term length for an Indiana State Representative?",
+      "options": [
+        "1 year",
+        "2 years",
+        "4 years",
+        "6 years"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana General Assembly, Indiana State Representatives serve 2-year terms. This is shorter than the 4-year terms served by Indiana State Senators.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-005",
+      "text": "How many days does the Indiana General Assembly meet in odd-numbered years?",
+      "options": [
+        "30 days",
+        "61 days",
+        "90 days",
+        "120 days"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, the General Assembly meets for 61 days in odd-numbered years and 30 days in even-numbered years. This part-time legislature model allows legislators to maintain other careers.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-006",
+      "text": "How many days does the Indiana General Assembly meet in even-numbered years?",
+      "options": [
+        "15 days",
+        "30 days",
+        "45 days",
+        "61 days"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, the General Assembly meets for 30 days in even-numbered years and 61 days in odd-numbered years. This shorter session in even-numbered years is designed for budget adjustments and urgent matters.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-007",
+      "text": "What is the name of Indiana's state legislature?",
+      "options": [
+        "Indiana Assembly",
+        "General Assembly",
+        "State Congress",
+        "Legislative Council"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, Indiana's state legislature is called the General Assembly. It consists of two chambers: the Senate and the House of Representatives.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-008",
+      "text": "How many chambers make up the Indiana General Assembly?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, the General Assembly is bicameral, meaning it has two chambers: the Senate and the House of Representatives. This structure mirrors the federal Congress.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-009",
+      "text": "Which chamber of the Indiana General Assembly has more members?",
+      "options": [
+        "The Senate",
+        "The House of Representatives",
+        "Both have equal members",
+        "Neither has members"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana General Assembly, the House of Representatives has 100 members while the Senate has 50 members. This 2:1 ratio is common in state legislatures.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-010",
+      "text": "What type of legislature does Indiana have?",
+      "options": [
+        "Full-time professional legislature",
+        "Part-time citizen legislature",
+        "Appointed legislature",
+        "Volunteer legislature"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana General Assembly, Indiana operates a part-time citizen legislature where members meet for limited sessions each year and maintain other careers. This model differs from full-time professional legislatures in states like California or New York.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-011",
+      "text": "How many consecutive General Assembly sessions must approve a constitutional amendment before it goes to voters?",
+      "options": [
+        "1 session",
+        "2 sessions",
+        "3 sessions",
+        "4 sessions"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, a proposed constitutional amendment must be approved by two consecutive General Assembly sessions before being placed on the ballot for voter approval. This ensures careful deliberation of constitutional changes.",
+      "difficulty": "hard",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-012",
+      "text": "What happens after the Indiana General Assembly approves a constitutional amendment in two consecutive sessions?",
+      "options": [
+        "It becomes law immediately",
+        "The governor must sign it",
+        "Voters must approve it in an election",
+        "The Supreme Court must review it"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Constitution, after the General Assembly approves a constitutional amendment in two consecutive sessions, it must be placed on the ballot for voter approval. This gives citizens the final say on changes to the state constitution.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-013",
+      "text": "Can Indiana citizens propose constitutional amendments through an initiative process?",
+      "options": [
+        "Yes, with 100,000 signatures",
+        "Yes, with 5% of voters",
+        "No, only the legislature can propose amendments",
+        "Yes, but only for budget matters"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Constitution, Indiana does not have a citizen initiative process for constitutional amendments. Only the General Assembly can propose amendments, which must then pass two consecutive sessions and be approved by voters.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "url": "https://iga.in.gov/",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-014",
+      "text": "Who is the current Governor of Indiana as of 2025?",
+      "options": [
+        "Eric Holcomb",
+        "Mike Braun",
+        "Mitch Daniels",
+        "Mike Pence"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to IN.gov, Mike Braun is the current Governor of Indiana. He describes Indiana as 'a beacon of freedom and opportunity, where hard work and Hoosier values build strong families and thriving communities.'",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/",
+        "name": "IN.gov"
+      },
+      "expiresAt": "2029-01-13T00:00:00.000Z"
+    },
+    {
+      "externalId": "ins-015",
+      "text": "What is the term length for the Governor of Indiana?",
+      "options": [
+        "2 years",
+        "4 years",
+        "6 years",
+        "8 years"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, the Governor of Indiana serves a 4-year term. Governors can serve up to two consecutive terms, for a maximum of 8 years total.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/gov/",
+        "name": "Indiana Constitution"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-016",
+      "text": "How many consecutive terms can an Indiana Governor serve?",
+      "options": [
+        "1 term",
+        "2 terms",
+        "3 terms",
+        "No limit"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, a Governor can serve up to two consecutive 4-year terms, for a maximum of 8 years total. After sitting out for at least one term, a former governor could run again.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/gov/",
+        "name": "Indiana Constitution"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-017",
+      "text": "Who is the current Lieutenant Governor of Indiana as of 2025?",
+      "options": [
+        "Suzanne Crouch",
+        "Micah Beckwith",
+        "Sue Ellspermann",
+        "Eric Holcomb"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to IN.gov, Micah Beckwith is the current Lieutenant Governor of Indiana. The Lieutenant Governor is elected on the same ticket as the Governor.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/",
+        "name": "IN.gov"
+      },
+      "expiresAt": "2029-01-13T00:00:00.000Z"
+    },
+    {
+      "externalId": "ins-018",
+      "text": "Who is the current Secretary of State of Indiana as of 2025?",
+      "options": [
+        "Connie Lawson",
+        "Diego Morales",
+        "Holli Sullivan",
+        "Todd Rokita"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to IN.gov, Diego Morales is the current Secretary of State of Indiana. The Secretary of State is one of several statewide elected executive officers in Indiana.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/",
+        "name": "IN.gov"
+      },
+      "expiresAt": "2027-01-01T00:00:00.000Z"
+    },
+    {
+      "externalId": "ins-019",
+      "text": "Who is the current Attorney General of Indiana as of 2025?",
+      "options": [
+        "Curtis Hill",
+        "Todd Rokita",
+        "Greg Zoeller",
+        "Steve Carter"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to IN.gov, Todd Rokita is the current Attorney General of Indiana. The Attorney General is elected statewide and serves as the state's chief legal officer.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/",
+        "name": "IN.gov"
+      },
+      "expiresAt": "2027-01-01T00:00:00.000Z"
+    },
+    {
+      "externalId": "ins-020",
+      "text": "Who is the current Treasurer of State of Indiana as of 2025?",
+      "options": [
+        "Kelly Mitchell",
+        "Daniel Elliott",
+        "Richard Mourdock",
+        "Tim Berry"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to IN.gov, Daniel Elliott is the current Treasurer of State of Indiana. The Treasurer is elected statewide and manages the state's finances and investments.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/",
+        "name": "IN.gov"
+      },
+      "expiresAt": "2027-01-01T00:00:00.000Z"
+    },
+    {
+      "externalId": "ins-021",
+      "text": "Who is the current State Comptroller of Indiana as of 2025?",
+      "options": [
+        "Tera Klutz",
+        "Elise Nieshalla",
+        "Tim Berry",
+        "Chris Atkins"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to IN.gov, Elise Nieshalla is the current State Comptroller of Indiana. The Comptroller is one of the statewide elected executive officers responsible for state financial oversight.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/",
+        "name": "IN.gov"
+      },
+      "expiresAt": "2027-01-01T00:00:00.000Z"
+    },
+    {
+      "externalId": "ins-022",
+      "text": "How many statewide elected executive officers does Indiana have?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "correctAnswer": 3,
+      "explanation": "According to IN.gov, Indiana has six statewide elected executive officers: Governor, Lieutenant Governor, Attorney General, Secretary of State, Treasurer of State, and State Comptroller. This structure distributes executive power across multiple independently elected officials.",
+      "difficulty": "hard",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/",
+        "name": "IN.gov"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-023",
+      "text": "How are the Governor and Lieutenant Governor of Indiana elected?",
+      "options": [
+        "Separately in different elections",
+        "On the same ticket together",
+        "The Governor appoints the Lieutenant Governor",
+        "The legislature elects the Lieutenant Governor"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, the Governor and Lieutenant Governor run on the same ticket and are elected together. This ensures they work as a team and share the same electoral mandate.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/gov/",
+        "name": "Indiana Constitution"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-024",
+      "text": "What is Indiana's official state motto?",
+      "options": [
+        "The Hoosier State",
+        "The Crossroads of America",
+        "Land of Lincoln",
+        "The Heart of America"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to IN.gov, Indiana's state motto is 'The Crossroads of America,' reflecting the state's central location and its role as a transportation hub. This motto appears on Indiana license plates and official state materials.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/",
+        "name": "IN.gov"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-025",
+      "text": "Which executive officer manages Indiana's state finances and investments?",
+      "options": [
+        "State Comptroller",
+        "Treasurer of State",
+        "Secretary of State",
+        "Attorney General"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to IN.gov, the Treasurer of State manages Indiana's finances and investments. The State Comptroller handles financial oversight and accounting, while the Treasurer focuses on investment management and cash flow.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "url": "https://www.in.gov/",
+        "name": "IN.gov"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-026",
+      "text": "How many levels are in the Indiana state court system?",
+      "options": [
+        "Two levels",
+        "Three levels",
+        "Four levels",
+        "Five levels"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Judicial Branch, Indiana has a four-level court system: trial courts (circuit and superior courts), the Court of Appeals, the Tax Court, and the Supreme Court at the top.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-027",
+      "text": "How are Indiana Supreme Court justices selected?",
+      "options": [
+        "Direct election by voters",
+        "Appointment by the Governor from a nominating commission list",
+        "Election by the General Assembly",
+        "Appointment by the Chief Justice"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, Supreme Court justices are appointed by the Governor from a list of nominees provided by the Judicial Nominating Commission, then face retention votes.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-028",
+      "text": "What is the term length for an Indiana Supreme Court justice?",
+      "options": [
+        "6 years",
+        "8 years",
+        "10 years",
+        "Life tenure"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Constitution, Supreme Court justices serve 10-year terms and must face retention elections to continue serving additional terms.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-029",
+      "text": "How many justices serve on the Indiana Supreme Court?",
+      "options": [
+        "5 justices",
+        "7 justices",
+        "9 justices",
+        "11 justices"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the Indiana Constitution, the Indiana Supreme Court consists of five justices, including one Chief Justice who serves as the administrative head of the court system.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-030",
+      "text": "What type of cases does the Indiana Tax Court handle?",
+      "options": [
+        "Criminal tax evasion cases",
+        "State tax disputes and appeals",
+        "Federal tax matters",
+        "Property boundary disputes"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Judicial Branch, the Tax Court is a specialized court that hears appeals and original actions related to state tax matters, including property tax assessments and state tax disputes.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-031",
+      "text": "What is the mandatory retirement age for Indiana judges?",
+      "options": [
+        "65 years old",
+        "70 years old",
+        "75 years old",
+        "There is no mandatory retirement age"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Constitution, judges must retire at age 75, though they may continue to serve as senior judges on a part-time basis after retirement.",
+      "difficulty": "hard",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-032",
+      "text": "How many judges serve on the Indiana Court of Appeals?",
+      "options": [
+        "9 judges",
+        "12 judges",
+        "15 judges",
+        "18 judges"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Judicial Branch, the Court of Appeals consists of 15 judges who hear appeals from trial courts across the state, sitting in panels of three judges.",
+      "difficulty": "hard",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-033",
+      "text": "What are the trial courts of general jurisdiction called in Indiana?",
+      "options": [
+        "District Courts",
+        "Circuit and Superior Courts",
+        "County Courts",
+        "Common Pleas Courts"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Judicial Branch, Circuit Courts and Superior Courts serve as the trial courts of general jurisdiction, handling civil, criminal, family, and juvenile cases at the county level.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-034",
+      "text": "How are trial court judges selected in Indiana?",
+      "options": [
+        "Appointed by the Governor",
+        "Elected by voters in partisan elections",
+        "Elected by voters in nonpartisan elections",
+        "Selected by county commissioners"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to Indiana law, trial court judges (circuit and superior court judges) are elected by voters in partisan elections, meaning candidates run with party labels on the ballot.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-035",
+      "text": "What body oversees judicial discipline and conduct in Indiana?",
+      "options": [
+        "The State Bar Association",
+        "The Commission on Judicial Qualifications",
+        "The Attorney General's Office",
+        "The General Assembly Judiciary Committee"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, the Commission on Judicial Qualifications investigates complaints against judges and can recommend discipline, including removal from office, to the Supreme Court.",
+      "difficulty": "hard",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-036",
+      "text": "What is the term length for Indiana Court of Appeals judges?",
+      "options": [
+        "6 years",
+        "8 years",
+        "10 years",
+        "12 years"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Constitution, Court of Appeals judges serve 10-year terms and are appointed by the Governor from a nominating commission list, then face retention elections.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-037",
+      "text": "Which court has the final authority to interpret the Indiana Constitution?",
+      "options": [
+        "The U.S. Supreme Court",
+        "The Indiana Supreme Court",
+        "The Indiana Court of Appeals",
+        "The Indiana General Assembly"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, the Indiana Supreme Court is the highest court in the state and has final authority to interpret the state constitution on matters of state law.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-038",
+      "text": "What happens when an Indiana appellate judge faces a retention election?",
+      "options": [
+        "Voters choose between the judge and an opponent",
+        "Voters decide yes or no on whether the judge should continue serving",
+        "The General Assembly votes on retention",
+        "The Governor decides whether to reappoint"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to Indiana law, appellate judges face retention elections where voters simply vote yes or no on whether the judge should remain in office, rather than running against an opponent.",
+      "difficulty": "medium",
+      "topicCategory": "state-courts",
+      "source": {
+        "url": "https://www.in.gov/courts/",
+        "name": "Indiana Courts"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-039",
+      "text": "In what month are general elections held in Indiana?",
+      "options": [
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to Indiana election law, general elections are held on the first Tuesday after the first Monday in November in even-numbered years, consistent with federal election timing.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-040",
+      "text": "How many days before an election must Indiana voters register to vote?",
+      "options": [
+        "15 days",
+        "21 days",
+        "29 days",
+        "30 days"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Secretary of State, voters must register at least 29 days before an election to be eligible to vote in that election, whether registering online, by mail, or in person.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-041",
+      "text": "What state official oversees elections and voter registration in Indiana?",
+      "options": [
+        "The Attorney General",
+        "The State Comptroller",
+        "The Secretary of State",
+        "The Lieutenant Governor"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to in.gov, the Secretary of State serves as the chief election officer for Indiana, overseeing voter registration, election administration, and campaign finance reporting.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-042",
+      "text": "What is required to vote by absentee ballot in Indiana?",
+      "options": [
+        "Any registered voter can vote absentee without a reason",
+        "Voters must provide one of several qualifying reasons",
+        "Only military and overseas voters can vote absentee",
+        "Voters must be over 65 years old"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Secretary of State, voters must have a qualifying reason to vote absentee, such as being absent from the county on election day, having a disability, being over 65, or working as an election officer.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-043",
+      "text": "At what age can Indiana residents register to vote?",
+      "options": [
+        "16 years old",
+        "17 years old",
+        "18 years old",
+        "21 years old"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Secretary of State, residents must be 18 years old by the date of the next election to register to vote, consistent with the 26th Amendment to the U.S. Constitution.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-044",
+      "text": "What form of identification is required to vote in person in Indiana?",
+      "options": [
+        "Any document showing name and address",
+        "A government-issued photo ID",
+        "A voter registration card",
+        "No identification is required"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Secretary of State, voters must present a government-issued photo ID that shows their name, photo, and expiration date to vote in person at the polls.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-045",
+      "text": "Who administers elections at the county level in Indiana?",
+      "options": [
+        "The County Clerk",
+        "The County Election Board",
+        "The County Auditor",
+        "The County Sheriff"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to Indiana election law, each county has a County Election Board composed of three members who oversee election administration, polling places, and vote counting in their county.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-046",
+      "text": "When do polls open on election day in Indiana?",
+      "options": [
+        "5:00 AM",
+        "6:00 AM",
+        "7:00 AM",
+        "8:00 AM"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Secretary of State, polling places open at 6:00 AM and close at 6:00 PM local time on election day, providing 12 hours for in-person voting.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-047",
+      "text": "How can Indiana voters check their voter registration status?",
+      "options": [
+        "Only by visiting the county clerk's office in person",
+        "By calling a statewide hotline",
+        "Online through the Secretary of State's website",
+        "By requesting a mailed confirmation"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Secretary of State, voters can check their registration status online at indianavoters.in.gov, which provides information about registration status, polling location, and sample ballots.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-048",
+      "text": "What happens if an Indiana voter moves to a new address within the same county?",
+      "options": [
+        "They must re-register to vote entirely",
+        "They must update their voter registration with the new address",
+        "Their registration automatically updates",
+        "They can vote at either their old or new precinct"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Secretary of State, voters who move within the same county must update their voter registration with their new address to ensure they vote in the correct precinct.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-049",
+      "text": "What is the deadline for requesting an absentee ballot in Indiana?",
+      "options": [
+        "7 days before the election",
+        "10 days before the election",
+        "The day before the election by noon",
+        "Two weeks before the election"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Secretary of State, voters must request an absentee ballot by the day before the election at noon, though it's recommended to request earlier to ensure time for mailing and return.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.in.gov/sos/elections/",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-051",
+      "text": "How many consecutive sessions must the Indiana General Assembly approve a constitutional amendment before it goes to voters?",
+      "options": [
+        "One session",
+        "Two sessions",
+        "Three sessions",
+        "Four sessions"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, a proposed amendment must be approved by the General Assembly in two consecutive sessions before being placed on the ballot for voter approval. This ensures careful deliberation of constitutional changes.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-052",
+      "text": "Can Indiana citizens place initiatives directly on the ballot through petition signatures?",
+      "options": [
+        "Yes, with 10% of registered voters",
+        "Yes, with 5% of registered voters",
+        "No, only the legislature can propose amendments",
+        "Yes, but only for local ordinances"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to Indiana law, the state does not have a citizen initiative process. Constitutional amendments and statutory changes must be proposed by the General Assembly. This makes Indiana different from states like California that allow direct citizen initiatives.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://www.in.gov/sos/elections",
+        "name": "Indiana Secretary of State"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-053",
+      "text": "What year did Indiana become the 19th state admitted to the Union?",
+      "options": [
+        "1812",
+        "1816",
+        "1820",
+        "1824"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to historical records, Indiana was admitted to the Union on December 11, 1816, becoming the 19th state. This followed the Northwest Ordinance process and came just five years after the Battle of Tippecanoe.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.in.gov/history",
+        "name": "Indiana Historical Bureau"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-054",
+      "text": "After the General Assembly approves a constitutional amendment twice, who makes the final decision?",
+      "options": [
+        "The Governor",
+        "The Indiana Supreme Court",
+        "The voters of Indiana",
+        "The U.S. Congress"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Constitution, after the General Assembly approves an amendment in two consecutive sessions, it must be submitted to the voters in a general election. A majority vote is required for the amendment to be ratified, ensuring citizens have the final say on constitutional changes.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-056",
+      "text": "Which body has the sole authority to propose amendments to the Indiana Constitution?",
+      "options": [
+        "The Governor and Cabinet",
+        "The Indiana General Assembly",
+        "The Indiana Supreme Court",
+        "A citizen petition with sufficient signatures"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, only the General Assembly has the power to propose amendments to the state constitution. Unlike some states with initiative processes, Indiana citizens cannot directly propose constitutional amendments through petitions.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-057",
+      "text": "In what month did Indiana achieve statehood?",
+      "options": [
+        "July",
+        "October",
+        "December",
+        "January"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to historical records, Indiana was admitted to the Union on December 11, 1816. This December admission date is commemorated annually as Indiana Day, celebrating the state's entry into the Union.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.in.gov/history",
+        "name": "Indiana Historical Bureau"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-058",
+      "text": "What percentage of voter approval is required to ratify a constitutional amendment in Indiana?",
+      "options": [
+        "Simple majority (over 50%)",
+        "Two-thirds majority (66.7%)",
+        "Three-fifths majority (60%)",
+        "Three-quarters majority (75%)"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the Indiana Constitution, a proposed constitutional amendment requires approval by a simple majority of voters casting ballots on that question. This is a lower threshold than the two-thirds legislative approval needed in consecutive sessions.",
+      "difficulty": "hard",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-060",
+      "text": "Between which two General Assembly sessions must a constitutional amendment be approved?",
+      "options": [
+        "Two sessions in the same year",
+        "Two consecutive sessions",
+        "Two sessions within five years",
+        "Two sessions with different governors"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, a proposed amendment must pass in two consecutive sessions of the General Assembly. This means if an amendment passes in the 2025 session, it must also pass in the 2026 session before going to voters.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-061",
+      "text": "What document established the process for Indiana's path to statehood?",
+      "options": [
+        "The Articles of Confederation",
+        "The Northwest Ordinance",
+        "The Louisiana Purchase",
+        "The Treaty of Paris"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to historical records, the Northwest Ordinance of 1787 established the process for territories in the Northwest Territory, including Indiana, to achieve statehood. This federal law set requirements for population, government structure, and constitutional conventions.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.in.gov/history",
+        "name": "Indiana Historical Bureau"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-063",
+      "text": "If a constitutional amendment passes the General Assembly in 2025, when is the earliest it could appear on the ballot?",
+      "options": [
+        "2025 general election",
+        "2026 general election",
+        "2027 general election",
+        "2028 general election"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, an amendment must pass two consecutive General Assembly sessions before going to voters. If it passes in 2025, it must also pass in the 2026 session, then appear on the ballot in the 2026 general election.",
+      "difficulty": "hard",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-064",
+      "text": "What type of election must constitutional amendments appear on in Indiana?",
+      "options": [
+        "Primary elections",
+        "Special elections",
+        "General elections",
+        "Municipal elections"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Constitution, proposed constitutional amendments must be submitted to voters at a general election, not primary or special elections. This ensures maximum voter participation in decisions about constitutional changes.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-066",
+      "text": "How many times has the Indiana Constitution been replaced since statehood?",
+      "options": [
+        "Never - still using the original",
+        "Once - replaced in 1851",
+        "Twice - replaced in 1851 and 1901",
+        "Three times - replaced in 1851, 1901, and 1970"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Historical Bureau, Indiana adopted its first constitution in 1816 at statehood, then replaced it with a second constitution in 1851, which remains in effect today with amendments. The 1851 constitution addressed issues like debt limits and legislative structure.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.in.gov/history",
+        "name": "Indiana Historical Bureau"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-067",
+      "text": "Can the Governor of Indiana veto a constitutional amendment passed by the General Assembly?",
+      "options": [
+        "Yes, with a two-thirds override possible",
+        "Yes, but only once per term",
+        "No, the Governor has no role in the amendment process",
+        "No, but the Governor can delay it for one session"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the Indiana Constitution, the Governor plays no role in the constitutional amendment process. Amendments require approval by the General Assembly in two consecutive sessions, then go directly to voters without gubernatorial involvement.",
+      "difficulty": "hard",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-069",
+      "text": "What happens if a constitutional amendment fails to pass in the second consecutive General Assembly session?",
+      "options": [
+        "It automatically goes to voters anyway",
+        "The process must start over from the beginning",
+        "The Governor can force a vote",
+        "It goes to the Indiana Supreme Court"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, if a proposed amendment fails to pass in the second consecutive session, the entire process must restart. The amendment would need to pass two consecutive sessions again before going to voters.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-070",
+      "text": "What was Indiana's status before becoming a state in 1816?",
+      "options": [
+        "A British colony",
+        "Part of the Northwest Territory",
+        "An independent republic",
+        "Part of the Louisiana Purchase"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Historical Bureau, Indiana was part of the Northwest Territory before achieving statehood. The territory was organized under the Northwest Ordinance of 1787 and included land that would become several Midwestern states.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.in.gov/history",
+        "name": "Indiana Historical Bureau"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-072",
+      "text": "What vote threshold is required in each General Assembly session for a constitutional amendment to advance?",
+      "options": [
+        "Simple majority in both chambers",
+        "Two-thirds majority in both chambers",
+        "Three-fifths majority in both chambers",
+        "Unanimous consent in both chambers"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the Indiana Constitution, a proposed constitutional amendment requires a simple majority vote in both the House and Senate in each of the two consecutive sessions. This is less stringent than the federal constitutional amendment process.",
+      "difficulty": "hard",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-073",
+      "text": "Which elected statewide office in Indiana is responsible for managing state finances and investments?",
+      "options": [
+        "State Comptroller",
+        "Treasurer of State",
+        "Auditor of State",
+        "Secretary of State"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to IN.gov, the Treasurer of State is responsible for managing state funds and investments. Indiana elects multiple statewide officers, including the Treasurer, who serves independently of the Governor.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-074",
+      "text": "Why does Indiana require constitutional amendments to pass two consecutive General Assembly sessions?",
+      "options": [
+        "To allow the Governor time to review",
+        "To ensure careful deliberation of constitutional changes",
+        "To meet federal requirements",
+        "To allow the Supreme Court to review"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the Indiana Constitution, the two-session requirement ensures careful deliberation of constitutional changes. This process allows time for public input, legislative debate, and reconsideration before amendments go to voters, protecting the constitution from hasty changes.",
+      "difficulty": "medium",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "url": "https://iga.in.gov/legislative/laws/const",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-077",
+      "text": "How many senators serve in the Indiana State Senate?",
+      "options": [
+        "50",
+        "100",
+        "40",
+        "60"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the Indiana General Assembly, the Indiana State Senate consists of 50 senators who serve four-year terms, representing districts across the state.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://iga.in.gov",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-078",
+      "text": "How many representatives serve in the Indiana House of Representatives?",
+      "options": [
+        "100",
+        "50",
+        "150",
+        "75"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the Indiana General Assembly, the Indiana House of Representatives has 100 members who serve two-year terms, making it twice the size of the state Senate.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://iga.in.gov",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-079",
+      "text": "How many days does the Indiana General Assembly meet during odd-numbered years?",
+      "options": [
+        "61 days",
+        "30 days",
+        "90 days",
+        "120 days"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the Indiana Constitution, the General Assembly meets for 61 days in odd-numbered years to conduct legislative business, including passing the state budget. This part-time legislature model allows legislators to maintain other careers.",
+      "difficulty": "medium",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://iga.in.gov",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-080",
+      "text": "How many days does the Indiana General Assembly meet during even-numbered years?",
+      "options": [
+        "30 days",
+        "61 days",
+        "45 days",
+        "90 days"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the Indiana Constitution, the General Assembly meets for 30 days in even-numbered years, which is a shorter session than odd-numbered years when the budget is passed.",
+      "difficulty": "medium",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://iga.in.gov",
+        "name": "Indiana General Assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-083",
+      "text": "What is the relationship between the Indiana Constitution and the U.S. Constitution?",
+      "options": [
+        "The Indiana Constitution must comply with the U.S. Constitution but can provide additional rights",
+        "The Indiana Constitution completely replaces the U.S. Constitution within state borders",
+        "The U.S. Constitution only applies to federal matters and has no effect on state law",
+        "The Indiana Constitution and U.S. Constitution are completely independent documents"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the Indiana Constitution and principles of federalism, state constitutions must comply with the U.S. Constitution as the supreme law of the land, but states can provide additional rights and protections to their citizens beyond what the federal constitution guarantees. This is why Indiana has its own bill of rights that mirrors and sometimes expands upon federal protections.",
+      "difficulty": "medium",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.in.gov/core/indiana-constitution.html",
+        "name": "Indiana Constitution"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-084",
+      "text": "What number state was Indiana when it joined the Union?",
+      "options": [
+        "19th",
+        "17th",
+        "21st",
+        "15th"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to the Indiana Historical Bureau, Indiana became the 19th state admitted to the United States when it joined the Union on December 11, 1816.",
+      "difficulty": "medium",
+      "topicCategory": "state-constitution",
+      "source": {
+        "url": "https://www.in.gov/history",
+        "name": "Indiana Historical Bureau"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-089",
+      "text": "Which state agency handles driver's license renewals in Indiana?",
+      "options": [
+        "Bureau of Motor Vehicles",
+        "Department of Transportation",
+        "Secretary of State",
+        "Department of Revenue"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, the Bureau of Motor Vehicles (BMV) is the state agency responsible for driver's license services, vehicle registration, and other motor vehicle-related functions in Indiana.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-090",
+      "text": "Which Indiana state agency manages fish and wildlife resources?",
+      "options": [
+        "Department of Natural Resources - Fish and Wildlife Division",
+        "Department of Environmental Management",
+        "Department of Agriculture",
+        "Parks and Recreation Department"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, the Fish and Wildlife division manages Indiana's fish and wildlife resources, including hunting and fishing licenses, conservation programs, and wildlife habitat protection.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-091",
+      "text": "What is the role of Indiana's State Comptroller?",
+      "options": [
+        "Oversees state accounting and financial reporting",
+        "Manages state tax collection",
+        "Invests state funds",
+        "Audits local governments"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, the State Comptroller, currently Elise Nieshalla, oversees state accounting, financial reporting, and ensures proper management of state financial records and transactions.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-092",
+      "text": "What is the role of Indiana's Treasurer of State?",
+      "options": [
+        "Manages and invests state funds",
+        "Collects state taxes",
+        "Audits state agencies",
+        "Oversees state budget preparation"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, the Treasurer of State, currently Daniel Elliott, is responsible for managing and investing state funds, ensuring the state's financial resources are properly safeguarded and earn appropriate returns.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-094",
+      "text": "Which state agency oversees Indiana's roads and highways?",
+      "options": [
+        "Indiana Department of Transportation",
+        "Bureau of Motor Vehicles",
+        "Department of Public Works",
+        "Highway Patrol Division"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, the Indiana Department of Transportation (INDOT) is responsible for planning, building, and maintaining the state's roads, highways, and bridges, ensuring safe and efficient transportation infrastructure.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-095",
+      "text": "Which state agency manages Indiana's state parks and camping facilities?",
+      "options": [
+        "Department of Natural Resources",
+        "Department of Tourism",
+        "Parks and Recreation Commission",
+        "Department of Environmental Management"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, the Department of Natural Resources manages Indiana's state parks, camping facilities, and outdoor recreation areas, preserving natural resources while providing public access to outdoor activities.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-096",
+      "text": "Which state agency issues professional licenses in Indiana?",
+      "options": [
+        "Indiana Professional Licensing Agency",
+        "Secretary of State",
+        "Department of Labor",
+        "Department of Commerce"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, the Indiana Professional Licensing Agency oversees the licensing and regulation of various professions in the state, ensuring professionals meet required standards to protect public safety.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-097",
+      "text": "How can Indiana residents contact their state legislators?",
+      "options": [
+        "Through the General Assembly website or local district offices",
+        "Only by visiting the State House in person",
+        "Only through the Governor's office",
+        "Only during legislative sessions"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, Indiana residents can contact their state representatives and senators through the General Assembly website, by phone, email, or by visiting district offices. This accessibility ensures citizens can engage with their elected officials year-round.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-098",
+      "text": "What online service does IN.gov provide for state tax filing?",
+      "options": [
+        "Online state tax filing through the Department of Revenue",
+        "Tax filing only through private companies",
+        "No online filing options",
+        "Tax filing only by mail"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, Indiana residents can file their state taxes online through the Department of Revenue's website, making tax compliance more convenient and accessible for citizens.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-099",
+      "text": "Which state agency oversees public health services in Indiana?",
+      "options": [
+        "Indiana Department of Health",
+        "Department of Human Services",
+        "Health and Hospital Corporation",
+        "Department of Family Services"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to in.gov, the Indiana Department of Health is responsible for public health services, disease prevention, health promotion, and protecting the health and safety of all Hoosiers.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.in.gov/core",
+        "name": "IN.gov Official State Portal"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ins-100",
+      "text": "What type of government structure does Indiana use at the local level?",
+      "options": [
+        "Township government system",
+        "Borough system",
+        "Parish system",
+        "District system"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to Indiana government sources, Indiana has a strong township government structure that is unique among states. Townships provide local services and governance at the most local level, working alongside county and municipal governments.",
+      "difficulty": "hard",
+      "topicCategory": "policy-civics",
+      "source": {
+        "url": "https://www.indianatownships.org",
+        "name": "Indiana Association of Cities and Towns"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-085",
+      "text": "Indiana's 1816 constitution was notably progressive for its time — what did it uniquely require the state to fund?",
+      "options": [
+        "A free public education system open to all",
+        "A state militia funded by property taxes",
+        "A network of toll-free roads connecting county seats",
+        "A public hospital in every county seat"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's first constitution (1816) included a provision requiring the state to establish a general system of education, ascending in a regular graduation from township schools to a state university, tuition-free and open to all. This was a rare civic commitment for a newly admitted state at the time.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Indiana State Library – Indiana Constitution of 1816",
+        "url": "https://www.in.gov/history/about-indiana-history/indiana-constitution/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-086",
+      "text": "How many votes of the Indiana General Assembly are required to propose an amendment to the Indiana Constitution?",
+      "options": [
+        "A majority vote in two consecutive sessions of the General Assembly",
+        "A two-thirds vote in a single session of the General Assembly",
+        "A three-fourths vote in a single session of the General Assembly",
+        "A majority vote in a single session followed by a statewide convention"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's amendment process requires a proposed amendment to pass a majority vote in two consecutive sessions of the General Assembly, after which voters ratify it in a general election. This dual-session requirement makes Indiana's constitution harder to amend than many states. See Indiana Constitution, Article 16.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Indiana Constitution - Indiana General Assembly",
+        "url": "https://iga.in.gov/legislative/laws/const/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-087",
+      "text": "Indiana held a constitutional convention in 1850–51. What major change did the new constitution make to how judges were selected?",
+      "options": [
+        "Judges became popularly elected rather than appointed by the legislature",
+        "The governor gained sole authority to appoint all judges",
+        "A permanent Supreme Court was established for the first time",
+        "Judges were required to be approved by a statewide referendum every two years"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's 1851 Constitution shifted judicial selection from legislative appointment to popular election, reflecting the Jacksonian democratic reform movement sweeping states at the time. This convention also addressed debt limits and banking after fiscal crises under the 1816 constitution. See: Indiana Historical Bureau.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Indiana Historical Bureau – Indiana Constitution of 1851",
+        "url": "https://www.in.gov/history/about-indiana-history/indiana-history/the-constitution-of-1851/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-088",
+      "text": "How many votes are required in each chamber of the Indiana General Assembly to override a governor's veto?",
+      "options": [
+        "A simple majority (more than half)",
+        "Three-fifths of all members elected",
+        "Two-thirds of all members elected",
+        "Three-fourths of all members elected"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Article 5, Section 14 of the Indiana Constitution allows the General Assembly to override a governor's veto with a majority of all members elected to each chamber — not a two-thirds supermajority as many states require. This makes Indiana's veto override threshold relatively accessible compared to federal and many state standards.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Indiana Constitution - Indiana General Assembly",
+        "url": "https://iga.in.gov/legislative/laws/2023/ic/titles/0001"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-089",
+      "text": "Indiana's 1851 constitution made which major change from its original 1816 constitution?",
+      "options": [
+        "It banned the state government from going into debt for internal improvements",
+        "It abolished the office of lieutenant governor entirely",
+        "It granted voting rights to women in local elections",
+        "It moved the state capital from Corydon to Indianapolis"
+      ],
+      "correctAnswer": 0,
+      "explanation": "After costly canal and railroad debts nearly bankrupted Indiana, the 1851 constitution prohibited the state from contracting debt for internal improvements — a direct lesson from the Mammoth Internal Improvement Act of 1836 disaster. The capital had already moved to Indianapolis in 1825, well before 1851.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Indiana State Library – Indiana Constitution History",
+        "url": "https://www.in.gov/library/files/Indiana_Constitution_History.pdf"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-091",
+      "text": "Indiana's constitution can be amended only if approved by voters — but how many consecutive General Assemblies must first pass the proposed amendment?",
+      "options": [
+        "Two consecutive General Assemblies",
+        "One General Assembly with a supermajority",
+        "Three consecutive General Assemblies",
+        "One General Assembly followed by a governor's signature"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Under Article 16 of the Indiana Constitution, a proposed amendment must pass two successive General Assemblies (with an intervening election after the first passage) before it goes to voters for ratification. This two-session requirement gives citizens a chance to weigh in through elections before a final vote. Source: Indiana Constitution, Article 16.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Indiana General Assembly – Indiana Constitution Article 16",
+        "url": "https://iga.in.gov/laws/2023/ic/titles/constitution#Article-16"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-092",
+      "text": "Can Indiana voters cast their ballot before Election Day?",
+      "options": [
+        "Yes, through early in-person voting",
+        "No, only absentee mail voting is allowed",
+        "No, Indiana requires all voting on Election Day",
+        "Yes, but only for voters over age 65"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana offers early in-person voting (called 'absentee voting in person') at county clerk offices and satellite locations starting 28 days before an election. Any registered voter may participate, with no excuse required.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "Indiana Election Division – Absentee Voting",
+        "url": "https://www.in.gov/sos/elections/voter-information/absentee-voting/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-093",
+      "text": "Indiana's 1816 constitution was notable for which progressive civic provision?",
+      "options": [
+        "It guaranteed free public education for all white children",
+        "It abolished slavery entirely within the state",
+        "It granted voting rights to free Black men",
+        "It established a unicameral legislature"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Indiana's 1816 constitution prohibited slavery, making it one of the first states to explicitly ban the practice upon entering the Union. This was a significant civic milestone, though full equality remained elusive for decades after. Source: Indiana State Library.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Indiana State Archives – Indiana Constitution of 1816",
+        "url": "https://www.in.gov/history/about-indiana-history/indiana-history/indiana-becomes-a-state/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-094",
+      "text": "How many articles does the Indiana Constitution contain?",
+      "options": [
+        "16 articles",
+        "10 articles",
+        "7 articles",
+        "20 articles"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Indiana Constitution, adopted in 1851, is organized into 16 articles covering topics from the Bill of Rights to local government. It remains one of the foundational documents of Indiana governance.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Indiana General Assembly – Indiana Constitution",
+        "url": "https://iga.in.gov/legislative/laws/constitution"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-095",
+      "text": "How does Indiana fund its public schools — what is the primary mechanism?",
+      "options": [
+        "A per-pupil foundation amount set by the state legislature and distributed through the school funding formula",
+        "Local property taxes collected by each school district and kept entirely within that district",
+        "A flat block grant divided equally among all school districts regardless of enrollment",
+        "Federal Title I funds distributed by the Indiana Department of Education based on poverty rates"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana uses a state foundation funding formula that calculates a per-pupil amount, then distributes dollars to districts based on enrollment. This system was designed to reduce reliance on local property taxes and promote more equal funding statewide. See Indiana's biennial budget and education funding at the Indiana General Assembly website.",
+      "difficulty": "hard",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "Indiana General Assembly - Education Funding",
+        "url": "https://iga.in.gov/legislative/laws/2023/ic/titles/020"
+      },
+      "expiresAt": null
+    }
+  ]
+}
