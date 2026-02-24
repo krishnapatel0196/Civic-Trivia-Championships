@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 34 of 34 (Scale to 90+ Questions) — IN PROGRESS
-Plan: 1 of 3 complete (34-01)
-Status: Wave 1 complete — pipeline preparation done
-Last activity: 2026-02-23 — Completed 34-01-PLAN.md (pipeline preparation)
+Plan: 2 of 3 complete (34-02)
+Status: Wave 2 complete — all 5 non-Federal collections generated, merged, and seeded
+Last activity: 2026-02-23 — Completed 34-02-PLAN.md (bulk question generation and seeding)
 
-Progress: [███████████████████░░░░░] 95/TBD plans complete (86 from v1.0-v1.5, 9 from v1.6)
+Progress: [████████████████████░░░░] 96/TBD plans complete (86 from v1.0-v1.5, 10 from v1.6)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -65,6 +65,11 @@ All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 - merge-generated-questions.ts has no database interaction — JSON-only for simplicity and speed
 - Collision detection by externalId makes merge idempotent (safe to run twice)
 
+**Phase 34-02 decisions:**
+- Accept shortfall when pipeline sources run dry — do not retry with higher target
+- ON CONFLICT DO NOTHING seeder by design cannot re-activate Phase 32 archived questions — active count gap is permanent for current question set
+- Fremont source near-exhausted (Phase 33 test artifacts already occupied IDs fre-072 to fre-084)
+
 ### Pending Todos
 
 - [ ] Announce v1.2 Community Collections launch (320 total questions live)
@@ -80,11 +85,18 @@ All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 
 ### Blockers/Concerns
 
+**Phase 34-02 COMPLETE — Bulk generation done:**
+- Generated and merged net-new questions: Indiana +8, California +16, Fremont +1, Bloomington +22, LA +20 (67 total)
+- Seeded all 66 new questions as active in DB
+- Final active counts: Indiana 86, California 71, Bloomington 75, Fremont 54, LA 62, Federal 114
+- None reached 90 active — gap caused by Phase 32 archiving (ON CONFLICT DO NOTHING won't re-activate)
+- Zero active duplicates confirmed across all 6 collections
+- Ready for Phase 34-03: any follow-up or phase closure
+
 **Phase 34-01 COMPLETE — Engineering gaps closed:**
 - generateQuestions.ts updated to claude-sonnet-4-6
 - seed-community.ts now covers all 5 non-Federal collections (bloomington-in, los-angeles-ca, fremont-ca, indiana-state, california-state)
 - merge-generated-questions.ts created: appends generated JSON output into canonical source files with duplicate protection
-- Ready for Phase 34-02: bulk generation across all 5 collections
 
 **Phase 33 COMPLETE:**
 - Self-validating generation pipeline operational (generateQuestions.ts)
@@ -106,11 +118,11 @@ All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 ## Session Continuity
 
 Last session: 2026-02-23
-Topic: Phase 34 — Scale to 90+ Questions (34-01 complete)
-Stopped at: Completed 34-01-PLAN.md (pipeline preparation)
+Topic: Phase 34 — Scale to 90+ Questions (34-02 complete)
+Stopped at: Completed 34-02-PLAN.md (bulk generation and seeding)
 Resume file: None
 
-Next action: Execute 34-02 (bulk generation across 5 collections)
+Next action: Execute 34-03 (phase closure or additional scale work)
 
 ---
 *v1.6 Content Quality & Scale — Phase 34 in progress (1/3 plans complete)*
