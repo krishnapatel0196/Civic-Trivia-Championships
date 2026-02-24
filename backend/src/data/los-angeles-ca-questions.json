@@ -1409,6 +1409,177 @@
         "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-and-referendum-process"
       },
       "expiresAt": null
+    },
+    {
+      "externalId": "la-073",
+      "text": "Which agency is responsible for operating Los Angeles's stormwater system to reduce urban runoff pollution?",
+      "options": [
+        "Los Angeles County Flood Control District",
+        "Los Angeles Department of Water and Power (LADWP)",
+        "Bureau of Sanitation, City of Los Angeles",
+        "California Department of Water Resources"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The Bureau of Sanitation (now part of LA Sanitation & Environment) manages the city's stormwater system under the Municipal Separate Storm Sewer System (MS4) permit, working to reduce pollutants that flow into local waterways. LADWP handles drinking water and power, while the County Flood Control District manages flood infrastructure. See: lasan.org",
+      "difficulty": "hard",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "LA Sanitation & Environment – Stormwater Program",
+        "url": "https://www.lacitysan.org/san/faces/home/portal/s/wpc/stormwater"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-074",
+      "text": "What famous outdoor amphitheater in Los Angeles has hosted concerts since 1922?",
+      "options": [
+        "Hollywood Bowl",
+        "Staples Center",
+        "Greek Theatre",
+        "The Forum"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Hollywood Bowl, operated by the LA Philharmonic, is one of the largest natural amphitheaters in the world and has been a beloved music venue since 1922. It is an iconic cultural landmark in Los Angeles.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Hollywood Bowl - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Hollywood_Bowl"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-075",
+      "text": "What is the largest single expenditure category in Los Angeles's annual city budget?",
+      "options": [
+        "Public Safety (Police & Fire)",
+        "Street Services & Infrastructure",
+        "Parks & Recreation",
+        "Debt Service & Pensions"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Public Safety consistently accounts for the largest share of LA's general fund budget — over 50% — with the LAPD alone receiving billions annually. This reflects how cities prioritize spending and what drives tax decisions. As of 2026-02-24, public safety remains the dominant budget category per the LA City Budget.",
+      "difficulty": "hard",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Los Angeles Budget",
+        "url": "https://cao.lacity.gov/budget/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-076",
+      "text": "Which famous outdoor amphitheater in Los Angeles is known for hosting concerts under the stars?",
+      "options": [
+        "Hollywood Bowl",
+        "Staples Center",
+        "Griffith Observatory",
+        "The Getty Center"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Hollywood Bowl is one of the world's largest natural amphitheaters, nestled in the Hollywood Hills. It has hosted performances since 1922 and is home to the LA Philharmonic's summer season.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Hollywood Bowl - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Hollywood_Bowl"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-077",
+      "text": "What major civic milestone did Los Angeles achieve in 1850?",
+      "options": [
+        "It was incorporated as a city by the State of California",
+        "It became the capital of California",
+        "It hosted the first session of the California State Legislature",
+        "It was granted a city charter by the U.S. federal government"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Los Angeles was officially incorporated as a city on April 4, 1850, shortly after California achieved statehood. This made it one of the earliest incorporated cities in the new state, laying the foundation for its civic and legal governance structure.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "City of Los Angeles - Official History",
+        "url": "https://en.wikipedia.org/wiki/History_of_Los_Angeles"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-078",
+      "text": "Which Los Angeles museum holds one of the world's largest collections of art from Africa, the Americas, and the Pacific?",
+      "options": [
+        "The Getty Center",
+        "Los Angeles County Museum of Art (LACMA)",
+        "The Broad",
+        "Natural History Museum of LA County"
+      ],
+      "correctAnswer": 1,
+      "explanation": "LACMA is the largest art museum in the western United States and houses encyclopedic collections spanning 6,000 years, including renowned holdings from Africa, the Americas, and the Pacific. It serves as a major cultural anchor for the region.",
+      "difficulty": "medium",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "LACMA - About",
+        "url": "https://www.lacma.org/about"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-079",
+      "text": "What was Los Angeles officially incorporated as when it became a U.S. city in 1850?",
+      "options": [
+        "A pueblo under Mexican law",
+        "A city under California state law",
+        "A U.S. military territory",
+        "A Spanish colonial district"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When California became a state in 1850, Los Angeles was formally incorporated as a city under California state law, transitioning from its Spanish and Mexican colonial roots to American civic governance. This incorporation set the foundation for all of LA's modern city institutions.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "City of Los Angeles - About LA",
+        "url": "https://lacity.gov/city-government/about-la"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-080",
+      "text": "What major civic event in 1781 officially established Los Angeles as a pueblo?",
+      "options": [
+        "Spanish colonial settlers founded El Pueblo de Los Ángeles under Governor Felipe de Neve",
+        "Mexican independence leaders declared Los Angeles a free city",
+        "The U.S. Army formally incorporated Los Angeles after the Mexican-American War",
+        "Franciscan missionaries from Mission San Gabriel established a permanent settlement"
+      ],
+      "correctAnswer": 0,
+      "explanation": "On September 4, 1781, Governor Felipe de Neve led 44 settlers to officially found El Pueblo de Los Ángeles, making it one of California's earliest formal civil settlements under Spanish colonial rule. This founding is celebrated annually as Los Angeles' birthday. (en.wikipedia.org/wiki/History_of_Los_Angeles)",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Wikipedia – History of Los Angeles",
+        "url": "https://en.wikipedia.org/wiki/History_of_Los_Angeles"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-081",
+      "text": "Bloomington is an unincorporated community in LA County — so who runs local government there?",
+      "options": [
+        "The Los Angeles County Board of Supervisors",
+        "An elected Bloomington City Council",
+        "The California State Legislature",
+        "A appointed Bloomington Township Board"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Because Bloomington is unincorporated, it has no city government of its own. Residents are governed by Los Angeles County, and their primary local elected representative is their LA County Supervisor. Votes in county elections directly shape services like roads and parks.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "Los Angeles County — Unincorporated Communities",
+        "url": "https://lacounty.gov/residents/unincorporated-communities/"
+      },
+      "expiresAt": null
     }
   ]
 }

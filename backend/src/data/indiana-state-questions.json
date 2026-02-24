@@ -1979,6 +1979,234 @@
         "url": "https://www.in.gov/doe/schools/school-funding/"
       },
       "expiresAt": null
+    },
+    {
+      "externalId": "ind-104",
+      "text": "What are the two chambers of Indiana's General Assembly?",
+      "options": [
+        "Senate and House of Representatives",
+        "Senate and House of Delegates",
+        "Assembly and House of Commons",
+        "Congress and State Council"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Like most U.S. state legislatures, Indiana's General Assembly has two chambers: a Senate (50 members) and a House of Representatives (100 members). Together they write, debate, and pass state laws.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "name": "Indiana General Assembly Official Website",
+        "url": "https://iga.in.gov/legislative/2024/info/about"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-105",
+      "text": "Who serves as the Governor of Indiana as of 2026-02-24?",
+      "options": [
+        "Mike Braun",
+        "Eric Holcomb",
+        "Brad Ellsworth",
+        "Todd Rokita"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Mike Braun was inaugurated as Indiana's 52nd Governor in January 2025 after winning the 2024 gubernatorial election. He previously served as a U.S. Senator from Indiana.",
+      "difficulty": "easy",
+      "topicCategory": "governor-executive",
+      "source": {
+        "name": "Indiana Governor's Office - in.gov",
+        "url": "https://www.in.gov/gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-106",
+      "text": "What is the highest court in Indiana's state court system?",
+      "options": [
+        "Indiana Supreme Court",
+        "Indiana Court of Appeals",
+        "Indiana Superior Court",
+        "Indiana Circuit Court"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Indiana Supreme Court is the highest court in the state, with five justices who have final say on Indiana law. It reviews decisions from lower courts and oversees the state's entire judicial branch.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "name": "Indiana Judicial Branch - in.gov",
+        "url": "https://www.in.gov/courts/about/structure/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-107",
+      "text": "Indiana requires voters to show photo ID at the polls. Which document is NOT accepted as valid voter ID under Indiana law?",
+      "options": [
+        "A utility bill with your name and address",
+        "An Indiana driver's license",
+        "A U.S. military ID card",
+        "An Indiana state-issued photo ID card"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's photo ID law, upheld by the U.S. Supreme Court in Crawford v. Marion County (2008), requires government-issued photo ID. Utility bills, bank statements, and similar documents lack a photo and are not accepted at Indiana polling places.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "Indiana Election Division - Voter ID Requirements",
+        "url": "https://www.in.gov/sos/elections/voter-information/voter-id-requirements/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-108",
+      "text": "How can Indiana citizens propose a change to the state constitution?",
+      "options": [
+        "Only the state legislature can propose constitutional amendments",
+        "Citizens can gather signatures to put amendments directly on the ballot",
+        "The governor submits proposed amendments to voters",
+        "A state court must first approve any proposed amendment"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Unlike some states, Indiana does not have a citizen initiative process for constitutional amendments. Only the Indiana General Assembly can propose amendments, which must pass two consecutive sessions before going to voters for ratification.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "name": "Indiana General Assembly – Constitutional Amendment Process",
+        "url": "https://iga.in.gov/legislative/laws/const/article/16"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-109",
+      "text": "How many votes in the Indiana General Assembly are required to override a governor's veto?",
+      "options": [
+        "A simple majority in each chamber",
+        "A two-thirds majority in each chamber",
+        "A three-fifths majority in each chamber",
+        "A unanimous vote in the Senate only"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Indiana's Constitution (Article 5, Section 14) requires a two-thirds majority in both the House and Senate to override a governor's veto, making it harder for the legislature to override executive vetoes than a simple majority would allow.",
+      "difficulty": "hard",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Indiana General Assembly - Indiana Constitution",
+        "url": "https://iga.in.gov/legislative/laws/const/article/5"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-110",
+      "text": "What type of tax is Indiana's main source of state revenue?",
+      "options": [
+        "Individual income tax",
+        "Property tax",
+        "Corporate tax",
+        "Sales tax"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Indiana relies primarily on the sales tax as its largest source of state revenue. The state sales tax rate is 7%, one of the highest flat rates in the nation, and it funds key services like education and infrastructure. Indiana Fiscal Policy Institute and the Indiana Department of Revenue confirm sales tax as the top revenue driver.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "Indiana Department of Revenue",
+        "url": "https://www.in.gov/dor/tax-forms/individual-income-taxes/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-111",
+      "text": "Which Indiana executive officer is constitutionally required to serve as President of the State Senate?",
+      "options": [
+        "Lieutenant Governor",
+        "Attorney General",
+        "Secretary of State",
+        "Governor"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana's Lieutenant Governor is constitutionally designated as President of the State Senate, a unique dual role blending executive and legislative duties. This makes the office more powerful than in many other states, where the lieutenant governor has no formal legislative role.",
+      "difficulty": "hard",
+      "topicCategory": "governor-executive",
+      "source": {
+        "name": "Indiana Constitution, Article 5 – Indiana General Assembly",
+        "url": "https://iga.in.gov/legislative/laws/const/article-5"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-112",
+      "text": "Does Indiana require voters to show photo ID at the polls?",
+      "options": [
+        "Yes, Indiana was the first state to enact a strict photo ID law",
+        "No, any signed document with your name is acceptable",
+        "Only first-time voters must show photo ID",
+        "Photo ID is requested but not required"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana passed the nation's first strict photo ID voting law in 2005, upheld by the U.S. Supreme Court in Crawford v. Marion County Election Board (2008). Voters must show a government-issued photo ID to cast a regular ballot.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "Indiana Election Division - Voter ID",
+        "url": "https://www.in.gov/sos/elections/voter-information/voter-id/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-113",
+      "text": "What was significant about Indiana becoming the 19th U.S. state in 1816?",
+      "options": [
+        "It gave Indiana citizens the right to elect their own state lawmakers and governor",
+        "It allowed Indiana to collect federal taxes independently",
+        "It made Indiana the first state carved from the Northwest Territory",
+        "It immediately granted Indiana two seats in the House of Representatives"
+      ],
+      "correctAnswer": 0,
+      "explanation": "When Indiana achieved statehood in 1816, residents gained full self-governance — including the ability to elect their own legislature and governor — rather than living under a federally appointed territorial government. This shift from territory to state is a core civic milestone. Ohio was actually the first Northwest Territory state (1803).",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Indiana State Archives – Indiana Statehood",
+        "url": "https://www.in.gov/history/about-indiana-history-and-trivia/indiana-history/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-114",
+      "text": "How many votes in the Indiana General Assembly are required to propose a constitutional amendment?",
+      "options": [
+        "A simple majority in both chambers in two consecutive sessions",
+        "Two-thirds of both chambers in a single session",
+        "Three-fourths of both chambers in two consecutive sessions",
+        "A simple majority in one session, then two-thirds in the next"
+      ],
+      "correctAnswer": 0,
+      "explanation": "To amend Indiana's constitution, a majority of both the House and Senate must approve the amendment in two separate General Assemblies (with an election in between), then Indiana voters ratify it. This double-session requirement gives citizens a chance to weigh in by electing new legislators before the final vote. See Indiana Constitution, Article 16.",
+      "difficulty": "medium",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Indiana Constitution – Indiana General Assembly",
+        "url": "https://iga.in.gov/legislative/laws/constitution"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "ind-115",
+      "text": "How does Indiana fund its public K-12 schools — what is the primary mechanism?",
+      "options": [
+        "A per-pupil 'foundation' grant distributed by the state based on enrollment",
+        "Local property taxes collected and kept entirely within each school district",
+        "A flat block grant divided equally among all school districts regardless of size",
+        "Federal Title I funds allocated directly to districts by the U.S. Department of Education"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indiana uses a foundation funding formula that distributes state dollars on a per-pupil basis, meaning schools receive more total funding as enrollment grows. This model was designed to reduce reliance on local property taxes and narrow funding gaps between wealthy and poor districts. Indiana Department of Education, https://www.in.gov/doe/",
+      "difficulty": "hard",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "Indiana Department of Education – School Funding",
+        "url": "https://www.in.gov/doe/it/data-center/finance/"
+      },
+      "expiresAt": null
     }
   ]
 }

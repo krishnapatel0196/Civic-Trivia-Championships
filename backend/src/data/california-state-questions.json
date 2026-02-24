@@ -1944,6 +1944,234 @@
         "url": "https://www.sos.ca.gov/elections/voter-registration/initiatives"
       },
       "expiresAt": null
+    },
+    {
+      "externalId": "cal-100",
+      "text": "What does it mean when Californians vote 'Yes' on a ballot initiative?",
+      "options": [
+        "They approve the proposed law or constitutional change",
+        "They send the measure back to the legislature for revision",
+        "They request a public hearing before a final vote",
+        "They approve funding only, not the policy itself"
+      ],
+      "correctAnswer": 0,
+      "explanation": "A 'Yes' vote on a California ballot initiative means voters are directly approving a proposed law or amendment — no action by the legislature is required. This is the essence of direct democracy, letting citizens bypass lawmakers entirely.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "name": "California Secretary of State – Initiatives",
+        "url": "https://www.sos.ca.gov/elections/voter-registration/voting-california/initiatives"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-101",
+      "text": "How do most California judges first reach the bench?",
+      "options": [
+        "They are appointed by the Governor",
+        "They are elected directly by voters",
+        "They are chosen by the State Legislature",
+        "They are selected by the State Bar Association"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Most California judges are initially appointed by the Governor, then must win a retention vote from voters at the next election to keep their seat. This hybrid system blends appointment with public accountability.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "name": "California Courts - Judicial Selection",
+        "url": "https://www.courts.ca.gov/2113.htm"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-102",
+      "text": "What is the minimum number of signatures needed to place a citizen initiative on California's statewide ballot?",
+      "options": [
+        "5% of votes cast in the last gubernatorial election",
+        "10% of registered voters statewide",
+        "1 million signatures from any California residents",
+        "A two-thirds vote of the state legislature"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California's initiative process requires signatures from at least 5% of the total votes cast in the previous gubernatorial election. This threshold lets everyday citizens bypass the legislature and propose laws directly to voters — a key feature of California's direct democracy system.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "name": "California Secretary of State – Initiative Process",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-process"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-103",
+      "text": "What is California's main source of state tax revenue?",
+      "options": [
+        "Personal income tax",
+        "Sales tax",
+        "Corporate tax",
+        "Property tax"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California relies more heavily on the personal income tax than most states — it makes up about two-thirds of the state's general fund revenue. This makes the budget sensitive to the earnings of high-income residents. California Department of Finance tracks this annually.",
+      "difficulty": "easy",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "California Department of Finance",
+        "url": "https://www.ebudget.ca.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-104",
+      "text": "What is the highest court in California?",
+      "options": [
+        "California Supreme Court",
+        "California Court of Appeal",
+        "California Superior Court",
+        "U.S. Ninth Circuit Court"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The California Supreme Court is the top court in the state, with seven justices who have the final say on California law. Below it are the Courts of Appeal and then the trial-level Superior Courts.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "name": "California Courts - The Judicial Branch of California",
+        "url": "https://www.courts.ca.gov/2113.htm"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-105",
+      "text": "What is California's initiative process used for?",
+      "options": [
+        "To let voters directly propose and pass new laws or constitutional amendments",
+        "To allow the governor to override the state legislature",
+        "To remove a state judge from the bench",
+        "To request a federal review of state laws"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California's initiative process allows citizens to collect signatures to place proposed laws or constitutional amendments directly on the ballot, bypassing the legislature. It is one of the most active direct democracy tools in the country.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "name": "California Secretary of State – Initiative Process",
+        "url": "https://www.sos.ca.gov/elections/voter-registration/initiatives"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-106",
+      "text": "California's Proposition 13 (1978) permanently limits annual increases in a property's assessed value to what percentage?",
+      "options": [
+        "2%",
+        "5%",
+        "10%",
+        "The rate of inflation, uncapped"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Prop 13 caps annual assessed value increases at 2% (or the rate of inflation, whichever is lower) until the property is sold and reassessed at market value. This landmark measure fundamentally shaped California's tax structure and local government funding for decades. California State Board of Equalization explains its ongoing effects.",
+      "difficulty": "hard",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "California State Board of Equalization – Proposition 13",
+        "url": "https://www.boe.ca.gov/proptaxes/prop13.htm"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-107",
+      "text": "How many chambers make up the California State Legislature?",
+      "options": [
+        "Two — the Senate and the Assembly",
+        "One — the Senate only",
+        "Three — the Senate, Assembly, and Cabinet",
+        "Two — the House and the Senate"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California has a bicameral (two-chamber) legislature: the State Senate with 40 members and the State Assembly with 80 members. Together they write, debate, and pass state laws. (California Legislature, legislature.ca.gov)",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "name": "California State Legislature",
+        "url": "https://www.legislature.ca.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-108",
+      "text": "Which California constitutional officer is responsible for managing the state's investments and serving as its banker?",
+      "options": [
+        "State Treasurer",
+        "State Controller",
+        "Secretary of State",
+        "Director of Finance"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The California State Treasurer manages the state's investments, issues bonds, and serves as the state's banker. The Controller, by contrast, handles payments and audits. These are separate elected constitutional offices with distinct roles.",
+      "difficulty": "hard",
+      "topicCategory": "governor-executive",
+      "source": {
+        "name": "California State Treasurer – About the Office",
+        "url": "https://www.treasurer.ca.gov/about/index.asp"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-109",
+      "text": "What unusual provision did California's first constitution of 1849 include that was rare for its time?",
+      "options": [
+        "It granted married women separate property rights independent of their husbands",
+        "It abolished the death penalty for all crimes",
+        "It established a state-funded public university system",
+        "It required all laws to be printed in four languages"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California's 1849 constitution granted married women the right to hold separate property, influenced by Spanish and Mexican civil law traditions already present in the region. This was a rare legal protection for women decades before most U.S. states recognized similar rights.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "California State Archives - Constitution of 1849",
+        "url": "https://www.sos.ca.gov/archives/collections/constitutions"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-110",
+      "text": "Which document takes priority if the California Constitution conflicts with the U.S. Constitution?",
+      "options": [
+        "The U.S. Constitution",
+        "The California Constitution",
+        "Whichever was enacted more recently",
+        "The California Supreme Court decides case by case"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Under the Supremacy Clause of the U.S. Constitution (Article VI), federal law and the U.S. Constitution are the supreme law of the land. State constitutions cannot contradict it. California's constitution can grant additional rights, but never fewer than the federal baseline.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "Khan Academy – Federalism and the Supremacy Clause",
+        "url": "https://www.khanacademy.org/humanities/ap-us-government-and-politics/foundations-of-american-democracy/federalism/a/federalism-and-the-constitution"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-111",
+      "text": "How does California's Proposition 98 affect the state budget?",
+      "options": [
+        "It guarantees a minimum percentage of the state budget goes to K-14 education",
+        "It caps annual property tax increases at 2% for homeowners",
+        "It requires a two-thirds legislative vote to raise any state tax",
+        "It mandates that infrastructure spending match education spending dollar for dollar"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Passed by voters in 1988, Proposition 98 sets a constitutional minimum funding guarantee for K-14 public education (K-12 schools and community colleges), typically around 40% of the General Fund. This makes education the single largest driver of California's annual budget negotiations. California Legislative Analyst's Office, lao.ca.gov.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "California Legislative Analyst's Office – Proposition 98 Primer",
+        "url": "https://lao.ca.gov/Publications/Report/4340"
+      },
+      "expiresAt": null
     }
   ]
 }
