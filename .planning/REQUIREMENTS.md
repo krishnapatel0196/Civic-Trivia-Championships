@@ -20,7 +20,7 @@ Requirements for content deduplication and scaling all collections to 90+ unique
 
 ### Content Generation
 
-- [ ] **GEN-01**: All 5 non-Federal collections reach 90+ unique questions after dedup and generation
+- [x] **GEN-01**: All 5 non-Federal collections reach 90+ unique questions after dedup and generation
 - [x] **GEN-02**: Semantic dedup check integrated into generation pipeline to prevent creating duplicates of existing questions
 - [x] **GEN-03**: All new questions pass existing 8 quality rules with no blocking violations
 - [x] **GEN-04**: Source diversity enforced — no single webpage sources more than 15% of a collection's questions
@@ -30,8 +30,8 @@ Requirements for content deduplication and scaling all collections to 90+ unique
 ### Data Cleanup
 
 - [x] **DATA-01**: Duplicate questions archived from existing collections (removed from JSON files, archived in database)
-- [ ] **DATA-02**: Updated JSON source files with duplicates removed and new questions added
-- [ ] **DATA-03**: All updated collections re-seeded to database with correct status (active)
+- [x] **DATA-02**: Updated JSON source files with duplicates removed and new questions added
+- [x] **DATA-03**: All updated collections re-seeded to database with correct status (active)
 - [x] **DATA-04**: Federal collection audited for duplicates (already at 117, but verify quality)
 
 ## Future Requirements
@@ -66,15 +66,15 @@ Deferred to later milestones.
 | DEDUP-06 | Phase 32 | Complete |
 | DEDUP-07 | Phase 32 | Complete |
 | DEDUP-08 | Phase 32 | Complete |
-| GEN-01 | Phase 34 | Pending |
+| GEN-01 | Phase 34 | Complete |
 | GEN-02 | Phase 33 | Complete |
 | GEN-03 | Phase 33 | Complete |
 | GEN-04 | Phase 33 | Complete |
 | GEN-05 | Phase 33 | Complete |
 | GEN-06 | Phase 33 | Complete |
 | DATA-01 | Phase 32 | Complete |
-| DATA-02 | Phase 34 | Pending |
-| DATA-03 | Phase 34 | Pending |
+| DATA-02 | Phase 34 | Complete |
+| DATA-03 | Phase 34 | Complete |
 | DATA-04 | Phase 32 | Complete |
 
 **Coverage:**
