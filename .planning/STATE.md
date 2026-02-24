@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study
-**Current focus:** v1.6 Content Quality & Scale - Phase 33 (Generation Pipeline Enhancement)
+**Current focus:** v1.6 Content Quality & Scale - Phase 34 (Scale to 90+ Questions)
 
 ## Current Position
 
-Phase: 33 of 34 (Generation Pipeline Enhancement) — COMPLETE
-Plan: 2 of 2 complete (33-01, 33-02)
-Status: Phase complete
-Last activity: 2026-02-23 — Completed 33-02-PLAN.md (generateQuestions.ts orchestrator)
+Phase: 34 of 34 (Scale to 90+ Questions) — IN PROGRESS
+Plan: 1 of 3 complete (34-01)
+Status: Wave 1 complete — pipeline preparation done
+Last activity: 2026-02-23 — Completed 34-01-PLAN.md (pipeline preparation)
 
-Progress: [███████████████████░░░░░] 94/TBD plans complete (86 from v1.0-v1.5, 8 from v1.6)
+Progress: [███████████████████░░░░░] 95/TBD plans complete (86 from v1.0-v1.5, 9 from v1.6)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete - 50/50 requirements delivered
@@ -35,7 +35,7 @@ Progress: [███████████████████░░░░
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 94 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 11 v1.5 + 8 v1.6)
+- Total plans completed: 95 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 11 v1.5 + 9 v1.6)
 - Quick tasks completed: 10
 - Milestones shipped: 6 (v1.0 through v1.5)
 - Total execution time: ~10 days (2026-02-13 → 2026-02-23)
@@ -50,7 +50,7 @@ Progress: [███████████████████░░░░
 | v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
 | v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
 | v1.5 Feedback Marks | 27-30 | 11 | 2026-02-22 |
-| v1.6 Content Quality & Scale | 31-34 | 12/TBD | In progress |
+| v1.6 Content Quality & Scale | 31-34 | 13/TBD | In progress |
 
 ## Accumulated Context
 
@@ -58,6 +58,12 @@ Progress: [███████████████████░░░░
 
 Decisions are logged in PROJECT.md Key Decisions table.
 All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
+
+**Phase 34-01 decisions:**
+- Use claude-sonnet-4-6 for question generation (not the stale claude-sonnet-4-5-20250929 model)
+- Extend seed-community.ts LOCALES (add 2 entries) rather than writing a new seed script — reuses tested idempotent logic
+- merge-generated-questions.ts has no database interaction — JSON-only for simplicity and speed
+- Collision detection by externalId makes merge idempotent (safe to run twice)
 
 ### Pending Todos
 
@@ -74,11 +80,16 @@ All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 
 ### Blockers/Concerns
 
+**Phase 34-01 COMPLETE — Engineering gaps closed:**
+- generateQuestions.ts updated to claude-sonnet-4-6
+- seed-community.ts now covers all 5 non-Federal collections (bloomington-in, los-angeles-ca, fremont-ca, indiana-state, california-state)
+- merge-generated-questions.ts created: appends generated JSON output into canonical source files with duplicate protection
+- Ready for Phase 34-02: bulk generation across all 5 collections
+
 **Phase 33 COMPLETE:**
 - Self-validating generation pipeline operational (generateQuestions.ts)
 - Gap analysis → Claude generation → quality check → semantic dedup → JSON output
 - Validated with dry-run and live test (2/2 questions generated successfully)
-- Ready for Phase 34: scale all 5 non-Federal collections to 90+ questions
 
 **Phase 32 COMPLETE:**
 - 268 questions archived across 6 collections, 386 active remain
@@ -95,11 +106,11 @@ All v1.5 decisions archived — see milestones/v1.5-ROADMAP.md for full list.
 ## Session Continuity
 
 Last session: 2026-02-23
-Topic: Phase 33 — Generation Pipeline Enhancement (COMPLETE)
-Stopped at: Completed 33-02-PLAN.md (generateQuestions.ts orchestrator)
+Topic: Phase 34 — Scale to 90+ Questions (34-01 complete)
+Stopped at: Completed 34-01-PLAN.md (pipeline preparation)
 Resume file: None
 
-Next action: /gsd:plan-phase 34 (Scale to 90+ Questions)
+Next action: Execute 34-02 (bulk generation across 5 collections)
 
 ---
-*v1.6 Content Quality & Scale — ROADMAP COMPLETE*
+*v1.6 Content Quality & Scale — Phase 34 in progress (1/3 plans complete)*
