@@ -48,18 +48,14 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ AI-powered repair of 107 broken source URLs across 320 questions — v1.5
 - ✓ ADMIN_EMAIL environment variable with validation — v1.5
 
+- ✓ Semantic duplicate detection infrastructure (OpenAI embeddings, cosine similarity, union-find clustering) — v1.6
+- ✓ 268 duplicates archived across 6 collections via human review workflow with admin UI and undo — v1.6
+- ✓ Advanced duplicate detectors: answer leakage, same-source factoid clustering, inverse duplicates — v1.6
+- ✓ Self-validating AI generation pipeline: gap analysis → Claude → quality retry → semantic dedup → source diversity — v1.6
+- ✓ Indiana (97) and California (91) scaled to 90+ questions; 519 total active questions — v1.6
+- ✓ Zero active duplicates and zero quality violations confirmed across all collections — v1.6
+
 ### Active
-
-## Current Milestone: v1.6 Content Quality & Scale
-
-**Goal:** Deduplicate all question collections and generate enough new content so every collection has 90+ unique, high-quality questions.
-
-**Target features:**
-- Audit and remove semantic duplicates within each collection file
-- Remove cross-collection duplicates (e.g., state questions repeated in city collections)
-- Generate new questions to bring all collections to 90+ unique questions
-- Validate all new content against existing quality rules engine
-- Seed updated content to database
 
 ### Out of Scope
 
@@ -82,16 +78,18 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v1.5 shipped 2026-02-22):**
-- 639 playable questions across 6 collections (Federal 119, Bloomington IN 116, Los Angeles CA 114, Indiana 100, California 98, Fremont CA 92)
+**Current state (v1.6 shipped 2026-02-24):**
+- 519 active questions across 6 collections (Federal 114, Indiana 97, California 91, Los Angeles CA 88, Bloomington IN 75, Fremont CA 54)
+- All questions deduplicated — 268 duplicates archived via embedding-based detection and human review
+- Zero active duplicates, zero quality violations across all collections
+- Semantic dedup infrastructure: OpenAI text-embedding-3-small, disk cache, cosine similarity, union-find clustering
+- Admin duplicate review UI at /admin/duplicates with cluster cards, auto-resolve, 30-second undo
+- Self-validating AI generation pipeline: gap analysis → Claude → quality retry → semantic dedup → source diversity enforcement
+- LA (88), Bloomington (75), Fremont (54) confirmed source-exhausted at maximum achievable counts
 - Quality rules engine with 8 rules, blocking/advisory severity, 0-100 scoring
-- Admin UI with question explorer, collection health dashboard, inline editing, flag review queue
-- Quality-gated AI generation pipeline with overshoot-and-curate strategy, quality validation retry loop, and cultural sensitivity framework
+- Admin UI with question explorer, collection health dashboard, inline editing, flag review queue, duplicate review
 - Player-driven quality curation: in-game flagging, post-game elaboration, admin triage
 - Gameplay telemetry tracking encounter/correct counts per question
-- Bidirectional admin cross-navigation between question explorer and flag review
-- 107 broken source URLs repaired; all remaining Learn More links valid or null
-- Production verification script for automated deployment validation
 
 **Question quality philosophy:**
 - "Dinner party test" — would knowing this answer be worth sharing at dinner?
@@ -137,7 +135,7 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - **Tech stack**: React 18+, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, PostgreSQL, Redis, JWT — specified in design doc
 - **Performance**: FCP <1.5s, TTI <3s, bundle <300KB gzipped
 - **Accessibility**: WCAG AA compliance required
-- **Content**: 639 questions across 6 collections (target 90+ unique per collection for gameplay), all source URLs validated
+- **Content**: 519 active questions across 6 collections (zero duplicates, zero quality violations), all source URLs validated
 
 ## Key Decisions
 
@@ -175,6 +173,14 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Hard delete flags on dismiss | Simpler than soft delete; no audit trail needed for dismissed flags | Good — simplicity |
 | AI URL suggestions limited to .gov/.edu/civic orgs | Authoritative sources only for civic content | Good — source quality |
 | Null source URL for unrepairable links | Better than displaying broken "Learn More" link to users | Good — clean UX |
+| text-embedding-3-small for semantic dedup | Balances cost ($0.02/1M tokens) with 1536-dimensional accuracy sufficient for question similarity | Good — effective detection |
+| Disk-based embedding cache (.embedding-cache/) | Avoid redundant API calls across scan runs; embeddings stable for unchanged question text | Good — cost and speed |
+| Union-find clustering for duplicates | Handles transitive groupings (A≈B, B≈C → one cluster) with O(α(n)) amortized complexity | Good — correct groupings |
+| Federal > State > City hierarchy policy | Cross-collection duplicates resolved by keeping the question in the more general collection | Good — consistent curation |
+| Human review required for duplicate archival | Educational content curation requires human judgment — auto-resolve at 0.90 threshold only | Good — content quality |
+| Accept source exhaustion as collection ceiling | LA/Bloomington/Fremont sources dry after 5+ generation rounds — accepted shortfalls, not endless retries | Good — avoids quality degradation |
+| Archive higher-numbered externalId on conflict | Preserves established question IDs with potential user history; discards newly-generated duplicates | Good — data integrity |
+| Serial generation (not concurrent) | Reliability over speed for question generation — avoids race conditions in dedup checks | Good — correctness |
 
 ---
-*Last updated: 2026-02-22 after v1.6 milestone start*
+*Last updated: 2026-02-24 after v1.6 milestone*

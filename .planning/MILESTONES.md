@@ -1,5 +1,33 @@
 # Project Milestones: Civic Trivia Championship
 
+## v1.6 Content Quality & Scale (Shipped: 2026-02-24)
+
+**Delivered:** Semantic deduplication infrastructure and AI content scaling — 268 duplicate questions identified and archived across 6 collections, self-validating generation pipeline built, Indiana and California scaled to 90+ questions, zero active duplicates confirmed across all 519 questions.
+
+**Phases completed:** 31-34 (13 plans total)
+
+**Key accomplishments:**
+
+- Semantic dedup infrastructure: OpenAI text-embedding-3-small service with disk-based cache, cosine similarity with tiered thresholds (exact/near-duplicate/possible), union-find clustering for transitive grouping
+- 268 duplicates identified and archived via admin review UI at /admin/duplicates with cluster cards, auto-resolve, and 30-second undo
+- Advanced duplicate detectors: answer leakage (one question reveals another's answer), same-source factoid clustering, inverse duplicates (complementary question pairs)
+- Self-validating generation pipeline: gap analysis → Claude → quality retry loop → semantic dedup gate → source diversity enforcement → JSON output
+- Indiana (97 active) and California (91 active) scaled past 90-question target; LA/Bloomington/Fremont confirmed source-exhausted at maximum achievable counts
+- Zero active duplicates and zero quality violations across all 519 active questions (verify-phase34-final.ts exits 0)
+
+**Stats:**
+
+- 89 files created/modified (19,798 insertions, 2,700 deletions)
+- ~32,033 lines of TypeScript (19,674 backend + 12,359 frontend)
+- 4 phases, 13 plans, 18 requirements delivered
+- 2 days from start to ship (2026-02-22 → 2026-02-24)
+
+**Git range:** `chore(31-01)` → `fix: add missing duplicate.ts rule to fix build`
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v1.5 Feedback Marks (Shipped: 2026-02-22)
 
 **Delivered:** Player-driven quality curation system — in-game flagging with post-game elaboration, admin flag review queue with archive/dismiss/restore actions, question explorer flag integration, and AI-powered repair of 107 broken source URLs.
