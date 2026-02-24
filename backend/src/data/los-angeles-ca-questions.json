@@ -1580,6 +1580,329 @@
         "url": "https://lacounty.gov/residents/unincorporated-communities/"
       },
       "expiresAt": null
+    },
+    {
+      "externalId": "la-082",
+      "text": "What major civic milestone did Los Angeles achieve in 1925 that shaped its modern government structure?",
+      "options": [
+        "LA adopted its current city charter, establishing a strong mayor-council system",
+        "LA consolidated with neighboring cities to form a unified metropolitan government",
+        "LA became the first U.S. city to create a publicly owned water utility",
+        "LA established the first elected city planning commission in California"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In 1925, Los Angeles adopted a new city charter that formalized its strong mayor-council structure, defining the balance of power between the mayor and the 15-member city council that still governs LA today. This charter laid the foundation for modern LA civic governance.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Los Angeles City Clerk - Charter and Ordinances",
+        "url": "https://clerk.lacity.gov/clerk-services/legislative-and-records-management/city-charter"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-083",
+      "text": "How many members make up the Los Angeles City Council?",
+      "options": [
+        "15 members",
+        "9 members",
+        "21 members",
+        "12 members"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Los Angeles City Council has 15 members, each representing one of the city's 15 council districts. It is one of the largest city councils in the U.S. by population served per member, as of 2026-02-24.",
+      "difficulty": "medium",
+      "topicCategory": "city-government",
+      "source": {
+        "name": "Los Angeles City Council Official Website",
+        "url": "https://council.lacity.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-084",
+      "text": "How are members of the Bloomington, CA Community Services District board chosen?",
+      "options": [
+        "Elected by registered voters within the district",
+        "Appointed by the Los Angeles County Board of Supervisors",
+        "Selected by the California Governor's office",
+        "Chosen by a panel of local business leaders"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Special districts like Bloomington's Community Services District are governed by boards elected directly by voters who live within the district boundaries. This gives residents a direct say in local services like water and parks. As of 2026-02-24, Bloomington CSD holds its own elections.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "California Special Districts Association",
+        "url": "https://www.csda.net/about/what-is-a-special-district"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-085",
+      "text": "California's ballot proposition system allows citizens to bypass the legislature — but what vote threshold is required to pass a constitutional amendment via ballot initiative?",
+      "options": [
+        "A simple majority (50% + 1)",
+        "Two-thirds of voters",
+        "Three-fifths of voters",
+        "60% of voters"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Unlike amending the U.S. Constitution, Californians can amend their state constitution through a ballot initiative with just a simple majority vote. The legislature, however, requires a two-thirds vote to place constitutional amendments on the ballot for voters to consider. This makes California's constitution relatively easy to amend compared to most states.",
+      "difficulty": "hard",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Secretary of State – Initiatives",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/how-initiatives-qualify"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-086",
+      "text": "What is Los Angeles's largest source of general fund revenue?",
+      "options": [
+        "Property tax",
+        "Sales tax",
+        "Business tax",
+        "Hotel occupancy tax"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Property tax is the single largest source of revenue for LA's General Fund, helping pay for police, fire, and other core city services. As of 2026-02-24, it accounts for roughly a third of general fund revenues. Source: LA City Budget.",
+      "difficulty": "easy",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Los Angeles Budget",
+        "url": "https://cao.lacity.gov/budget"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-087",
+      "text": "Why does Los Angeles' 1850 incorporation matter to California civic history?",
+      "options": [
+        "It made LA one of the original cities incorporated when California became a U.S. state, shaping early Pacific Coast governance",
+        "It allowed LA to bypass federal land grants, giving the city unique property rights still in effect today",
+        "It established LA as the first capital of California before Sacramento took over",
+        "It gave LA special authority to negotiate directly with Mexico under the Treaty of Guadalupe Hidalgo"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Los Angeles was incorporated as a city on April 4, 1850, the same year California achieved statehood, making it one of the earliest formally governed cities on the U.S. Pacific Coast. This early civic structure helped shape how local government, land use, and public services developed across Southern California. Source: City of Los Angeles, Office of the City Clerk.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "City of Los Angeles - Official History",
+        "url": "https://clkrep.lacity.org/onlinedocs/2000/00-1817_rpt_clerk_1.pdf"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-088",
+      "text": "Which world-famous museum in Los Angeles is free to the public and sits in the La Brea Tar Pits park?",
+      "options": [
+        "La Brea Tar Pits Museum",
+        "Getty Center",
+        "LACMA",
+        "Natural History Museum of LA"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The La Brea Tar Pits Museum is free to enter and sits directly alongside active tar pits where Ice Age fossils are still being excavated today. It's a rare example of an active paleontological dig in the middle of a major city.",
+      "difficulty": "medium",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "La Brea Tar Pits – Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/La_Brea_Tar_Pits"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-089",
+      "text": "What major civic role did the Port of Los Angeles play in shaping the city's growth?",
+      "options": [
+        "It became the busiest container port in the U.S., driving trade and jobs",
+        "It was built primarily as a naval base and later converted to commercial use",
+        "It was founded by the railroads and remains privately owned today",
+        "It serves mainly cruise ships and has little impact on trade"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Port of Los Angeles is the busiest container port in the United States, handling hundreds of billions in trade annually. It has been a cornerstone of LA's economic and civic development, supporting thousands of local jobs and shaping the region's identity as a global trade hub.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Port of Los Angeles – About",
+        "url": "https://www.portoflosangeles.org/about/facts-and-figures"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-090",
+      "text": "How many votes are required on the LA County Board of Supervisors to pass an urgency ordinance?",
+      "options": [
+        "4 out of 5 votes",
+        "3 out of 5 votes",
+        "A unanimous 5 out of 5 votes",
+        "2 out of 5 votes"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Under California law, urgency ordinances — which take effect immediately rather than after the standard 30-day period — require a four-fifths supermajority vote. For LA County's five-member Board of Supervisors, that means 4 votes are needed. This higher threshold is meant to prevent hasty emergency legislation. See California Government Code §25131.",
+      "difficulty": "hard",
+      "topicCategory": "la-county",
+      "source": {
+        "name": "California Legislative Information - Government Code §25131",
+        "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=GOV&sectionNum=25131."
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-091",
+      "text": "How many signatures (as a % of votes cast in the last gubernatorial election) are required to place a constitutional amendment on the California ballot via citizen initiative?",
+      "options": [
+        "8% of votes cast",
+        "5% of votes cast",
+        "12% of votes cast",
+        "10% of votes cast"
+      ],
+      "correctAnswer": 2,
+      "explanation": "To amend the California Constitution through a citizen initiative, supporters must gather signatures from 12% of the number of votes cast in the last gubernatorial election — a higher bar than the 8% required for statutory initiatives. This two-tier system makes constitutional changes harder to achieve than ordinary law changes. See California Secretary of State initiative guide.",
+      "difficulty": "hard",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Secretary of State – Initiative and Referendum",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-and-referendum"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-092",
+      "text": "Which famous museum sits atop Griffith Park and offers free stargazing events?",
+      "options": [
+        "Griffith Observatory",
+        "Getty Center",
+        "Natural History Museum",
+        "LACMA"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Griffith Observatory, opened in 1935, sits on the southern slope of Mount Hollywood and offers free public telescope viewing nights, making astronomy accessible to all Angelenos.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Griffith Observatory – City of Los Angeles",
+        "url": "https://griffithobservatory.org/about/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-093",
+      "text": "What type of government does the City of Los Angeles use?",
+      "options": [
+        "Mayor-Council government",
+        "Commission government",
+        "Council-Manager government",
+        "Township government"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Los Angeles operates under a Mayor-Council form of government, where a directly elected mayor serves as the chief executive and a 15-member City Council serves as the legislative body. This structure gives both branches distinct powers over city operations and policy.",
+      "difficulty": "easy",
+      "topicCategory": "city-government",
+      "source": {
+        "name": "City of Los Angeles Official Website",
+        "url": "https://www.lacity.gov/government"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-094",
+      "text": "Los Angeles was incorporated as a city in 1850 — but what was its approximate population at that time?",
+      "options": [
+        "About 1,600 residents",
+        "About 10,000 residents",
+        "About 50,000 residents",
+        "About 500 residents"
+      ],
+      "correctAnswer": 0,
+      "explanation": "When LA incorporated in 1850, it had roughly 1,600 residents — a tiny farming town that would grow into one of the world's largest cities. Understanding this growth helps illustrate how civic institutions must scale with population demands.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Wikipedia – History of Los Angeles",
+        "url": "https://en.wikipedia.org/wiki/History_of_Los_Angeles"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-095",
+      "text": "How is the LA County Sheriff chosen, unlike city police chiefs?",
+      "options": [
+        "Elected directly by county voters",
+        "Appointed by the Board of Supervisors",
+        "Appointed by the County CEO",
+        "Selected by a civilian commission"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The LA County Sheriff is elected countywide by voters, not appointed — making the Sheriff independently accountable to the public rather than to the Board of Supervisors. This is a key structural difference from city police chiefs, who are typically appointed. As of 2026-02-24, Robert Luna serves as Sheriff.",
+      "difficulty": "hard",
+      "topicCategory": "la-county",
+      "source": {
+        "name": "LA County Sheriff's Department – About",
+        "url": "https://lasd.org/about/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-096",
+      "text": "What major civic role did Los Angeles play during the 1932 Summer Olympics that shaped its public infrastructure?",
+      "options": [
+        "LA built the first publicly funded Olympic Village in U.S. history, setting a precedent for athlete housing",
+        "LA constructed the Memorial Coliseum specifically for the Games, which later became a landmark civic venue",
+        "LA created a permanent Olympic Committee that evolved into the city's parks and recreation department",
+        "LA issued the first municipal bonds in California history to fund Olympic stadium construction"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The 1932 Los Angeles Olympics featured the first Olympic Village ever built for athletes, a publicly organized residential complex that housed male competitors. This civic innovation influenced how cities planned large-scale public infrastructure for future events. The LA Memorial Coliseum, while used for the Games, was built in 1923 before the Olympics.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Encyclopedia Britannica / LA84 Foundation",
+        "url": "https://en.wikipedia.org/wiki/1932_Summer_Olympics"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-097",
+      "text": "How is Bloomington represented in the Los Angeles County Board of Supervisors?",
+      "options": [
+        "Bloomington falls within the 5th Supervisorial District",
+        "Bloomington elects its own supervisor independently",
+        "Bloomington is part of the 1st Supervisorial District",
+        "Bloomington is an incorporated city with its own city council"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Bloomington is an unincorporated community in Los Angeles County, represented by the 1st Supervisorial District. Residents vote for their County Supervisor rather than a city council, since Bloomington has no city government of its own. As of 2026-02-24, the 1st District covers much of the eastern San Gabriel Valley and parts of the Inland area.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "LA County Board of Supervisors – District Map",
+        "url": "https://bos.lacounty.gov/board-of-supervisors/supervisorial-districts/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-098",
+      "text": "What role did the Los Angeles Plaza (La Plaza) play in the city's early civic history?",
+      "options": [
+        "It served as the original civic and commercial hub of the Spanish colonial settlement",
+        "It was built as a memorial to California statehood in 1850",
+        "It was established as LA's first public park by the U.S. government after the Mexican-American War",
+        "It functioned as the city's first courthouse and jail during the American period"
+      ],
+      "correctAnswer": 0,
+      "explanation": "La Plaza, established around 1781 when Los Angeles was founded as a Spanish pueblo, served as the central gathering place for civic, religious, and commercial life — a common pattern in Spanish colonial town planning. Understanding how early civic spaces shaped city identity helps citizens connect past governance structures to modern public spaces.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "La Plaza de Cultura y Artes / Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/El_Pueblo_de_Los_%C3%81ngeles_Historical_Monument"
+      },
+      "expiresAt": null
     }
   ]
 }

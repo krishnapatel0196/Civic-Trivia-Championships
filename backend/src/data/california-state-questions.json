@@ -2172,6 +2172,291 @@
         "url": "https://lao.ca.gov/Publications/Report/4340"
       },
       "expiresAt": null
+    },
+    {
+      "externalId": "cal-112",
+      "text": "How do most California judges get their jobs?",
+      "options": [
+        "They are appointed by the Governor and confirmed by a commission",
+        "They are elected directly by voters in partisan elections",
+        "They are chosen by the state legislature",
+        "They are appointed by the California Supreme Court"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Most California judges are initially appointed by the Governor and confirmed by the Commission on Judicial Appointments. They must then win retention elections to keep their seats, giving voters a check on the process.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "name": "California Courts - How Judges Are Selected",
+        "url": "https://www.courts.ca.gov/2113.htm"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-113",
+      "text": "What is the minimum number of signatures needed to place a citizen initiative on the California ballot?",
+      "options": [
+        "5% of votes cast in the last gubernatorial election",
+        "10% of registered voters statewide",
+        "1 million signatures from any California residents",
+        "A two-thirds majority vote of the state legislature"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In California, a citizen initiative requires signatures equal to 5% of the votes cast in the last governor's race. This lets everyday Californians propose new laws without going through the legislature — a hallmark of direct democracy.",
+      "difficulty": "easy",
+      "topicCategory": "ballot-initiatives",
+      "source": {
+        "name": "California Secretary of State – Initiative Process",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-process"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-114",
+      "text": "What year did California become the 31st state of the United States?",
+      "options": [
+        "1848",
+        "1850",
+        "1853",
+        "1856"
+      ],
+      "correctAnswer": 1,
+      "explanation": "California was admitted to the Union on September 9, 1850, following the Mexican-American War and the rapid population boom sparked by the 1848 Gold Rush. It skipped territorial status and went straight to statehood.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "California State Library – California History",
+        "url": "https://www.library.ca.gov/california-history/state-history/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-115",
+      "text": "How many chambers make up the California State Legislature?",
+      "options": [
+        "Two — the Senate and the Assembly",
+        "One — the Assembly",
+        "Three — the Senate, Assembly, and Cabinet",
+        "Two — the House and the Senate"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California has a bicameral (two-chamber) legislature: the State Senate with 40 members and the State Assembly with 80 members. Together they write and pass state laws.",
+      "difficulty": "easy",
+      "topicCategory": "legislature",
+      "source": {
+        "name": "California Legislature Official Website",
+        "url": "https://www.legislature.ca.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-116",
+      "text": "Which California constitutional officer manages the state's finances and investments?",
+      "options": [
+        "State Treasurer",
+        "State Controller",
+        "Secretary of State",
+        "Attorney General"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California's State Treasurer manages the state's investments, sells bonds, and oversees financing for public projects. The Controller, by contrast, handles payments and audits state spending — a common source of confusion between the two roles.",
+      "difficulty": "medium",
+      "topicCategory": "governor-executive",
+      "source": {
+        "name": "California State Treasurer – Office Overview",
+        "url": "https://www.treasurer.ca.gov/about/index.asp"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-117",
+      "text": "What is the highest court in California's state court system?",
+      "options": [
+        "California Supreme Court",
+        "California Court of Appeal",
+        "California Superior Court",
+        "U.S. Ninth Circuit Court"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The California Supreme Court is the state's highest court, with seven justices who have the final say on state law questions. The U.S. Ninth Circuit handles federal cases and is not part of California's state court system.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "name": "California Courts - About the Supreme Court",
+        "url": "https://www.courts.ca.gov/supremecourt.htm"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-118",
+      "text": "What unusual feature did California's first state constitution (1849) include that made it stand out from most other state constitutions at the time?",
+      "options": [
+        "It granted property rights to married women, independent of their husbands",
+        "It established a unicameral legislature with only one chamber",
+        "It required all laws to be printed in three languages",
+        "It banned the formation of private banks entirely"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California's 1849 constitution included protections for married women's separate property, influenced by Spanish and Mexican legal traditions already present in the region. This was progressive for U.S. statehood-era documents. Source: California State Archives.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "California Secretary of State – California State Constitution History",
+        "url": "https://www.sos.ca.gov/archives/collections/constitutions"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-119",
+      "text": "What does California's Constitution guarantee that the U.S. Constitution does not explicitly mention?",
+      "options": [
+        "The right to privacy",
+        "The right to bear arms",
+        "Freedom of speech",
+        "The right to a jury trial"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California's Constitution explicitly guarantees a right to privacy in Article I, Section 1. The U.S. Constitution does not mention privacy by name, though courts have interpreted it to imply privacy rights in certain areas.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "California Legislative Information - California Constitution Article I",
+        "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CONS&sectionNum=SEC.%201.&article=I"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-120",
+      "text": "California's state budget must be passed by what deadline each year?",
+      "options": [
+        "June 15",
+        "July 1",
+        "April 15",
+        "September 1"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Under Proposition 25 (2010), the California Legislature must pass a budget by June 15 or forfeit their pay. The Governor then has until June 30 to sign it before the fiscal year starts July 1. This replaced the old two-thirds vote requirement for passage.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "California Department of Finance – Budget Process",
+        "url": "https://www.dof.ca.gov/budget/budget_frequently_asked_questions/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-121",
+      "text": "How many members serve in the California State Assembly?",
+      "options": [
+        "80 members",
+        "40 members",
+        "120 members",
+        "100 members"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The California State Assembly has 80 members, each representing a district of about 500,000 residents. The Senate has 40 members, making the full Legislature 120 people total. Together they write, debate, and pass state laws.",
+      "difficulty": "medium",
+      "topicCategory": "legislature",
+      "source": {
+        "name": "California State Assembly – About",
+        "url": "https://www.assembly.ca.gov/content/about-assembly"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-122",
+      "text": "Which California constitutional officer is responsible for managing the state's investments and serving as its banker?",
+      "options": [
+        "State Treasurer",
+        "State Controller",
+        "Secretary of State",
+        "Superintendent of Public Instruction"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The California State Treasurer manages the state's investments, issues bonds, and acts as the state's banker. The Controller, often confused with the Treasurer, handles the state's accounts and audits. Both are separately elected constitutional officers.",
+      "difficulty": "hard",
+      "topicCategory": "governor-executive",
+      "source": {
+        "name": "California State Treasurer - About",
+        "url": "https://www.treasurer.ca.gov/about/index.asp"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-123",
+      "text": "How do most California judges get their jobs?",
+      "options": [
+        "They are appointed by the Governor, then confirmed by voters at the next election",
+        "They are elected directly by voters in partisan elections",
+        "They are chosen by the State Legislature through a majority vote",
+        "They are appointed by the California Supreme Court Chief Justice"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Most California judges are initially appointed by the Governor and must then be confirmed by the Commission on Judicial Appointments. They later face retention elections where voters decide whether to keep them in office. This hybrid system balances executive appointment with public accountability.",
+      "difficulty": "easy",
+      "topicCategory": "state-courts",
+      "source": {
+        "name": "California Courts - How Judges Are Selected",
+        "url": "https://www.courts.ca.gov/2113.htm"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-124",
+      "text": "What unusual circumstance surrounded California's path to statehood in 1850?",
+      "options": [
+        "California skipped the territorial phase and was admitted directly as a state",
+        "California was required to hold a second constitutional convention before Congress approved statehood",
+        "California was admitted as two separate states that later merged",
+        "California had to purchase its land from Mexico before Congress would consider statehood"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California never went through the typical U.S. territorial government phase. Following the Mexican-American War and the Gold Rush, California drafted a constitution and applied directly for statehood, which Congress granted in 1850 — making it one of the few states to skip territorial status entirely.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "California State Archives - Statehood History",
+        "url": "https://www.sos.ca.gov/archives/collections/1850"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-125",
+      "text": "Which branch of California government does the state constitution establish as the highest authority in the state?",
+      "options": [
+        "The Legislature",
+        "The Governor",
+        "The People",
+        "The Supreme Court"
+      ],
+      "correctAnswer": 2,
+      "explanation": "California's Constitution opens by declaring that 'all political power is inherent in the people.' This means the people are the ultimate source of government authority, a principle shared with the U.S. Constitution's idea of popular sovereignty.",
+      "difficulty": "easy",
+      "topicCategory": "state-constitution",
+      "source": {
+        "name": "California Constitution, Article II – California Legislative Information",
+        "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CONS&sectionNum=SEC.%201.&article=II"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "cal-126",
+      "text": "What unique power does California's governor have over the state budget that most governors lack?",
+      "options": [
+        "Line-item veto to cut specific spending items",
+        "Authority to raise taxes without legislative approval",
+        "Power to redirect federal funds without oversight",
+        "Ability to freeze the budget for up to 90 days"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California's governor can use a line-item veto to reduce or eliminate specific spending items in the budget bill without rejecting the entire budget. This gives the executive branch significant leverage in shaping final spending priorities. California Constitution, Article IV, Section 10.",
+      "difficulty": "medium",
+      "topicCategory": "policy-civics",
+      "source": {
+        "name": "California Legislative Analyst's Office – Budget Process Overview",
+        "url": "https://lao.ca.gov/Publications/Report/3879"
+      },
+      "expiresAt": null
     }
   ]
 }
