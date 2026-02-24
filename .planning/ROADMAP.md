@@ -373,11 +373,12 @@ Plans:
   3. All collections re-seeded to database with correct active status
   4. Quality score distribution maintained (no degradation from high-volume generation)
   5. Total question bank expanded to 540+ unique questions across 6 collections
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 34-01: TBD
-- [ ] 34-02: TBD
+- [ ] 34-01-PLAN.md — Prep pipeline: update model, extend seeding, create merge utility
+- [ ] 34-02-PLAN.md — Generate all 5 collections, merge to source JSON, seed to database
+- [ ] 34-03-PLAN.md — Verify counts, quality sanity check, commit and clean up
 
 ## Progress
 
@@ -389,4 +390,4 @@ Phases execute in numeric order: 31 → 32 → 33 → 34
 | 31. Semantic Deduplication Infrastructure | 2/2 | Complete | 2026-02-23 |
 | 32. Existing Collection Audit | 4/4 | Complete | 2026-02-23 |
 | 33. Generation Pipeline Enhancement | 2/2 | Complete | 2026-02-23 |
-| 34. Scale to 90+ Questions | 0/TBD | Not started | - |
+| 34. Scale to 90+ Questions | 0/3 | Not started | - |
