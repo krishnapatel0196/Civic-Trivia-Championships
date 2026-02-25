@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-24)
+See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study
-**Current focus:** v1.7 Live Civic Intelligence — election question pipeline, quality rule, Norwich collection
+**Current focus:** v1.7 Live Civic Intelligence — Phase 35 (Election Data Foundation + Quality Rule)
 
 ## Current Position
 
-Phase: Not started (v1.7 defining requirements)
+Phase: 35 of 38 (Election Data Foundation + Quality Rule)
 Plan: Not started
-Status: Defining requirements — v1.7 milestone goals confirmed
-Last activity: 2026-02-25 — v1.7 milestone started (Live Civic Intelligence)
+Status: Requirements defined, roadmap created — ready to plan Phase 35
+Last activity: 2026-02-25 — v1.7 roadmap created (4 phases, 27 requirements mapped)
 
-Progress: [████████████████████████] 99 plans complete (v1.0 through v1.6)
+Progress: [████████████████████████] 99 plans complete (v1.0 through v1.6) — v1.7 starting
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete ✅
@@ -24,6 +24,7 @@ Progress: [███████████████████████
 - v1.4 (Phases 23-26): Complete ✅
 - v1.5 (Phases 27-30): Complete ✅
 - v1.6 (Phases 31-34): Complete ✅ (shipped 2026-02-24)
+- v1.7 (Phases 35-38): In progress 🚧
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -57,7 +58,12 @@ Progress: [███████████████████████
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-All v1.6 decisions archived — see milestones/v1.6-ROADMAP.md for full list.
+Recent v1.7 decisions:
+
+- Admin-entered race data for v1.7 (not scrapers) — scraping is v1.8+ per research finding that no reliable free API exists for US local elections
+- Advisory severity for address/phone quality rule — legitimate civic location questions can have address answers; flag for human review, no auto-archive
+- Follow-up questions have expiresAt = NULL — "Who won?" is a permanent historic fact, not a time-limited question
+- election_race_id as direct FK on questions (not junction table) — each election question belongs to exactly one race; simpler than junction table
 
 ### Pending Todos
 
@@ -78,7 +84,7 @@ All v1.6 decisions archived — see milestones/v1.6-ROADMAP.md for full list.
 
 ### Blockers/Concerns
 
-None — v1.6 complete. Next: `/gsd:new-milestone` for v1.7 planning.
+None — roadmap confirmed, ready for Phase 35 planning.
 
 ### Quick Tasks Completed
 
@@ -90,12 +96,12 @@ None — v1.6 complete. Next: `/gsd:new-milestone` for v1.7 planning.
 
 ## Session Continuity
 
-Last session: 2026-02-24
-Topic: v1.6 milestone completion and archive
-Stopped at: Milestone archived — MILESTONES.md, PROJECT.md, STATE.md, archive files created, git tagged v1.6
+Last session: 2026-02-25
+Topic: v1.7 roadmap creation
+Stopped at: ROADMAP.md created, REQUIREMENTS.md traceability confirmed, STATE.md updated
 Resume file: None
 
-Next action: Define requirements → create roadmap → `/gsd:plan-phase [N]`
+Next action: `/gsd:plan-phase 35`
 
 ---
-*v1.7 Live Civic Intelligence — STARTED 2026-02-25*
+*v1.7 Live Civic Intelligence — roadmap created 2026-02-25*

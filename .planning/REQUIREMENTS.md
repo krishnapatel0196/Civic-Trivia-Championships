@@ -101,38 +101,38 @@ Phase numbering continues from Phase 34 (last v1.6 phase).
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ELEC-01 | Phase 35 | Pending |
-| ELEC-02 | Phase 35 | Pending |
-| ELEC-03 | Phase 35 | Pending |
-| QUAL-01 | Phase 35 | Pending |
-| QUAL-02 | Phase 35 | Pending |
-| QUAL-03 | Phase 35 | Pending |
-| QUAL-04 | Phase 35 | Pending |
-| NORW-01 | Phase 36 | Pending |
-| NORW-02 | Phase 36 | Pending |
-| NORW-03 | Phase 36 | Pending |
-| NORW-04 | Phase 36 | Pending |
-| NORW-05 | Phase 36 | Pending |
-| ELEC-04 | Phase 37 | Pending |
-| ELEC-05 | Phase 37 | Pending |
-| ELEC-06 | Phase 37 | Pending |
-| ELEC-07 | Phase 37 | Pending |
-| ELEC-08 | Phase 37 | Pending |
-| ELEC-09 | Phase 37 | Pending |
-| ELEC-10 | Phase 37 | Pending |
-| ELEC-11 | Phase 38 | Pending |
-| ELEC-12 | Phase 38 | Pending |
-| ELEC-13 | Phase 38 | Pending |
-| ELEC-14 | Phase 38 | Pending |
-| ELEC-15 | Phase 38 | Pending |
-| ELEC-16 | Phase 38 | Pending |
-| ELEC-17 | Phase 38 | Pending |
-| ELEC-18 | Phase 38 | Pending |
-| ELEC-19 | Phase 38 | Pending |
-| ELEC-20 | Phase 38 | Pending |
-| ELEC-21 | Phase 38 | Pending |
-| ELEC-22 | Phase 38 | Pending |
-| ELEC-23 | Phase 38 | Pending |
+| ELEC-01 | Phase 35 | Confirmed |
+| ELEC-02 | Phase 35 | Confirmed |
+| ELEC-03 | Phase 35 | Confirmed |
+| QUAL-01 | Phase 35 | Confirmed |
+| QUAL-02 | Phase 35 | Confirmed |
+| QUAL-03 | Phase 35 | Confirmed |
+| QUAL-04 | Phase 35 | Confirmed |
+| NORW-01 | Phase 36 | Confirmed |
+| NORW-02 | Phase 36 | Confirmed |
+| NORW-03 | Phase 36 | Confirmed |
+| NORW-04 | Phase 36 | Confirmed |
+| NORW-05 | Phase 36 | Confirmed |
+| ELEC-04 | Phase 37 | Confirmed |
+| ELEC-05 | Phase 37 | Confirmed |
+| ELEC-06 | Phase 37 | Confirmed |
+| ELEC-07 | Phase 37 | Confirmed |
+| ELEC-08 | Phase 37 | Confirmed |
+| ELEC-09 | Phase 37 | Confirmed |
+| ELEC-10 | Phase 37 | Confirmed |
+| ELEC-11 | Phase 38 | Confirmed |
+| ELEC-12 | Phase 38 | Confirmed |
+| ELEC-13 | Phase 38 | Confirmed |
+| ELEC-14 | Phase 38 | Confirmed |
+| ELEC-15 | Phase 38 | Confirmed |
+| ELEC-16 | Phase 38 | Confirmed |
+| ELEC-17 | Phase 38 | Confirmed |
+| ELEC-18 | Phase 38 | Confirmed |
+| ELEC-19 | Phase 38 | Confirmed |
+| ELEC-20 | Phase 38 | Confirmed |
+| ELEC-21 | Phase 38 | Confirmed |
+| ELEC-22 | Phase 38 | Confirmed |
+| ELEC-23 | Phase 38 | Confirmed |
 
 **Coverage:**
 - v1.7 requirements: 27 total
@@ -142,4 +142,4 @@ Phase numbering continues from Phase 34 (last v1.6 phase).
 ---
 
 *Requirements defined: 2026-02-25*
-*Last updated: 2026-02-25 after initial v1.7 definition*
+*Last updated: 2026-02-25 — phase assignments confirmed in ROADMAP.md*
