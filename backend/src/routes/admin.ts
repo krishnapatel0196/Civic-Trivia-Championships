@@ -937,7 +937,7 @@ router.get('/flags/:questionId/detail', async (req: Request, res: Response) => {
         qf.elaboration_text,
         qf.created_at
       FROM civic_trivia.question_flags qf
-      LEFT JOIN auth.users u ON qf.user_id = u.id
+      LEFT JOIN users u ON qf.user_id = u.id
       WHERE qf.question_id = ${questionId}
       ORDER BY qf.created_at DESC
       LIMIT 20
