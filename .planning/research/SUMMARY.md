@@ -1,260 +1,175 @@
 # Project Research Summary
 
-**Project:** Civic Trivia Championship v1.6 - Content Quality & Scale
-**Domain:** Educational trivia with AI-generated civic content
-**Researched:** 2026-02-22
+**Project:** Civic Trivia Championship v1.7 - Live Civic Intelligence
+**Domain:** Election question pipeline, Norwich UK collection, quality rules
+**Researched:** 2026-02-25
 **Confidence:** HIGH
+
+---
 
 ## Executive Summary
 
-The v1.6 milestone addresses a critical quality gap: text-based duplicate detection catches only ~50% of duplicates in AI-generated content. Research shows that LA County's 52 questions contained nearly 50% duplicates/near-duplicates, including semantic paraphrases ("How many people does LA County serve?" vs "What is the LA County population?"), answer leakage in explanations, and same-source factoid clustering. Scaling to 90+ questions per collection (540+ total) without semantic deduplication would create a poor user experience and inflate perceived content volume.
+v1.7 adds three capabilities to the existing civic trivia platform: (1) time-boxed election questions that reflect real current races and expire on election day, (2) a quality rule blocking phone/address answers with retroactive audit, and (3) a Norwich, England collection. Research confirms all three are achievable with minimal new infrastructure — zero new npm packages required.
 
-**Recommended approach:** Implement hybrid duplicate detection (text normalization + embedding-based semantic similarity) using OpenAI text-embedding-3-small with fast-cosine-similarity for in-memory vector comparison. Add quality rules for cross-question validation (answer leakage, source diversity) and integrate semantic checks into the existing quality validation pipeline. Use overshoot-and-curate strategy (generate 1.3x target, keep best quality) to maintain high standards at scale.
+**The most important finding:** No reliable free API exists for US local election candidate data. Ballotpedia is paid; Google Civic deprecated its Representatives API in April 2025; OpenStates covers state legislature only. **The right approach for v1.7 is admin-entered race data**, with the generation pipeline designed to accept scraping later. This avoids fragile HTML scrapers while delivering the full election question lifecycle. Democracy Club provides free, open API data for UK elections (Norwich).
 
-**Key risks:** (1) AI hallucination in factual civic content — requires RAG with source grounding and programmatic fact verification; (2) Cross-collection duplicates — city questions repeating state/federal facts; (3) Database state inconsistency during migration — existing 639 questions need safe, idempotent deduplication. All three mitigated through phased rollout with dry-run modes, manual review workflows, and human-in-the-loop for high-stakes changes.
+**Critical architecture insight:** The election pipeline needs a new `election_races` PostgreSQL table with a `questions_generated` flag for cron idempotency. In-memory is insufficient — the cron runs in a stateless process and would re-generate on every daily run without this flag. The existing hourly cron infrastructure extends cleanly with a single new daily job (6 AM, 60-day lookahead).
+
+---
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing stack (Claude Sonnet 4.5 with RAG, Zod validation, quality rules engine) works well but needs semantic similarity detection. Research compared pgvector/vector databases vs lightweight in-memory approaches. **Recommendation: Add OpenAI text-embedding-3-small + fast-cosine-similarity for minimal complexity and zero production risk.**
+**No new npm dependencies needed for v1.7.** The election pipeline uses existing infrastructure:
+- `node-cron` (already installed) — daily election detection job
+- Drizzle ORM (already in use) — new `election_races` table schema
+- Anthropic SDK (already installed) — election question generation
+- PostgreSQL (Supabase, already in use) — election race data storage
 
-**Core technologies:**
-- **OpenAI text-embedding-3-small** (new): Semantic similarity detection — 1536-dim embeddings, $0.02/1M tokens ($0.01 batch), proven reliability, free $5 credit covers entire project
-- **fast-cosine-similarity** (new): Vector similarity computation — 3x faster than alternatives, TypeScript native, zero dependencies
-- **p-limit v7.3.0** (existing): Rate limit compliance — already installed, 80M+ weekly downloads, perfect for concurrent embedding API calls
-- **Existing quality validation pipeline**: Retry loop with blocking/advisory rules — extend with semantic duplicate rule, minimal disruption
+**For UK election data (Norwich):** Democracy Club (`candidates.democracyclub.org.uk`) — free, open API, Creative Commons license, covers every UK election from district council level up. No API key required for read access. Covers Norwich City Council elections (13 wards, next election 2026).
 
-**Anti-recommendations (avoid):**
-- **NO pgvector**: Overkill for one-time audit, requires schema changes, adds production risk
-- **NO vector databases**: Scale mismatch (639 questions << millions), external dependency, ongoing operational overhead
-- **NO LangChain**: Heavyweight abstraction, 100+ KB dependencies for simple embedding calls
+**What NOT to use:**
+- Google Civic Information API — Representatives endpoint deprecated April 2025
+- OpenStates — state legislature only, not city council
+- Playwright/Puppeteer for county portal scraping — heavy, brittle, v1.8+ consideration
+- Ballotpedia API — paid subscription, not needed when admin entry achieves same result
 
 ### Expected Features
 
-Educational trivia platforms treat deduplication as pre-launch quality checks, not ongoing operations. Academic research shows automated detection + human curation is the sweet spot for quality at scale.
+**Election pipeline table stakes:**
+- Race-specific questions with real candidate names and seat names
+- Expiration on election day (end of day, local timezone)
+- Admin activation gate — draft → active flow prevents unreviewed content
+- Election race DB record linking questions to races for follow-up workflow
 
-**Must have (table stakes):**
-- **Exact duplicate detection** — text normalization (already implemented via DuplicateDetector)
-- **Semantic duplicate detection** — embedding-based similarity, threshold 0.85-0.90 (GAP — needs implementation)
-- **Cross-collection duplicate detection** — prevent same questions across federal/state/city (GAP — currently siloed)
-- **Manual review workflow** — admin reviews flagged duplicates, makes final archival decisions (extend existing flag review queue)
-- **Batch content generation** — calculate gap, apply overshoot, retry with feedback (already implemented)
-- **Quality validation with blocking rules** — prevent low-quality content (already implemented with 8 rules)
+**Election lifecycle (3 stages):**
+1. Pre-election: who is running, what party, is there an incumbent (expires election day)
+2. Post-primary: who won the primary, who advances to general (expires general election day)
+3. Post-general: who won, historical result (no expiry — permanent civic fact)
 
-**Should have (competitive):**
-- **Inverse duplicate detection** — catch Q1 "What year did X happen?" + Q2 "Which governor signed X?" revealing each other (differentiator, medium complexity)
-- **Answer leakage detection** — Q2's explanation shouldn't contain Q1's answer (academic research confirms this is real problem)
-- **Same-source factoid clustering** — track which source paragraphs generate questions, enforce diversity (leverages existing source.url field)
-- **Duplicate metrics in collection health dashboard** — admin visibility into duplicate rates (easy addition to existing dashboard)
-- **Smart overshoot calculation** — dynamic adjustment based on historical pass rates and duplicate rates (data science best practice)
+**Norwich must-haves:**
+- Explicit two-tier government framing (City Council vs Norfolk County Council)
+- UK terminology throughout (councillor, ward, by-election, MP)
+- ~55-90 questions across 6 categories (civic history, city government, landmarks, culture, Norfolk context, sports)
 
-**Defer (v2+):**
-- **Fully automated duplicate removal** — research shows false positives require human review (don't build)
-- **Real-time semantic search in production** — pgvector/vector DB only justified if building "find similar questions" feature
-- **Local embedding models** — OpenAI's quality is higher and free credits make cost a non-issue
+**Address/phone rule:**
+- Advisory severity (not blocking) — legitimate civic location questions exist
+- Flags any option containing a phone number or street address format
+- Report-only audit script (no auto-archival)
 
 ### Architecture Approach
 
-The current generation pipeline (Locale Config → RAG Sources → Claude Generation → Zod Validation → Quality Validation → JSON Output → Database Seeding) has clean extension points. Add semantic similarity as a parallel check alongside text normalization during quality validation. Research shows embedding-based detection integrates cleanly with minimal disruption to existing retry loops and batch processing.
+The Architecture agent produced a comprehensive spec (see ARCHITECTURE.md). Key decisions:
 
-**Major components:**
-1. **SemanticDupDetector** — embedding-based similarity check using OpenAI + cosine similarity, integrated as optional parameter to validateAndRetry()
-2. **EmbeddingCache** — in-memory Map<externalId, embedding> for generation workflow, checks new questions against existing embeddings
-3. **Cross-question validation rules** — answer leakage detection, source diversity enforcement, fact extraction for same-source clustering
-4. **Dedup scanner CLI tool** — batch scan all collections, generate duplicate reports for manual review, idempotent with dry-run mode
-5. **Migration-safe archival workflow** — two-phase approach (mark for review → human confirms → archive), respects status field constraints
+1. **`election_races` PostgreSQL table** — stores race metadata, candidate list (JSONB), `questions_generated` and `followup_generated` flags, and result. Required for cron idempotency across stateless process restarts.
 
-**Integration pattern:**
-Composition over replacement. DuplicateDetector keeps text normalization (fast, no API calls), SemanticDupDetector runs after as second layer (slower, catches paraphrases). Both violations surface in quality audit, unified retry loop handles regeneration.
+2. **`election_race_id` FK on questions table** — nullable column linking election questions to their race. Enables admin UI to show all questions for a race and trigger follow-up generation.
+
+3. **Candidate data as structured context, not RAG** — the existing pipeline uses scraped text documents as RAG. Candidate data (name, party, incumbent) is structured and should be injected as a formatted list in the user message, not as a text file.
+
+4. **Admin activation gate on election questions** — generated questions go to `draft` status. Admin reviews and activates. This is the right balance for the auto-publish pipeline without a human review gate on regular generation.
+
+5. **Advisory severity for address/phone rule** — "Where is City Hall located?" with a street address answer can be legitimate civic content. Advisory flag for human review, not automatic archival.
+
+**Build order (from ARCHITECTURE.md):**
+- Phase 1: DB schema (`election_races` table + `election_race_id` FK)
+- Phase 2: Norwich collection (independent of election pipeline — ships playable collection immediately)
+- Phase 3: Address/phone quality rule + audit (independent of election pipeline)
+- Phase 4: Election generation script
+- Phase 5: Election cron + detection
+- Phase 6: Admin election management UI
+- Phase 7: End-to-end verification
 
 ### Critical Pitfalls
 
-Research identified 13 pitfalls; top 5 by severity:
+Top 5 by severity:
 
-1. **Text-only deduplication misses semantic duplicates** — Simple normalization catches only 50% of AI-generated duplicates. LA had "How many people does LA County serve?" / "What population does LA County government serve?" / "What is the LA County population?" all passing text checks. Prevention: Multi-level pipeline (exact text → semantic similarity → answer overlap), cosine threshold 0.85-0.90, fact extraction for source-level dedup.
+1. **Candidate withdraws after questions go live (HIGH)** — Questions become factually wrong mid-election. Prevention: `withdrew` field on candidate JSONB + admin "Regenerate" action in election management UI.
 
-2. **AI hallucination in factual content** — LLMs "optimized for fluency, not truth" generate plausible-sounding falsehoods (wrong dates, numbers, non-existent entities). Catastrophic for educational content. Prevention: RAG with explicit source grounding (quote relevant sentence in reasoning), programmatic fact verification against .gov APIs for verifiable claims, human-in-the-loop for high-stakes content (elections, hard difficulty).
+2. **Cron double-generation if flag not set atomically (HIGH)** — Race generates questions twice, creating duplicates. Prevention: Set `questions_generated = TRUE` immediately when generation starts (not after); add secondary existence check.
 
-3. **Cross-collection duplicates ignored** — Federal/state facts appear in city collections. DuplicateDetector loads per-collection with no shared state. Prevention: Global duplicate registry across all collections, content specialization strategy (general facts at highest relevant hierarchy level), generation prompts with anti-patterns from other collections.
+3. **Timezone mismatch expiring questions before polls close (MEDIUM)** — Pacific-time elections expire at 4:59 PM local if stored as UTC. Prevention: `timezone` column on `election_races`; convert to UTC using jurisdiction's local timezone.
 
-4. **Answer leakage in explanations** — Question B's explanation: "According to source, Y is the process that X uses to..." reveals answer to Question A about X. Quality validation runs per-question without cross-question checks. Prevention: Batch validation after generation, check if any question's correct answer appears in other explanations, regenerate with constraints if leakage found.
+4. **Norfolk County Council vs Norwich City Council confusion (HIGH)** — Wrong attribution of responsibilities (roads, schools) to city vs county. Prevention: Explicit two-tier structure explanation in `norwich-uk.ts` system prompt.
 
-5. **Database state inconsistency during migration** — Git status shows manual edits to data files and multiple ad-hoc dedup scripts. Production system wasn't designed for deduplication from start. Prevention: Idempotent migration scripts in transactions, two-phase migration (mark → review → archive), dry-run mode mandatory, status field transition constraints.
+5. **Retroactive audit auto-archiving legitimate questions (MEDIUM)** — Address rule shouldn't auto-archive "Where is City Hall located?". Prevention: Audit script is report-only; admin reviews flags manually.
+
+---
 
 ## Implications for Roadmap
 
-Based on research, suggested 4-phase structure prioritizing quality foundation before scaling:
+Research confirms the 7-phase build order from ARCHITECTURE.md. Suggested phase structure continuing from Phase 34:
 
-### Phase 1: Semantic Deduplication Foundation (Week 1)
-**Rationale:** Must establish hybrid detection (text + semantic) before generating new content. Attempting to scale without semantic dedup will produce collections full of paraphrased duplicates.
-
+### Phase 35: Election Data Foundation
+**Goal:** DB schema changes (election_races table) and address/phone quality rule + audit
 **Delivers:**
-- OpenAI embedding service + fast-cosine-similarity integration
-- SemanticDupDetector class with configurable thresholds
-- EmbeddingCache for generation workflow
-- Dedup scanner CLI tool with dry-run mode
+- `election_races` table with all required columns (seat, candidates JSONB, election_date, timezone, flags, result)
+- `election_race_id` FK on questions table
+- `address-phone.ts` quality rule (advisory severity)
+- `audit-address-phone.ts` report script
+- Audit run on existing 519 questions, human review of flagged questions
 
-**Addresses:**
-- Semantic duplicate detection (FEATURES table stakes)
-- Cross-collection duplicate detection (FEATURES table stakes)
-- Text-only deduplication pitfall (PITFALLS #1)
-- Cross-collection duplicates pitfall (PITFALLS #3)
+**Why first:** DB schema must exist before election generation (Phase 37 depends on it). Quality rule is independent and delivers immediate value.
 
-**Avoids:**
-- Database state inconsistency (idempotent scripts, dry-run first)
-- Production risk (no schema changes, in-memory only)
-
-### Phase 2: Existing Collection Audit & Cleanup (Week 1)
-**Rationale:** Must deduplicate existing 639 questions before generating new content. Otherwise new questions will duplicate existing ones that should have been archived.
-
+### Phase 36: Norwich, England Collection
+**Goal:** 50-90 local Norwich questions live in new collection
 **Delivers:**
-- Backfill embeddings for all existing questions
-- Run dedup scanner across all 6 collections
-- Generate duplicate reports with similarity scores
-- Manual review workflow (extend existing flag review queue)
-- Archive confirmed duplicates
+- `norwich-uk.ts` locale config with UK terminology, two-tier government framing
+- Question generation (targeting 60-70 questions, source-limited)
+- Collection seeded and activated in production
 
-**Addresses:**
-- Manual review workflow (FEATURES table stakes)
-- Database migration safety (PITFALLS #5)
+**Why second:** Completely independent of election pipeline. Delivers a playable collection immediately without waiting for the election pipeline phases.
 
-**Avoids:**
-- Fully automated removal (anti-feature, causes false positives)
-- Status field violations (two-phase migration with human review)
-
-### Phase 3: Cross-Question Quality Rules (Week 2)
-**Rationale:** Before scaling content generation, add quality rules that detect cross-question issues (answer leakage, source over-mining). These violations are harder to fix post-generation.
-
+### Phase 37: Election Question Generation Script
+**Goal:** `generate-election-questions.ts` that consumes a race record and produces expiring questions
 **Delivers:**
-- Answer leakage detection (check if correct answers appear in other explanations)
-- Source diversity enforcement (<20% from any single source)
-- Same-source factoid clustering detection
-- Batch-level validation (not just per-question)
-- Enhanced generation reports with cross-question stats
+- Election-aware generation with candidate list as structured context
+- `expiresAt` = election_date in jurisdiction's local timezone
+- `election_race_id` FK linked on all generated questions
+- `buildElectionSystemPrompt()` with MCQ guidance for small/large candidate pools
+- Test with manually-entered race data
 
-**Addresses:**
-- Answer leakage detection (FEATURES differentiator)
-- Same-source factoid clustering (FEATURES differentiator)
-- Answer leakage pitfall (PITFALLS #4)
-- Same-source mining pitfall (PITFALLS #4 related)
+**Depends on:** Phase 35 (election_races table)
 
-**Avoids:**
-- AI hallucination (source grounding reinforced through diversity rules)
-
-### Phase 4: Scale to 90+ Questions per Collection (Week 2-3)
-**Rationale:** With dedup and quality infrastructure in place, safe to scale. Use overshoot-and-curate strategy to maintain quality at volume.
-
+### Phase 38: Election Cron + Admin UI
+**Goal:** Daily automated election detection and admin election management page
 **Delivers:**
-- Calculate gaps per collection (90 target - current unique count)
-- Apply 1.3x overshoot multiplier
-- Generate new content with semantic dedup enabled
-- Quality-over-quantity filtering (keep best by quality score)
-- Difficulty-aware generation (separate passes for easy/medium/hard)
-- Early stopping if success rate drops below threshold
+- `electionDetection.ts` cron job (daily 6 AM, 60-day lookahead, idempotency via flag)
+- `startCron.ts` updated to register new job
+- `ElectionManagementPage.tsx` at /admin/elections
+- "Active", "Pending Generation", "Awaiting Follow-up" sections
+- "Generate Follow-up" action with winner entry form
+- End-to-end verification: create test race → cron detects → questions generated → expire → admin enters result → follow-up generated
 
-**Addresses:**
-- Batch content generation (FEATURES table stakes, validate at scale)
-- Smart overshoot calculation (FEATURES differentiator)
-- Quality degradation in high-volume generation (PITFALLS #9)
-- RAG context window degradation (PITFALLS #8, use topic-filtered sources)
+**Depends on:** Phase 35 (schema), Phase 37 (generation script)
 
-**Avoids:**
-- Prompt drift (lock configuration, test against golden set before deploying)
-- Intra-batch duplicates (batch-aware prompting, progressive dedup)
+---
 
-### Phase Ordering Rationale
+## Research Flags
 
-**Foundation → Cleanup → Rules → Scale** is the only safe order because:
+**During planning/execution:**
 
-1. **Foundation first:** Can't detect semantic duplicates without embedding infrastructure. Building on text-only dedup repeats existing failures.
+1. **Norwich question count** — target is 50-90 but actual count will be source-limited. Expect ~60-70 before sources run dry (similar to Fremont's 54). Don't force 90.
 
-2. **Cleanup before generation:** Generating new questions before deduplicating existing ones creates duplicates between old and new content. Wasted API costs regenerating questions similar to ones that should have been archived.
+2. **Address/phone audit false positive rate** — regex may catch "3 branches of government" type content if not carefully constrained. Test on sample before running full 519-question audit.
 
-3. **Rules before scale:** Cross-question quality rules are cheaper to enforce during generation than to fix post-generation. Answer leakage requires regenerating both questions involved.
+3. **Election MCQ for small candidate pools** — generation prompt needs explicit guidance for 2-candidate and 8+ candidate races. This is non-trivial prompt engineering; allow iteration in Phase 37.
 
-4. **Scale last:** Quality at volume requires mature infrastructure. Research shows generation quality degrades as scale increases without proper controls (overshoot-and-curate, early stopping, difficulty-aware passes).
-
-**Dependencies from research:**
-- STACK.md: OpenAI embeddings needed before semantic detection works
-- ARCHITECTURE.md: validateAndRetry() hook point requires SemanticDupDetector implementation first
-- PITFALLS.md: Phase assignment tables explicitly call out Phase 1 for dedup architecture, Phase 2 for quality rules, Phase 4 for scaling
-
-### Research Flags
-
-**Phases likely needing deeper research during planning:**
-- **Phase 3 (Cross-Question Quality Rules):** Answer leakage detection algorithms not well-documented in trivia platforms. May need to prototype simple text-matching approach vs LLM-based analysis to balance accuracy and cost.
-- **Phase 4 (Scale to 90+):** Optimal overshoot multiplier (1.3x?) needs calibration based on actual pass rates. Golden set testing strategy needs definition before locking prompt versions.
-
-**Phases with standard patterns (skip research-phase):**
-- **Phase 1 (Semantic Dedup Foundation):** Embedding-based duplicate detection is well-established. OpenAI embeddings + cosine similarity is industry standard with extensive documentation.
-- **Phase 2 (Existing Collection Audit):** Database migration patterns well-understood. Idempotent scripts with dry-run modes are standard practice.
+4. **Follow-up generation prompt design** — "Who won?" questions are structurally simple, but the generation prompt needs to produce meaningfully different questions at each lifecycle stage without duplicating what was asked before the election.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | OpenAI embeddings extensively documented, fast-cosine-similarity benchmarked, existing codebase analysis confirms integration points. Anti-recommendations (pgvector, vector DBs) justified with clear rationale. |
-| Features | MEDIUM | Table stakes features confirmed via academic research (semantic similarity thresholds, manual review workflows). Differentiators (inverse duplicates, answer leakage) found in academic papers but less common in commercial trivia platforms. |
-| Architecture | HIGH | Direct codebase analysis reveals clean extension points (validateAndRetry hook, DuplicateDetector composition pattern, quality rules engine). Hybrid detection approach proven in academic research. |
-| Pitfalls | HIGH | Top 5 pitfalls backed by codebase evidence (git status showing manual fixes, existing DuplicateDetector limitations, audit report violations). Prevention strategies validated against research sources and industry best practices. |
+| Stack | HIGH | Zero new npm dependencies confirmed. Democracy Club API verified as free and active. |
+| Features | HIGH | Election lifecycle stages are clear. Norwich example questions drafted and fact-checked. Address/phone detection patterns specified. |
+| Architecture | HIGH | Architecture agent read codebase directly. Build order validated against actual file structure. |
+| Pitfalls | HIGH | Top pitfalls are concrete and actionable. Timezone issue and double-generation risk specifically identified with prevention strategies. |
 
-**Overall confidence:** HIGH
-
-Research depth is excellent due to:
-1. **Direct codebase analysis:** ARCHITECTURE.md and PITFALLS.md cite specific files, line numbers, and existing patterns
-2. **Academic research validation:** Semantic similarity thresholds (0.85-0.90), manual review workflows, RAG optimization all backed by peer-reviewed sources
-3. **Real-world evidence:** LA duplicate audit (50% duplicates) provides concrete validation of the problem severity
-
-### Gaps to Address
-
-**During planning/execution:**
-
-1. **Semantic similarity threshold tuning (Phase 1):** Research recommends 0.85-0.90 but optimal threshold depends on Civic Trivia's specific content. **Resolution:** Start with 0.90 (stricter), generate duplicate report for existing questions, manually review 20-30 flagged pairs to measure precision. Adjust in 0.05 increments if false positive rate >10%.
-
-2. **Cross-collection policy (Phase 2):** Should any questions be allowed across collections? Example: "Who is the governor?" could legitimately appear in both state and city collections if framed differently. **Resolution:** Define collection hierarchy (federal > state > city) and content specialization policy before Phase 2. General civic facts belong at highest relevant level; collection-specific angles allowed.
-
-3. **Overshoot multiplier calibration (Phase 4):** Research suggests 1.3x but actual multiplier depends on quality pass rates and duplicate rates observed during execution. **Resolution:** Track stats during Phase 4 first batch, calculate optimal multiplier: `target * (1 / pass_rate) * (1 / (1 - dup_rate))`, cap at 2x to avoid cost explosion.
-
-4. **Answer leakage detection algorithm (Phase 3):** Not well-documented whether simple text matching ("does explanation contain answer?") is sufficient or if LLM-based analysis needed. **Resolution:** Prototype simple approach first (check if correct answer string appears in other explanations with fuzzy matching). If false positive rate >20%, escalate to LLM-based semantic analysis.
-
-5. **RAG source filtering strategy (Phase 4):** As source documents grow, existing "load all sources" approach will degrade quality. **Resolution:** Implement topic-filtered RAG (embed topic descriptions, use cosine similarity to select top 5 relevant sources per generation batch). Monitor hallucination rate; if it increases, implement chunk-level retrieval with re-ranking.
-
-## Sources
-
-### Primary (HIGH confidence)
-
-**Codebase analysis:**
-- `backend/src/services/qualityRules/rules/duplicate.ts` — existing text normalization approach, integration points
-- `backend/src/scripts/content-generation/utils/quality-validation.ts` — validateAndRetry() hook, retry loop architecture
-- `backend/src/scripts/content-generation/generate-locale-questions.ts` — generation pipeline flow, DuplicateDetector initialization
-- `backend/audit-report.md` — quality violation evidence, LA duplicate audit findings
-- Git status showing manual data edits and ad-hoc dedup scripts — database migration challenges
-
-**Official documentation:**
-- [OpenAI Embeddings API Pricing](https://costgoat.com/pricing/openai-embeddings) — cost analysis, batch API
-- [fast-cosine-similarity npm](https://www.npmjs.com/package/fast-cosine-similarity) — performance benchmarks, TypeScript support
-- [Anthropic Embeddings Documentation](https://platform.claude.com/docs/en/build-with-claude/embeddings) — Voyage AI recommendation
-
-### Secondary (MEDIUM confidence)
-
-**Academic research:**
-- [Semantic Similarity Analysis for Examination Questions Classification](https://www.mdpi.com/2076-3417/13/14/8323) — threshold recommendations, educational content patterns
-- [How do I use embeddings for duplicate detection?](https://zilliz.com/ai-faq/how-do-i-use-embeddings-for-duplicate-detection) — cosine similarity 0.9 threshold, industry standard
-- [Deduplicating records in systematic reviews](https://www.sciencedirect.com/science/article/abs/pii/S0895435622002566) — manual review workflows, automated tools not perfect
-- [ACM publication on answer leakage in quiz generation](https://dl.acm.org/doi/pdf/10.1145/3626772.3657855) — volleyball championship example
-
-**Industry best practices:**
-- [AI Hallucination Testing in 2026](https://medium.com/ai-in-quality-assurance/ai-hallucination-testing-in-2026-how-qa-engineers-detect-confidently-wrong-ai-answers-cb978ec6cc26) — fact verification strategies
-- [How to Optimize RAG Context Windows for Smarter Retrieval](https://medium.com/@ai.nishikant/how-to-optimize-rag-context-windows-b26859f03b2d) — topic filtering, chunking strategies
-- [AI Data Quality in 2026: Challenges & Best Practices](https://research.aimultiple.com/data-quality-ai/) — quality degradation at high volume
-
-### Tertiary (LOW confidence, needs validation)
-
-- [Best AI quiz generator tools in 2026](https://blog.vocaliv.com/top-5-best-ai-quiz-generator-tools-in-2026) — general trivia platform trends
-- [Content curation strategy best practices](https://www.semrush.com/blog/content-curation/) — overshoot strategies (not specific to AI generation)
-- [Duplicate data management in ML](https://dagshub.com/blog/mastering-duplicate-data-management-in-machine-learning-for-optimal-model-performance/) — acceptable duplicate rates (10-30% in ML contexts, different domain)
+**Overall confidence: HIGH**
 
 ---
-*Research completed: 2026-02-22*
+
+*Research completed: 2026-02-25*
 *Ready for roadmap: yes*
