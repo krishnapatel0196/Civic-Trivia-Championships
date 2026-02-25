@@ -57,6 +57,13 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ### Active
 
+**v1.7 Live Civic Intelligence (in progress):**
+
+- [ ] Time-boxed election question pipeline — automated scraping of official election sources (county/state portals) for city collections (Fremont CA, Bloomington IN, Los Angeles CA); questions generated with expiration tied to election day; scheduled automation detects upcoming races
+- [ ] Manual follow-up question generation — admin-triggered generation of successor questions after election results (winner → general race → current term expiry)
+- [ ] Address/phone number blocking quality rule — new blocking rule preventing any question whose correct answer is a phone number or street address; re-audit all 519 active questions and archive violators
+- [ ] Norwich, England collection — 50-90 local questions covering city government, civic history, landmarks, elections, and local services; UK/England national content deferred to future collection
+
 ### Out of Scope
 
 - Team/multiplayer mode — Phase 2
@@ -183,4 +190,4 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Serial generation (not concurrent) | Reliability over speed for question generation — avoids race conditions in dedup checks | Good — correctness |
 
 ---
-*Last updated: 2026-02-24 after v1.6 milestone*
+*Last updated: 2026-02-25 after v1.7 milestone started*

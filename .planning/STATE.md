@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-24)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study
-**Current focus:** Planning next milestone (v1.7)
+**Current focus:** v1.7 Live Civic Intelligence — election question pipeline, quality rule, Norwich collection
 
 ## Current Position
 
-Phase: Not started (v1.7 not yet planned)
+Phase: Not started (v1.7 defining requirements)
 Plan: Not started
-Status: Ready to plan — v1.6 milestone complete and archived
-Last activity: 2026-02-24 — v1.6 milestone complete (4 phases, 13 plans, 519 active questions)
+Status: Defining requirements — v1.7 milestone goals confirmed
+Last activity: 2026-02-25 — v1.7 milestone started (Live Civic Intelligence)
 
 Progress: [████████████████████████] 99 plans complete (v1.0 through v1.6)
 
@@ -95,7 +95,7 @@ Topic: v1.6 milestone completion and archive
 Stopped at: Milestone archived — MILESTONES.md, PROJECT.md, STATE.md, archive files created, git tagged v1.6
 Resume file: None
 
-Next action: `/gsd:new-milestone` to plan v1.7
+Next action: Define requirements → create roadmap → `/gsd:plan-phase [N]`
 
 ---
-*v1.6 Content Quality & Scale — SHIPPED 2026-02-24*
+*v1.7 Live Civic Intelligence — STARTED 2026-02-25*
