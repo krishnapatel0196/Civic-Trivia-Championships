@@ -4,7 +4,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'United States',
     slug: 'federal',
-    description: 'How well do you really know Uncle Sam? Put your federal know-how to the test.',
+    description: 'How well do you really know Uncle Sam?',
     localeCode: 'en-US',
     localeName: 'United States',
     iconIdentifier: 'flag-us',
