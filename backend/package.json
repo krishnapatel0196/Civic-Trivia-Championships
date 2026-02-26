@@ -15,7 +15,8 @@
     "audit-address-phone": "tsx src/scripts/audit-address-phone.ts",
     "archive-violations": "tsx src/scripts/archive-violations.ts",
     "verify:production": "tsx src/scripts/verify-production.ts",
-    "scan-duplicates": "tsx src/scripts/scan-duplicates.ts"
+    "scan-duplicates": "tsx src/scripts/scan-duplicates.ts",
+    "generate-election-questions": "tsx src/scripts/generate-election-questions.ts"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
