@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 ## Current Position
 
 Phase: 38 of 38 (Election Cron + Current-Term Stage + Admin Election UI)
-Plan: Not started
-Status: Phase 37 complete and verified (5/5 must-haves) — ready to plan Phase 38
-Last activity: 2026-02-26 — Phase 37 executed and verified (ElectionQuestionGenerator + admin UI, live on Render)
+Plan: 01 of N (Election Detection Cron)
+Status: In progress — Plan 38-01 complete
+Last activity: 2026-02-26 — Completed 38-01-PLAN.md (election detection cron + lastCronRun state)
 
-Progress: [████████████████████████] 105 plans complete (v1.0 through v1.6 + Phases 35–37) — v1.7 in progress
+Progress: [████████████████████████] 106 plans complete (v1.0 through v1.6 + Phases 35–38-01) — v1.7 in progress
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete ✅
@@ -63,6 +63,9 @@ Recent v1.7 decisions:
 - Admin-entered race data for v1.7 (not scrapers) — scraping is v1.8+ per research finding that no reliable free API exists for US local elections
 - claude-sonnet-4-6 hardcoded directly in ElectionQuestionGenerator (not the MODEL constant in anthropic-client.ts which is outdated at claude-sonnet-4-5)
 - Collection slug passed explicitly as CLI/API parameter (not derived from jurisdiction string matching)
+- Election cron resolves collection slug via collections.name = race.jurisdiction DB lookup (cron has no slug context)
+- GenerationBlockedError from cron is idempotent skip — running cron twice for same race is expected, not an error
+- lastCronRun stored as module-level mutable let in electionDetection.ts — no DB round-trip needed for admin banner
 - elections-voting topic created lazily by resolveCollectionAndTopic if not present for the collection
 - Force-regenerate uses timestamp-suffixed externalIds (elc-{raceId}-{ts36}-{seq}) to avoid ON CONFLICT DO NOTHING silently skipping new questions
 - getEndOfDayUTC anchors on local noon (not midnight) to correctly handle DST spring-forward dates
@@ -102,7 +105,7 @@ Recent v1.7 decisions:
 
 ### Blockers/Concerns
 
-None — Phase 37 complete and verified, ready for Phase 38 planning.
+None — Phase 38-01 complete, election detection cron ready. Proceeding to Phase 38-02 (admin API for cron status banner).
 
 ### Quick Tasks Completed
 
@@ -115,11 +118,11 @@ None — Phase 37 complete and verified, ready for Phase 38 planning.
 ## Session Continuity
 
 Last session: 2026-02-26
-Topic: Phase 37 execution — ElectionQuestionGenerator service + CLI + admin UI
-Stopped at: Phase 37 complete and verified (5/5) — ready for Phase 38
+Topic: Phase 38-01 execution — Election detection cron (electionDetection.ts + startCron.ts + server.ts)
+Stopped at: Completed 38-01-PLAN.md — election detection cron registered, lastCronRun exported
 Resume file: None
 
-Next action: Plan Phase 38 (Election Cron + Current-Term Stage + Admin Election UI)
+Next action: Execute Phase 38-02 (admin API endpoint exposing lastCronRun + election race CRUD)
 
 ---
 *v1.7 Live Civic Intelligence — roadmap created 2026-02-25*
