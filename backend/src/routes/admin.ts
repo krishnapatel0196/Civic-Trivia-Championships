@@ -2,13 +2,15 @@ import { Router, Request, Response } from 'express';
 import { authenticateToken, requireAdmin } from '../middleware/auth.js';
 import { db } from '../db/index.js';
 import { questions, collections, collectionQuestions, questionFlags, electionRaces } from '../db/schema.js';
-import { eq, and, or, lte, gt, isNotNull, sql, inArray, ilike, desc, asc } from 'drizzle-orm';
+import { eq, and, or, lte, gt, lt, isNotNull, sql, inArray, ilike, desc, asc } from 'drizzle-orm';
 import { auditQuestion } from '../services/qualityRules/index.js';
 import type { QuestionInput } from '../services/qualityRules/types.js';
 import { z } from 'zod';
 import { DuplicateReviewService } from '../services/DuplicateReviewService.js';
 import { JSONSyncService } from '../services/JSONSyncService.js';
 import { generateElectionQuestions, GenerationBlockedError } from '../services/generation/ElectionQuestionGenerator.js';
+import { generateCurrentTermQuestions, FollowupBlockedError } from '../services/generation/CurrentTermQuestionGenerator.js';
+import { lastCronRun } from '../cron/electionDetection.js';
 
 const router = Router();
 
@@ -1370,6 +1372,108 @@ router.get('/duplicates/summary', async (req: Request, res: Response) => {
   }
 });
 
+// ─── Zod schemas for election race endpoints ──────────────────────────────────
+
+const enterResultSchema = z.object({
+  winnerName: z.string().min(1).max(200),
+  termEndDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be YYYY-MM-DD format'),
+  collectionSlug: z.string().min(1),
+});
+
+const updateRaceSchema = z.object({
+  seat: z.string().min(1).max(200).optional(),
+  electionType: z.enum(['primary', 'general', 'runoff', 'by-election']).optional(),
+  electionDate: z.string().datetime({ offset: true }).optional(),
+  timezone: z.string().min(1).optional(),
+  jurisdiction: z.string().min(1).max(200).optional(),
+  candidates: z.array(z.object({
+    name: z.string().min(1),
+    party: z.string().min(1),
+    incumbent: z.boolean(),
+  })).optional(),
+});
+
+/**
+ * GET /election-races/classified — Return races grouped into three lifecycle categories.
+ *
+ * Classification (strict priority):
+ * 1. Awaiting Follow-up: election_date < now AND followup_generated = FALSE
+ * 2. Active Elections:   questions_generated = TRUE AND election_date >= now
+ * 3. Pending Generation: questions_generated = FALSE AND election_date >= now
+ * Races with followup_generated = TRUE are complete — excluded from all tabs.
+ *
+ * IMPORTANT: This route is registered BEFORE GET /election-races to prevent
+ * Express matching "/classified" as an :id param on the generic route.
+ */
+router.get('/election-races/classified', async (req: Request, res: Response) => {
+  try {
+    const now = new Date();
+
+    // Fetch all races
+    const allRaces = await db
+      .select()
+      .from(electionRaces)
+      .orderBy(desc(electionRaces.electionDate));
+
+    // Fetch question counts for all races in a single query (avoid N+1)
+    const questionCounts = await db
+      .select({
+        electionRaceId: questions.electionRaceId,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(questions)
+      .where(
+        and(
+          inArray(questions.status, ['active', 'draft']),
+          isNotNull(questions.electionRaceId)
+        )
+      )
+      .groupBy(questions.electionRaceId);
+
+    const countMap = new Map(questionCounts.map((r) => [r.electionRaceId, r.count]));
+
+    // Classify races by strict priority
+    const activeElections: typeof allRaces = [];
+    const pendingGeneration: typeof allRaces = [];
+    const awaitingFollowup: typeof allRaces = [];
+
+    for (const race of allRaces) {
+      // Priority 1: Awaiting Follow-up (past election, followup not yet generated)
+      if (race.electionDate < now && !race.followupGenerated) {
+        awaitingFollowup.push(race);
+        continue;
+      }
+      // Complete races (followup done) — excluded from all tabs
+      if (race.followupGenerated) {
+        continue;
+      }
+      // Priority 2: Active Elections (questions generated, future election)
+      if (race.questionsGenerated && race.electionDate >= now) {
+        activeElections.push(race);
+        continue;
+      }
+      // Priority 3: Pending Generation (no questions yet, future election)
+      if (!race.questionsGenerated && race.electionDate >= now) {
+        pendingGeneration.push(race);
+      }
+    }
+
+    // Attach questionCount to each race
+    const attachCount = (races: typeof allRaces) =>
+      races.map((r) => ({ ...r, questionCount: countMap.get(r.id) ?? 0 }));
+
+    res.json({
+      activeElections: attachCount(activeElections),
+      pendingGeneration: attachCount(pendingGeneration),
+      awaitingFollowup: attachCount(awaitingFollowup),
+      cronLastRun: lastCronRun,
+    });
+  } catch (error: any) {
+    console.error('Failed to classify election races:', error);
+    res.status(500).json({ error: 'Failed to classify election races', detail: error?.message || String(error) });
+  }
+});
+
 /**
  * GET /election-races — List all election races ordered by createdAt desc
  */
@@ -1460,6 +1564,280 @@ router.post('/election-races/:id/generate', async (req: Request, res: Response) 
     const message = error instanceof Error ? error.message : String(error);
     console.error('Failed to generate election questions:', error);
     return res.status(500).json({ error: 'Failed to generate election questions', detail: message });
+  }
+});
+
+/**
+ * GET /election-races/:id/question-count — Return active and draft question counts for a race.
+ * Used by the re-generate confirmation modal to show "X active questions will be archived."
+ */
+router.get('/election-races/:id/question-count', async (req: Request, res: Response) => {
+  try {
+    const raceId = parseInt(req.params.id, 10);
+    if (isNaN(raceId)) {
+      return res.status(400).json({ error: 'Invalid race ID' });
+    }
+
+    const [activeRow, draftRow] = await Promise.all([
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(questions)
+        .where(and(eq(questions.electionRaceId, raceId), eq(questions.status, 'active'))),
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(questions)
+        .where(and(eq(questions.electionRaceId, raceId), eq(questions.status, 'draft'))),
+    ]);
+
+    return res.json({
+      activeCount: activeRow[0]?.count ?? 0,
+      draftCount: draftRow[0]?.count ?? 0,
+    });
+  } catch (error: any) {
+    console.error('Failed to fetch question count for race:', error);
+    return res.status(500).json({ error: 'Failed to fetch question count', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * POST /election-races/:id/enter-result — Enter election result and generate current-term questions.
+ * Body: { winnerName: string, termEndDate: string (YYYY-MM-DD), collectionSlug: string }
+ * - 200: { questionsCreated, raceId, jurisdiction, collectionSlug }
+ * - 400: validation error
+ * - 404: race not found
+ * - 409: FollowupBlockedError (already generated)
+ * - 500: generation error
+ */
+router.post('/election-races/:id/enter-result', async (req: Request, res: Response) => {
+  try {
+    const raceId = parseInt(req.params.id, 10);
+    if (isNaN(raceId)) {
+      return res.status(400).json({ error: 'Invalid race ID' });
+    }
+
+    const parsed = enterResultSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: 'Validation failed', details: parsed.error.flatten() });
+    }
+
+    const { winnerName, termEndDate, collectionSlug } = parsed.data;
+
+    const result = await generateCurrentTermQuestions(raceId, collectionSlug, { winnerName, termEndDate });
+
+    return res.status(200).json({
+      questionsCreated: result.questionsCreated,
+      raceId: result.raceId,
+      jurisdiction: result.jurisdiction,
+      collectionSlug: result.collectionSlug,
+    });
+  } catch (error: any) {
+    if (error instanceof FollowupBlockedError) {
+      return res.status(409).json({
+        error: 'already_generated',
+        message: error.message,
+        raceId: error.raceId,
+      });
+    }
+    if (error instanceof Error && error.message.includes('not found')) {
+      return res.status(404).json({ error: error.message });
+    }
+    console.error('Failed to enter result and generate current-term questions:', error);
+    return res.status(500).json({
+      error: 'Failed to generate current-term questions',
+      detail: error?.message || String(error),
+    });
+  }
+});
+
+/**
+ * POST /election-races/:id/regenerate — Destructive re-generate flow.
+ * Archives active questions, deletes draft questions, resets flag, then regenerates.
+ * Returns: { questionsCreated, archived, deleted, raceId, jurisdiction, collectionSlug }
+ */
+router.post('/election-races/:id/regenerate', async (req: Request, res: Response) => {
+  try {
+    const raceId = parseInt(req.params.id, 10);
+    if (isNaN(raceId)) {
+      return res.status(400).json({ error: 'Invalid race ID' });
+    }
+
+    // 1. Load race
+    const [race] = await db
+      .select()
+      .from(electionRaces)
+      .where(eq(electionRaces.id, raceId))
+      .limit(1);
+
+    if (!race) {
+      return res.status(404).json({ error: `Election race not found: ID ${raceId}` });
+    }
+
+    // 2. Resolve collection slug from jurisdiction name
+    const [collectionRow] = await db
+      .select({ slug: collections.slug })
+      .from(collections)
+      .where(eq(collections.name, race.jurisdiction))
+      .limit(1);
+
+    if (!collectionRow) {
+      return res.status(400).json({ error: 'No collection found matching jurisdiction.' });
+    }
+
+    const collectionSlug = collectionRow.slug;
+
+    // 3. Archive active questions
+    const historyEntry = {
+      action: 'archived' as const,
+      timestamp: new Date().toISOString(),
+    };
+
+    const archivedRows = await db
+      .update(questions)
+      .set({
+        status: 'archived',
+        expirationHistory: sql`${questions.expirationHistory} || ${JSON.stringify([historyEntry])}::jsonb`,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(eq(questions.electionRaceId, raceId), eq(questions.status, 'active'))
+      )
+      .returning({ id: questions.id });
+
+    const archived = archivedRows.length;
+
+    // 4. Delete draft questions — fetch IDs first, then clean up collection_questions and questions
+    const draftRows = await db
+      .select({ id: questions.id })
+      .from(questions)
+      .where(
+        and(eq(questions.electionRaceId, raceId), eq(questions.status, 'draft'))
+      );
+
+    const draftIds = draftRows.map((r) => r.id);
+    let deleted = 0;
+
+    if (draftIds.length > 0) {
+      // Delete from collection_questions first (FK constraint)
+      await db
+        .delete(collectionQuestions)
+        .where(inArray(collectionQuestions.questionId, draftIds));
+
+      // Delete the questions
+      await db.delete(questions).where(inArray(questions.id, draftIds));
+      deleted = draftIds.length;
+    }
+
+    // 5. Reset questionsGenerated flag
+    await db
+      .update(electionRaces)
+      .set({ questionsGenerated: false })
+      .where(eq(electionRaces.id, raceId));
+
+    // 6. Regenerate (force: false — flag is already reset)
+    const result = await generateElectionQuestions(raceId, collectionSlug, { force: false });
+
+    return res.status(200).json({
+      questionsCreated: result.questionsCreated,
+      archived,
+      deleted,
+      raceId,
+      jurisdiction: race.jurisdiction,
+      collectionSlug,
+    });
+  } catch (error: any) {
+    if (error instanceof Error && error.message.includes('not found')) {
+      return res.status(404).json({ error: error.message });
+    }
+    console.error('Failed to regenerate election questions:', error);
+    return res.status(500).json({
+      error: 'Failed to regenerate election questions',
+      detail: error?.message || String(error),
+    });
+  }
+});
+
+/**
+ * PUT /election-races/:id — Update an existing election race.
+ * Only updates fields present in body.
+ * Returns: { race: updated }
+ */
+router.put('/election-races/:id', async (req: Request, res: Response) => {
+  try {
+    const raceId = parseInt(req.params.id, 10);
+    if (isNaN(raceId)) {
+      return res.status(400).json({ error: 'Invalid race ID' });
+    }
+
+    const parsed = updateRaceSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: 'Validation failed', details: parsed.error.flatten() });
+    }
+
+    const updateData = parsed.data;
+
+    // Verify race exists
+    const [existing] = await db
+      .select()
+      .from(electionRaces)
+      .where(eq(electionRaces.id, raceId))
+      .limit(1);
+
+    if (!existing) {
+      return res.status(404).json({ error: `Election race not found: ID ${raceId}` });
+    }
+
+    // Build update payload — only include fields present in body
+    const patch: Record<string, unknown> = {};
+    if (updateData.seat !== undefined) patch.seat = updateData.seat;
+    if (updateData.electionType !== undefined) patch.electionType = updateData.electionType;
+    if (updateData.electionDate !== undefined) patch.electionDate = new Date(updateData.electionDate);
+    if (updateData.timezone !== undefined) patch.timezone = updateData.timezone;
+    if (updateData.jurisdiction !== undefined) patch.jurisdiction = updateData.jurisdiction;
+    if (updateData.candidates !== undefined) patch.candidates = updateData.candidates;
+
+    const [updated] = await db
+      .update(electionRaces)
+      .set(patch)
+      .where(eq(electionRaces.id, raceId))
+      .returning();
+
+    return res.status(200).json({ race: updated });
+  } catch (error: any) {
+    console.error('Failed to update election race:', error);
+    return res.status(500).json({ error: 'Failed to update election race', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * DELETE /election-races/:id — Delete an election race.
+ * Questions with election_race_id referencing this race will have it set to NULL
+ * (schema uses onDelete: 'set null').
+ * Returns: { deleted: true }
+ */
+router.delete('/election-races/:id', async (req: Request, res: Response) => {
+  try {
+    const raceId = parseInt(req.params.id, 10);
+    if (isNaN(raceId)) {
+      return res.status(400).json({ error: 'Invalid race ID' });
+    }
+
+    // Verify race exists
+    const [existing] = await db
+      .select()
+      .from(electionRaces)
+      .where(eq(electionRaces.id, raceId))
+      .limit(1);
+
+    if (!existing) {
+      return res.status(404).json({ error: `Election race not found: ID ${raceId}` });
+    }
+
+    await db.delete(electionRaces).where(eq(electionRaces.id, raceId));
+
+    return res.status(200).json({ deleted: true });
+  } catch (error: any) {
+    console.error('Failed to delete election race:', error);
+    return res.status(500).json({ error: 'Failed to delete election race', detail: error?.message || String(error) });
   }
 });
 
