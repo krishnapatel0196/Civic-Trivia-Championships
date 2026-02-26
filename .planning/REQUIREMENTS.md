@@ -11,9 +11,9 @@ Requirements for the Live Civic Intelligence milestone. Continues from v1.6 (pha
 
 ### Election Pipeline — Foundation
 
-- [ ] **ELEC-01**: Admin can create an election race record with seat name, election type (primary/general/runoff/by-election), election date, jurisdiction, timezone, and candidate list (name, party, incumbent flag)
-- [ ] **ELEC-02**: `election_races` PostgreSQL table exists with fields: seat, election_type, election_date, timezone, jurisdiction, candidates (JSONB), questions_generated, followup_generated, result, created_at
-- [ ] **ELEC-03**: `questions` table has nullable `election_race_id` foreign key linking election questions to their race
+- [x] **ELEC-01**: Admin can create an election race record with seat name, election type (primary/general/runoff/by-election), election date, jurisdiction, timezone, and candidate list (name, party, incumbent flag)
+- [x] **ELEC-02**: `election_races` PostgreSQL table exists with fields: seat, election_type, election_date, timezone, jurisdiction, candidates (JSONB), questions_generated, followup_generated, result, created_at
+- [x] **ELEC-03**: `questions` table has nullable `election_race_id` foreign key linking election questions to their race
 
 ### Election Pipeline — Question Generation
 
@@ -49,9 +49,9 @@ Requirements for the Live Civic Intelligence milestone. Continues from v1.6 (pha
 
 ### Quality Rule
 
-- [ ] **QUAL-01**: New advisory quality rule `checkAddressPhone` detects questions where any answer option contains a phone number (US or UK format) or street address
-- [ ] **QUAL-02**: Rule is registered in the quality rules engine and runs as part of standard question validation
-- [ ] **QUAL-03**: `audit-address-phone.ts` script scans all 519 active questions, outputs a report of flagged questions grouped by collection — no auto-archival
+- [x] **QUAL-01**: New advisory quality rule `checkAddressPhone` detects questions where any answer option contains a phone number (US or UK format) or street address
+- [x] **QUAL-02**: Rule is registered in the quality rules engine and runs as part of standard question validation
+- [x] **QUAL-03**: `audit-address-phone.ts` script scans all 519 active questions, outputs a report of flagged questions grouped by collection — no auto-archival
 - [ ] **QUAL-04**: Admin reviews audit report and manually archives confirmed violations (phone numbers and explicit street addresses as answers)
 
 ### Norwich, England Collection
@@ -101,13 +101,13 @@ Phase numbering continues from Phase 34 (last v1.6 phase).
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ELEC-01 | Phase 35 | Confirmed |
-| ELEC-02 | Phase 35 | Confirmed |
-| ELEC-03 | Phase 35 | Confirmed |
-| QUAL-01 | Phase 35 | Confirmed |
-| QUAL-02 | Phase 35 | Confirmed |
-| QUAL-03 | Phase 35 | Confirmed |
-| QUAL-04 | Phase 35 | Confirmed |
+| ELEC-01 | Phase 35 | Complete |
+| ELEC-02 | Phase 35 | Complete |
+| ELEC-03 | Phase 35 | Complete |
+| QUAL-01 | Phase 35 | Complete |
+| QUAL-02 | Phase 35 | Complete |
+| QUAL-03 | Phase 35 | Complete |
+| QUAL-04 | Phase 35 | Pending (admin manual review) |
 | NORW-01 | Phase 36 | Confirmed |
 | NORW-02 | Phase 36 | Confirmed |
 | NORW-03 | Phase 36 | Confirmed |
