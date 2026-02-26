@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 ## Current Position
 
 Phase: 37 of 38 (Election Question Generation Script)
-Plan: Not started
-Status: Phase 36 complete and verified (4/5 must-haves; minor terminology gap accepted) — ready to plan Phase 37
-Last activity: 2026-02-25 — Phase 36 executed and verified (117 Norwich questions, collection live)
+Plan: 01 of 02 complete
+Status: Plan 01 complete — ElectionQuestionGenerator service + CLI script ready
+Last activity: 2026-02-26 — Plan 01 executed (ElectionQuestionGenerator service + CLI)
 
 Progress: [████████████████████████] 103 plans complete (v1.0 through v1.6 + Phase 35 + Phase 36) — v1.7 in progress
 
@@ -61,6 +61,12 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent v1.7 decisions:
 
 - Admin-entered race data for v1.7 (not scrapers) — scraping is v1.8+ per research finding that no reliable free API exists for US local elections
+- claude-sonnet-4-6 hardcoded directly in ElectionQuestionGenerator (not the MODEL constant in anthropic-client.ts which is outdated at claude-sonnet-4-5)
+- Collection slug passed explicitly as CLI/API parameter (not derived from jurisdiction string matching)
+- elections-voting topic created lazily by resolveCollectionAndTopic if not present for the collection
+- Force-regenerate uses timestamp-suffixed externalIds (elc-{raceId}-{ts36}-{seq}) to avoid ON CONFLICT DO NOTHING silently skipping new questions
+- getEndOfDayUTC anchors on local noon (not midnight) to correctly handle DST spring-forward dates
+- No Zod BatchSchema validation on election question responses (existing schema regex won't match elc- format)
 - Advisory severity for address/phone quality rule — legitimate civic location questions can have address answers; flag for human review, no auto-archive
 - Follow-up questions have expiresAt = NULL — "Who won?" is a permanent historic fact, not a time-limited question
 - election_race_id as direct FK on questions (not junction table) — each election question belongs to exactly one race; simpler than junction table
@@ -109,11 +115,11 @@ None — Phase 35 complete, ready for Phase 36 planning.
 ## Session Continuity
 
 Last session: 2026-02-26
-Topic: Phase 36 Plan 02 execution — Norwich content generation and activation
-Stopped at: Plan 02 complete — 117 questions seeded, image added, collection activated, human approved
+Topic: Phase 37 Plan 01 execution — ElectionQuestionGenerator service + CLI
+Stopped at: Plan 01 complete — service and CLI committed, SUMMARY.md created
 Resume file: None
 
-Next action: Execute Phase 37 (next phase in v1.7 roadmap)
+Next action: Execute Phase 37 Plan 02 — API route + admin UI generate button
 
 ---
 *v1.7 Live Civic Intelligence — roadmap created 2026-02-25*
