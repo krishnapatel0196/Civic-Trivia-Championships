@@ -74,10 +74,11 @@ Plans:
 4. Questions correctly attribute responsibilities to Norwich City Council (housing, planning, leisure) vs Norfolk County Council (roads, schools, social care) — no cross-tier attribution errors
 5. All Norwich questions have `externalId` prefixed with `nor` (e.g., `nor-001`)
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 36-01: norwich-uk locale config, source fetch, question generation, seed, and activate
+- [ ] 36-01-PLAN.md — Norwich locale config, voice guidance prompt, collection/seed/merge registration
+- [ ] 36-02-PLAN.md — Generate questions, add collection image, seed to DB, activate, verify
 
 ---
 
@@ -135,6 +136,6 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 1-34 (v1.0-v1.6) | v1.0-v1.6 | 99/99 | Complete | 2026-02-24 |
 | 35. Election Data Foundation + Quality Rule | v1.7 | 2/2 | Complete | 2026-02-26 |
-| 36. Norwich, England Collection | v1.7 | 0/1 | Not started | - |
+| 36. Norwich, England Collection | v1.7 | 0/2 | Not started | - |
 | 37. Election Question Generation Script | v1.7 | 0/1 | Not started | - |
 | 38. Election Cron + Current-Term Stage + Admin Election UI | v1.7 | 0/3 | Not started | - |
