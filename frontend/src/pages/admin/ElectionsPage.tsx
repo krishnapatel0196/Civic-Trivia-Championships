@@ -174,7 +174,10 @@ export function ElectionsPage() {
   // Generation handlers
   const handleGenerate = (raceId: number) => {
     setGeneratingRaceId(raceId);
-    setGenCollectionSlug('');
+    // Auto-match collection slug from race jurisdiction
+    const race = races.find(r => r.id === raceId);
+    const matched = race ? collections.find(c => c.name === race.jurisdiction) : null;
+    setGenCollectionSlug(matched?.slug ?? '');
     setShowCollectionPrompt(true);
   };
 
@@ -284,14 +287,28 @@ export function ElectionsPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Jurisdiction <span className="text-red-600">*</span>
                 </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g., Bloomington, IN"
-                  value={form.jurisdiction}
-                  onChange={(e) => setForm((p) => ({ ...p, jurisdiction: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                />
+                {collections.length > 0 ? (
+                  <select
+                    required
+                    value={form.jurisdiction}
+                    onChange={(e) => setForm((p) => ({ ...p, jurisdiction: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  >
+                    <option value="">— select a collection —</option>
+                    {collections.map(c => (
+                      <option key={c.slug} value={c.name}>{c.name}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g., Bloomington, IN"
+                    value={form.jurisdiction}
+                    onChange={(e) => setForm((p) => ({ ...p, jurisdiction: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  />
+                )}
               </div>
             </div>
 
