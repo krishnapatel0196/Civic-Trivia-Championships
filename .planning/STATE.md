@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 ## Current Position
 
 Phase: 36 of 38 (Norwich, England Collection)
-Plan: 01 of 03 complete
-Status: In progress — Plan 01 (infrastructure) complete, ready for Plan 02 (generation run)
-Last activity: 2026-02-26 — Completed 36-01-PLAN.md (Norwich locale config, voice guidance, seed registration)
+Plan: 02 of 02 complete
+Status: Phase complete — Norwich collection live with 117 questions, image, and human approval
+Last activity: 2026-02-26 — Completed 36-02-PLAN.md (Norwich question generation, image, collection activation)
 
-Progress: [████████████████████████] 102 plans complete (v1.0 through v1.6 + Phase 35 + Phase 36 Plan 01) — v1.7 in progress
+Progress: [████████████████████████] 103 plans complete (v1.0 through v1.6 + Phase 35 + Phase 36) — v1.7 in progress
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete ✅
@@ -72,6 +72,10 @@ Recent v1.7 decisions:
 - Norwich batchSize 15 (not 25) — smaller topic-focused batches across 8 topic categories
 - Norwich themeColor #1B4332 (deep forest green) — visually distinct from all existing collection colors
 - Two-tier governance (City Council vs Norfolk County Council) encoded as critical accuracy requirement in Norwich voice guidance
+- Norwich generation produced 117 questions (target 50-90); overshoot accepted as all passed quality validation
+- Norwich image sourced from Geograph.org.uk CC-BY-SA 2.0 (Wikimedia CDN rate-limited curl); Node.js HTTPS with Referer header used as workaround
+- Generation pipeline seeds questions as draft by default — activate via direct DB update after quality review
+- Norwich is the platform's first non-US collection (en-GB); establishes pattern for future international collections
 
 ### Pending Todos
 
@@ -105,11 +109,11 @@ None — Phase 35 complete, ready for Phase 36 planning.
 ## Session Continuity
 
 Last session: 2026-02-26
-Topic: Phase 36 Plan 01 execution — Norwich infrastructure
-Stopped at: Plan 01 complete — all 2 tasks committed, SUMMARY created
+Topic: Phase 36 Plan 02 execution — Norwich content generation and activation
+Stopped at: Plan 02 complete — 117 questions seeded, image added, collection activated, human approved
 Resume file: None
 
-Next action: Execute Phase 36 Plan 02 (Norwich content generation run)
+Next action: Execute Phase 37 (next phase in v1.7 roadmap)
 
 ---
 *v1.7 Live Civic Intelligence — roadmap created 2026-02-25*
