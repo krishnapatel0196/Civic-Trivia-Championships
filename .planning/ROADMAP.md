@@ -120,12 +120,12 @@ Plans:
 4. Admin enters winner name and term end date for an expired race via the "Enter Result + Generate Current-Term Questions" form; current-term questions are generated with `expiresAt` set to the term end date; `followup_generated` is set to TRUE
 5. Admin can update a race's candidate list and re-trigger generation; previously generated questions are archived before new questions are created
 
-**Plans:** TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 38-01: electionDetection.ts cron job, startCron.ts registration, idempotency
-- [ ] 38-02: Current-term question generation (follow-up stage, term-end expiry)
-- [ ] 38-03: ElectionManagementPage.tsx, admin API endpoints, nav link, route
+- [ ] 38-01-PLAN.md — Daily election detection cron (6 AM Eastern), startCron registration, idempotency, in-memory last-run state
+- [ ] 38-02-PLAN.md — CurrentTermQuestionGenerator service + 6 new admin API endpoints (classified, question-count, enter-result, regenerate, edit, delete)
+- [ ] 38-03-PLAN.md — ElectionsPage three-tab rewrite (Active/Pending/Awaiting), Enter Result modal, Re-generate confirm, cron banner
 
 ---
 
