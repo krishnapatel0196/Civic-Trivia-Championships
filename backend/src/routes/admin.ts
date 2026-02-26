@@ -1445,8 +1445,9 @@ router.post('/election-races/:id/generate', async (req: Request, res: Response) 
     if (error instanceof Error && error.message.includes('not found')) {
       return res.status(404).json({ error: error.message });
     }
+    const message = error instanceof Error ? error.message : String(error);
     console.error('Failed to generate election questions:', error);
-    return res.status(500).json({ error: 'Failed to generate election questions' });
+    return res.status(500).json({ error: 'Failed to generate election questions', detail: message });
   }
 });
 

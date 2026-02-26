@@ -58,6 +58,15 @@ export function ElectionsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  // Collections (for generation dropdown)
+  const [collections, setCollections] = useState<{ id: number; name: string; slug: string }[]>([]);
+  useEffect(() => {
+    fetch(`${API_URL}/api/game/collections`)
+      .then(r => r.json())
+      .then(data => setCollections(data.collections ?? data ?? []))
+      .catch(() => {});
+  }, []);
+
   // Generation state
   const [generatingRaceId, setGeneratingRaceId] = useState<number | null>(null);
   const [genCollectionSlug, setGenCollectionSlug] = useState('');
@@ -190,7 +199,7 @@ export function ElectionsPage() {
       } else if (response.status === 409) {
         setGenError({ type: 'blocked', message: data.message, existingCount: data.existingCount, generatedAt: data.generatedAt });
       } else {
-        setGenError({ type: 'error', message: data.error || 'Failed to generate questions' });
+        setGenError({ type: 'error', message: data.detail || data.error || 'Failed to generate questions' });
       }
     } catch (err) {
       setGenError({ type: 'error', message: 'Network error — please try again' });
@@ -493,15 +502,28 @@ export function ElectionsPage() {
                   {selectedRace ? `Race: ${selectedRace.seat} — ${selectedRace.jurisdiction}` : ''}
                 </p>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Collection slug
+                  Collection
                 </label>
-                <input
-                  type="text"
-                  value={genCollectionSlug}
-                  onChange={e => setGenCollectionSlug(e.target.value)}
-                  placeholder="e.g., bloomington-in"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-700 mb-4"
-                />
+                {collections.length > 0 ? (
+                  <select
+                    value={genCollectionSlug}
+                    onChange={e => setGenCollectionSlug(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-700 mb-4"
+                  >
+                    <option value="">— select a collection —</option>
+                    {collections.map(c => (
+                      <option key={c.slug} value={c.slug}>{c.name} ({c.slug})</option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    value={genCollectionSlug}
+                    onChange={e => setGenCollectionSlug(e.target.value)}
+                    placeholder="e.g., bloomington-in"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-700 mb-4"
+                  />
+                )}
                 <div className="flex gap-3 justify-end">
                   <button
                     onClick={() => setShowCollectionPrompt(false)}
