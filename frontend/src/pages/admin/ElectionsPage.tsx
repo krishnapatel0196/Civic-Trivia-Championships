@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Dialog, Transition } from '@headlessui/react';
 import { API_URL } from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
 
@@ -55,6 +57,24 @@ export function ElectionsPage() {
   const [form, setForm] = useState(emptyForm());
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Generation state
+  const [generatingRaceId, setGeneratingRaceId] = useState<number | null>(null);
+  const [genCollectionSlug, setGenCollectionSlug] = useState('');
+  const [showCollectionPrompt, setShowCollectionPrompt] = useState(false);
+  const [genLoading, setGenLoading] = useState(false);
+  const [genResult, setGenResult] = useState<{
+    questionsCreated: number;
+    archived: number;
+    collectionSlug: string;
+    jurisdiction: string;
+  } | null>(null);
+  const [genError, setGenError] = useState<{
+    type: 'blocked' | 'error';
+    message: string;
+    existingCount?: number;
+    generatedAt?: string | null;
+  } | null>(null);
 
   const fetchRaces = async () => {
     if (!accessToken) return;
@@ -141,6 +161,45 @@ export function ElectionsPage() {
       setSubmitting(false);
     }
   };
+
+  // Generation handlers
+  const handleGenerate = (raceId: number) => {
+    setGeneratingRaceId(raceId);
+    setGenCollectionSlug('');
+    setShowCollectionPrompt(true);
+  };
+
+  const startGeneration = async (raceId: number, collectionSlug: string, force: boolean = false) => {
+    setShowCollectionPrompt(false);
+    setGenLoading(true);
+    setGenResult(null);
+    setGenError(null);
+    try {
+      const response = await fetch(`${API_URL}/api/admin/election-races/${raceId}/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ collectionSlug, force }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setGenResult(data);
+        fetchRaces();
+      } else if (response.status === 409) {
+        setGenError({ type: 'blocked', message: data.message, existingCount: data.existingCount, generatedAt: data.generatedAt });
+      } else {
+        setGenError({ type: 'error', message: data.error || 'Failed to generate questions' });
+      }
+    } catch (err) {
+      setGenError({ type: 'error', message: 'Network error — please try again' });
+    } finally {
+      setGenLoading(false);
+    }
+  };
+
+  const selectedRace = races.find(r => r.id === generatingRaceId);
 
   return (
     <div className="space-y-6">
@@ -345,6 +404,7 @@ export function ElectionsPage() {
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Jurisdiction</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Candidates</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Generated</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
@@ -394,12 +454,185 @@ export function ElectionsPage() {
                       </span>
                     </div>
                   </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => handleGenerate(race.id)}
+                      className="text-xs px-3 py-1 rounded border border-gray-300 hover:border-red-700 hover:text-red-700 transition-colors"
+                    >
+                      Generate
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
+
+      {/* Modal 1: Collection Slug Prompt */}
+      <Transition show={showCollectionPrompt} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={() => setShowCollectionPrompt(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-200" enterFrom="opacity-0" enterTo="opacity-100"
+            leave="ease-in duration-150" leaveFrom="opacity-100" leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-40" />
+          </Transition.Child>
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-200" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100"
+              leave="ease-in duration-150" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
+                <Dialog.Title className="text-lg font-semibold text-gray-900 mb-2">
+                  Generate Election Questions
+                </Dialog.Title>
+                <p className="text-sm text-gray-600 mb-4">
+                  {selectedRace ? `Race: ${selectedRace.seat} — ${selectedRace.jurisdiction}` : ''}
+                </p>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Collection slug
+                </label>
+                <input
+                  type="text"
+                  value={genCollectionSlug}
+                  onChange={e => setGenCollectionSlug(e.target.value)}
+                  placeholder="e.g., bloomington-in"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-700 mb-4"
+                />
+                <div className="flex gap-3 justify-end">
+                  <button
+                    onClick={() => setShowCollectionPrompt(false)}
+                    className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => startGeneration(generatingRaceId!, genCollectionSlug)}
+                    disabled={!genCollectionSlug.trim()}
+                    className="px-4 py-2 text-sm bg-red-700 text-white rounded-lg hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Generate
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
+
+      {/* Modal 2: Loading */}
+      <Transition show={genLoading} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={() => {}}>
+          <Transition.Child as={Fragment} enter="ease-out duration-200" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-150" leaveFrom="opacity-100" leaveTo="opacity-0">
+            <div className="fixed inset-0 bg-black bg-opacity-40" />
+          </Transition.Child>
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Transition.Child as={Fragment} enter="ease-out duration-200" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-150" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+              <Dialog.Panel className="bg-white rounded-xl shadow-xl p-8 w-full max-w-sm text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-10 h-10 rounded-full border-4 border-gray-200 border-t-red-700 animate-spin" />
+                </div>
+                <Dialog.Title className="text-lg font-semibold text-gray-900 mb-2">Generating Questions</Dialog.Title>
+                <p className="text-sm text-gray-600">Creating questions for {selectedRace?.seat}...</p>
+                <p className="text-xs text-gray-400 mt-2">This may take 1–2 minutes.</p>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
+
+      {/* Modal 3: Success */}
+      <Transition show={genResult !== null} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={() => setGenResult(null)}>
+          <Transition.Child as={Fragment} enter="ease-out duration-200" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-150" leaveFrom="opacity-100" leaveTo="opacity-0">
+            <div className="fixed inset-0 bg-black bg-opacity-40" />
+          </Transition.Child>
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Transition.Child as={Fragment} enter="ease-out duration-200" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-150" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+              <Dialog.Panel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
+                <Dialog.Title className="text-lg font-semibold text-green-700 mb-2">Questions Generated</Dialog.Title>
+                {genResult && (
+                  <>
+                    <p className="text-sm text-gray-700 mb-1">
+                      <strong>{genResult.questionsCreated}</strong> draft questions created for {genResult.jurisdiction}.
+                      {genResult.archived > 0 && ` (${genResult.archived} previous questions archived)`}
+                    </p>
+                    <div className="mt-4 mb-4">
+                      <Link
+                        to={`/admin/questions?collection=${genResult.collectionSlug}&status=draft`}
+                        className="text-sm text-red-700 hover:text-red-800 font-medium"
+                        onClick={() => setGenResult(null)}
+                      >
+                        View in Explorer &rarr;
+                      </Link>
+                    </div>
+                  </>
+                )}
+                <div className="flex justify-end">
+                  <button onClick={() => setGenResult(null)} className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                    Close
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
+
+      {/* Modal 4: Error / Blocked */}
+      <Transition show={genError !== null} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={() => setGenError(null)}>
+          <Transition.Child as={Fragment} enter="ease-out duration-200" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-150" leaveFrom="opacity-100" leaveTo="opacity-0">
+            <div className="fixed inset-0 bg-black bg-opacity-40" />
+          </Transition.Child>
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Transition.Child as={Fragment} enter="ease-out duration-200" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-150" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+              <Dialog.Panel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
+                {genError?.type === 'blocked' ? (
+                  <>
+                    <Dialog.Title className="text-lg font-semibold text-amber-700 mb-2">Questions Already Generated</Dialog.Title>
+                    <p className="text-sm text-gray-700 mb-1">
+                      {genError.existingCount} questions already exist for this race.
+                    </p>
+                    {genError.generatedAt && (
+                      <p className="text-xs text-gray-500 mb-3">
+                        Generated: {new Date(genError.generatedAt).toLocaleDateString()}
+                      </p>
+                    )}
+                    <p className="text-sm text-gray-600 mb-4">
+                      Force Regenerate will archive the existing questions and create new ones.
+                    </p>
+                    <div className="flex gap-3 justify-end">
+                      <button onClick={() => setGenError(null)} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900">
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => { setGenError(null); startGeneration(generatingRaceId!, genCollectionSlug, true); }}
+                        className="px-4 py-2 text-sm bg-amber-600 text-white rounded-lg hover:bg-amber-700"
+                      >
+                        Force Regenerate
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Dialog.Title className="text-lg font-semibold text-red-700 mb-2">Generation Failed</Dialog.Title>
+                    <p className="text-sm text-gray-700 mb-4">{genError?.message}</p>
+                    <div className="flex justify-end">
+                      <button onClick={() => setGenError(null)} className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                        Close
+                      </button>
+                    </div>
+                  </>
+                )}
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 }
