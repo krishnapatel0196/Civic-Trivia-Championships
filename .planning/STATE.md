@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 ## Current Position
 
 Phase: 36 of 38 (Norwich, England Collection)
-Plan: Not started
-Status: Phase 35 complete and verified — ready to plan Phase 36
-Last activity: 2026-02-26 — Phase 35 executed and verified (election_races schema + checkAddressPhone quality rule, 5/5 must-haves)
+Plan: 01 of 03 complete
+Status: In progress — Plan 01 (infrastructure) complete, ready for Plan 02 (generation run)
+Last activity: 2026-02-26 — Completed 36-01-PLAN.md (Norwich locale config, voice guidance, seed registration)
 
-Progress: [████████████████████████] 101 plans complete (v1.0 through v1.6 + Phase 35) — v1.7 in progress
+Progress: [████████████████████████] 102 plans complete (v1.0 through v1.6 + Phase 35 + Phase 36 Plan 01) — v1.7 in progress
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete ✅
@@ -68,6 +68,10 @@ Recent v1.7 decisions:
 - Focused audit scripts import a single rule directly (not full auditQuestion) for clean single-rule reports
 - drizzle-kit push interactive "create or rename?" prompt bypassed by applying DDL via pg client directly — schema.ts remains source of truth, workaround is safe and non-destructive
 - election_race_id stored as UTC TIMESTAMPTZ; separate timezone TEXT field (IANA) used for display/scheduling context only
+- Norwich uses en-GB localeCode — first non-US collection; all others are en-US
+- Norwich batchSize 15 (not 25) — smaller topic-focused batches across 8 topic categories
+- Norwich themeColor #1B4332 (deep forest green) — visually distinct from all existing collection colors
+- Two-tier governance (City Council vs Norfolk County Council) encoded as critical accuracy requirement in Norwich voice guidance
 
 ### Pending Todos
 
@@ -101,11 +105,11 @@ None — Phase 35 complete, ready for Phase 36 planning.
 ## Session Continuity
 
 Last session: 2026-02-26
-Topic: Phase 35 execution (both plans, wave 1 parallel)
-Stopped at: Phase 35 complete and verified — all 5 must-haves pass
+Topic: Phase 36 Plan 01 execution — Norwich infrastructure
+Stopped at: Plan 01 complete — all 2 tasks committed, SUMMARY created
 Resume file: None
 
-Next action: `/gsd:discuss-phase 36` or `/gsd:plan-phase 36`
+Next action: Execute Phase 36 Plan 02 (Norwich content generation run)
 
 ---
 *v1.7 Live Civic Intelligence — roadmap created 2026-02-25*
