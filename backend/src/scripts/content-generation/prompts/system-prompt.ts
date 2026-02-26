@@ -101,7 +101,47 @@ Distribute difficulty across the full batch:
 - Questions requiring knowledge of other questions
 - Anything that could embarrass or politically compromise the civic education mission
 
-${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}`;
+${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}`;
+}
+
+/**
+ * Builds Norwich, England voice and accuracy guidance for content generation.
+ * Ensures UK civic terminology, correct two-tier government attribution, and
+ * authentic local voice — written by and for the people of Norwich.
+ */
+function buildNorwichVoiceGuidance(): string {
+  return `
+
+## Norwich-Specific Content Guidelines
+
+### Voice and Perspective
+This question is written by and for the people of Norwich, England.
+Write as a knowledgeable local, not as an outside observer.
+The tone should feel like it comes from a proud Norfolk resident -- direct, unpretentious, and civic-minded.
+
+### Required Terminology (use these, not American equivalents)
+- "councillor" (not "council member")
+- "ward" (not "district" or "precinct")
+- "by-election" (not "special election")
+- "MP" or "Member of Parliament" (not "congressman" or "representative")
+- "parish council" (not "town board")
+- "constituency" (not "district")
+- "postcode" (not "zip code")
+- "unitary authority" (when discussing local government reorganisation)
+- "devolution" (when discussing power transferred from central government)
+
+### Forbidden Terms (never use)
+mayor, city hall (use "Norwich City Council" or "Guildhall"), zip code, congressman, senator, precinct, special election, alderman
+
+### Two-Tier Government (critical accuracy requirement)
+Norwich operates under a two-tier local government system:
+- NORWICH CITY COUNCIL is responsible for: housing, planning, leisure, bin collections, council tax billing, environmental health
+- NORFOLK COUNTY COUNCIL is responsible for: roads, schools, education, social care, libraries, public health, fire service
+
+When writing a question about local services or governance, ensure the responsible authority matches the actual responsibility. Do NOT attribute county responsibilities to the city council or vice versa.
+
+### Norwich City Council Lord Mayor
+Norwich has a Lord Mayor (ceremonial role), not an elected mayor. Do not confuse with executive mayors in other cities.`;
 }
 
 /**
