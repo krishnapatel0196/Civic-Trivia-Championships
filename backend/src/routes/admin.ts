@@ -8,6 +8,7 @@ import type { QuestionInput } from '../services/qualityRules/types.js';
 import { z } from 'zod';
 import { DuplicateReviewService } from '../services/DuplicateReviewService.js';
 import { JSONSyncService } from '../services/JSONSyncService.js';
+import { generateElectionQuestions, GenerationBlockedError } from '../services/generation/ElectionQuestionGenerator.js';
 
 const router = Router();
 
@@ -1408,6 +1409,44 @@ router.post('/election-races', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Failed to create election race:', error);
     return res.status(500).json({ error: 'Failed to create election race' });
+  }
+});
+
+// POST /election-races/:id/generate — Trigger question generation for an election race
+// Body: { collectionSlug: string, force?: boolean }
+router.post('/election-races/:id/generate', async (req: Request, res: Response) => {
+  try {
+    const raceId = parseInt(req.params.id, 10);
+    if (isNaN(raceId)) {
+      return res.status(400).json({ error: 'Invalid race ID' });
+    }
+
+    const { collectionSlug, force } = req.body;
+    if (!collectionSlug || typeof collectionSlug !== 'string') {
+      return res.status(400).json({ error: 'collectionSlug is required' });
+    }
+
+    const result = await generateElectionQuestions(raceId, collectionSlug, { force: force === true });
+    return res.status(200).json({
+      questionsCreated: result.questionsCreated,
+      archived: result.archived,
+      jurisdiction: result.jurisdiction,
+      collectionSlug: result.collectionSlug,
+    });
+  } catch (error) {
+    if (error instanceof GenerationBlockedError) {
+      return res.status(409).json({
+        error: 'already_generated',
+        message: error.message,
+        existingCount: error.existingCount,
+        generatedAt: error.generatedAt,
+      });
+    }
+    if (error instanceof Error && error.message.includes('not found')) {
+      return res.status(404).json({ error: error.message });
+    }
+    console.error('Failed to generate election questions:', error);
+    return res.status(500).json({ error: 'Failed to generate election questions' });
   }
 });
 
