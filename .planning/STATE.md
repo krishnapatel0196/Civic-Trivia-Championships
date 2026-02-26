@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 ## Current Position
 
 Phase: 35 of 38 (Election Data Foundation + Quality Rule)
-Plan: 02 of N (35-02 complete)
-Status: In progress — address/phone quality rule shipped
-Last activity: 2026-02-26 — Completed 35-02-PLAN.md (checkAddressPhone rule + audit script)
+Plan: 01 and 02 complete (both 35-01 and 35-02 done)
+Status: Phase 35 complete — election data foundation + address/phone quality rule both shipped
+Last activity: 2026-02-26 — Completed 35-01-PLAN.md (election_races table, admin UI, CRUD API)
 
 Progress: [████████████████████████] 99 plans complete (v1.0 through v1.6) — v1.7 starting
 
@@ -66,6 +66,8 @@ Recent v1.7 decisions:
 - election_race_id as direct FK on questions (not junction table) — each election question belongs to exactly one race; simpler than junction table
 - checkAddressPhone scans answer options ONLY — not question.text or explanation; civic bodies legitimately reference addresses
 - Focused audit scripts import a single rule directly (not full auditQuestion) for clean single-rule reports
+- drizzle-kit push interactive "create or rename?" prompt bypassed by applying DDL via pg client directly — schema.ts remains source of truth, workaround is safe and non-destructive
+- election_race_id stored as UTC TIMESTAMPTZ; separate timezone TEXT field (IANA) used for display/scheduling context only
 
 ### Pending Todos
 
@@ -99,11 +101,11 @@ None — roadmap confirmed, ready for Phase 35 planning.
 ## Session Continuity
 
 Last session: 2026-02-26
-Topic: Phase 35 plan 02 execution — checkAddressPhone quality rule
-Stopped at: Completed 35-02-PLAN.md — rule created, engine registered, audit script ships
+Topic: Phase 35 plan 01 execution — election_races data foundation
+Stopped at: Completed 35-01-PLAN.md — election_races table, questions.election_race_id FK, admin CRUD API, Elections admin page
 Resume file: None
 
-Next action: Continue Phase 35 (plan 03 — election data model)
+Next action: Phase 35 complete — move to Phase 36 or next v1.7 phase
 
 ---
 *v1.7 Live Civic Intelligence — roadmap created 2026-02-25*
