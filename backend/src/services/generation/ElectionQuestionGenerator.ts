@@ -136,13 +136,8 @@ export function buildElectionSystemPrompt(race: ElectionRace, questionTarget: nu
   const candidateNames = race.candidates.map((c) => c.name).join(', ') || 'Unknown';
   const candidateCount = race.candidates.length;
 
-  // Format the election date as YYYY-MM-DD in the jurisdiction's local timezone
-  const localElectionDate = new Intl.DateTimeFormat('en-CA', {
-    timeZone: race.timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(race.electionDate);
+  // Format the election date as YYYY-MM-DD (stored as UTC midnight, use ISO string directly)
+  const localElectionDate = race.electionDate.toISOString().split('T')[0];
 
   let mcqGuidance: string;
   if (candidateCount === 2) {
@@ -389,13 +384,10 @@ export async function generateElectionQuestions(
   const { collectionId, topicId } = await resolveCollectionAndTopic(collectionSlug);
   console.log(`  Collection ID: ${collectionId}, Topic ID: ${topicId}`);
 
-  // 5. Compute expiresAt — end-of-day in the jurisdiction's local timezone
-  const localDateStr = new Intl.DateTimeFormat('en-CA', {
-    timeZone: race.timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(race.electionDate);
+  // 5. Compute expiresAt — end-of-day in the jurisdiction's local timezone.
+  // electionDate is stored as UTC midnight of the intended date (e.g. 2026-11-03T00:00:00Z).
+  // Use toISOString().split('T')[0] to get the date as stored, avoiding timezone shift.
+  const localDateStr = race.electionDate.toISOString().split('T')[0];
 
   const expiresAt = getEndOfDayUTC(localDateStr, race.timezone);
   console.log(`  Expires at: ${expiresAt.toISOString()} (end of ${localDateStr} in ${race.timezone})`);
