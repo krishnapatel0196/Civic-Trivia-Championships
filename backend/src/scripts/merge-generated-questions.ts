@@ -21,6 +21,7 @@ const JSON_FILE_MAP: Record<string, string> = {
   'indiana': 'indiana-state-questions.json',
   'california': 'california-state-questions.json',
   'fremont-ca': 'fremont-ca-questions.json',
+  'norwich-uk': 'norwich-uk-questions.json',
 };
 
 interface Question {

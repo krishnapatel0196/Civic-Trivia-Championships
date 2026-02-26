@@ -66,5 +66,16 @@ export const collectionsData: NewCollection[] = [
     themeColor: '#92400E', // golden brown - California
     isActive: true,
     sortOrder: 6
+  },
+  {
+    name: 'Norwich, England',
+    slug: 'norwich-uk',
+    description: 'Local democracy, history & culture in the heart of Norfolk',
+    localeCode: 'en-GB',
+    localeName: 'Norwich, England',
+    iconIdentifier: 'flag-gb',
+    themeColor: '#1B4332', // deep forest green (visually distinct from all existing colors)
+    isActive: false,      // activated after questions are seeded
+    sortOrder: 7
   }
 ];
