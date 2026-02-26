@@ -27,6 +27,7 @@ export const SCORE_WEIGHTS: Record<string, number> = {
   'long-question': 5,
   'missing-citation': 8,
   'missing-options': 10,
+  'address-phone': 10,  // Advisory — modest penalty for phone/address in answer options
 };
 
 /**
