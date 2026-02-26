@@ -50,6 +50,24 @@ export const collectionTopics = civicTriviaSchema.table('collection_topics', {
   topicIdx: index('idx_collection_topics_topic').on(table.topicId)
 }));
 
+// Election Races table
+export const electionRaces = civicTriviaSchema.table('election_races', {
+  id: serial('id').primaryKey(),
+  seat: text('seat').notNull(), // e.g., "Mayor of Bloomington"
+  electionType: text('election_type').notNull(), // primary, general, runoff, by-election
+  electionDate: timestamp('election_date', { withTimezone: true }).notNull(),
+  timezone: text('timezone').notNull(), // IANA format, e.g., "America/Indiana/Indianapolis"
+  jurisdiction: text('jurisdiction').notNull(), // e.g., "Bloomington, IN"
+  candidates: jsonb('candidates').$type<Array<{name: string; party: string; incumbent: boolean}>>().notNull().default([]),
+  questionsGenerated: boolean('questions_generated').notNull().default(false),
+  followupGenerated: boolean('followup_generated').notNull().default(false),
+  result: text('result'), // nullable, filled after election resolves
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+});
+
+export type ElectionRace = typeof electionRaces.$inferSelect;
+export type NewElectionRace = typeof electionRaces.$inferInsert;
+
 // Questions table
 export const questions = civicTriviaSchema.table('questions', {
   id: serial('id').primaryKey(),
@@ -85,7 +103,9 @@ export const questions = civicTriviaSchema.table('questions', {
   correctCount: integer('correct_count').notNull().default(0),
   qualityScore: integer('quality_score'),
   violationCount: integer('violation_count'),
-  flagCount: integer('flag_count').notNull().default(0)
+  flagCount: integer('flag_count').notNull().default(0),
+  electionRaceId: integer('election_race_id')
+    .references(() => electionRaces.id, { onDelete: 'set null' })
 }, (table) => ({
   topicIdx: index('idx_questions_topic_id').on(table.topicId),
   learningContentIdx: index('idx_questions_learning_content')
