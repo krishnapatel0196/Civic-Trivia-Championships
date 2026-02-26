@@ -17,13 +17,13 @@ Requirements for the Live Civic Intelligence milestone. Continues from v1.6 (pha
 
 ### Election Pipeline — Question Generation
 
-- [ ] **ELEC-04**: Admin can trigger question generation for a specific race from the admin election management UI
-- [ ] **ELEC-05**: Election question generation produces questions referencing actual candidate names and seat from the race record
-- [ ] **ELEC-06**: Generated election questions have `expiresAt` set to end-of-day on election date in the jurisdiction's local timezone (not UTC midnight)
-- [ ] **ELEC-07**: Generated election questions are linked to their election race via `election_race_id`
-- [ ] **ELEC-08**: Generated election questions enter `draft` status; admin activates before players see them
-- [ ] **ELEC-09**: Election generation prompt includes MCQ construction guidance for small candidate pools (2 candidates) and crowded primaries (5+ candidates) to prevent degenerate answer options
-- [ ] **ELEC-10**: After generation, `election_races.questions_generated` flag is set to `TRUE` to prevent duplicate generation runs
+- [x] **ELEC-04**: Admin can trigger question generation for a specific race from the admin election management UI
+- [x] **ELEC-05**: Election question generation produces questions referencing actual candidate names and seat from the race record
+- [x] **ELEC-06**: Generated election questions have `expiresAt` set to end-of-day on election date in the jurisdiction's local timezone (not UTC midnight)
+- [x] **ELEC-07**: Generated election questions are linked to their election race via `election_race_id`
+- [x] **ELEC-08**: Generated election questions enter `draft` status; admin activates before players see them
+- [x] **ELEC-09**: Election generation prompt includes MCQ construction guidance for small candidate pools (2 candidates) and crowded primaries (5+ candidates) to prevent degenerate answer options
+- [x] **ELEC-10**: After generation, `election_races.questions_generated` flag is set to `TRUE` to prevent duplicate generation runs
 
 ### Election Pipeline — Cron Detection
 
