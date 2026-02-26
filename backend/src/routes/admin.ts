@@ -1126,7 +1126,19 @@ router.get('/duplicates', async (req: Request, res: Response) => {
     // Lazy-initialize singleton service
     if (!duplicateReviewService) {
       duplicateReviewService = new DuplicateReviewService();
-      await duplicateReviewService.loadReport();
+      try {
+        await duplicateReviewService.loadReport();
+      } catch (loadErr: any) {
+        if (loadErr?.message?.includes('No scanner reports found')) {
+          return res.json({
+            clusters: [],
+            advancedFlags: [],
+            summary: { totalClusters: 0, pendingReview: 0, resolved: 0, autoResolvable: 0 },
+            noReports: true,
+          });
+        }
+        throw loadErr;
+      }
     }
 
     // Parse filters

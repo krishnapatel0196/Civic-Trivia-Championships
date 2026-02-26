@@ -132,6 +132,11 @@ export function DuplicateReviewPage() {
       }
 
       const data = await response.json();
+      if (data.noReports) {
+        setError('No duplicate scan reports found on this server. Run the scan locally to generate reports.');
+        setClusters([]);
+        return;
+      }
       setClusters(data.clusters || []);
       setAdvancedFlags(data.advancedFlags || []);
       setSummary(data.summary || null);
