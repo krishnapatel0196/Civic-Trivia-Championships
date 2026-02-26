@@ -51,11 +51,11 @@ Phases 1-34 complete. See MILESTONES.md for full details.
 4. Running the `audit-address-phone.ts` script against all 519 active questions produces a grouped report of flagged questions — no auto-archival occurs
 5. The `checkAddressPhone` rule runs as part of standard question validation (quality score recalculated for any new question includes the rule's output)
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 35-01: DB schema — election_races table, election_race_id FK, Drizzle types
-- [ ] 35-02: Address/phone quality rule + audit script + admin review
+- [ ] 35-01-PLAN.md — election_races schema, election_race_id FK, admin API + Elections page
+- [ ] 35-02-PLAN.md — checkAddressPhone quality rule, engine registration, audit script
 
 ---
 
@@ -133,7 +133,7 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1-34 (v1.0–v1.6) | v1.0–v1.6 | 99/99 | Complete | 2026-02-24 |
+| 1-34 (v1.0-v1.6) | v1.0-v1.6 | 99/99 | Complete | 2026-02-24 |
 | 35. Election Data Foundation + Quality Rule | v1.7 | 0/2 | Not started | - |
 | 36. Norwich, England Collection | v1.7 | 0/1 | Not started | - |
 | 37. Election Question Generation Script | v1.7 | 0/1 | Not started | - |
