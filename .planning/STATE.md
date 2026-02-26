@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-25)
 ## Current Position
 
 Phase: 38 of 38 (Election Cron + Current-Term Stage + Admin Election UI)
-Plan: 01 of N (Election Detection Cron)
-Status: In progress — Plan 38-01 complete
-Last activity: 2026-02-26 — Completed 38-01-PLAN.md (election detection cron + lastCronRun state)
+Plan: 02 of N (CurrentTermQuestionGenerator + Admin Election Lifecycle Endpoints)
+Status: In progress — Plan 38-02 complete
+Last activity: 2026-02-26 — Completed 38-02-PLAN.md (CurrentTermQuestionGenerator service + 6 admin election lifecycle endpoints)
 
-Progress: [████████████████████████] 106 plans complete (v1.0 through v1.6 + Phases 35–38-01) — v1.7 in progress
+Progress: [████████████████████████] 107 plans complete (v1.0 through v1.6 + Phases 35–38-02) — v1.7 in progress
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete ✅
@@ -66,6 +66,12 @@ Recent v1.7 decisions:
 - Election cron resolves collection slug via collections.name = race.jurisdiction DB lookup (cron has no slug context)
 - GenerationBlockedError from cron is idempotent skip — running cron twice for same race is expected, not an error
 - lastCronRun stored as module-level mutable let in electionDetection.ts — no DB round-trip needed for admin banner
+- FollowupBlockedError thrown when followupGenerated=true on enter-result call (idempotent 409 guard)
+- elc-term-{raceId}-{seq} external ID format for current-term questions (distinct from elc- campaign questions)
+- classified endpoint registered before GET /election-races to avoid Express :id param match on "classified"
+- Awaiting Follow-up classification: election_date < now AND followup_generated = FALSE (regardless of questions_generated)
+- Regenerate resolves collection slug from collections.name = race.jurisdiction (same pattern as cron)
+- PUT /election-races/:id uses partial patch — only updates fields present in body
 - elections-voting topic created lazily by resolveCollectionAndTopic if not present for the collection
 - Force-regenerate uses timestamp-suffixed externalIds (elc-{raceId}-{ts36}-{seq}) to avoid ON CONFLICT DO NOTHING silently skipping new questions
 - getEndOfDayUTC anchors on local noon (not midnight) to correctly handle DST spring-forward dates
@@ -105,7 +111,7 @@ Recent v1.7 decisions:
 
 ### Blockers/Concerns
 
-None — Phase 38-01 complete, election detection cron ready. Proceeding to Phase 38-02 (admin API for cron status banner).
+None — Phase 38-02 complete. CurrentTermQuestionGenerator + 6 admin endpoints ready. Proceeding to Phase 38-03 (admin election UI three-tab component).
 
 ### Quick Tasks Completed
 
@@ -118,11 +124,11 @@ None — Phase 38-01 complete, election detection cron ready. Proceeding to Phas
 ## Session Continuity
 
 Last session: 2026-02-26
-Topic: Phase 38-01 execution — Election detection cron (electionDetection.ts + startCron.ts + server.ts)
-Stopped at: Completed 38-01-PLAN.md — election detection cron registered, lastCronRun exported
+Topic: Phase 38-02 execution — CurrentTermQuestionGenerator service + 6 admin election lifecycle endpoints
+Stopped at: Completed 38-02-PLAN.md — all endpoints wired, TypeScript clean
 Resume file: None
 
-Next action: Execute Phase 38-02 (admin API endpoint exposing lastCronRun + election race CRUD)
+Next action: Execute Phase 38-03 (admin election UI three-tab component)
 
 ---
 *v1.7 Live Civic Intelligence — roadmap created 2026-02-25*
