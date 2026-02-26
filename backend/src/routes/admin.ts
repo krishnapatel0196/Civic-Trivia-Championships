@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { authenticateToken, requireAdmin } from '../middleware/auth.js';
 import { db } from '../db/index.js';
-import { questions, collections, collectionQuestions, questionFlags } from '../db/schema.js';
+import { questions, collections, collectionQuestions, questionFlags, electionRaces } from '../db/schema.js';
 import { eq, and, or, lte, gt, isNotNull, sql, inArray, ilike, desc, asc } from 'drizzle-orm';
 import { auditQuestion } from '../services/qualityRules/index.js';
 import type { QuestionInput } from '../services/qualityRules/types.js';
@@ -1354,6 +1354,60 @@ router.get('/duplicates/summary', async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Error fetching duplicate summary:', error);
     res.status(500).json({ error: 'Failed to fetch duplicate summary', detail: error?.message || String(error) });
+  }
+});
+
+/**
+ * GET /election-races — List all election races ordered by createdAt desc
+ */
+router.get('/election-races', async (req: Request, res: Response) => {
+  try {
+    const races = await db.select().from(electionRaces).orderBy(desc(electionRaces.createdAt));
+    res.json({ races });
+  } catch (error) {
+    console.error('Failed to fetch election races:', error);
+    res.status(500).json({ error: 'Failed to fetch election races' });
+  }
+});
+
+const createElectionRaceSchema = z.object({
+  seat: z.string().min(1).max(200),
+  electionType: z.enum(['primary', 'general', 'runoff', 'by-election']),
+  electionDate: z.string().datetime({ offset: true }),
+  timezone: z.string().min(1),
+  jurisdiction: z.string().min(1).max(200),
+  candidates: z.array(z.object({
+    name: z.string().min(1),
+    party: z.string().min(1),
+    incumbent: z.boolean(),
+  })).default([]),
+});
+
+/**
+ * POST /election-races — Create a new election race
+ */
+router.post('/election-races', async (req: Request, res: Response) => {
+  try {
+    const parsed = createElectionRaceSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: 'Validation failed', details: parsed.error.flatten() });
+    }
+
+    const { seat, electionType, electionDate, timezone, jurisdiction, candidates } = parsed.data;
+
+    const [created] = await db.insert(electionRaces).values({
+      seat,
+      electionType,
+      electionDate: new Date(electionDate),
+      timezone,
+      jurisdiction,
+      candidates,
+    }).returning();
+
+    return res.status(201).json({ race: created });
+  } catch (error) {
+    console.error('Failed to create election race:', error);
+    return res.status(500).json({ error: 'Failed to create election race' });
   }
 });
 
