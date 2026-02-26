@@ -56,11 +56,11 @@ Requirements for the Live Civic Intelligence milestone. Continues from v1.6 (pha
 
 ### Norwich, England Collection
 
-- [ ] **NORW-01**: `norwich-uk` locale config exists with UK civic terminology (councillor, ward, by-election, MP), two-tier government framing (City Council vs Norfolk County Council), and currency/date format guidance
-- [ ] **NORW-02**: Norwich collection is generated with 50-90 questions targeting 6 categories: city government, civic history, landmarks/institutions, economy/culture, Norfolk county context, sports/community
-- [ ] **NORW-03**: Norwich generation prompts explicitly distinguish Norwich City Council responsibilities (housing, planning, leisure) from Norfolk County Council responsibilities (roads, schools, social care)
-- [ ] **NORW-04**: Norwich collection is seeded, activated, and playable in production with collection card
-- [ ] **NORW-05**: `externalIdPrefix` for Norwich questions is `nor` (follows established 3-char pattern)
+- [x] **NORW-01**: `norwich-uk` locale config exists with UK civic terminology (councillor, ward, by-election, MP), two-tier government framing (City Council vs Norfolk County Council), and currency/date format guidance
+- [x] **NORW-02**: Norwich collection is generated with 50-90 questions targeting 6 categories: city government, civic history, landmarks/institutions, economy/culture, Norfolk county context, sports/community
+- [x] **NORW-03**: Norwich generation prompts explicitly distinguish Norwich City Council responsibilities (housing, planning, leisure) from Norfolk County Council responsibilities (roads, schools, social care)
+- [x] **NORW-04**: Norwich collection is seeded, activated, and playable in production with collection card
+- [x] **NORW-05**: `externalIdPrefix` for Norwich questions is `nor` (follows established 3-char pattern)
 
 ---
 

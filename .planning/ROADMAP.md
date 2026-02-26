@@ -136,6 +136,6 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 1-34 (v1.0-v1.6) | v1.0-v1.6 | 99/99 | Complete | 2026-02-24 |
 | 35. Election Data Foundation + Quality Rule | v1.7 | 2/2 | Complete | 2026-02-26 |
-| 36. Norwich, England Collection | v1.7 | 0/2 | Not started | - |
+| 36. Norwich, England Collection | v1.7 | 2/2 | Complete | 2026-02-25 |
 | 37. Election Question Generation Script | v1.7 | 0/1 | Not started | - |
 | 38. Election Cron + Current-Term Stage + Admin Election UI | v1.7 | 0/3 | Not started | - |
