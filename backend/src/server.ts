@@ -12,7 +12,7 @@ import { router as adminRouter } from './routes/admin.js';
 import feedbackRouter from './routes/feedback.js';
 import { storageFactory } from './config/redis.js';
 import { initializeSessionManager } from './services/sessionService.js';
-import { startExpirationCron } from './cron/startCron.js';
+import { startExpirationCron, startElectionDetectionCron } from './cron/startCron.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +32,9 @@ async function startServer() {
 
   // Start expiration cron job
   startExpirationCron();
+
+  // Start election detection cron job
+  startElectionDetectionCron();
 
   // Middleware
   app.use(cors({
