@@ -77,7 +77,7 @@ export function QuestionsPage() {
   const order = searchParams.get('order') || 'asc';
   const collection = searchParams.get('collection') || '';
   const difficulty = searchParams.get('difficulty') || '';
-  const status = searchParams.get('status') || '';
+  const status = searchParams.get('status') ?? 'active';
   const search = searchParams.get('search') || '';
 
   // Sync debounced search to URL
