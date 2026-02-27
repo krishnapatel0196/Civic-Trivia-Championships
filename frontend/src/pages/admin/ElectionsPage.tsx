@@ -104,11 +104,14 @@ export function ElectionsPage() {
   // Collections (for dropdown)
   const [collections, setCollections] = useState<{ id: number; name: string; slug: string }[]>([]);
   useEffect(() => {
-    fetch(`${API_URL}/api/game/collections`)
+    if (!accessToken) return;
+    fetch(`${API_URL}/api/admin/collections`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
       .then(r => r.json())
-      .then(data => setCollections(data.collections ?? data ?? []))
+      .then(data => setCollections(data.collections ?? []))
       .catch(() => {});
-  }, []);
+  }, [accessToken]);
 
   // Toast
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
