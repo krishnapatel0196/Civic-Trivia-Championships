@@ -550,6 +550,22 @@ export function GameScreen({
         </div>
       )}
 
+      {/* Tap hint — fixed overlay, lives here to avoid transform context from sliding motion.div */}
+      {state.phase === 'revealing' && (
+        <motion.img
+          src="/images/noun-tap-8166713-03B9D2.svg"
+          alt=""
+          aria-hidden="true"
+          initial={{ opacity: 0, scale: 1 }}
+          animate={{ opacity: 0.7, scale: [1, 1.12, 1] }}
+          transition={{
+            opacity: { delay: 1, duration: 0.6 },
+            scale: { delay: 1.6, duration: 2.5, repeat: Infinity, ease: 'easeInOut' },
+          }}
+          className="fixed bottom-6 right-6 w-14 h-14 pointer-events-none select-none"
+        />
+      )}
+
       {/* Pause overlay */}
       {state.isPaused && (
         <PauseOverlay
