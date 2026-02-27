@@ -1688,6 +1688,7 @@ router.post('/election-races/:id/enter-result', async (req: Request, res: Respon
 /**
  * POST /election-races/:id/regenerate — Destructive re-generate flow.
  * Archives active questions, deletes draft questions, resets flag, then regenerates.
+ * Body (optional): { collectionSlug?: string } — overrides the name-based collection lookup.
  * Returns: { questionsCreated, archived, deleted, raceId, jurisdiction, collectionSlug }
  */
 router.post('/election-races/:id/regenerate', async (req: Request, res: Response) => {
@@ -1708,18 +1709,34 @@ router.post('/election-races/:id/regenerate', async (req: Request, res: Response
       return res.status(404).json({ error: `Election race not found: ID ${raceId}` });
     }
 
-    // 2. Resolve collection slug from jurisdiction name
-    const [collectionRow] = await db
-      .select({ slug: collections.slug })
-      .from(collections)
-      .where(eq(collections.name, race.jurisdiction))
-      .limit(1);
+    // 2. Resolve collection slug — use override if provided, else fall back to name-based lookup
+    const overrideSlug = typeof req.body?.collectionSlug === 'string' ? req.body.collectionSlug.trim() : '';
 
-    if (!collectionRow) {
-      return res.status(400).json({ error: 'No collection found matching jurisdiction.' });
+    let collectionSlug: string;
+
+    if (overrideSlug) {
+      // Admin provided explicit slug override (e.g., collection was renamed)
+      const [collectionBySlug] = await db
+        .select({ slug: collections.slug })
+        .from(collections)
+        .where(eq(collections.slug, overrideSlug))
+        .limit(1);
+      if (!collectionBySlug) {
+        return res.status(400).json({ error: `No collection found with slug "${overrideSlug}".` });
+      }
+      collectionSlug = collectionBySlug.slug;
+    } else {
+      // Default: resolve from jurisdiction name (existing behavior)
+      const [collectionByName] = await db
+        .select({ slug: collections.slug })
+        .from(collections)
+        .where(eq(collections.name, race.jurisdiction))
+        .limit(1);
+      if (!collectionByName) {
+        return res.status(400).json({ error: `No collection found matching jurisdiction "${race.jurisdiction}".` });
+      }
+      collectionSlug = collectionByName.slug;
     }
-
-    const collectionSlug = collectionRow.slug;
 
     // 3. Archive active questions
     const historyEntry = {
