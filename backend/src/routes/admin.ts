@@ -1535,6 +1535,19 @@ router.post('/election-races', async (req: Request, res: Response) => {
 
     const { seat, electionType, electionDate, timezone, jurisdiction, candidates } = parsed.data;
 
+    // Validate jurisdiction matches a real collection name
+    const [matchedCollection] = await db
+      .select({ id: collections.id })
+      .from(collections)
+      .where(eq(collections.name, jurisdiction))
+      .limit(1);
+
+    if (!matchedCollection) {
+      return res.status(400).json({
+        error: `No collection found with name "${jurisdiction}". The jurisdiction must match a collection name exactly.`,
+      });
+    }
+
     const [created] = await db.insert(electionRaces).values({
       seat,
       electionType,
