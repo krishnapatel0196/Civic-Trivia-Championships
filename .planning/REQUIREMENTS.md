@@ -27,25 +27,25 @@ Requirements for the Live Civic Intelligence milestone. Continues from v1.6 (pha
 
 ### Election Pipeline — Cron Detection
 
-- [ ] **ELEC-11**: Daily cron job (6 AM) queries `election_races` for races within the next 60 days where `questions_generated = FALSE`
-- [ ] **ELEC-12**: Cron job auto-triggers question generation for detected races without manual admin intervention
-- [ ] **ELEC-13**: Cron job logs clearly when no upcoming elections are found (distinguishable from silent failure)
-- [ ] **ELEC-14**: Cron idempotency: if generation script is called twice for the same race (flag not yet set), secondary existence check on `election_race_id` prevents duplicate questions
+- [x] **ELEC-11**: Daily cron job (6 AM) queries `election_races` for races within the next 60 days where `questions_generated = FALSE`
+- [x] **ELEC-12**: Cron job auto-triggers question generation for detected races without manual admin intervention
+- [x] **ELEC-13**: Cron job logs clearly when no upcoming elections are found (distinguishable from silent failure)
+- [x] **ELEC-14**: Cron idempotency: if generation script is called twice for the same race (flag not yet set), secondary existence check on `election_race_id` prevents duplicate questions
 
 ### Election Pipeline — Current Officeholder Stage
 
-- [ ] **ELEC-15**: Admin can enter election result (winner name, term end date) for an expired election race from the admin election management UI
-- [ ] **ELEC-16**: Admin can trigger current-term question generation after entering winner data
-- [ ] **ELEC-17**: Current-term questions ("Who is the current [seat]?", "When does [officeholder]'s term expire?") are generated with `expiresAt` set to the term end date
-- [ ] **ELEC-18**: After current-term generation, `election_races.followup_generated` flag is set to `TRUE`
+- [x] **ELEC-15**: Admin can enter election result (winner name, term end date) for an expired election race from the admin election management UI
+- [x] **ELEC-16**: Admin can trigger current-term question generation after entering winner data
+- [x] **ELEC-17**: Current-term questions ("Who is the current [seat]?", "When does [officeholder]'s term expire?") are generated with `expiresAt` set to the term end date
+- [x] **ELEC-18**: After current-term generation, `election_races.followup_generated` flag is set to `TRUE`
 
 ### Election Pipeline — Admin UI
 
-- [ ] **ELEC-19**: Admin election management page exists at `/admin/elections`
-- [ ] **ELEC-20**: Page shows three sections: Active Elections (questions live), Pending Generation (questions_generated = FALSE), Awaiting Follow-up (expired, followup_generated = FALSE)
-- [ ] **ELEC-21**: "Generate Now" button manually triggers generation for a pending race (bypasses cron for immediate need)
-- [ ] **ELEC-22**: "Enter Result + Generate Current-Term Questions" action available for expired races awaiting follow-up; form captures winner name and term end date
-- [ ] **ELEC-23**: Admin can update a race's candidate list (e.g., when a candidate withdraws) and re-trigger generation; previously generated questions are archived before regeneration
+- [x] **ELEC-19**: Admin election management page exists at `/admin/elections`
+- [x] **ELEC-20**: Page shows three sections: Active Elections (questions live), Pending Generation (questions_generated = FALSE), Awaiting Follow-up (expired, followup_generated = FALSE)
+- [x] **ELEC-21**: "Generate Now" button manually triggers generation for a pending race (bypasses cron for immediate need)
+- [x] **ELEC-22**: "Enter Result + Generate Current-Term Questions" action available for expired races awaiting follow-up; form captures winner name and term end date
+- [x] **ELEC-23**: Admin can update a race's candidate list (e.g., when a candidate withdraws) and re-trigger generation; previously generated questions are archived before regeneration
 
 ### Quality Rule
 

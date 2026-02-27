@@ -9,7 +9,7 @@
 - ✅ **v1.4 Fremont CA Collection** - Phases 23-26 (shipped 2026-02-21)
 - ✅ **v1.5 Feedback Marks** - Phases 27-30 (shipped 2026-02-22)
 - ✅ **v1.6 Content Quality & Scale** - Phases 31-34 (shipped 2026-02-24)
-- 🚧 **v1.7 Live Civic Intelligence** - Phases 35-38 (in progress)
+- ✅ **v1.7 Live Civic Intelligence** - Phases 35-38 (shipped 2026-02-26)
 
 ## Phases
 
@@ -139,4 +139,4 @@ Plans:
 | 35. Election Data Foundation + Quality Rule | v1.7 | 2/2 | Complete | 2026-02-26 |
 | 36. Norwich, England Collection | v1.7 | 2/2 | Complete | 2026-02-25 |
 | 37. Election Question Generation Script | v1.7 | 2/2 | Complete | 2026-02-26 |
-| 38. Election Cron + Current-Term Stage + Admin Election UI | v1.7 | 0/3 | Not started | - |
+| 38. Election Cron + Current-Term Stage + Admin Election UI | v1.7 | 3/3 | Complete | 2026-02-26 |
