@@ -21,6 +21,7 @@ interface QuestionDetail {
   difficulty: string;
   status: string;
   createdAt: string;
+  expiresAt: string | null;
   options: string[];
   correctAnswer: number; // 0-based index
   explanation: string;
@@ -176,6 +177,7 @@ export function QuestionDetailPanel({
           difficulty: q.difficulty,
           status: q.status,
           createdAt: q.createdAt,
+          expiresAt: q.expiresAt ?? null,
           options: q.options || [],
           correctAnswer: q.correctAnswer,
           explanation: q.explanation,
@@ -743,6 +745,12 @@ export function QuestionDetailPanel({
                                 Created:{' '}
                                 {new Date(questionDetail.createdAt).toLocaleDateString()}
                               </span>
+                              {questionDetail.expiresAt && (
+                                <span className="text-gray-600">
+                                  Expires:{' '}
+                                  {new Date(questionDetail.expiresAt).toLocaleDateString()}
+                                </span>
+                              )}
                               <span className="text-gray-600">
                                 ID: {questionDetail.externalId}
                               </span>

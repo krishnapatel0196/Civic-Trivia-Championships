@@ -12,6 +12,7 @@ export interface QuestionRow {
   encounterCount: number;
   correctCount: number;
   createdAt: string;
+  expiresAt: string | null;
   collectionNames: string[];
 }
 
@@ -96,6 +97,9 @@ export function QuestionTable({
                 Created
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                Expires
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                 Violations
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
@@ -126,6 +130,9 @@ export function QuestionTable({
                 </td>
                 <td className="px-6 py-4">
                   <div className="h-4 bg-gray-200 rounded w-16"></div>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="h-4 bg-gray-200 rounded w-20"></div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="h-4 bg-gray-200 rounded w-20"></div>
@@ -187,6 +194,9 @@ export function QuestionTable({
               onClick={() => onSortChange('created_at')}
             >
               Created {renderSortIcon('created_at')}
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+              Expires
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
               Violations
@@ -258,6 +268,15 @@ export function QuestionTable({
                 <span className="text-sm text-gray-900">
                   {new Date(question.createdAt).toLocaleDateString()}
                 </span>
+              </td>
+              <td className="px-6 py-4">
+                {question.expiresAt ? (
+                  <span className="text-sm text-gray-900">
+                    {new Date(question.expiresAt).toLocaleDateString()}
+                  </span>
+                ) : (
+                  <span className="text-sm text-gray-400">—</span>
+                )}
               </td>
               <td className="px-6 py-4 text-center">
                 {question.violationCount !== null ? (
