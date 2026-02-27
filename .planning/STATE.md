@@ -121,15 +121,16 @@ None — Phase 38 complete. Election cron (01) + CurrentTermQuestionGenerator + 
 | 018 | Make Easy Steps truly adaptive with dynamic question selection | 2026-02-21 | ba9d39c | [018-fix-easy-steps-adaptive-difficulty](./quick/018-fix-easy-steps-adaptive-difficulty/) |
 | 019 | Reduce mobile question size and remove redundant progress button | 2026-02-22 | 418e51f | [019-mobile-question-size-remove-progress-btn](./quick/019-mobile-question-size-remove-progress-btn/) |
 | 020 | Fix pulsing tap icon 404 — commit missing SVG to repo | 2026-02-26 | fef1950 | [020-fix-pulsing-tap-icon-404-svg-and-play-re](./quick/020-fix-pulsing-tap-icon-404-svg-and-play-re/) |
+| 021 | Fix SPA routing: add serve + start script for direct URL / refresh | 2026-02-26 | f86abda | [021-fix-spa-routing-direct-url-refresh](./quick/021-fix-spa-routing-direct-url-refresh/) |
 
 ## Session Continuity
 
 Last session: 2026-02-26
-Topic: Quick task 020 — Fix pulsing tap icon 404 (commit missing SVG)
-Stopped at: Completed 020-PLAN.md — noun-tap-8166713-03B9D2.svg committed to repo
+Topic: Quick task 021 — Fix SPA routing (serve + start script for direct URL / refresh)
+Stopped at: Completed 021-PLAN.md — serve dependency + npm start script committed
 Resume file: None
 
-Next action: End-to-end verification and v1.7 deployment
+Next action: Push to GitHub; verify Render redeploys with npm start; test direct URL access on /play, /admin, /elections
 
 ---
 *v1.7 Live Civic Intelligence — roadmap created 2026-02-25*
