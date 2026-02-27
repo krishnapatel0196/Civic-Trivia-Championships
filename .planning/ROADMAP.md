@@ -9,7 +9,7 @@
 - ✅ **v1.4 Fremont CA Collection** - Phases 23-26 (shipped 2026-02-21)
 - ✅ **v1.5 Feedback Marks** - Phases 27-30 (shipped 2026-02-22)
 - ✅ **v1.6 Content Quality & Scale** - Phases 31-34 (shipped 2026-02-24)
-- 🚧 **v1.7 Live Civic Intelligence** - Phases 35-39 (gap closure in progress)
+- ✅ **v1.7 Live Civic Intelligence** - Phases 35-39 (shipped 2026-02-27)
 
 ## Phases
 
@@ -30,7 +30,7 @@ Phases 1-34 complete. See MILESTONES.md for full details.
 
 ---
 
-### 🚧 v1.7 Live Civic Intelligence (Gap Closure)
+### ✅ v1.7 Live Civic Intelligence (Gap Closure)
 
 **Milestone Goal:** Make the trivia platform react to real civic events — election questions that appear when races are announced and expire on election day; a new UK city collection; and a quality rule that catches phone/address answers before they reach players.
 
@@ -145,7 +145,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 39-01-PLAN.md — Admin collections endpoint for ElectionsPage dropdown, backend jurisdiction validation, collectionSlug override on /regenerate
+- [x] 39-01-PLAN.md — Admin collections endpoint for ElectionsPage dropdown, backend jurisdiction validation, collectionSlug override on /regenerate
 
 ---
 
@@ -160,4 +160,4 @@ Plans:
 | 36. Norwich, England Collection | v1.7 | 2/2 | Complete | 2026-02-25 |
 | 37. Election Question Generation Script | v1.7 | 2/2 | Complete | 2026-02-26 |
 | 38. Election Cron + Current-Term Stage + Admin Election UI | v1.7 | 3/3 | Complete | 2026-02-26 |
-| 39. Election Pipeline Collection Hardening | v1.7 | 0/1 | Planned | — |
+| 39. Election Pipeline Collection Hardening | v1.7 | 1/1 | Complete | 2026-02-27 |
