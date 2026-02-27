@@ -1,5 +1,34 @@
 # Project Milestones: Civic Trivia Championship
 
+## v1.7 Live Civic Intelligence (Shipped: 2026-02-27)
+
+**Delivered:** End-to-end election question pipeline with admin race management, daily auto-detection cron, current-term follow-up generation, plus Norwich England as the platform's first non-US collection and an address/phone advisory quality rule.
+
+**Phases completed:** 35-39 (10 plans total)
+
+**Key accomplishments:**
+
+- Election pipeline foundation: `election_races` PostgreSQL table (11 columns, JSONB candidates), `questions.election_race_id` FK, admin race creation UI at `/admin/elections` with dynamic candidate management
+- `ElectionQuestionGenerator` service: timezone-aware expiry via `Intl.DateTimeFormat` noon-anchor (DST-safe), idempotency via `questionsGenerated` flag, `GenerationBlockedError`, candidate-count-aware MCQ prompts
+- Daily 6 AM Eastern election detection cron auto-generates questions for races within 60 days; `GenerationBlockedError` treated as idempotent skip; structured JSON logging with `lastCronRun` in-memory state
+- Full election lifecycle admin UI: three-tab `/admin/elections` (Active / Pending / Awaiting Follow-up); `CurrentTermQuestionGenerator` triggered by winner + term end date entry; re-generate archives old questions before creating new
+- Phase 39 pipeline hardening: unfiltered `GET /api/admin/collections` (no 50-question floor), jurisdiction DB validation on race creation (400 on mismatch), `collectionSlug` override on `/regenerate`
+- Norwich, England collection: platform's first non-US collection (en-GB), 117 questions across 8 topic categories, two-tier governance accuracy rules (City Council vs Norfolk County Council), deep forest green card
+- `checkAddressPhone` advisory quality rule with 3 regex patterns; audit script for all active questions; QUAL-04 awaits admin manual review of flagged questions
+
+**Stats:**
+
+- 51+ files created/modified (56 commits)
+- ~35,771 lines of TypeScript total (cumulative: ~11,400 frontend + ~24,370 backend)
+- 5 phases, 10 plans, 27 requirements (25 satisfied, 1 partial, 1 pending-by-design)
+- 3 days from start to ship (2026-02-25 → 2026-02-27)
+
+**Git range:** `feat(36-02)` → `docs(39)`
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v1.6 Content Quality & Scale (Shipped: 2026-02-24)
 
 **Delivered:** Semantic deduplication infrastructure and AI content scaling — 268 duplicate questions identified and archived across 6 collections, self-validating generation pipeline built, Indiana and California scaled to 90+ questions, zero active duplicates confirmed across all 519 questions.

@@ -55,14 +55,18 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Indiana (97) and California (91) scaled to 90+ questions; 519 total active questions — v1.6
 - ✓ Zero active duplicates and zero quality violations confirmed across all collections — v1.6
 
+- ✓ `election_races` table + `questions.election_race_id` FK; admin race creation UI at `/admin/elections` — v1.7
+- ✓ `ElectionQuestionGenerator` service: timezone-aware expiry, idempotency, candidate-count-aware MCQ prompts — v1.7
+- ✓ Daily 6 AM Eastern election detection cron: auto-generates questions for races within 60 days, idempotent — v1.7
+- ✓ `CurrentTermQuestionGenerator`: admin enters winner + term end → current-term questions with term expiry — v1.7
+- ✓ Three-tab `/admin/elections` UI: Active / Pending Generation / Awaiting Follow-up lifecycle management — v1.7
+- ✓ Election pipeline hardening: unfiltered admin collections endpoint, jurisdiction DB validation, collectionSlug override — v1.7
+- ✓ Norwich, England collection: 117 questions, en-GB locale, two-tier governance rules, playable in production — v1.7
+- ✓ `checkAddressPhone` advisory quality rule + audit script for 519 active questions — v1.7
+
 ### Active
 
-**v1.7 Live Civic Intelligence (in progress):**
-
-- [ ] Time-boxed election question pipeline — automated scraping of official election sources (county/state portals) for city collections (Fremont CA, Bloomington IN, Los Angeles CA); questions generated with expiration tied to election day; scheduled automation detects upcoming races
-- [ ] Manual follow-up question generation — admin-triggered generation of successor questions after election results (winner → general race → current term expiry)
-- [ ] Address/phone number blocking quality rule — new blocking rule preventing any question whose correct answer is a phone number or street address; re-audit all 519 active questions and archive violators
-- [ ] Norwich, England collection — 50-90 local questions covering city government, civic history, landmarks, elections, and local services; UK/England national content deferred to future collection
+*(No active requirements — v1.7 complete. Define next milestone requirements with `/gsd:new-milestone`.)*
 
 ### Out of Scope
 
@@ -85,16 +89,18 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v1.6 shipped 2026-02-24):**
-- 519 active questions across 6 collections (Federal 114, Indiana 97, California 91, Los Angeles CA 88, Bloomington IN 75, Fremont CA 54)
+**Current state (v1.7 shipped 2026-02-27):**
+- 636 active questions across 7 collections (Federal 114, Indiana 97, California 91, Los Angeles CA 88, Bloomington IN 75, Fremont CA 54, Norwich UK 117)
+- Norwich, England is the platform's first non-US collection (en-GB locale, two-tier governance accuracy)
+- Election pipeline fully wired: `election_races` table → question generation → daily cron detection → current-term follow-up → admin lifecycle UI
+- Election questions are time-boxed: `expiresAt` tied to election day (local timezone, DST-safe); current-term questions expire at term end
+- Admin election management at `/admin/elections` with three-tab lifecycle (Active / Pending / Awaiting Follow-up)
+- Quality rules engine with 9 rules (8 from v1.6 + new `checkAddressPhone` advisory rule)
 - All questions deduplicated — 268 duplicates archived via embedding-based detection and human review
 - Zero active duplicates, zero quality violations across all collections
-- Semantic dedup infrastructure: OpenAI text-embedding-3-small, disk cache, cosine similarity, union-find clustering
-- Admin duplicate review UI at /admin/duplicates with cluster cards, auto-resolve, 30-second undo
 - Self-validating AI generation pipeline: gap analysis → Claude → quality retry → semantic dedup → source diversity enforcement
 - LA (88), Bloomington (75), Fremont (54) confirmed source-exhausted at maximum achievable counts
-- Quality rules engine with 8 rules, blocking/advisory severity, 0-100 scoring
-- Admin UI with question explorer, collection health dashboard, inline editing, flag review queue, duplicate review
+- Admin UI: question explorer, collection health, inline editing, flag review queue, duplicate review, election management
 - Player-driven quality curation: in-game flagging, post-game elaboration, admin triage
 - Gameplay telemetry tracking encounter/correct counts per question
 
@@ -188,6 +194,20 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Accept source exhaustion as collection ceiling | LA/Bloomington/Fremont sources dry after 5+ generation rounds — accepted shortfalls, not endless retries | Good — avoids quality degradation |
 | Archive higher-numbered externalId on conflict | Preserves established question IDs with potential user history; discards newly-generated duplicates | Good — data integrity |
 | Serial generation (not concurrent) | Reliability over speed for question generation — avoids race conditions in dedup checks | Good — correctness |
+| Admin-entered race data for v1.7 (no scrapers) | No reliable free API for US local elections; scraping fragile; admin entry achieves same result | Good — practical for launch |
+| `claude-sonnet-4-6` hardcoded in ElectionQuestionGenerator | MODEL constant in anthropic-client.ts was outdated at claude-sonnet-4-5; direct string avoids accidental regression | Good — correct model used |
+| Collection slug explicit (not derived from jurisdiction) | String-matching jurisdictions to slugs is fragile; explicit slug parameter is precise and safe | Good — avoids silent mismatches |
+| `GenerationBlockedError` as idempotent skip in cron | Running cron twice for same race is expected — treating it as failure would cause false alerts | Good — clean cron semantics |
+| `lastCronRun` in-memory module state | Admin banner needs cron status without DB round-trip; module-level let is simple and low-latency | Good — minimal complexity |
+| Advisory severity for address/phone rule | Legitimate civic questions can reference addresses; flag for human review, not auto-archive | Good — avoids false positives |
+| `election_race_id` as direct FK on questions | Each election question belongs to exactly one race; junction table adds unnecessary complexity | Good — simpler model |
+| `checkAddressPhone` scans options only | Question.text and explanation legitimately reference addresses; options contain the answer | Good — correct targeting |
+| en-GB localeCode for Norwich | First non-US collection; establishes pattern for future international collections | Good — correct locale treatment |
+| Two-tier governance in Norwich voice guidance | City vs County Council attribution encoded as critical accuracy requirement | Good — prevents misattribution |
+| DDL applied directly via pg client for election schema | drizzle-kit push requires TTY for create-vs-rename prompt; pg client is safe and non-destructive | Good — unblocked without workaround harm |
+| Follow-up questions have `expiresAt = NULL` | "Who won?" is permanent historic fact — time-limiting it would silently hide civic history | Good — correct semantics |
+| Jurisdiction validation at runtime (no FK) | DB lookup against `collections.name` gives informative 400; FK would give opaque constraint error | Good — better error UX |
+| collectionSlug override with optional chaining | `req.body` may be undefined when frontend sends no body; `?.collectionSlug` prevents TypeError | Good — defensive practice |
 
 ---
-*Last updated: 2026-02-25 after v1.7 milestone started*
+*Last updated: 2026-02-27 after v1.7 milestone*

@@ -2,27 +2,27 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-25)
+See: .planning/PROJECT.md (updated 2026-02-27)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study
-**Current focus:** v1.7 Live Civic Intelligence — COMPLETE ✅
+**Current focus:** Planning next milestone
 
 ## Current Position
 
 Phase: 39 of 39 — COMPLETE ✅
-Plan: 1/1 complete
-Status: Phase 39 verified — v1.7 milestone fully complete (all 5 phases: 35–39)
-Last activity: 2026-02-27 — Phase 39 complete (GET /admin/collections, jurisdiction validation, collectionSlug override, ElectionsPage auth)
+Plan: N/A
+Status: v1.7 milestone complete and archived
+Last activity: 2026-02-27 — v1.7 milestone archived; ready for v1.8 planning
 
-Progress: [████████████████████████] 111 plans complete (v1.0 through v1.7 incl. Phase 39)
+Progress: [████████████████████████] 111 plans complete (v1.0 through v1.7 all phases)
 
 **Milestone progress:**
-- v1.0 (Phases 1-7): Complete ✅
-- v1.1 (Phases 8-12): Complete ✅
-- v1.2 (Phases 13-17): Complete ✅
-- v1.3 (Phases 18-22): Complete ✅
-- v1.4 (Phases 23-26): Complete ✅
-- v1.5 (Phases 27-30): Complete ✅
+- v1.0 (Phases 1-7): Complete ✅ (shipped 2026-02-13)
+- v1.1 (Phases 8-12): Complete ✅ (shipped 2026-02-18)
+- v1.2 (Phases 13-17): Complete ✅ (shipped 2026-02-19)
+- v1.3 (Phases 18-22): Complete ✅ (shipped 2026-02-20)
+- v1.4 (Phases 23-26): Complete ✅ (shipped 2026-02-21)
+- v1.5 (Phases 27-30): Complete ✅ (shipped 2026-02-22)
 - v1.6 (Phases 31-34): Complete ✅ (shipped 2026-02-24)
 - v1.7 (Phases 35-39): Complete ✅ (shipped 2026-02-27)
 
@@ -33,77 +33,22 @@ Progress: [███████████████████████
 - Redis: Upstash (stirred-pika-7510)
 - GitHub: EmpoweredVote/Civic-Trivia-Championships
 
-## Performance Metrics
-
-**Velocity:**
-- Total plans completed: 99 (26 v1.0 + 11 v1.1 + 15 v1.2 + 17 v1.3 + 6 v1.4 + 11 v1.5 + 13 v1.6)
-- Quick tasks completed: 10
-- Milestones shipped: 7 (v1.0 through v1.6)
-- Total execution time: ~11 days (2026-02-13 → 2026-02-24)
-
-**By Milestone:**
-
-| Milestone | Phases | Plans | Shipped |
-|-----------|--------|-------|---------|
-| v1.0 MVP | 1-7 | 26 | 2026-02-13 |
-| v1.1 Production Hardening | 8-12 | 11 | 2026-02-18 |
-| v1.2 Community Collections | 13-17 | 15 | 2026-02-19 |
-| v1.3 Quality & Admin | 18-22 | 17 | 2026-02-20 |
-| v1.4 Fremont CA | 23-26 | 6 | 2026-02-21 |
-| v1.5 Feedback Marks | 27-30 | 11 | 2026-02-22 |
-| v1.6 Content Quality & Scale | 31-34 | 13 | 2026-02-24 |
-
 ## Accumulated Context
 
-### Decisions
+### Key Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-Recent v1.7 decisions:
-
-- Admin-entered race data for v1.7 (not scrapers) — scraping is v1.8+ per research finding that no reliable free API exists for US local elections
-- claude-sonnet-4-6 hardcoded directly in ElectionQuestionGenerator (not the MODEL constant in anthropic-client.ts which is outdated at claude-sonnet-4-5)
-- Collection slug passed explicitly as CLI/API parameter (not derived from jurisdiction string matching)
-- Election cron resolves collection slug via collections.name = race.jurisdiction DB lookup (cron has no slug context)
-- GenerationBlockedError from cron is idempotent skip — running cron twice for same race is expected, not an error
-- lastCronRun stored as module-level mutable let in electionDetection.ts — no DB round-trip needed for admin banner
-- FollowupBlockedError thrown when followupGenerated=true on enter-result call (idempotent 409 guard)
-- elc-term-{raceId}-{seq} external ID format for current-term questions (distinct from elc- campaign questions)
-- classified endpoint registered before GET /election-races to avoid Express :id param match on "classified"
-- Awaiting Follow-up classification: election_date < now AND followup_generated = FALSE (regardless of questions_generated)
-- Regenerate resolves collection slug from collections.name = race.jurisdiction (same pattern as cron)
-- GET /admin/collections returns all collections without question-count floor — admins need to see every collection
-- Jurisdiction validation on POST /election-races uses runtime DB lookup (no FK constraint) — 400 on mismatch
-- collectionSlug override in regenerate uses req.body?.collectionSlug with optional chaining — req.body may be undefined when frontend sends no body
-- ElectionsPage guards collections fetch with if (!accessToken) return to prevent 401 before auth state hydrates
-- PUT /election-races/:id uses partial patch — only updates fields present in body
-- elections-voting topic created lazily by resolveCollectionAndTopic if not present for the collection
-- Force-regenerate uses timestamp-suffixed externalIds (elc-{raceId}-{ts36}-{seq}) to avoid ON CONFLICT DO NOTHING silently skipping new questions
-- getEndOfDayUTC anchors on local noon (not midnight) to correctly handle DST spring-forward dates
-- No Zod BatchSchema validation on election question responses (existing schema regex won't match elc- format)
-- Advisory severity for address/phone quality rule — legitimate civic location questions can have address answers; flag for human review, no auto-archive
-- Follow-up questions have expiresAt = NULL — "Who won?" is a permanent historic fact, not a time-limited question
-- election_race_id as direct FK on questions (not junction table) — each election question belongs to exactly one race; simpler than junction table
-- checkAddressPhone scans answer options ONLY — not question.text or explanation; civic bodies legitimately reference addresses
-- Focused audit scripts import a single rule directly (not full auditQuestion) for clean single-rule reports
-- drizzle-kit push interactive "create or rename?" prompt bypassed by applying DDL via pg client directly — schema.ts remains source of truth, workaround is safe and non-destructive
-- election_race_id stored as UTC TIMESTAMPTZ; separate timezone TEXT field (IANA) used for display/scheduling context only
-- Norwich uses en-GB localeCode — first non-US collection; all others are en-US
-- Norwich batchSize 15 (not 25) — smaller topic-focused batches across 8 topic categories
-- Norwich themeColor #1B4332 (deep forest green) — visually distinct from all existing collection colors
-- Two-tier governance (City Council vs Norfolk County Council) encoded as critical accuracy requirement in Norwich voice guidance
-- Norwich generation produced 117 questions (target 50-90); overshoot accepted as all passed quality validation
-- Norwich image sourced from Geograph.org.uk CC-BY-SA 2.0 (Wikimedia CDN rate-limited curl); Node.js HTTPS with Referer header used as workaround
-- Generation pipeline seeds questions as draft by default — activate via direct DB update after quality review
-- Norwich is the platform's first non-US collection (en-GB); establishes pattern for future international collections
 
 ### Pending Todos
 
 - [ ] Announce v1.2 Community Collections launch (320 total questions live)
 - [ ] Invite volunteers to GitHub org
 - [ ] Share live URLs with team
-- [ ] Consider Phase 35 to selectively re-activate high-quality archived questions to close LA/Bloomington/Fremont gaps to 90
+- [ ] Consider selectively re-activating high-quality archived questions to close LA/Bloomington/Fremont gaps to 90
+- [ ] Admin review of audit-address-phone report (QUAL-04 — run audit-address-phone.ts against live questions and manually archive confirmed violations)
+- [ ] Assess Norwich by-election/MP terminology gap — editorial judgment on whether new questions are warranted for v1.8
 
-### Known Tech Debt (carried from v1.6)
+### Known Tech Debt
 
 - violation_count column may go stale if quality rules change without re-audit
 - ILIKE search may degrade beyond 1000 questions (consider pg_trgm GIN index)
@@ -112,10 +57,12 @@ Recent v1.7 decisions:
 - Generation pipeline has cross-run duplicate risk: DB dedup baseline loaded at run start, requires post-seed dedup check
 - generateQuestions.ts crashes for --collection federal (bare array format) — not exercised since Federal at 114
 - Auto-resolve alert shows "undefined clusters" (API field name mismatch) — cosmetic only
+- Norwich by-election/MP terminology absent from 117 questions — content gap, deferred to v1.8 content review
+- Election pipeline human verification items require live Render environment (DB schema, full lifecycle with live Claude API)
 
 ### Blockers/Concerns
 
-None — Phase 39 complete. All three election pipeline data-integrity gaps from the v1.7 audit are closed. v1.7 milestone fully verified and complete.
+None — v1.7 milestone archived. Ready for next milestone planning.
 
 ### Quick Tasks Completed
 
@@ -130,11 +77,11 @@ None — Phase 39 complete. All three election pipeline data-integrity gaps from
 ## Session Continuity
 
 Last session: 2026-02-27
-Topic: Phase 39 — Election pipeline collection hardening (complete)
-Stopped at: Phase 39 fully verified — ROADMAP.md and STATE.md updated; phase completion commit pending
+Topic: v1.7 milestone completion and archival
+Stopped at: v1.7 fully archived — git tag v1.7 created
 Resume file: None
 
-Next action: /gsd:audit-milestone — audit v1.7 milestone before archiving
+Next action: /gsd:new-milestone — start v1.8 milestone
 
 ---
-*v1.7 Live Civic Intelligence — roadmap created 2026-02-25*
+*v1.7 Live Civic Intelligence — archived 2026-02-27*
