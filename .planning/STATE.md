@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study
-**Current focus:** v1.7 Live Civic Intelligence — COMPLETE ✅
+**Current focus:** v1.8 Election Pipeline Hardening — Phase 39 in progress
 
 ## Current Position
 
-Phase: 38 of 38 — COMPLETE ✅
-Plan: 3/3 complete
-Status: Phase 38 verified and approved — v1.7 milestone complete
-Last activity: 2026-02-26 — Phase 38 verified (election cron + CurrentTermGenerator + three-tab ElectionsPage UI)
+Phase: 39 of 39 — In progress
+Plan: 1/1+ complete (39-01 done)
+Status: Phase 39 Plan 01 complete — election pipeline collection hardening
+Last activity: 2026-02-27 — Completed 39-01-PLAN.md (GET /admin/collections, jurisdiction validation, collectionSlug override, ElectionsPage auth)
 
-Progress: [████████████████████████] 110 plans complete (v1.0 through v1.6 + Phases 35–38) — v1.7 feature-complete
+Progress: [████████████████████████] 111 plans complete (v1.0 through v1.7 + Phase 39-01)
 
 **Milestone progress:**
 - v1.0 (Phases 1-7): Complete ✅
@@ -71,6 +71,10 @@ Recent v1.7 decisions:
 - classified endpoint registered before GET /election-races to avoid Express :id param match on "classified"
 - Awaiting Follow-up classification: election_date < now AND followup_generated = FALSE (regardless of questions_generated)
 - Regenerate resolves collection slug from collections.name = race.jurisdiction (same pattern as cron)
+- GET /admin/collections returns all collections without question-count floor — admins need to see every collection
+- Jurisdiction validation on POST /election-races uses runtime DB lookup (no FK constraint) — 400 on mismatch
+- collectionSlug override in regenerate uses req.body?.collectionSlug with optional chaining — req.body may be undefined when frontend sends no body
+- ElectionsPage guards collections fetch with if (!accessToken) return to prevent 401 before auth state hydrates
 - PUT /election-races/:id uses partial patch — only updates fields present in body
 - elections-voting topic created lazily by resolveCollectionAndTopic if not present for the collection
 - Force-regenerate uses timestamp-suffixed externalIds (elc-{raceId}-{ts36}-{seq}) to avoid ON CONFLICT DO NOTHING silently skipping new questions
@@ -111,7 +115,7 @@ Recent v1.7 decisions:
 
 ### Blockers/Concerns
 
-None — Phase 38 complete. Election cron (01) + CurrentTermQuestionGenerator + 6 endpoints (02) + three-tab admin UI (03) all executed. v1.7 Live Civic Intelligence feature-complete; ready for end-to-end verification and deployment.
+None — Phase 39 Plan 01 complete. Three election pipeline data-integrity gaps from v1.7 audit are closed. Ready for remaining Phase 39 plans if any exist.
 
 ### Quick Tasks Completed
 
@@ -125,12 +129,12 @@ None — Phase 38 complete. Election cron (01) + CurrentTermQuestionGenerator + 
 
 ## Session Continuity
 
-Last session: 2026-02-26
-Topic: Quick task 021 — Fix SPA routing (serve + start script for direct URL / refresh)
-Stopped at: Completed 021-PLAN.md — serve dependency + npm start script committed
+Last session: 2026-02-27
+Topic: Phase 39 Plan 01 — Election pipeline collection hardening
+Stopped at: Completed 39-01-PLAN.md — 4 tasks committed (b56f244, 0f9be2f, 9db7b07, fd7646b)
 Resume file: None
 
-Next action: Push to GitHub; verify Render redeploys with npm start; test direct URL access on /play, /admin, /elections
+Next action: Push to GitHub; verify Phase 39 remaining plans if any
 
 ---
 *v1.7 Live Civic Intelligence — roadmap created 2026-02-25*
