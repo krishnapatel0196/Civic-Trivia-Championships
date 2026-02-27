@@ -624,6 +624,29 @@ router.get('/questions/:id/detail', async (req: Request, res: Response) => {
 });
 
 /**
+ * GET /collections - List all collections for admin dropdowns.
+ * Unlike GET /api/game/collections, this has NO question-count floor
+ * and NO is_active filter — admins need to see every collection.
+ */
+router.get('/collections', async (req: Request, res: Response) => {
+  try {
+    const result = await db
+      .select({
+        id: collections.id,
+        name: collections.name,
+        slug: collections.slug,
+        isActive: collections.isActive,
+      })
+      .from(collections)
+      .orderBy(collections.sortOrder);
+    res.json({ collections: result });
+  } catch (error: any) {
+    console.error('Error fetching collections:', error);
+    res.status(500).json({ error: 'Failed to fetch collections', detail: error?.message || String(error) });
+  }
+});
+
+/**
  * GET /collections/health - Get health stats for all collections
  * Returns aggregated stats for each collection including:
  * - Question counts (active, archived, total)
