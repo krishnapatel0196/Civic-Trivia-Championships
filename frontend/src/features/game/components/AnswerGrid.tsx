@@ -240,6 +240,19 @@ export function AnswerGrid({
           </div>
         </motion.div>
       )}
+
+      {/* Tap hint — fades in 1s after answer reveal */}
+      {isRevealing && (
+        <motion.img
+          src="/images/noun-tap-8166713-03B9D2.svg"
+          alt=""
+          aria-hidden="true"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.7 }}
+          transition={{ delay: 1, duration: 0.6 }}
+          className="fixed bottom-6 right-6 w-14 h-14 pointer-events-none select-none"
+        />
+      )}
     </div>
   );
 }
