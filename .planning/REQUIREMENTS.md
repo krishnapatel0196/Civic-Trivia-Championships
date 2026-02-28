@@ -110,11 +110,11 @@ Deferred to future milestones.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DB-01 | Phase 40 | Pending |
-| DB-02 | Phase 40 | Pending |
-| DB-03 | Phase 40 | Pending |
-| DB-04 | Phase 40 | Pending |
-| DB-05 | Phase 40 | Pending |
+| DB-01 | Phase 40 | Complete |
+| DB-02 | Phase 40 | Complete |
+| DB-03 | Phase 40 | Complete |
+| DB-04 | Phase 40 | Complete |
+| DB-05 | Phase 40 | Complete |
 | AUTH-01 | Phase 41 | Pending |
 | AUTH-02 | Phase 41 | Pending |
 | AUTH-03 | Phase 41 | Pending |
@@ -129,12 +129,12 @@ Deferred to future milestones.
 | GEMS-01 | Phase 42 | Pending |
 | GEMS-02 | Phase 42 | Pending |
 | GEMS-03 | Phase 42 | Pending |
-| XP-01 | Phase 40 | Pending |
+| XP-01 | Phase 40 | Complete |
 | XP-02 | Phase 42 | Pending |
 | XP-03 | Phase 42 | Pending |
 | ADMIN-01 | Phase 41 | Pending |
 | ADMIN-02 | Phase 41 | Pending |
-| ADMIN-03 | Phase 40 | Pending |
+| ADMIN-03 | Phase 40 | Complete |
 | PROF-01 | Phase 43 | Pending |
 | PROF-02 | Phase 43 | Pending |
 | PROF-03 | Phase 43 | Pending |

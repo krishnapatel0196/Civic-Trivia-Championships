@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 40 — Database Migration (v1.8 Empowered Identity)
+**Current focus:** Phase 41 — Auth & Tier Integration (v1.8 Empowered Identity)
 
 ## Current Position
 
 Phase: 40 of 44 in v1.8 (Database Migration) — COMPLETE
 Plan: 3 of 3 complete in Phase 40 (40-01, 40-02, 40-03 all done)
 Status: Phase 40 complete
-Last activity: 2026-02-28 — Completed 40-02 (953 questions migrated to trivia schema)
+Last activity: 2026-02-28 — Phase 40 complete (trivia schema deployed, 953 questions migrated, types generated, 5/5 verified)
 
 Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 3/15 complete (40-01, 40-02, 40-03)
 
