@@ -108,8 +108,6 @@ Deferred to future milestones.
 
 ## Traceability
 
-*Populated during roadmap creation.*
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | DB-01 | Phase 40 | Pending |
@@ -153,10 +151,18 @@ Deferred to future milestones.
 | DEP-10 | Phase 44 | Pending |
 
 **Coverage:**
-- v1.8 requirements: 37 total
-- Mapped to phases: 37
-- Unmapped: 0 ✓
+- v1.8 requirements: 39 total
+- Mapped to phases: 39
+- Unmapped: 0
+
+| Phase | Requirements |
+|-------|-------------|
+| Phase 40 — Database Migration | DB-01, DB-02, DB-03, DB-04, DB-05, XP-01, ADMIN-03 (7) |
+| Phase 41 — Auth & Tier Integration | AUTH-01, AUTH-02, AUTH-03, TIER-01, TIER-02, ADMIN-01, ADMIN-02 (7) |
+| Phase 42 — Gem & Progression Integration | GEMS-01, GEMS-02, GEMS-03, XP-02, XP-03, TIER-03, TIER-04 (7) |
+| Phase 43 — Frontend Auth & Profile | AUTH-04, AUTH-05, AUTH-06, AUTH-07, PROF-01, PROF-02, PROF-03, PROF-04 (8) |
+| Phase 44 — Deprecation & Cleanup | DEP-01, DEP-02, DEP-03, DEP-04, DEP-05, DEP-06, DEP-07, DEP-08, DEP-09, DEP-10 (10) |
 
 ---
 *Requirements defined: 2026-02-28*
-*Last updated: 2026-02-28 after initial definition*
+*Last updated: 2026-02-28 — traceability populated by roadmap creation*
