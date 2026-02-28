@@ -10,20 +10,20 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 40 of 44 in v1.8 (Database Migration)
-Plan: 1 of 3 complete in Phase 40
-Status: In progress — Plan 40-01 complete
-Last activity: 2026-02-28 — Completed 40-01 (trivia schema deployed to shared Supabase)
+Plan: 3 of 3 complete in Phase 40 (40-01, 40-03 done; 40-02 is data migration, may be skipped)
+Status: Phase 40 plans 40-01 and 40-03 complete — 40-02 (data migration) pending
+Last activity: 2026-02-28 — Completed 40-03 (TypeScript types generated from shared Supabase)
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plan 1/15 complete
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 2/15 complete (40-01, 40-03)
 
 **Milestone progress:**
-- v1.0–v1.7 (Phases 1–39): Complete ✅
-- v1.8 (Phases 40–44): In progress — Phase 40 plan 1/3 done
+- v1.0–v1.7 (Phases 1–39): Complete
+- v1.8 (Phases 40–44): In progress — Phase 40 plans 40-01 and 40-03 done
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
 - Backend LIVE: https://civic-trivia-backend.onrender.com
-- Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed; data migration pending (40-02)
+- Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed; TypeScript types generated; data migration pending (40-02)
 - Redis: Upstash (stirred-pika-7510)
 
 ## Accumulated Context
@@ -45,24 +45,28 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - questionFlags.userId type: changed from INTEGER to UUID to match public.users(id) FK on shared Supabase
 - PostgREST exposure requires manual Dashboard step (Settings > API > Exposed schemas: add "trivia") — SQL GRANTs alone insufficient
 
+**Phase 40-03 decisions:**
+- stderr redirect (2>/dev/null) required when running `supabase gen types` to prevent "Initialising login role..." diagnostic from contaminating TypeScript output
+- trivia schema confirmed already PostgREST-exposed — all 9 tables present in generated types (Dashboard step from 40-01 already done)
+- Regeneration command: `SUPABASE_ACCESS_TOKEN=... npx supabase gen types --linked --lang typescript --schema public,trivia 2>/dev/null > backend/src/types/database.types.ts`
+
 ### Pending Todos
 
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
 - [ ] Assess Norwich by-election/MP terminology gap — editorial judgment for content review
 - [x] Confirm Supabase credentials — DONE (PAT provided, project kxsdzaojfaibhuzmclfq linked)
-- [ ] Manual Supabase Dashboard step: Settings > API > Exposed schemas > add "trivia" (required before Phase 40-03 or any PostgREST API calls)
-- [ ] Provide SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY, EMPOWERED_ACCOUNTS_URL for Phase 40-03 env migration
+- [x] Manual Supabase Dashboard step: Settings > API > Exposed schemas > add "trivia" — DONE (confirmed by 40-03 type generation showing all 9 trivia tables)
+- [ ] Provide SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY, EMPOWERED_ACCOUNTS_URL for Phase 41 backend env migration
 
 ### Blockers/Concerns
 
-- PostgREST will not expose trivia schema until manual Dashboard step is done (Settings > API > Exposed schemas)
-- Phase 40-03 backend env migration will require SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY — confirm these are available before starting 40-03
+- Phase 41 backend env migration will require SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY — confirm these are available before starting Phase 41
 - Review `empowered-accounts-integration-guide.md` (repo root) before Phase 43 for API contracts
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 40-01-PLAN.md — trivia schema deployed to shared Supabase project
+Stopped at: Completed 40-03-PLAN.md — TypeScript types generated from shared Supabase (database.types.ts, 1,950 lines, build passing)
 Resume file: None
 
-Next action: /gsd:execute-phase 40-02 — Phase 40 Plan 02: Data Migration (pg_dump from EV-Backend-Dev, restore to shared Supabase trivia schema)
+Next action: /gsd:execute-phase 40-02 — Phase 40 Plan 02: Data Migration (pg_dump from EV-Backend-Dev, restore to shared Supabase trivia schema) OR skip to Phase 41 if data migration was already handled
