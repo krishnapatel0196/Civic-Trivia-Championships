@@ -9,21 +9,21 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 40 of 44 in v1.8 (Database Migration)
-Plan: 3 of 3 complete in Phase 40 (40-01, 40-03 done; 40-02 is data migration, may be skipped)
-Status: Phase 40 plans 40-01 and 40-03 complete — 40-02 (data migration) pending
-Last activity: 2026-02-28 — Completed 40-03 (TypeScript types generated from shared Supabase)
+Phase: 40 of 44 in v1.8 (Database Migration) — COMPLETE
+Plan: 3 of 3 complete in Phase 40 (40-01, 40-02, 40-03 all done)
+Status: Phase 40 complete
+Last activity: 2026-02-28 — Completed 40-02 (953 questions migrated to trivia schema)
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 2/15 complete (40-01, 40-03)
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 3/15 complete (40-01, 40-02, 40-03)
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): In progress — Phase 40 plans 40-01 and 40-03 done
+- v1.8 (Phases 40–44): In progress — Phase 40 complete (all 3 plans done)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
 - Backend LIVE: https://civic-trivia-backend.onrender.com
-- Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed; TypeScript types generated; data migration pending (40-02)
+- Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, fully populated (953 questions), TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
 
 ## Accumulated Context
@@ -44,6 +44,12 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - Migration history repair: used `supabase migration repair --status reverted` to clear 24 pre-existing remote entries before pushing new trivia schema migration
 - questionFlags.userId type: changed from INTEGER to UUID to match public.users(id) FK on shared Supabase
 - PostgREST exposure requires manual Dashboard step (Settings > API > Exposed schemas: add "trivia") — SQL GRANTs alone insufficient
+
+**Phase 40-02 decisions:**
+- Supabase Management API /database/query used for target writes — DB password unavailable (PATCH /v1/projects/{ref} db_pass field accepted but did not propagate to pooler auth)
+- Dollar-quoting ($JVAL$...$JVAL$::jsonb) for JSONB SQL literals — prevents double-escape of backslashes in markdown learning_content fields
+- expiration_history NULL coalesced to [] — source allows NULL, target requires NOT NULL DEFAULT '[]'
+- question_flags not migrated — integer user_id incompatible with UUID FK on target
 
 **Phase 40-03 decisions:**
 - stderr redirect (2>/dev/null) required when running `supabase gen types` to prevent "Initialising login role..." diagnostic from contaminating TypeScript output
@@ -66,7 +72,7 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 40-03-PLAN.md — TypeScript types generated from shared Supabase (database.types.ts, 1,950 lines, build passing)
+Stopped at: Completed 40-02-PLAN.md — 953 questions + all content tables migrated to shared Supabase trivia schema
 Resume file: None
 
-Next action: /gsd:execute-phase 40-02 — Phase 40 Plan 02: Data Migration (pg_dump from EV-Backend-Dev, restore to shared Supabase trivia schema) OR skip to Phase 41 if data migration was already handled
+Next action: /gsd:execute-phase 41 — Phase 41: Accounts JWT Integration (auth migration from local JWTs to Supabase/Empowered JWTs)
