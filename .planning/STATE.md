@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-02-27)
 
 ## Current Position
 
-Phase: 39 of 39 — COMPLETE ✅
-Plan: N/A
-Status: v1.7 milestone complete and archived
-Last activity: 2026-02-27 — v1.7 milestone archived; ready for v1.8 planning
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements for v1.8
+Last activity: 2026-02-28 — Milestone v1.8 Empowered Identity started
 
 Progress: [████████████████████████] 111 plans complete (v1.0 through v1.7 all phases)
 
@@ -81,7 +81,7 @@ Topic: v1.7 milestone completion and archival
 Stopped at: v1.7 fully archived — git tag v1.7 created
 Resume file: None
 
-Next action: /gsd:new-milestone — start v1.8 milestone
+Next action: /gsd:plan-phase 40 — plan Phase 40: Database Migration
 
 ---
-*v1.7 Live Civic Intelligence — archived 2026-02-27*
+*v1.8 Empowered Identity — started 2026-02-28*

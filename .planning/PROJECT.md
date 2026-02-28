@@ -66,7 +66,16 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ### Active
 
-*(No active requirements — v1.7 complete. Define next milestone requirements with `/gsd:new-milestone`.)*
+*(v1.8 — Empowered Identity)*
+
+- Replace custom JWT/bcrypt auth with Supabase JWT verification against shared Empowered Accounts project
+- Migrate trivia tables to `trivia` schema on shared Supabase project (UUID user FKs, aligned with accounts)
+- Replace local gem tracking with `award_gems` RPC (yellow gems, platform-level ledger)
+- Add Connected tier guard: only identity-verified users earn gems and get persistent stats
+- Replace `is_admin` boolean with admin role check via `user_roles` table (accounts system)
+- Update frontend auth flow to call Empowered Accounts API for login/signup
+- Slim profile page to trivia stats + accounts-sourced tier/gem balance; link out for identity settings
+- Remove all deprecated local auth routes, JWT utilities, users table, and orphaned env vars
 
 ### Out of Scope
 
@@ -209,5 +218,18 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Jurisdiction validation at runtime (no FK) | DB lookup against `collections.name` gives informative 400; FK would give opaque constraint error | Good — better error UX |
 | collectionSlug override with optional chaining | `req.body` may be undefined when frontend sends no body; `?.collectionSlug` prevents TypeError | Good — defensive practice |
 
+## Current Milestone: v1.8 Empowered Identity
+
+**Goal:** Replace the custom auth/gem/admin system with the shared Empowered Accounts platform, making Civic Trivia a fully integrated feature of the Empowered Vote ecosystem.
+
+**Target features:**
+- Auth: Supabase JWT from Empowered Accounts (drop custom bcrypt/JWT)
+- Database: All trivia tables migrated to `trivia` schema on shared Supabase project
+- Gems: `award_gems` RPC for yellow gems (drop local total_gems)
+- Tiers: Connected tier required for gem earning and persistent progression
+- Admin: Role-based check via `user_roles` (drop `is_admin` boolean)
+- Frontend: Login/signup → accounts API; profile page → trivia stats only
+- Cleanup: All deprecated auth infrastructure removed
+
 ---
-*Last updated: 2026-02-27 after v1.7 milestone*
+*Last updated: 2026-02-28 after v1.8 milestone started*
