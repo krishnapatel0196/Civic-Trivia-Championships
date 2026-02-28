@@ -6,8 +6,8 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   // SSL configuration for production
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
-  // Set search path to civic_trivia schema
-  options: '-c search_path=civic_trivia'
+  // Set search path to trivia schema
+  options: '-c search_path=trivia'
 });
 
 // Test connection on startup

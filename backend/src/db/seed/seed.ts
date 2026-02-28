@@ -105,11 +105,11 @@ async function seed() {
 
       // f) Run ANALYZE on all tables
       console.log('\nRunning ANALYZE on all tables...');
-      await tx.execute(sql`ANALYZE civic_trivia.collections`);
-      await tx.execute(sql`ANALYZE civic_trivia.topics`);
-      await tx.execute(sql`ANALYZE civic_trivia.collection_topics`);
-      await tx.execute(sql`ANALYZE civic_trivia.questions`);
-      await tx.execute(sql`ANALYZE civic_trivia.collection_questions`);
+      await tx.execute(sql`ANALYZE trivia.collections`);
+      await tx.execute(sql`ANALYZE trivia.topics`);
+      await tx.execute(sql`ANALYZE trivia.collection_topics`);
+      await tx.execute(sql`ANALYZE trivia.questions`);
+      await tx.execute(sql`ANALYZE trivia.collection_questions`);
       console.log('ANALYZE complete');
     });
 

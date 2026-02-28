@@ -7,7 +7,7 @@ export default {
   dbCredentials: {
     url: process.env.DATABASE_URL!,
   },
-  schemaFilter: ['civic_trivia'],
+  schemaFilter: ['trivia'],
   verbose: true,
   strict: true
 } satisfies Config;

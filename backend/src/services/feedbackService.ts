@@ -16,7 +16,7 @@ import { eq, and, sql } from 'drizzle-orm';
  * @returns Object with created status and flag ID
  */
 export async function createFlag(
-  userId: number,
+  userId: string,  // UUID — references public.users(id) on shared Supabase project
   questionId: number,
   sessionId: string
 ): Promise<{ created: boolean; flagId: number }> {
@@ -69,7 +69,7 @@ export async function createFlag(
  * @returns True if flag was deleted, false if no flag existed
  */
 export async function deleteFlag(
-  userId: number,
+  userId: string,  // UUID — references public.users(id) on shared Supabase project
   questionId: number
 ): Promise<boolean> {
   return await db.transaction(async (tx) => {
@@ -109,7 +109,7 @@ export async function deleteFlag(
  * @returns Count of flags actually updated
  */
 export async function updateFlagElaborations(
-  userId: number,
+  userId: string,  // UUID — references public.users(id) on shared Supabase project
   sessionId: string,
   elaborations: Array<{
     questionId: string;  // externalId
