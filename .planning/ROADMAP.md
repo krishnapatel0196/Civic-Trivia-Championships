@@ -119,7 +119,7 @@
 4. RLS policies are active on all `trivia` schema tables such that service role bypasses and user-scoped rows enforce ownership
 5. `supabase gen types` output includes `trivia` schema; generated types are committed and the TypeScript build passes
 
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 - [ ] 40-01: Schema creation, RLS policies, and player_stats/player_prefs table definitions
@@ -141,7 +141,7 @@ Plans:
 4. All existing `/api/admin/*` routes return correct responses for a user whose UUID appears in `public.user_roles` with admin role, and 403 for any other user
 5. Anonymous play (game start and question fetch with no auth header) continues to work without error
 
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 - [ ] 41-01: Supabase JWT middleware (requireAuth, optionalAuth) with jose jwtVerify
@@ -163,7 +163,7 @@ Plans:
 4. The `total_gems` column no longer exists in any trivia schema table and no backend code references it
 5. Anonymous play completes without error and no gem/stat writes occur
 
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 - [ ] 42-01: award_gems RPC integration in game completion endpoint
@@ -185,7 +185,7 @@ Plans:
 4. The profile page displays the Connected user's trivia stats (games played, accuracy, best score, XP), gem balance, tier badge, and display name sourced from respective APIs
 5. Identity management actions (name change, password, avatar) are absent from the trivia profile UI and replaced with a link to the accounts platform
 
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 - [ ] 43-01: Frontend auth service rewrite (login, signup, logout, token refresh) → accounts API
@@ -206,7 +206,7 @@ Plans:
 4. `JWT_SECRET`, `JWT_REFRESH_SECRET`, and `ADMIN_EMAIL` are absent from `.env.example` and all env validation logic
 5. `.env.example` lists `SUPABASE_JWT_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, and `EMPOWERED_ACCOUNTS_URL`; the Redis token blacklist code path is fully removed
 
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 - [ ] 44-01: Remove auth routes, controllers, JWT utilities, User model, and bcrypt dependency
