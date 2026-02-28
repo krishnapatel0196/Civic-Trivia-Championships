@@ -10,20 +10,20 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 40 of 44 in v1.8 (Database Migration)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-02-28 — v1.8 roadmap created; Phase 40 is next
+Plan: 1 of 3 complete in Phase 40
+Status: In progress — Plan 40-01 complete
+Last activity: 2026-02-28 — Completed 40-01 (trivia schema deployed to shared Supabase)
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 not started (5 phases remain)
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plan 1/15 complete
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete ✅
-- v1.8 (Phases 40–44): Not started
+- v1.8 (Phases 40–44): In progress — Phase 40 plan 1/3 done
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
 - Backend LIVE: https://civic-trivia-backend.onrender.com
-- Database: Supabase EV-Backend-Dev (to be migrated to shared Supabase, trivia schema)
+- Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed; data migration pending (40-02)
 - Redis: Upstash (stirred-pika-7510)
 
 ## Accumulated Context
@@ -40,21 +40,29 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - Suspended accounts: blocked from gem earning and stat writes
 - Identity management: links out to accounts platform — no in-trivia editing
 
+**Phase 40-01 decisions:**
+- Migration history repair: used `supabase migration repair --status reverted` to clear 24 pre-existing remote entries before pushing new trivia schema migration
+- questionFlags.userId type: changed from INTEGER to UUID to match public.users(id) FK on shared Supabase
+- PostgREST exposure requires manual Dashboard step (Settings > API > Exposed schemas: add "trivia") — SQL GRANTs alone insufficient
+
 ### Pending Todos
 
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
 - [ ] Assess Norwich by-election/MP terminology gap — editorial judgment for content review
-- [ ] Confirm Supabase credentials available before Phase 40 (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY, EMPOWERED_ACCOUNTS_URL)
+- [x] Confirm Supabase credentials — DONE (PAT provided, project kxsdzaojfaibhuzmclfq linked)
+- [ ] Manual Supabase Dashboard step: Settings > API > Exposed schemas > add "trivia" (required before Phase 40-03 or any PostgREST API calls)
+- [ ] Provide SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY, EMPOWERED_ACCOUNTS_URL for Phase 40-03 env migration
 
 ### Blockers/Concerns
 
-- Phase 40 requires shared Supabase project access — confirm credentials before starting
+- PostgREST will not expose trivia schema until manual Dashboard step is done (Settings > API > Exposed schemas)
+- Phase 40-03 backend env migration will require SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY — confirm these are available before starting 40-03
 - Review `empowered-accounts-integration-guide.md` (repo root) before Phase 43 for API contracts
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: v1.8 roadmap written; ROADMAP.md and STATE.md created
+Stopped at: Completed 40-01-PLAN.md — trivia schema deployed to shared Supabase project
 Resume file: None
 
-Next action: /gsd:plan-phase 40 — plan Phase 40: Database Migration
+Next action: /gsd:execute-phase 40-02 — Phase 40 Plan 02: Data Migration (pg_dump from EV-Backend-Dev, restore to shared Supabase trivia schema)
