@@ -10,7 +10,7 @@
 - ✅ **v1.5 Feedback Marks** — Phases 27–30 (shipped 2026-02-22)
 - ✅ **v1.6 Content Quality & Scale** — Phases 31–34 (shipped 2026-02-24)
 - ✅ **v1.7 Live Civic Intelligence** — Phases 35–39 (shipped 2026-02-27)
-- 🚧 **v1.8 Empowered Identity** — Phases 40–44 (in progress)
+- ✅ **v1.8 Empowered Identity** — Phases 40–46 (shipped 2026-03-01)
 
 ## Phases
 
@@ -102,7 +102,7 @@
 
 ---
 
-### 🚧 v1.8 Empowered Identity (In Progress)
+### ✅ v1.8 Empowered Identity (SHIPPED 2026-03-01)
 
 **Milestone Goal:** Replace the custom auth/gem/admin system with the shared Empowered Accounts platform. Civic Trivia becomes a fully integrated feature of the Empowered Vote ecosystem: Supabase JWT for identity, shared gem ledger, Connected tier guards, platform-level admin roles, and complete removal of the legacy local auth stack.
 
@@ -250,7 +250,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 46-01-PLAN.md — Rename authenticateToken → requireAuth in 3 files, remove requireConnected export, fix stale JSDoc, verify build
+- [x] 46-01-PLAN.md — Rename authenticateToken → requireAuth in 3 files, remove requireConnected export, fix stale JSDoc, verify build
 
 ---
 
@@ -274,4 +274,4 @@ Plans:
 | 43. Frontend Auth & Profile | v1.8 | 3/3 | Complete | 2026-03-01 |
 | 44. Deprecation & Cleanup | v1.8 | 2/2 | Complete | 2026-03-01 |
 | 45. Auth State Hardening | v1.8 | 2/2 | Complete | 2026-03-01 |
-| 46. Auth Cleanup | v1.8 | 0/1 | Pending | — |
+| 46. Auth Cleanup | v1.8 | 1/1 | Complete | 2026-03-01 |
