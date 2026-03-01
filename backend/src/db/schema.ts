@@ -160,6 +160,9 @@ export const playerStats = triviaSchema.table('player_stats', {
   bestScore: integer('best_score').notNull().default(0),
   totalCorrect: integer('total_correct').notNull().default(0),
   totalQuestions: integer('total_questions').notNull().default(0),
+  currentStreak: integer('current_streak').notNull().default(0),
+  bestStreak: integer('best_streak').notNull().default(0),
+  lifetimeGems: integer('lifetime_gems').notNull().default(0),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
