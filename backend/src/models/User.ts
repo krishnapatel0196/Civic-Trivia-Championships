@@ -8,6 +8,7 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
   totalXp: number;
+  /** @deprecated GEMS-03: total_gems removed for UUID users in Phase 42. Legacy column for integer users only. Remove in Phase 44. */
   totalGems: number;
   gamesPlayed: number;
   bestScore: number;
@@ -20,6 +21,7 @@ export interface User {
 
 export interface UserProfileStats {
   totalXp: number;
+  /** @deprecated GEMS-03: total_gems removed for UUID users in Phase 42. Legacy column for integer users only. Remove in Phase 44. */
   totalGems: number;
   gamesPlayed: number;
   bestScore: number;
@@ -112,6 +114,7 @@ export const User = {
 
   /**
    * Update user stats atomically after game completion
+   * @deprecated GEMS-03: Writes total_gems for integer users only. UUID users use award_gems RPC + upsertPlayerStats. Remove in Phase 44.
    */
   async updateStats(
     id: number,

@@ -36,6 +36,7 @@ export function calculateProgression(
  * @param correctAnswers - Number of correct answers
  * @param totalQuestions - Total questions in the game
  * @returns XP and gems earned
+ * @deprecated GEMS-03: Legacy progression for integer users. UUID users use awardPlatformGems + upsertPlayerStats. Remove in Phase 44.
  */
 export async function updateUserProgression(
   userId: number,
