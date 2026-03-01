@@ -7,7 +7,9 @@ const pool = new Pool({
   // SSL configuration for production
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
   // Set search path to trivia schema
-  options: '-c search_path=trivia'
+  options: '-c search_path=trivia',
+  // Force IPv4 — Render cannot reach Supabase over IPv6
+  family: 4,
 });
 
 // Test connection on startup
