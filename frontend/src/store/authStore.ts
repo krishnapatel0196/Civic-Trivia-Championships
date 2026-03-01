@@ -7,6 +7,7 @@ interface AuthStore {
   isAuthenticated: boolean;
   isLoading: boolean;
   tier: Tier | null;
+  tierResolved: boolean;
   displayName: string | null;
   timerMultiplier: number;
   setAuth: (token: string, user: AccountsUser, extras?: { tier?: Tier; displayName?: string }) => void;
@@ -14,6 +15,8 @@ interface AuthStore {
   setLoading: (loading: boolean) => void;
   setTimerMultiplier: (multiplier: number) => void;
   setDisplayName: (name: string) => void;
+  setTier: (tier: Tier) => void;
+  setTierResolved: (resolved: boolean) => void;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -22,6 +25,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isAuthenticated: false,
   isLoading: true,
   tier: null,
+  tierResolved: false,
   displayName: null,
   timerMultiplier: 1.0,
 
@@ -43,6 +47,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       isAuthenticated: false,
       isLoading: false,
       tier: null,
+      tierResolved: false,
       displayName: null,
       timerMultiplier: 1.0,
     });
@@ -61,5 +66,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
   setDisplayName: (name: string) =>
     set({
       displayName: name,
+    }),
+
+  setTier: (tier: Tier) =>
+    set({
+      tier,
+    }),
+
+  setTierResolved: (resolved: boolean) =>
+    set({
+      tierResolved: resolved,
     }),
 }));

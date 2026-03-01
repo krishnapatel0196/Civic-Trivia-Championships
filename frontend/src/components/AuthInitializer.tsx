@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
-import { exchangeRefreshToken } from '../services/accountsApi';
+import { exchangeRefreshToken, fetchAccountProfile } from '../services/accountsApi';
 
 interface AuthInitializerProps {
   children: React.ReactNode;
@@ -18,6 +18,7 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
       if (!storedRefresh) {
         clearAuth();
         setLoading(false);
+        useAuthStore.getState().setTierResolved(true);
         return;
       }
 
@@ -33,15 +34,32 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
             email: data.user?.email || '',
             tier: data.user?.tier || 'inform',
           });
+
+          // Resolve authoritative tier from the accounts API.
+          // setLoading(false) is deferred until this resolves to prevent AdminGuard
+          // from briefly seeing stale JWT-metadata tier before the API call completes.
+          try {
+            const profile = await fetchAccountProfile(data.access_token);
+            useAuthStore.getState().setTier(profile.tier);
+            useAuthStore.getState().setDisplayName(profile.display_name);
+          } catch {
+            // Profile fetch failed — session is still valid; tier stays at JWT metadata value.
+            // Silently ignore so auth flow completes successfully.
+          } finally {
+            useAuthStore.getState().setTierResolved(true);
+            setLoading(false);
+          }
         } else {
           // exchangeRefreshToken already removed the stale token from localStorage
           clearAuth();
+          useAuthStore.getState().setTierResolved(true);
+          setLoading(false);
         }
       } catch {
         // Any unexpected error — clear auth state
         localStorage.removeItem('ev_refresh_token');
         clearAuth();
-      } finally {
+        useAuthStore.getState().setTierResolved(true);
         setLoading(false);
       }
     };

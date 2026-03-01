@@ -22,11 +22,11 @@ import { ElectionsPage } from './pages/admin/ElectionsPage';
 
 // AdminGuard component: checks for admin role
 function AdminGuard() {
-  const { isAuthenticated, user, isLoading } = useAuthStore();
+  const { isAuthenticated, user, isLoading, tier, tierResolved } = useAuthStore();
 
-  if (isLoading) return null;
+  if (isLoading || !tierResolved) return null;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (!user || user.tier !== 'empowered') return <Forbidden />;
+  if (!user || tier !== 'empowered') return <Forbidden />;
 
   return <Outlet />;
 }
