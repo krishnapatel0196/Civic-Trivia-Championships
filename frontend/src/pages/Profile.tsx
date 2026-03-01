@@ -41,9 +41,14 @@ export function Profile() {
     const load = async () => {
       const { accessToken } = useAuthStore.getState();
 
+      if (!accessToken) {
+        navigate('/login?from=/profile', { replace: true });
+        return;
+      }
+
       const [triviaResult, accountResult] = await Promise.allSettled([
         fetchTriviaStats(),
-        fetchAccountProfile(accessToken ?? ''),
+        fetchAccountProfile(accessToken),
       ]);
 
       if (triviaResult.status === 'fulfilled') {
@@ -57,6 +62,7 @@ export function Profile() {
         const profile = accountResult.value;
         setAccountData(profile);
         useAuthStore.getState().setDisplayName(profile.display_name);
+        useAuthStore.getState().setTier(profile.tier);
         // TODO(43): re-enable inform-tier redirect once Connected accounts are available for testing
         // if (profile.tier === 'inform') {
         //   navigate('/signup', { replace: true });
