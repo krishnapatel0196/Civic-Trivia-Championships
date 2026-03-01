@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { sessionManager, Question } from '../services/sessionService.js';
 import { optionalAuth } from '../middleware/auth.js';
-import { updateUserProgression } from '../services/progressionService.js';
+import { updateUserProgression, calculateProgression, checkAccountContext, awardPlatformGems, upsertPlayerStats } from '../services/progressionService.js';
 import { storageFactory } from '../config/redis.js';
 import { selectQuestionsForGame, getCollectionMetadata, getFederalCollectionId, createAdaptiveSession, transformSingleDBQuestion, TOTAL_QUESTIONS } from '../services/questionService.js';
 import { getNextQuestionTier, selectNextAdaptiveQuestion } from '../services/gameModes.js';
@@ -125,6 +125,13 @@ router.post('/session', optionalAuth, async (req: Request, res: Response) => {
     // Get userId from auth middleware (authenticated) or use 'anonymous'
     const userId = req.userId ?? 'anonymous';
 
+    // Check account context for authenticated UUID users
+    let accountContext: { isConnected: boolean; isSuspended: boolean; accessToken: string } | undefined;
+    if (typeof userId === 'string' && userId !== 'anonymous' && req.accessToken) {
+      const ctx = await checkAccountContext(req.accessToken);
+      accountContext = { ...ctx, accessToken: req.accessToken };
+    }
+
     if (questionIds && Array.isArray(questionIds)) {
       // Legacy path: questionIds provided — fetch from DB and filter to matching IDs
       const allQuestions = await selectQuestionsForGame(null, []);
@@ -153,7 +160,8 @@ router.post('/session', optionalAuth, async (req: Request, res: Response) => {
         const sessionId = await sessionManager.createSession(
           userId,
           [firstQuestion],
-          collectionMeta ? { id: collectionMeta.id, name: collectionMeta.name, slug: collectionMeta.slug } : undefined
+          collectionMeta ? { id: collectionMeta.id, name: collectionMeta.name, slug: collectionMeta.slug } : undefined,
+          accountContext
         );
 
         // Set adaptive state on the session and persist
@@ -198,7 +206,8 @@ router.post('/session', optionalAuth, async (req: Request, res: Response) => {
     const sessionId = await sessionManager.createSession(
       userId,
       selectedQuestions,
-      collectionMeta ? { id: collectionMeta.id, name: collectionMeta.name, slug: collectionMeta.slug } : undefined
+      collectionMeta ? { id: collectionMeta.id, name: collectionMeta.name, slug: collectionMeta.slug } : undefined,
+      accountContext
     );
 
     // Record played questions for recent-question exclusion
@@ -380,11 +389,11 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
     }
 
     // Calculate and award progression for authenticated users (only once)
-    let progression: { xpEarned: number; gemsEarned: number } | null = null;
+    let progression: any = null;
 
     if (session.userId && session.userId !== 'anonymous' && !session.progressionAwarded) {
       if (typeof session.userId === 'number') {
-        // Legacy integer user path — TODO Phase 42: Replace with award_gems RPC
+        // Legacy integer user path — TODO Phase 44: Remove when integer users are fully migrated
         progression = await updateUserProgression(
           session.userId,
           results.totalScore,
@@ -393,11 +402,48 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
         );
         session.progressionAwarded = true;
       } else {
-        // UUID users: progression disabled until Phase 42 implements award_gems RPC
-        progression = null;
-        session.progressionAwarded = true; // prevent retry
-        // TODO Phase 42: Replace with award_gems RPC
+        // UUID user path — platform gem award + stats
+        const { gemsEarned } = calculateProgression(results.totalCorrect, results.totalQuestions);
+
+        let gemsConfirmed = false;
+        let gemError: string | undefined;
+
+        // Only award gems and write stats for Connected, non-suspended users
+        if (session.isConnected === true && session.isSuspended !== true) {
+          // Award gems via platform RPC
+          const gemResult = await awardPlatformGems(session.userId as string, gemsEarned);
+          gemsConfirmed = gemResult.confirmed;
+          gemError = gemResult.error;
+
+          // Write player stats (only count confirmed gems in lifetime_gems)
+          await upsertPlayerStats(
+            session.userId as string,
+            results.totalScore,
+            results.totalCorrect,
+            results.totalQuestions,
+            gemsConfirmed ? gemsEarned : 0
+          );
+        }
+
+        progression = {
+          gemsEarned: (session.isConnected && !session.isSuspended) ? gemsEarned : 0,
+          gemsConfirmed,
+          stats: (session.isConnected && !session.isSuspended) ? {
+            gamesPlayed: 1,
+            totalCorrect: results.totalCorrect,
+            totalQuestions: results.totalQuestions,
+            bestScore: results.totalScore,
+          } : null,
+          ...((!gemsConfirmed && session.isConnected && !session.isSuspended)
+            ? { message: "We had trouble recording your rewards — we'll resolve this when your connection improves." }
+            : {}),
+        };
+        session.progressionAwarded = true;
       }
+    }
+
+    if (session.progressionAwarded) {
+      await sessionManager.saveSession(session);
     }
 
     // Strip flagged field from all answer records (keep server-internal only)
