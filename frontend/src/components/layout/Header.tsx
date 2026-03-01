@@ -4,7 +4,7 @@ import { useAuthStore } from '../../store/authStore';
 import { authService } from '../../services/authService';
 
 export function Header() {
-  const { user, accessToken, clearAuth, isAuthenticated } = useAuthStore();
+  const { user, accessToken, clearAuth, isAuthenticated, displayName } = useAuthStore();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -63,18 +63,8 @@ export function Header() {
           {isAuthenticated && user ? (
             <div className="flex items-center space-x-4">
               <span className="hidden sm:block text-sm text-slate-300">
-                {user.name || user.email}
+                {displayName || user.email}
               </span>
-
-              {/* Admin pill (only for admin users) */}
-              {user.isAdmin && (
-                <Link
-                  to="/admin"
-                  className="text-xs font-medium bg-red-900/50 text-red-400 px-2 py-0.5 rounded-full hover:bg-red-900/70 transition-colors"
-                >
-                  Admin
-                </Link>
-              )}
 
               {/* Hamburger menu */}
               <div className="relative" ref={menuRef}>
