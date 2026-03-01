@@ -214,9 +214,49 @@ Plans:
 
 ---
 
+#### Phase 45: Auth State Hardening
+
+**Goal**: Tier and admin status flow reliably from the accounts API to the auth store — fix the critical admin gate mismatch, tier loss after token refresh, and profile sync gap that were identified in the v1.8 audit. Formally verify Phase 43's frontend requirements.
+**Depends on**: Phase 44
+**Gap Closure**: Closes audit gaps from v1.8-MILESTONE-AUDIT.md
+
+**Success Criteria** (what must be TRUE):
+1. An admin user who reloads the page (triggering token refresh) can still reach `/admin/*` routes — both the frontend AdminGuard and backend `requireAdmin` grant access consistently
+2. After `AuthInitializer` completes on a page load, `authStore.tier` reflects the user's actual tier from the accounts API (not `user_metadata.tier` fallback)
+3. After `Profile.tsx` loads, the authStore tier is updated to match the authoritative value returned by `fetchAccountProfile`
+4. No `Authorization: Bearer ` header is sent with an empty/null token — null/undefined access tokens are handled before the header is attached
+5. A `VERIFICATION.md` exists for Phase 43 confirming AUTH-04–07 and PROF-01–04 are satisfied by the codebase
+
+**Plans**: 2 plans
+
+Plans:
+- [ ] 45-01-PLAN.md — Code fixes: AuthInitializer tier fetch, AdminGuard backend check, Profile.tsx store sync, accessToken null guard
+- [ ] 45-02-PLAN.md — Phase 43 formal verification (VERIFICATION.md) + ADMIN-01 requirement text update
+
+---
+
+#### Phase 46: Auth Cleanup
+
+**Goal**: Remove residual tech debt from the v1.8 auth migration — rename the `authenticateToken` alias to `requireAuth` in all remaining callers, remove the unused `requireConnected` export, and fix a stale JSDoc comment — leaving the auth layer clean and internally consistent.
+**Depends on**: Phase 45
+**Gap Closure**: Closes low-severity tech debt items from v1.8 audit
+
+**Success Criteria** (what must be TRUE):
+1. No file in the backend imports or references `authenticateToken` — all three callers (`profile.ts`, `admin.ts`, `feedback.ts`) use `requireAuth`
+2. `requireConnected` is either removed from `auth.ts` exports or has at least one active consumer (no dead exports)
+3. The JSDoc comment on `sessionService.ts` line ~126 correctly describes the `userId` type as a UUID string, not "number for authenticated"
+4. TypeScript build passes with zero errors after all renames
+
+**Plans**: 1 plan
+
+Plans:
+- [ ] 46-01-PLAN.md — Rename authenticateToken → requireAuth in 3 files, remove requireConnected export, fix stale JSDoc, verify build
+
+---
+
 ## Progress
 
-**Execution Order:** 40 → 41 → 42 → 43 → 44
+**Execution Order:** 40 → 41 → 42 → 43 → 44 → 45 → 46
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -233,3 +273,5 @@ Plans:
 | 42. Gem & Progression Integration | v1.8 | 3/3 | Complete | 2026-03-01 |
 | 43. Frontend Auth & Profile | v1.8 | 3/3 | Complete | 2026-03-01 |
 | 44. Deprecation & Cleanup | v1.8 | 2/2 | Complete | 2026-03-01 |
+| 45. Auth State Hardening | v1.8 | 0/2 | Pending | — |
+| 46. Auth Cleanup | v1.8 | 0/1 | Pending | — |
