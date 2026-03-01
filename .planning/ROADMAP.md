@@ -206,11 +206,11 @@ Plans:
 4. `JWT_SECRET`, `JWT_REFRESH_SECRET`, and `ADMIN_EMAIL` are absent from `.env.example` and all env validation logic
 5. `.env.example` lists `SUPABASE_JWT_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, and `EMPOWERED_ACCOUNTS_URL`; the Redis token blacklist code path is fully removed
 
-**Plans**: 3 plans
+**Plans**: 2 plans
 
 Plans:
-- [ ] 44-01: Remove auth routes, controllers, JWT utilities, User model, and bcrypt dependency
-- [ ] 44-02: Drop local users table, remove Redis blacklist, update env vars and documentation
+- [ ] 44-01-PLAN.md — Delete legacy auth files (9 files), uninstall dead packages (10 packages), surgically edit 7 remaining files to remove all dead imports and integer-user branches
+- [ ] 44-02-PLAN.md — Update env.ts and .env.example, create users table drop migration, full build verification and stale reference sweep
 
 ---
 
@@ -232,4 +232,4 @@ Plans:
 | 41. Auth & Tier Integration | v1.8 | 2/2 | Complete | 2026-02-28 |
 | 42. Gem & Progression Integration | v1.8 | 3/3 | Complete | 2026-03-01 |
 | 43. Frontend Auth & Profile | v1.8 | 0/3 | Not started | - |
-| 44. Deprecation & Cleanup | v1.8 | 0/TBD | Not started | - |
+| 44. Deprecation & Cleanup | v1.8 | 0/2 | Not started | - |
