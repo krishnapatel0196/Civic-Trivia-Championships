@@ -9,16 +9,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 42 of 44 in v1.8 (Gem & Progression Integration) — Complete
-Plan: 3 of 3 complete in Phase 42 (42-01, 42-02, 42-03 done)
-Status: Phase 42 complete — ready for Phase 43
-Last activity: 2026-02-28 — Completed 42-03-PLAN.md — game routes wired with account context check and gem award; GEMS-03 deprecation markers added
+Phase: 43 of 44 in v1.8 (Frontend Auth & Profile) — In progress
+Plan: 1 of 3 complete in Phase 43 (43-01 done)
+Status: In progress — 43-01 complete, 43-02 next (Login/Signup pages)
+Last activity: 2026-03-01 — Completed 43-01-PLAN.md — auth infrastructure rewired to Empowered Accounts API; hybrid token storage (access token in Zustand, refresh token in localStorage); Supabase native token refresh
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 8/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02, 42-03)
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 9/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02, 42-03, 43-01)
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 next
+- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 in progress (1/3 plans done)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -88,6 +88,13 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - accountContext check fires for all UUID users at session start (not just Connected-tier) — tier filtering happens at award time in GET /results
 - GEMS-03 JSDoc @deprecated markers chosen over TODO comments — surfaces in IDE hover text and TypeDoc without requiring grep
 
+**Phase 43-01 decisions:**
+- Token refresh endpoint: Supabase native /auth/v1/token?grant_type=refresh_token used directly (no /api/auth/refresh route documented in integration guide)
+- accountsApiFetch is standalone (not extending apiRequest) — avoids VITE_API_URL prefix and credentials:include contamination
+- AuthInitializer immediately resolves unauthenticated state when no ev_refresh_token in localStorage (no spinner, no network call for new visitors)
+- api.ts auto-attaches Bearer token from store for all trivia backend requests (callers no longer need to pass Authorization header manually)
+- SignupData.name removed — accounts API does not accept name at signup; Connected onboarding flow sets display_name
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards — code complete, runtime path blocked without this)
@@ -100,14 +107,16 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 
 ### Blockers/Concerns
 
-- Review `empowered-accounts-integration-guide.md` (repo root) before Phase 43 for API contracts
-- Phase 43: replace profile routes using legacy User model (as unknown as number cast markers in profile.ts)
+- Phase 43-02: Login.tsx still reads response.accessToken (camelCase) — must fix to access_token; Signup.tsx still sends name field
+- Phase 43-02: Profile.tsx calls authStore.setUserName — must be removed
+- Phase 43-03: Header.tsx, App.tsx, AdminDashboard, AdminLayout reference user.name and user.isAdmin — fix when Profile page rewritten
+- VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY not confirmed as frontend env vars — exchangeRefreshToken falls back to ACCOUNTS_API_URL if absent
 - Phase 44: remove integer-user path (updateUserProgression, User.updateStats, total_gems column reads) per GEMS-03 markers
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: Completed 42-03-PLAN.md — game routes wired with account context and gem award; Phase 42 complete
+Last session: 2026-03-01
+Stopped at: Completed 43-01-PLAN.md — auth infrastructure rewired to Empowered Accounts API; hybrid token storage; Supabase native token refresh
 Resume file: None
 
-Next action: Execute Phase 43 — profile UUID migration (replace legacy User model in profile routes)
+Next action: Execute Phase 43 Plan 02 — Login/Signup page rewire (fix access_token field name, remove name field, add return-to navigation)
