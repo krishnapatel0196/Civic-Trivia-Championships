@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { authService } from '../services/authService';
 import { Input } from '../components/ui/Input';
@@ -15,6 +15,8 @@ export function Login() {
 
   const setAuth = useAuthStore((state) => state.setAuth);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const from = searchParams.get('from');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,8 +26,14 @@ export function Login() {
 
     try {
       const response = await authService.login({ email, password });
-      setAuth(response.accessToken, response.user);
-      navigate('/');
+      localStorage.setItem('ev_refresh_token', response.refresh_token);
+      setAuth(response.access_token, response.user);
+      // Validate from starts with / to prevent open redirect attacks
+      if (from && from.startsWith('/')) {
+        navigate(from);
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       const authError = err as AuthError;
 
