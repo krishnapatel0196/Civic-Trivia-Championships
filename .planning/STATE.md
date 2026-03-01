@@ -5,20 +5,20 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 43 — Frontend Auth & Profile (v1.8 Empowered Identity)
+**Current focus:** Phase 44 — Deprecation Cleanup (v1.8 Empowered Identity)
 
 ## Current Position
 
-Phase: 43 of 44 in v1.8 (Frontend Auth & Profile) — In progress, checkpoint partially verified
-Plan: 3 of 3 complete in Phase 43 (43-01, 43-02, 43-03 tasks done) — checkpoint human-verify in progress
-Status: Live testing underway — login works, profile page loads, collections load, several infrastructure bugs fixed during deploy
-Last activity: 2026-03-01 — Live testing session: fixed DATABASE_URL (Session Pooler, IPv4), fixed profile route (player_stats/player_prefs), fixed null display_name crash in Avatar
+Phase: 44 of 44 in v1.8 (Deprecation Cleanup) — In progress
+Plan: 1 of 2 complete in Phase 44 (44-01 complete)
+Status: 44-01 executed — 9 legacy files deleted, 10 packages uninstalled, 7 files surgically cleaned, TypeScript builds clean
+Last activity: 2026-03-01 — Completed 44-01-PLAN.md (legacy auth removal)
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 10/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02, 42-03, 43-01, 43-02) + 43-03 auto tasks
+Progress: [█████████░] v1.0–v1.7 complete (109 plans); v1.8 plans 11/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02, 42-03, 43-01, 43-02, 44-01) + 43-03 auto tasks
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 auto tasks complete (3/3 plans executed, checkpoint pending)
+- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 auto tasks complete (3/3 plans executed, checkpoint pending), Phase 44 plan 1/2 complete
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -108,6 +108,12 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - CollectionCard isAdmin = user.tier === 'empowered' — empowered tier implies admin for question count display aria-label
 - Timer update failures silently ignored in Profile — non-critical UX, no toast yet
 
+**Phase 44-01 decisions:**
+- getRawClient() on SessionStorageFactory: rateLimiter.ts imported deleted legacyRedis export; fixed by adding getRawClient() to storageFactory so rate limiter reuses the single Redis connection — no duplicate connection, clean architecture
+- admin.ts flag response shape: flags[].username replaced by flags[].userId (UUID string) — accounts platform resolves display names; UUID is accurate
+- profile.ts full rewrite: PATCH /name, PATCH /password, POST /avatar all required deleted User model; frontend does not call these routes so removed entirely
+- GameSession.userId now string (not string | number) — anonymous sessions remain as 'anonymous' string; integer user path fully removed
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards — code complete, runtime path blocked without this)
@@ -121,7 +127,7 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ### Blockers/Concerns
 
 - VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY not confirmed as frontend env vars — exchangeRefreshToken falls back to ACCOUNTS_API_URL if absent (token refresh may fail after ~1hr)
-- Phase 44: remove integer-user path (updateUserProgression, User.updateStats, total_gems column reads) per GEMS-03 markers
+- Phase 44-01 complete: integer-user path removed, updateUserProgression deleted, User model deleted — GEMS-03 markers resolved
 - "Manage your Empowered Account" link on profile broken — ACCOUNTS_API_URL points to API endpoint, not a user-facing web UI URL; needs a separate VITE_EMPOWERED_ACCOUNTS_WEB_URL env var or hardcoded platform URL
 
 ### Infrastructure Fixes Applied During Deploy (2026-03-01)
@@ -135,7 +141,7 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Live testing — login works, collections load, profile page loads with tier badge and stats; "Manage account" link broken (API URL vs web UI URL)
+Stopped at: Completed 44-01-PLAN.md — legacy auth removal complete, TypeScript clean
 Resume file: None
 
-Next action: Fix "Manage your Empowered Account" link URL, confirm token refresh works (add VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY to frontend Render env), then approve Phase 43 checkpoint and plan Phase 44
+Next action: Execute 44-02-PLAN.md — env.ts cleanup (remove ADMIN_EMAIL), .env.example rewrite, Supabase migration for DROP TABLE IF EXISTS trivia.users
