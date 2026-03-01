@@ -1,8 +1,9 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 
 export function ProtectedRoute() {
   const { isAuthenticated, isLoading } = useAuthStore();
+  const location = useLocation();
 
   // AuthInitializer handles the loading UI
   if (isLoading) {
@@ -10,7 +11,7 @@ export function ProtectedRoute() {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={`/login?from=${encodeURIComponent(location.pathname)}`} replace />;
   }
 
   return <Outlet />;
