@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 41 — Auth & Tier Integration (v1.8 Empowered Identity)
+**Current focus:** Phase 42 — Gem & Progression Integration (v1.8 Empowered Identity)
 
 ## Current Position
 

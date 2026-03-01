@@ -144,8 +144,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 41-01-PLAN.md — Middleware foundation: install jose + supabase-js, create supabaseAdmin config, replace auth.ts with requireAuth/optionalAuth/requireConnected/requireAdmin
-- [ ] 41-02-PLAN.md — Caller migration: update all route handlers from req.user to req.userId, fix sessionService plausibility, fix progression guard, verify build
+- [x] 41-01-PLAN.md — Middleware foundation: install jose + supabase-js, create supabaseAdmin config, replace auth.ts with requireAuth/optionalAuth/requireConnected/requireAdmin
+- [x] 41-02-PLAN.md — Caller migration: update all route handlers from req.user to req.userId, fix sessionService plausibility, fix progression guard, verify build
 
 ---
 
@@ -228,7 +228,7 @@ Plans:
 | 31–34. Scale Phases | v1.6 | 13/13 | Complete | 2026-02-24 |
 | 35–39. Election Phases | v1.7 | 10/10 | Complete | 2026-02-27 |
 | 40. Database Migration | v1.8 | 3/3 | Complete | 2026-02-28 |
-| 41. Auth & Tier Integration | v1.8 | 0/2 | Not started | - |
+| 41. Auth & Tier Integration | v1.8 | 2/2 | Complete | 2026-02-28 |
 | 42. Gem & Progression Integration | v1.8 | 0/TBD | Not started | - |
 | 43. Frontend Auth & Profile | v1.8 | 0/TBD | Not started | - |
 | 44. Deprecation & Cleanup | v1.8 | 0/TBD | Not started | - |
