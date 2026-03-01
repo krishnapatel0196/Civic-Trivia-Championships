@@ -130,7 +130,7 @@ Plans:
 
 #### Phase 41: Auth & Tier Integration (Backend)
 
-**Goal**: The backend validates Supabase JWTs, extracts UUID user identity, enforces Connected tier guards, and checks admin status via the platform `user_roles` table — all existing admin routes working under the new guards.
+**Goal**: The backend validates Supabase JWTs, extracts UUID user identity, enforces Connected tier guards, and checks admin status via the platform `admin_users` table — all existing admin routes working under the new guards.
 **Depends on**: Phase 40
 **Requirements**: AUTH-01, AUTH-02, AUTH-03, TIER-01, TIER-02, ADMIN-01, ADMIN-02
 
@@ -138,15 +138,14 @@ Plans:
 1. A request with a valid Supabase JWT reaches protected routes with `req.userId` set to the UUID from the JWT `sub` claim; an invalid or absent JWT returns 401
 2. Routes using `optionalAuth` accept both authenticated requests (with `req.userId` populated) and unauthenticated requests (userId undefined) without error
 3. A request from a Connected-tier user passes `requireConnected`; a request from an anonymous or Inform-tier user is rejected with 403
-4. All existing `/api/admin/*` routes return correct responses for a user whose UUID appears in `public.user_roles` with admin role, and 403 for any other user
+4. All existing `/api/admin/*` routes return correct responses for a user whose UUID appears in `public.admin_users`, and 403 for any other user
 5. Anonymous play (game start and question fetch with no auth header) continues to work without error
 
-**Plans**: 3 plans
+**Plans**: 2 plans
 
 Plans:
-- [ ] 41-01: Supabase JWT middleware (requireAuth, optionalAuth) with jose jwtVerify
-- [ ] 41-02: requireConnected tier guard via service role client
-- [ ] 41-03: requireAdmin role check via user_roles table; wire to all admin routes
+- [ ] 41-01-PLAN.md — Middleware foundation: install jose + supabase-js, create supabaseAdmin config, replace auth.ts with requireAuth/optionalAuth/requireConnected/requireAdmin
+- [ ] 41-02-PLAN.md — Caller migration: update all route handlers from req.user to req.userId, fix sessionService plausibility, fix progression guard, verify build
 
 ---
 
@@ -229,7 +228,7 @@ Plans:
 | 31–34. Scale Phases | v1.6 | 13/13 | Complete | 2026-02-24 |
 | 35–39. Election Phases | v1.7 | 10/10 | Complete | 2026-02-27 |
 | 40. Database Migration | v1.8 | 3/3 | Complete | 2026-02-28 |
-| 41. Auth & Tier Integration | v1.8 | 0/TBD | Not started | - |
+| 41. Auth & Tier Integration | v1.8 | 0/2 | Not started | - |
 | 42. Gem & Progression Integration | v1.8 | 0/TBD | Not started | - |
 | 43. Frontend Auth & Profile | v1.8 | 0/TBD | Not started | - |
 | 44. Deprecation & Cleanup | v1.8 | 0/TBD | Not started | - |
