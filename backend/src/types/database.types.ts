@@ -1628,7 +1628,10 @@ export type Database = {
       player_stats: {
         Row: {
           best_score: number
+          best_streak: number
+          current_streak: number
           games_played: number
+          lifetime_gems: number
           total_correct: number
           total_questions: number
           total_xp: number
@@ -1637,7 +1640,10 @@ export type Database = {
         }
         Insert: {
           best_score?: number
+          best_streak?: number
+          current_streak?: number
           games_played?: number
+          lifetime_gems?: number
           total_correct?: number
           total_questions?: number
           total_xp?: number
@@ -1646,7 +1652,10 @@ export type Database = {
         }
         Update: {
           best_score?: number
+          best_streak?: number
+          current_streak?: number
           games_played?: number
+          lifetime_gems?: number
           total_correct?: number
           total_questions?: number
           total_xp?: number
