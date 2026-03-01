@@ -1,4 +1,9 @@
 import pg from 'pg';
+import { setDefaultResultOrder } from 'dns';
+
+// Force IPv4 DNS resolution — Render cannot reach Supabase's direct endpoint over IPv6
+setDefaultResultOrder('ipv4first');
+
 const { Pool } = pg;
 
 // Create PostgreSQL connection pool from DATABASE_URL
