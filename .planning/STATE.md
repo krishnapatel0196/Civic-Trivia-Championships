@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-03-01)
 Phase: Not started (next milestone not yet planned)
 Plan: Not started
 Status: Ready to plan next milestone
-Last activity: 2026-03-01 — v1.8 Empowered Identity milestone complete and archived
+Last activity: 2026-03-01 — Completed quick task 022: What would it take to make a new collection of questions?
 
 Progress: [██████████] v1.0–v1.8 (Phases 1–46) — ALL SHIPPED
 
@@ -51,6 +51,12 @@ Key v1.8 decisions:
 ### Blockers/Concerns
 
 - VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY not confirmed as frontend env vars — token refresh may fall back to ACCOUNTS_API_URL if absent
+
+### Quick Tasks Completed
+
+| # | Description | Date | Directory |
+|---|-------------|------|-----------|
+| 022 | What would it take to make a new collection of questions? | 2026-03-01 | [022-what-would-it-take-to-make-a-new-collect](./quick/022-what-would-it-take-to-make-a-new-collect/) |
 
 ## Session Continuity
 
