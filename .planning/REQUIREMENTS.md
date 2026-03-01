@@ -48,7 +48,7 @@ Replace the custom auth/gem/admin system with the shared Empowered Accounts plat
 
 ### Admin
 
-- [ ] **ADMIN-01**: `requireAdmin` middleware checks `public.user_roles` table via service role client (not `is_admin` boolean)
+- [ ] **ADMIN-01**: `requireAdmin` middleware checks `public.admin_users` table via service role client (not `is_admin` boolean)
 - [ ] **ADMIN-02**: All existing admin routes continue to work under new admin guard
 - [ ] **ADMIN-03**: Timer multiplier preference (trivia-specific setting) persisted in `trivia.player_prefs` table keyed by UUID user_id
 
