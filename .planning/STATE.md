@@ -18,7 +18,7 @@ Progress: [██████████] v1.0–v1.8 COMPLETE (all phases done
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): COMPLETE — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 auto tasks complete (3/3 plans executed, checkpoint pending), Phase 44 complete (2/2 plans)
+- v1.8 (Phases 40–44): **COMPLETE** — All 5 phases done, all 15 plans executed, all goals verified (Phase 40–44 complete)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com

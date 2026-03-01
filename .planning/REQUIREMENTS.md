@@ -61,16 +61,16 @@ Replace the custom auth/gem/admin system with the shared Empowered Accounts plat
 
 ### Deprecation & Cleanup
 
-- [ ] **DEP-01**: Custom `POST /api/auth/signup`, `/login`, `/logout`, `/refresh` routes removed from trivia backend
-- [ ] **DEP-02**: `bcrypt` dependency removed (no local password hashing)
-- [ ] **DEP-03**: Custom JWT utilities (`tokenUtils.ts`, `jwt.ts` config) removed
-- [ ] **DEP-04**: Local `users` table removed from trivia schema (identity lives in accounts)
-- [ ] **DEP-05**: `User.ts` model removed
-- [ ] **DEP-06**: `authController.ts` removed
-- [ ] **DEP-07**: `JWT_SECRET`, `JWT_REFRESH_SECRET`, `ADMIN_EMAIL` env vars removed
-- [ ] **DEP-08**: `SUPABASE_JWT_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, `EMPOWERED_ACCOUNTS_URL` env vars added
-- [ ] **DEP-09**: `.env.example` updated to reflect new env shape
-- [ ] **DEP-10**: Redis token blacklist removed (Supabase handles session invalidation)
+- [x] **DEP-01**: Custom `POST /api/auth/signup`, `/login`, `/logout`, `/refresh` routes removed from trivia backend
+- [x] **DEP-02**: `bcrypt` dependency removed (no local password hashing)
+- [x] **DEP-03**: Custom JWT utilities (`tokenUtils.ts`, `jwt.ts` config) removed
+- [x] **DEP-04**: Local `users` table removed from trivia schema (identity lives in accounts)
+- [x] **DEP-05**: `User.ts` model removed
+- [x] **DEP-06**: `authController.ts` removed
+- [x] **DEP-07**: `JWT_SECRET`, `JWT_REFRESH_SECRET`, `ADMIN_EMAIL` env vars removed
+- [x] **DEP-08**: `SUPABASE_JWT_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, `EMPOWERED_ACCOUNTS_URL` env vars added
+- [x] **DEP-09**: `.env.example` updated to reflect new env shape
+- [x] **DEP-10**: Redis token blacklist removed (Supabase handles session invalidation)
 
 ---
 
@@ -118,37 +118,37 @@ Deferred to future milestones.
 | AUTH-01 | Phase 41 | Complete |
 | AUTH-02 | Phase 41 | Complete |
 | AUTH-03 | Phase 41 | Complete |
-| AUTH-04 | Phase 43 | Pending |
-| AUTH-05 | Phase 43 | Pending |
-| AUTH-06 | Phase 43 | Pending |
-| AUTH-07 | Phase 43 | Pending |
+| AUTH-04 | Phase 43 | Complete |
+| AUTH-05 | Phase 43 | Complete |
+| AUTH-06 | Phase 43 | Complete |
+| AUTH-07 | Phase 43 | Complete |
 | TIER-01 | Phase 41 | Complete |
 | TIER-02 | Phase 41 | Complete |
 | TIER-03 | Phase 42 | Complete |
 | TIER-04 | Phase 42 | Complete |
 | GEMS-01 | Phase 42 | Complete |
-| GEMS-02 | Phase 43 | Pending |
-| GEMS-03 | Phase 44 | Pending |
+| GEMS-02 | Phase 43 | Complete |
+| GEMS-03 | Phase 44 | Complete |
 | XP-01 | Phase 40 | Complete |
 | XP-02 | Phase 42 | Complete |
 | XP-03 | Phase 42 | Complete |
 | ADMIN-01 | Phase 41 | Complete |
 | ADMIN-02 | Phase 41 | Complete |
 | ADMIN-03 | Phase 40 | Complete |
-| PROF-01 | Phase 43 | Pending |
-| PROF-02 | Phase 43 | Pending |
-| PROF-03 | Phase 43 | Pending |
-| PROF-04 | Phase 43 | Pending |
-| DEP-01 | Phase 44 | Pending |
-| DEP-02 | Phase 44 | Pending |
-| DEP-03 | Phase 44 | Pending |
-| DEP-04 | Phase 44 | Pending |
-| DEP-05 | Phase 44 | Pending |
-| DEP-06 | Phase 44 | Pending |
-| DEP-07 | Phase 44 | Pending |
-| DEP-08 | Phase 44 | Pending |
-| DEP-09 | Phase 44 | Pending |
-| DEP-10 | Phase 44 | Pending |
+| PROF-01 | Phase 43 | Complete |
+| PROF-02 | Phase 43 | Complete |
+| PROF-03 | Phase 43 | Complete |
+| PROF-04 | Phase 43 | Complete |
+| DEP-01 | Phase 44 | Complete |
+| DEP-02 | Phase 44 | Complete |
+| DEP-03 | Phase 44 | Complete |
+| DEP-04 | Phase 44 | Complete |
+| DEP-05 | Phase 44 | Complete |
+| DEP-06 | Phase 44 | Complete |
+| DEP-07 | Phase 44 | Complete |
+| DEP-08 | Phase 44 | Complete |
+| DEP-09 | Phase 44 | Complete |
+| DEP-10 | Phase 44 | Complete |
 
 **Coverage:**
 - v1.8 requirements: 39 total
