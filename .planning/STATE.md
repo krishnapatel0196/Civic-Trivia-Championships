@@ -9,16 +9,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 45 of 46 (Auth State Hardening) — COMPLETE
-Plan: 2 of 2 complete in Phase 45 (45-01, 45-02 both complete)
-Status: Phase 45 verified — 5/5 must-haves passed. tierResolved flag added, AuthInitializer fetches authoritative tier, AdminGuard race condition fixed, Profile.tsx tier sync and accessToken null guard fixed. Phase 43 VERIFICATION.md written (8/8), ADMIN-01 corrected.
-Last activity: 2026-03-01 — Phase 45 Auth State Hardening complete and verified
+Phase: 46 of 46 (Auth Cleanup) — COMPLETE
+Plan: 1 of 1 complete in Phase 46 (46-01 complete)
+Status: Phase 46 complete — authenticateToken alias removed, requireConnected dead export removed, all three route callers use requireAuth, sessionService.ts JSDoc corrected. TypeScript build passes with zero errors.
+Last activity: 2026-03-01 — Phase 46 Auth Cleanup complete; v1.8 Empowered Identity milestone fully delivered
 
-Progress: [██████████] v1.0–v1.8 phases 40-45 done; Phase 46 pending
+Progress: [██████████] v1.0–v1.8 phases 40-46 done — MILESTONE COMPLETE
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–46): Phases 40–45 complete; Phase 46 pending
+- v1.8 (Phases 40–46): ALL COMPLETE
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -121,6 +121,11 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - Profile.tsx accessToken null guard: early-return redirect to /login?from=/profile rather than passing empty string to Bearer header
 - fetchAccountProfile failure in AuthInitializer silently swallowed — session remains valid, tier stays at JWT metadata fallback
 
+**Phase 46-01 decisions:**
+- authenticateToken alias removed entirely — all callers were in scope of this plan, clean cut in one commit; no phased migration needed
+- requireConnected removed — Connected-tier access gate is enforced at frontend (AuthInitializer + AdminGuard); no Express route used it
+- supabaseAdmin import retained in auth.ts — still used by requireAdmin for admin_users table lookup
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards — code complete, runtime path blocked without this)
@@ -148,7 +153,7 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 45-01-PLAN.md — tierResolved flag, AdminGuard race fix, Profile.tsx tier sync and null guard all committed
+Stopped at: Completed 46-01-PLAN.md — authenticateToken alias removed, requireConnected removed, all callers use requireAuth, sessionService.ts JSDoc corrected
 Resume file: None
 
-Next action: Phase 45-01 code changes now committed (8246b42, 4e151b9). Phase 46 gap-closure or other Phase 45 plans as needed.
+Next action: v1.8 Empowered Identity milestone (Phases 40-46) fully delivered. Pending todos: EMPOWERED_ACCOUNTS_URL env var, admin audit review.
