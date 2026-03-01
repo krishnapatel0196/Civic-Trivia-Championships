@@ -26,7 +26,7 @@ function AdminGuard() {
 
   if (isLoading) return null;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (!user?.isAdmin) return <Forbidden />;
+  if (!user || user.tier !== 'empowered') return <Forbidden />;
 
   return <Outlet />;
 }

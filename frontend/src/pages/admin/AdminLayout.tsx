@@ -110,7 +110,7 @@ export function AdminLayout() {
           <h2 className="text-lg font-semibold text-red-700">Admin Panel</h2>
 
           <div className="flex items-center space-x-2 text-sm text-gray-700">
-            <span className="hidden sm:inline">{user?.name || user?.email}</span>
+            <span className="hidden sm:inline">{user?.email}</span>
             <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full">
               Admin
             </span>

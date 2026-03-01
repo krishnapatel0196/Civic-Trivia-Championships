@@ -9,7 +9,7 @@ interface CollectionCardProps {
 
 export function CollectionCard({ collection, isSelected, onSelect }: CollectionCardProps) {
   const user = useAuthStore((state) => state.user);
-  const isAdmin = user?.isAdmin === true;
+  const isAdmin = user?.tier === 'empowered';
 
   return (
     <button
