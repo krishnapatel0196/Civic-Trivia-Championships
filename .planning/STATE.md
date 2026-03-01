@@ -9,16 +9,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 44 of 44 in v1.8 (Deprecation Cleanup) — In progress
-Plan: 1 of 2 complete in Phase 44 (44-01 complete)
-Status: 44-01 executed — 9 legacy files deleted, 10 packages uninstalled, 7 files surgically cleaned, TypeScript builds clean
-Last activity: 2026-03-01 — Completed 44-01-PLAN.md (legacy auth removal)
+Phase: 44 of 44 in v1.8 (Deprecation Cleanup) — COMPLETE
+Plan: 2 of 2 complete in Phase 44 (44-01, 44-02 both complete)
+Status: 44-02 executed — env.ts cleaned, .env.example rewritten, migration created, full sweep confirmed zero stale refs
+Last activity: 2026-03-01 — Completed 44-02-PLAN.md (env config cleanup and build verification)
 
-Progress: [█████████░] v1.0–v1.7 complete (109 plans); v1.8 plans 11/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02, 42-03, 43-01, 43-02, 44-01) + 43-03 auto tasks
+Progress: [██████████] v1.0–v1.8 COMPLETE (all phases done)
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 auto tasks complete (3/3 plans executed, checkpoint pending), Phase 44 plan 1/2 complete
+- v1.8 (Phases 40–44): COMPLETE — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 auto tasks complete (3/3 plans executed, checkpoint pending), Phase 44 complete (2/2 plans)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -141,7 +141,7 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 44-01-PLAN.md — legacy auth removal complete, TypeScript clean
+Stopped at: Completed 44-02-PLAN.md — Phase 44 and v1.8 Empowered Identity milestone complete
 Resume file: None
 
-Next action: Execute 44-02-PLAN.md — env.ts cleanup (remove ADMIN_EMAIL), .env.example rewrite, Supabase migration for DROP TABLE IF EXISTS trivia.users
+Next action: v1.8 milestone complete. Operational note: set EMPOWERED_ACCOUNTS_URL in backend Render env vars for gem awards to function at runtime.
