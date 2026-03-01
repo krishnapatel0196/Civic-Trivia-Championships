@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 43 of 44 in v1.8 (Frontend Auth & Profile) — In progress, awaiting checkpoint
-Plan: 3 of 3 complete in Phase 43 (43-01, 43-02, 43-03 tasks done) — checkpoint human-verify pending
-Status: Paused at checkpoint — auto tasks complete, awaiting user verification of full auth + profile flow
-Last activity: 2026-03-01 — Completed 43-03-PLAN.md auto tasks — Profile page rewritten (dual-API, tier badge, no identity management), full frontend TS build zero errors
+Phase: 43 of 44 in v1.8 (Frontend Auth & Profile) — In progress, checkpoint partially verified
+Plan: 3 of 3 complete in Phase 43 (43-01, 43-02, 43-03 tasks done) — checkpoint human-verify in progress
+Status: Live testing underway — login works, profile page loads, collections load, several infrastructure bugs fixed during deploy
+Last activity: 2026-03-01 — Live testing session: fixed DATABASE_URL (Session Pooler, IPv4), fixed profile route (player_stats/player_prefs), fixed null display_name crash in Avatar
 
 Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 10/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02, 42-03, 43-01, 43-02) + 43-03 auto tasks
 
@@ -120,14 +120,22 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 
 ### Blockers/Concerns
 
-- VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY not confirmed as frontend env vars — exchangeRefreshToken falls back to ACCOUNTS_API_URL if absent
+- VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY not confirmed as frontend env vars — exchangeRefreshToken falls back to ACCOUNTS_API_URL if absent (token refresh may fail after ~1hr)
 - Phase 44: remove integer-user path (updateUserProgression, User.updateStats, total_gems column reads) per GEMS-03 markers
-- 43-03 checkpoint: full flow (login → profile) requires Empowered Accounts API to be running at VITE_EMPOWERED_ACCOUNTS_URL for end-to-end verification
+- "Manage your Empowered Account" link on profile broken — ACCOUNTS_API_URL points to API endpoint, not a user-facing web UI URL; needs a separate VITE_EMPOWERED_ACCOUNTS_WEB_URL env var or hardcoded platform URL
+
+### Infrastructure Fixes Applied During Deploy (2026-03-01)
+
+- DATABASE_URL: now using Session Pooler (aws-0-us-west-1, IPv4) — direct connection was IPv6-only, unreachable from Render
+- backend/src/config/database.ts: added setDefaultResultOrder('ipv4first') as belt-and-suspenders
+- backend/src/routes/profile.ts: replaced legacy User.getProfileStats/findById with player_stats + player_prefs Drizzle queries
+- frontend Profile.tsx: null guard on display_name — Avatar and h1 fall back to email if display_name is null
+- Render env vars added: FRONTEND_URL_ALT=https://ctc.empowered.vote, NODE_OPTIONS=--dns-result-order=ipv4first
 
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: 43-03 auto task complete; paused at checkpoint:human-verify — user must verify full auth + profile flow in browser
+Stopped at: Live testing — login works, collections load, profile page loads with tier badge and stats; "Manage account" link broken (API URL vs web UI URL)
 Resume file: None
 
-Next action: After user approves checkpoint — create final 43-03 metadata commit, then plan Phase 44 cleanup (remove integer-user legacy paths)
+Next action: Fix "Manage your Empowered Account" link URL, confirm token refresh works (add VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY to frontend Render env), then approve Phase 43 checkpoint and plan Phase 44
