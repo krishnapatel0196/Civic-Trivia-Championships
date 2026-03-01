@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-03-01)
 Phase: Not started (next milestone not yet planned)
 Plan: Not started
 Status: Ready to plan next milestone
-Last activity: 2026-03-01 — Completed quick task 022: What would it take to make a new collection of questions?
+Last activity: 2026-03-01 — Completed quick task 023: Scaffold and activate collection CLIs
 
 Progress: [██████████] v1.0–v1.8 (Phases 1–46) — ALL SHIPPED
 
@@ -57,11 +57,12 @@ Key v1.8 decisions:
 | # | Description | Date | Directory |
 |---|-------------|------|-----------|
 | 022 | What would it take to make a new collection of questions? | 2026-03-01 | [022-what-would-it-take-to-make-a-new-collect](./quick/022-what-would-it-take-to-make-a-new-collect/) |
+| 023 | Scaffold and activate collection CLIs | 2026-03-01 | [023-scaffold-and-activate-collection-cli](./quick/023-scaffold-and-activate-collection-cli/) |
 
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: v1.8 milestone archived — ready for next milestone planning
+Stopped at: Completed quick task 023 — scaffold-collection and activate-collection CLIs
 Resume file: None
 
 Next action: `/gsd:new-milestone` to plan v1.9
