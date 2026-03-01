@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 42 of 44 in v1.8 (Gem & Progression Integration) — In progress
-Plan: 1 of 3 complete in Phase 42 (42-01 done)
-Status: In progress — 42-01 complete, ready for 42-02
-Last activity: 2026-03-01 — Completed 42-01-PLAN.md — player_stats columns added, Drizzle schema updated, TypeScript types regenerated
+Plan: 2 of 3 complete in Phase 42 (42-01, 42-02 done)
+Status: In progress — 42-02 complete, ready for 42-03
+Last activity: 2026-03-01 — Completed 42-02-PLAN.md — GameSession extended with Connected/suspended fields, progressionService platform integration functions built
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 6/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01)
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 7/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02)
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
@@ -74,6 +74,14 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - Supabase CLI was already authenticated from Phase 40 stored session — no SUPABASE_ACCESS_TOKEN env var needed; `npx supabase db push` worked directly
 - Regeneration command confirmed: `npx supabase gen types --linked --lang typescript --schema public,trivia 2>/dev/null > backend/src/types/database.types.ts` (no SUPABASE_ACCESS_TOKEN needed when CLI already authenticated)
 
+**Phase 42-02 decisions:**
+- isConnected and isSuspended are NON-OPTIONAL booleans in GameSession — optional fields would silently allow gem awards to anonymous users since !undefined === true
+- accessToken is optional (?) — anonymous sessions have no token, that's intentional
+- awardPlatformGems uses (supabaseAdmin as any).rpc — consistent with Phase 41 connect schema pattern to avoid cross-schema type errors
+- withRetry is internal to progressionService (not exported) — callers only see result objects
+- current_streak and best_streak initialized to 1 on INSERT only, omitted from onConflictDoUpdate — real day-streak logic deferred to future phase
+- gemsConfirmed param in upsertPlayerStats decouples stats write from RPC success — caller passes 0 if award_gems failed
+
 ### Pending Todos
 
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
@@ -86,13 +94,13 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ### Blockers/Concerns
 
 - Review `empowered-accounts-integration-guide.md` (repo root) before Phase 43 for API contracts
-- Phase 42: implement award_gems RPC for UUID user progression (TODO markers in game.ts)
+- Phase 42-03: wire checkAccountContext, awardPlatformGems, upsertPlayerStats into game.ts routes (POST /game/start and POST /game/complete)
 - Phase 43: replace profile routes using legacy User model (as unknown as number cast markers in profile.ts)
 
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 42-01-PLAN.md — player_stats columns added to Supabase, Drizzle schema updated, types regenerated, clean build
+Stopped at: Completed 42-02-PLAN.md — GameSession extended with Connected/suspended fields, progressionService platform integration functions built, clean build
 Resume file: None
 
-Next action: Execute Phase 42-02 — progressionService.ts service layer (awardPlatformGems, upsertPlayerStats, checkAccountStanding)
+Next action: Execute Phase 42-03 — wire service functions into game.ts routes (POST /game/start calls checkAccountContext, POST /game/complete calls awardPlatformGems + upsertPlayerStats)
