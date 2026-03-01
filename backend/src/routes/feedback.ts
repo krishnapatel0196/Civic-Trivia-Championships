@@ -37,10 +37,7 @@ router.post(
       }
 
       const { questionId: externalId, sessionId } = req.body;
-      // TODO(Phase 41): req.user!.userId will become a UUID string after auth migration.
-      // Casting to string here bridges the type gap until Phase 41 replaces tokenUtils
-      // with Supabase JWT verification where userId is already a UUID string.
-      const userId = String(req.user!.userId);
+      const userId = req.userId!;
 
       // Look up question by externalId
       const question = await db
@@ -89,8 +86,7 @@ router.delete(
       }
 
       const { questionId: externalId } = req.params;
-      // TODO(Phase 41): Will become a UUID string after auth migration
-      const userId = String(req.user!.userId);
+      const userId = req.userId!;
 
       // Look up question by externalId
       const question = await db
@@ -143,8 +139,7 @@ router.patch(
       }
 
       const { sessionId, elaborations } = req.body;
-      // TODO(Phase 41): Will become a UUID string after auth migration
-      const userId = String(req.user!.userId);
+      const userId = req.userId!;
 
       // Update elaborations
       const updatedCount = await updateFlagElaborations(userId, sessionId, elaborations);

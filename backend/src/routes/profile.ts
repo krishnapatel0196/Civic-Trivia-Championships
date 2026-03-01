@@ -61,7 +61,7 @@ router.use(authenticateToken);
  */
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user!.userId;
+    const userId = req.userId!;
 
     // Fetch user stats
     const stats = await User.getProfileStats(userId);
@@ -105,7 +105,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
  */
 router.patch('/settings', async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user!.userId;
+    const userId = req.userId!;
     const { timerMultiplier } = req.body;
 
     // Validate timerMultiplier
@@ -132,7 +132,7 @@ router.patch('/settings', async (req: Request, res: Response): Promise<void> => 
  */
 router.patch('/name', updateNameValidation, validate, async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user!.userId;
+    const userId = req.userId!;
     const { name } = req.body;
 
     await User.updateName(userId, name);
@@ -149,7 +149,7 @@ router.patch('/name', updateNameValidation, validate, async (req: Request, res: 
  */
 router.patch('/password', updatePasswordValidation, validate, async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user!.userId;
+    const userId = req.userId!;
     const { currentPassword, newPassword } = req.body;
 
     // Fetch user to get current password hash
@@ -209,7 +209,7 @@ router.post(
       const avatarUrl = `/uploads/avatars/${req.file.filename}`;
 
       // Update user's avatar URL in database
-      const userId = req.user!.userId;
+      const userId = req.userId!;
       await User.updateAvatarUrl(userId, avatarUrl);
 
       res.json({ avatarUrl });

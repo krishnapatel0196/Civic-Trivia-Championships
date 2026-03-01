@@ -123,7 +123,7 @@ router.post('/session', optionalAuth, async (req: Request, res: Response) => {
     let selectedQuestions: Question[];
 
     // Get userId from auth middleware (authenticated) or use 'anonymous'
-    const userId = req.user?.userId ?? 'anonymous';
+    const userId = req.userId ?? 'anonymous';
 
     if (questionIds && Array.isArray(questionIds)) {
       // Legacy path: questionIds provided — fetch from DB and filter to matching IDs
@@ -382,17 +382,22 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
     // Calculate and award progression for authenticated users (only once)
     let progression: { xpEarned: number; gemsEarned: number } | null = null;
 
-    if (typeof session.userId === 'number' && !session.progressionAwarded) {
-      // Authenticated user and progression not yet awarded
-      progression = await updateUserProgression(
-        session.userId,
-        results.totalScore,
-        results.totalCorrect,
-        results.totalQuestions
-      );
-
-      // Mark progression as awarded to prevent double-awarding
-      session.progressionAwarded = true;
+    if (session.userId && session.userId !== 'anonymous' && !session.progressionAwarded) {
+      if (typeof session.userId === 'number') {
+        // Legacy integer user path — TODO Phase 42: Replace with award_gems RPC
+        progression = await updateUserProgression(
+          session.userId,
+          results.totalScore,
+          results.totalCorrect,
+          results.totalQuestions
+        );
+        session.progressionAwarded = true;
+      } else {
+        // UUID users: progression disabled until Phase 42 implements award_gems RPC
+        progression = null;
+        session.progressionAwarded = true; // prevent retry
+        // TODO Phase 42: Replace with award_gems RPC
+      }
     }
 
     // Strip flagged field from all answer records (keep server-internal only)

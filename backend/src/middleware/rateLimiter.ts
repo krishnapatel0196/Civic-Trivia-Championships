@@ -21,7 +21,7 @@ export async function flagRateLimiter(
   next: NextFunction
 ): Promise<void> {
   // Get userId from authenticated token payload
-  const userId = req.user?.userId;
+  const userId = req.userId;
 
   if (!userId) {
     res.status(401).json({ error: 'Authentication required' });
@@ -67,7 +67,7 @@ export async function flagRateLimiter(
  * @returns Remaining flags and retry-after seconds
  */
 export async function getRateLimitStatus(
-  userId: number
+  userId: string
 ): Promise<{ remaining: number; retryAfter: number | null }> {
   const key = `rate_limit:flag:${userId}`;
 
