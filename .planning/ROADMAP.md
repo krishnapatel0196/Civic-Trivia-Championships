@@ -273,5 +273,5 @@ Plans:
 | 42. Gem & Progression Integration | v1.8 | 3/3 | Complete | 2026-03-01 |
 | 43. Frontend Auth & Profile | v1.8 | 3/3 | Complete | 2026-03-01 |
 | 44. Deprecation & Cleanup | v1.8 | 2/2 | Complete | 2026-03-01 |
-| 45. Auth State Hardening | v1.8 | 0/2 | Pending | — |
+| 45. Auth State Hardening | v1.8 | 2/2 | Complete | 2026-03-01 |
 | 46. Auth Cleanup | v1.8 | 0/1 | Pending | — |

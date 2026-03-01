@@ -5,21 +5,20 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 45 — Auth State Hardening
+**Current focus:** Phase 46 — Auth Cleanup (v1.8 Empowered Identity)
 
 ## Current Position
 
-Phase: 45 of 46 (Auth State Hardening) — In progress
-Plan: 2 of 2 complete in Phase 45 (45-01 done, 45-02 done)
-Status: 45-02 executed — Phase 43 VERIFICATION.md written (8/8 requirements), ADMIN-01 requirement text corrected
-Last activity: 2026-03-01 — Completed 45-02-PLAN.md (Phase 43 verification and REQUIREMENTS.md correction)
+Phase: 45 of 46 (Auth State Hardening) — COMPLETE
+Plan: 2 of 2 complete in Phase 45 (45-01, 45-02 both complete)
+Status: Phase 45 verified — 5/5 must-haves passed. tierResolved flag added, AuthInitializer fetches authoritative tier, AdminGuard race condition fixed, Profile.tsx tier sync and accessToken null guard fixed. Phase 43 VERIFICATION.md written (8/8), ADMIN-01 corrected.
+Last activity: 2026-03-01 — Phase 45 Auth State Hardening complete and verified
 
-Progress: [██████████] v1.0–v1.8 COMPLETE (phases 40-44 done); Phase 45 documentation audit closures complete
+Progress: [██████████] v1.0–v1.8 phases 40-45 done; Phase 46 pending
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): **COMPLETE** — All 5 phases done, all 15 plans executed, all goals verified
-- Phase 45 (Auth State Hardening): 2 plans complete (45-01 bug fixes, 45-02 doc audit closures)
+- v1.8 (Phases 40–46): Phases 40–45 complete; Phase 46 pending
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
