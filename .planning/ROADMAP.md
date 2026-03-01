@@ -165,9 +165,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 42-01: award_gems RPC integration in game completion endpoint
-- [ ] 42-02: player_stats write logic with Connected-tier guard and suspension check
-- [ ] 42-03: Remove total_gems column and all references
+- [ ] 42-01-PLAN.md — Schema: add current_streak, best_streak, lifetime_gems to player_stats; update Drizzle schema; regenerate types
+- [ ] 42-02-PLAN.md — Services: extend GameSession with tier/suspension fields; build awardPlatformGems, upsertPlayerStats, checkAccountContext
+- [ ] 42-03-PLAN.md — Routes: wire account context into session start, gem award + stat write into results; GEMS-03 deprecation markers
 
 ---
 
@@ -229,6 +229,6 @@ Plans:
 | 35–39. Election Phases | v1.7 | 10/10 | Complete | 2026-02-27 |
 | 40. Database Migration | v1.8 | 3/3 | Complete | 2026-02-28 |
 | 41. Auth & Tier Integration | v1.8 | 2/2 | Complete | 2026-02-28 |
-| 42. Gem & Progression Integration | v1.8 | 0/TBD | Not started | - |
+| 42. Gem & Progression Integration | v1.8 | 0/3 | Not started | - |
 | 43. Frontend Auth & Profile | v1.8 | 0/TBD | Not started | - |
 | 44. Deprecation & Cleanup | v1.8 | 0/TBD | Not started | - |
