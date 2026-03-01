@@ -9,16 +9,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 43 of 44 in v1.8 (Frontend Auth & Profile) — In progress
-Plan: 2 of 3 complete in Phase 43 (43-01, 43-02 done)
-Status: In progress — 43-02 complete, 43-03 next (Profile page)
-Last activity: 2026-03-01 — Completed 43-02-PLAN.md — Login/Signup rewired to accounts API (snake_case tokens, ev_refresh_token), return-to navigation added, ProtectedRoute passes ?from=, Header updated for AccountsUser type
+Phase: 43 of 44 in v1.8 (Frontend Auth & Profile) — In progress, awaiting checkpoint
+Plan: 3 of 3 complete in Phase 43 (43-01, 43-02, 43-03 tasks done) — checkpoint human-verify pending
+Status: Paused at checkpoint — auto tasks complete, awaiting user verification of full auth + profile flow
+Last activity: 2026-03-01 — Completed 43-03-PLAN.md auto tasks — Profile page rewritten (dual-API, tier badge, no identity management), full frontend TS build zero errors
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 10/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02, 42-03, 43-01, 43-02)
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 10/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02, 42-03, 43-01, 43-02) + 43-03 auto tasks
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 in progress (1/3 plans done)
+- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 auto tasks complete (3/3 plans executed, checkpoint pending)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -101,6 +101,13 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - Open redirect guard in Login: from param validated to start with / before navigate is called
 - displayName || user.email display pattern in Header — displayName populated by AuthInitializer from accounts profile, not from AccountsUser (which has no name field)
 
+**Phase 43-03 decisions:**
+- fetchAccountProfile imported from accountsApi.ts directly (not via authService) — already exported there from plan 01; plan spec referenced authService.fetchAccountProfile but that method was never added to authService
+- AdminGuard uses user.tier === 'empowered' as admin check — AccountsUser has no isAdmin field; empowered tier is the appropriate frontend guard
+- AdminDashboard/AdminLayout display user.email (no user.name on AccountsUser)
+- CollectionCard isAdmin = user.tier === 'empowered' — empowered tier implies admin for question count display aria-label
+- Timer update failures silently ignored in Profile — non-critical UX, no toast yet
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards — code complete, runtime path blocked without this)
@@ -113,15 +120,14 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 
 ### Blockers/Concerns
 
-- Phase 43-03: Profile.tsx calls authStore.setUserName — must be removed; Profile page is the last remaining plan
-- App.tsx, CollectionCard.tsx, AdminDashboard.tsx, AdminLayout.tsx still reference user.isAdmin or user.name — 4 TS errors remain; fix in Phase 43-03 or Phase 44 cleanup
 - VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY not confirmed as frontend env vars — exchangeRefreshToken falls back to ACCOUNTS_API_URL if absent
 - Phase 44: remove integer-user path (updateUserProgression, User.updateStats, total_gems column reads) per GEMS-03 markers
+- 43-03 checkpoint: full flow (login → profile) requires Empowered Accounts API to be running at VITE_EMPOWERED_ACCOUNTS_URL for end-to-end verification
 
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 43-02-PLAN.md — Login/Signup/ProtectedRoute/Header rewired for accounts API and AccountsUser type
+Stopped at: 43-03 auto task complete; paused at checkpoint:human-verify — user must verify full auth + profile flow in browser
 Resume file: None
 
-Next action: Execute Phase 43 Plan 03 — Profile page (fetch accounts profile, display tier/displayName/gems, handle tier gating)
+Next action: After user approves checkpoint — create final 43-03 metadata commit, then plan Phase 44 cleanup (remove integer-user legacy paths)
