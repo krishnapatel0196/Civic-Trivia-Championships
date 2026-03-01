@@ -1,15 +1,34 @@
-export interface User {
-  id: number;
+export type Tier = 'inform' | 'connected' | 'empowered';
+
+export interface AccountsUser {
+  id: string;
   email: string;
-  name: string;
-  isAdmin?: boolean;
+  tier: Tier;
+}
+
+export interface AccountProfile {
+  id: string;
+  email: string;
+  display_name: string;
+  avatar_url: string | null;
+  tier: Tier;
+  account_standing: string;
+  connected_profile?: {
+    xp: number;
+    gem_balance: number;
+    display_name: string;
+    verification_status?: string;
+    completed_onboarding?: boolean;
+  };
 }
 
 export interface AuthState {
   accessToken: string | null;
-  user: User | null;
+  user: AccountsUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  tier: Tier | null;
+  displayName: string | null;
 }
 
 export interface LoginCredentials {
@@ -20,12 +39,13 @@ export interface LoginCredentials {
 export interface SignupData {
   email: string;
   password: string;
-  name: string;
 }
 
 export interface AuthResponse {
-  accessToken: string;
-  user: User;
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  user: AccountsUser;
 }
 
 export interface AuthError {

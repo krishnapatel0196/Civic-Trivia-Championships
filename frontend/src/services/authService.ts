@@ -1,38 +1,31 @@
-import { apiRequest } from './api';
+import { accountsApiFetch } from './accountsApi';
 import type {
+  AuthResponse,
   LoginCredentials,
   SignupData,
-  AuthResponse,
-  User,
 } from '../types/auth';
 
 export const authService = {
-  signup: async (data: SignupData): Promise<{ message: string; user: User }> => {
-    return apiRequest('/auth/signup', {
+  signup: async (data: SignupData): Promise<{ message: string }> => {
+    return accountsApiFetch<{ message: string }>('/api/auth/signup', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({ email: data.email, password: data.password }),
     });
   },
 
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    return apiRequest('/auth/login', {
+    return accountsApiFetch<AuthResponse>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
   },
 
   logout: async (accessToken: string): Promise<{ message: string }> => {
-    return apiRequest('/auth/logout', {
+    return accountsApiFetch<{ message: string }>('/api/auth/logout', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    });
-  },
-
-  refresh: async (): Promise<AuthResponse> => {
-    return apiRequest('/auth/refresh', {
-      method: 'POST',
     });
   },
 };
