@@ -5,20 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 44 — Deprecation Cleanup (v1.8 Empowered Identity)
+**Current focus:** Phase 45 — Auth State Hardening
 
 ## Current Position
 
-Phase: 44 of 44 in v1.8 (Deprecation Cleanup) — COMPLETE
-Plan: 2 of 2 complete in Phase 44 (44-01, 44-02 both complete)
-Status: 44-02 executed — env.ts cleaned, .env.example rewritten, migration created, full sweep confirmed zero stale refs
-Last activity: 2026-03-01 — Completed 44-02-PLAN.md (env config cleanup and build verification)
+Phase: 45 of 46 (Auth State Hardening) — In progress
+Plan: 2 of 2 complete in Phase 45 (45-01 done, 45-02 done)
+Status: 45-02 executed — Phase 43 VERIFICATION.md written (8/8 requirements), ADMIN-01 requirement text corrected
+Last activity: 2026-03-01 — Completed 45-02-PLAN.md (Phase 43 verification and REQUIREMENTS.md correction)
 
-Progress: [██████████] v1.0–v1.8 COMPLETE (all phases done)
+Progress: [██████████] v1.0–v1.8 COMPLETE (phases 40-44 done); Phase 45 documentation audit closures complete
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): **COMPLETE** — All 5 phases done, all 15 plans executed, all goals verified (Phase 40–44 complete)
+- v1.8 (Phases 40–44): **COMPLETE** — All 5 phases done, all 15 plans executed, all goals verified
+- Phase 45 (Auth State Hardening): 2 plans complete (45-01 bug fixes, 45-02 doc audit closures)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -141,7 +142,7 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 44-02-PLAN.md — Phase 44 and v1.8 Empowered Identity milestone complete
+Stopped at: Completed 45-02-PLAN.md — Phase 43 VERIFICATION.md written, ADMIN-01 corrected
 Resume file: None
 
-Next action: v1.8 milestone complete. Operational note: set EMPOWERED_ACCOUNTS_URL in backend Render env vars for gem awards to function at runtime.
+Next action: Phase 45 doc audit closures complete. Phase 45 code changes (45-01) already applied. Proceed to Phase 45 VERIFICATION.md or Phase 46 as planned.
