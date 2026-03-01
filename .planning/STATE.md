@@ -115,6 +115,13 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - profile.ts full rewrite: PATCH /name, PATCH /password, POST /avatar all required deleted User model; frontend does not call these routes so removed entirely
 - GameSession.userId now string (not string | number) — anonymous sessions remain as 'anonymous' string; integer user path fully removed
 
+**Phase 45-01 decisions:**
+- tierResolved defaults to false in authStore; set to true in all 4 AuthInitializer exit paths (success, profile-fetch-failure, no-session, no-refresh-token)
+- setLoading(false) moved into per-branch finally blocks — prevents AdminGuard from briefly seeing stale JWT-metadata tier before accounts API call completes
+- AdminGuard uses store-level tier field (not user.tier) for empowered check — user.tier is stale JWT metadata after Supabase token refresh which does not reliably populate user_metadata.tier
+- Profile.tsx accessToken null guard: early-return redirect to /login?from=/profile rather than passing empty string to Bearer header
+- fetchAccountProfile failure in AuthInitializer silently swallowed — session remains valid, tier stays at JWT metadata fallback
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards — code complete, runtime path blocked without this)
@@ -142,7 +149,7 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 45-02-PLAN.md — Phase 43 VERIFICATION.md written, ADMIN-01 corrected
+Stopped at: Completed 45-01-PLAN.md — tierResolved flag, AdminGuard race fix, Profile.tsx tier sync and null guard all committed
 Resume file: None
 
-Next action: Phase 45 doc audit closures complete. Phase 45 code changes (45-01) already applied. Proceed to Phase 45 VERIFICATION.md or Phase 46 as planned.
+Next action: Phase 45-01 code changes now committed (8246b42, 4e151b9). Phase 46 gap-closure or other Phase 45 plans as needed.
