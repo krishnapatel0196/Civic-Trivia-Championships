@@ -9,16 +9,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 41 of 44 in v1.8 (Auth & Tier Integration) — Phase complete
-Plan: 2 of 2 complete in Phase 41 (41-01, 41-02 done)
-Status: Phase 41 complete — ready for Phase 42
-Last activity: 2026-03-01 — Completed 41-02-PLAN.md — all req.user callers migrated to req.userId, sessionService UUID-safe, TypeScript build clean
+Phase: 42 of 44 in v1.8 (Gem & Progression Integration) — In progress
+Plan: 1 of 3 complete in Phase 42 (42-01 done)
+Status: In progress — 42-01 complete, ready for 42-02
+Last activity: 2026-03-01 — Completed 42-01-PLAN.md — player_stats columns added, Drizzle schema updated, TypeScript types regenerated
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 5/15 complete (40-01, 40-02, 40-03, 41-01, 41-02)
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 6/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01)
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete
+- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 in progress (1/3)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -69,6 +69,11 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - sessionService timerMultiplier defaults to 1.0 for UUID users (typeof session.userId === 'number' guard)
 - getRateLimitStatus signature: userId changed from number to string to match UUID type
 
+**Phase 42-01 decisions:**
+- ADD COLUMN IF NOT EXISTS used for each column — idempotent migration safe for re-runs
+- Supabase CLI was already authenticated from Phase 40 stored session — no SUPABASE_ACCESS_TOKEN env var needed; `npx supabase db push` worked directly
+- Regeneration command confirmed: `npx supabase gen types --linked --lang typescript --schema public,trivia 2>/dev/null > backend/src/types/database.types.ts` (no SUPABASE_ACCESS_TOKEN needed when CLI already authenticated)
+
 ### Pending Todos
 
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
@@ -87,7 +92,7 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 41-02-PLAN.md — all req.user callers migrated to req.userId, clean TypeScript build
+Stopped at: Completed 42-01-PLAN.md — player_stats columns added to Supabase, Drizzle schema updated, types regenerated, clean build
 Resume file: None
 
-Next action: Execute Phase 42 — award_gems RPC integration for UUID user progression
+Next action: Execute Phase 42-02 — progressionService.ts service layer (awardPlatformGems, upsertPlayerStats, checkAccountStanding)
