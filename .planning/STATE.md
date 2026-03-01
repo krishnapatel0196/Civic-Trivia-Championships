@@ -9,16 +9,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 40 of 44 in v1.8 (Database Migration) — COMPLETE
-Plan: 3 of 3 complete in Phase 40 (40-01, 40-02, 40-03 all done)
-Status: Phase 40 complete
-Last activity: 2026-02-28 — Phase 40 complete (trivia schema deployed, 953 questions migrated, types generated, 5/5 verified)
+Phase: 41 of 44 in v1.8 (Auth & Tier Integration) — In progress
+Plan: 1 of ? complete in Phase 41 (41-01 done)
+Status: In progress
+Last activity: 2026-02-28 — Completed 41-01-PLAN.md — packages installed, supabaseAdmin singleton created, auth.ts replaced with 4 Supabase JWT middleware functions
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 3/15 complete (40-01, 40-02, 40-03)
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 4/15 complete (40-01, 40-02, 40-03, 41-01)
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): In progress — Phase 40 complete (all 3 plans done)
+- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 plan 01 done
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -33,7 +33,7 @@ Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.
 Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 
 - Auth: `jwtVerify` (jose) against `SUPABASE_JWT_SECRET` — per accounts integration guide
-- Admin: `public.user_roles` table via service role client — replaces boolean `is_admin`
+- Admin: `admin_users` table UUID lookup (not user_roles join) — correctly typed in database.types.ts
 - Gems: `award_gems` RPC, `p_gem_type: 'yellow'`, `p_source: 'civic_trivia'` — replaces local total_gems
 - Stats: `trivia.player_stats` is trivia-specific (UUID user_id); not shared platform XP
 - Anonymous play: preserved — only Connected tier earns gems and persistent stats
@@ -56,23 +56,30 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - trivia schema confirmed already PostgREST-exposed — all 9 tables present in generated types (Dashboard step from 40-01 already done)
 - Regeneration command: `SUPABASE_ACCESS_TOKEN=... npx supabase gen types --linked --lang typescript --schema public,trivia 2>/dev/null > backend/src/types/database.types.ts`
 
+**Phase 41-01 decisions:**
+- authenticateToken preserved as export alias for requireAuth — callers still reference it; Plan 02 migrates callers and removes alias
+- Admin check uses admin_users table (typed in database.types.ts) not user_roles join (untyped)
+- connect schema accessed via `(supabaseAdmin as any).schema('connect')` — connect schema not in generated types
+- Caller TypeScript errors (req.user property missing) are expected; will be fixed in Plan 02
+
 ### Pending Todos
 
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
 - [ ] Assess Norwich by-election/MP terminology gap — editorial judgment for content review
 - [x] Confirm Supabase credentials — DONE (PAT provided, project kxsdzaojfaibhuzmclfq linked)
 - [x] Manual Supabase Dashboard step: Settings > API > Exposed schemas > add "trivia" — DONE (confirmed by 40-03 type generation showing all 9 trivia tables)
-- [ ] Provide SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY, EMPOWERED_ACCOUNTS_URL for Phase 41 backend env migration
+- [x] Provide SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY — DONE (confirmed in backend/.env)
+- [ ] Plan 02: migrate all callers from req.user.userId to req.userId (rateLimiter.ts, feedback.ts, game.ts, profile.ts + any others)
 
 ### Blockers/Concerns
 
-- Phase 41 backend env migration will require SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY — confirm these are available before starting Phase 41
+- Plan 02 caller migration required before backend compiles cleanly — 10 TypeScript errors in 4 files referencing req.user
 - Review `empowered-accounts-integration-guide.md` (repo root) before Phase 43 for API contracts
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 40-02-PLAN.md — 953 questions + all content tables migrated to shared Supabase trivia schema
+Stopped at: Completed 41-01-PLAN.md — auth.ts replaced, supabaseAdmin created, packages installed
 Resume file: None
 
-Next action: /gsd:execute-phase 41 — Phase 41: Accounts JWT Integration (auth migration from local JWTs to Supabase/Empowered JWTs)
+Next action: Execute Phase 41 Plan 02 — migrate callers from req.user.userId to req.userId
