@@ -187,8 +187,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 43-01: Frontend auth service rewrite (login, signup, logout, token refresh) → accounts API
-- [ ] 43-02: Profile page redesign (trivia stats + accounts API data; link out for identity management)
+- [ ] 43-01-PLAN.md — Auth infrastructure: types, accountsApi.ts, authService rewrite, authStore update, api.ts interceptor, AuthInitializer
+- [ ] 43-02-PLAN.md — Login/Signup pages rewire with return-to navigation, ProtectedRoute update
+- [ ] 43-03-PLAN.md — Profile page redesign: dual-API data, tier badge, remove identity management, accounts link
 
 ---
 
@@ -230,5 +231,5 @@ Plans:
 | 40. Database Migration | v1.8 | 3/3 | Complete | 2026-02-28 |
 | 41. Auth & Tier Integration | v1.8 | 2/2 | Complete | 2026-02-28 |
 | 42. Gem & Progression Integration | v1.8 | 3/3 | Complete | 2026-03-01 |
-| 43. Frontend Auth & Profile | v1.8 | 0/TBD | Not started | - |
+| 43. Frontend Auth & Profile | v1.8 | 0/3 | Not started | - |
 | 44. Deprecation & Cleanup | v1.8 | 0/TBD | Not started | - |
