@@ -9,16 +9,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 41 of 44 in v1.8 (Auth & Tier Integration) — In progress
-Plan: 1 of ? complete in Phase 41 (41-01 done)
-Status: In progress
-Last activity: 2026-02-28 — Completed 41-01-PLAN.md — packages installed, supabaseAdmin singleton created, auth.ts replaced with 4 Supabase JWT middleware functions
+Phase: 41 of 44 in v1.8 (Auth & Tier Integration) — Phase complete
+Plan: 2 of 2 complete in Phase 41 (41-01, 41-02 done)
+Status: Phase 41 complete — ready for Phase 42
+Last activity: 2026-03-01 — Completed 41-02-PLAN.md — all req.user callers migrated to req.userId, sessionService UUID-safe, TypeScript build clean
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 4/15 complete (40-01, 40-02, 40-03, 41-01)
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 5/15 complete (40-01, 40-02, 40-03, 41-01, 41-02)
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 plan 01 done
+- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -62,6 +62,13 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - connect schema accessed via `(supabaseAdmin as any).schema('connect')` — connect schema not in generated types
 - Caller TypeScript errors (req.user property missing) are expected; will be fixed in Plan 02
 
+**Phase 41-02 decisions:**
+- req.userId is now the canonical user identifier throughout all routes and middleware (string UUID)
+- Profile routes use `as unknown as number` cast as explicit Phase 43 TODO markers — UUID users cannot reach legacy integer User model at runtime anyway
+- Progression guard for UUID users: sets progressionAwarded=true with progression=null to prevent retry; Phase 42 implements award_gems RPC
+- sessionService timerMultiplier defaults to 1.0 for UUID users (typeof session.userId === 'number' guard)
+- getRateLimitStatus signature: userId changed from number to string to match UUID type
+
 ### Pending Todos
 
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
@@ -69,17 +76,18 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - [x] Confirm Supabase credentials — DONE (PAT provided, project kxsdzaojfaibhuzmclfq linked)
 - [x] Manual Supabase Dashboard step: Settings > API > Exposed schemas > add "trivia" — DONE (confirmed by 40-03 type generation showing all 9 trivia tables)
 - [x] Provide SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY — DONE (confirmed in backend/.env)
-- [ ] Plan 02: migrate all callers from req.user.userId to req.userId (rateLimiter.ts, feedback.ts, game.ts, profile.ts + any others)
+- [x] Plan 02: migrate all callers from req.user.userId to req.userId — DONE (41-02 complete)
 
 ### Blockers/Concerns
 
-- Plan 02 caller migration required before backend compiles cleanly — 10 TypeScript errors in 4 files referencing req.user
 - Review `empowered-accounts-integration-guide.md` (repo root) before Phase 43 for API contracts
+- Phase 42: implement award_gems RPC for UUID user progression (TODO markers in game.ts)
+- Phase 43: replace profile routes using legacy User model (as unknown as number cast markers in profile.ts)
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: Completed 41-01-PLAN.md — auth.ts replaced, supabaseAdmin created, packages installed
+Last session: 2026-03-01
+Stopped at: Completed 41-02-PLAN.md — all req.user callers migrated to req.userId, clean TypeScript build
 Resume file: None
 
-Next action: Execute Phase 41 Plan 02 — migrate callers from req.user.userId to req.userId
+Next action: Execute Phase 42 — award_gems RPC integration for UUID user progression
