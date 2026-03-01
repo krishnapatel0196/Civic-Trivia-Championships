@@ -9,16 +9,16 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 42 of 44 in v1.8 (Gem & Progression Integration) — In progress
-Plan: 2 of 3 complete in Phase 42 (42-01, 42-02 done)
-Status: In progress — 42-02 complete, ready for 42-03
-Last activity: 2026-03-01 — Completed 42-02-PLAN.md — GameSession extended with Connected/suspended fields, progressionService platform integration functions built
+Phase: 42 of 44 in v1.8 (Gem & Progression Integration) — Complete
+Plan: 3 of 3 complete in Phase 42 (42-01, 42-02, 42-03 done)
+Status: Phase 42 complete — ready for Phase 43
+Last activity: 2026-02-28 — Completed 42-03-PLAN.md — game routes wired with account context check and gem award; GEMS-03 deprecation markers added
 
-Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 7/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02)
+Progress: [████████░░] v1.0–v1.7 complete (109 plans); v1.8 plans 8/15 complete (40-01, 40-02, 40-03, 41-01, 41-02, 42-01, 42-02, 42-03)
 
 **Milestone progress:**
 - v1.0–v1.7 (Phases 1–39): Complete
-- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 in progress (1/3)
+- v1.8 (Phases 40–44): In progress — Phase 40 complete, Phase 41 complete, Phase 42 complete, Phase 43 next
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com
@@ -82,6 +82,12 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 - current_streak and best_streak initialized to 1 on INSERT only, omitted from onConflictDoUpdate — real day-streak logic deferred to future phase
 - gemsConfirmed param in upsertPlayerStats decouples stats write from RPC success — caller passes 0 if award_gems failed
 
+**Phase 42-03 decisions:**
+- progression declared as any (not a union type) — avoids forcing discriminated union while legacy integer path still exists; Phase 44 will tighten the type
+- saveSession called after progressionAwarded set — ensures idempotency if GET /results called twice by slow client
+- accountContext check fires for all UUID users at session start (not just Connected-tier) — tier filtering happens at award time in GET /results
+- GEMS-03 JSDoc @deprecated markers chosen over TODO comments — surfaces in IDE hover text and TypeDoc without requiring grep
+
 ### Pending Todos
 
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
@@ -94,13 +100,13 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 ### Blockers/Concerns
 
 - Review `empowered-accounts-integration-guide.md` (repo root) before Phase 43 for API contracts
-- Phase 42-03: wire checkAccountContext, awardPlatformGems, upsertPlayerStats into game.ts routes (POST /game/start and POST /game/complete)
 - Phase 43: replace profile routes using legacy User model (as unknown as number cast markers in profile.ts)
+- Phase 44: remove integer-user path (updateUserProgression, User.updateStats, total_gems column reads) per GEMS-03 markers
 
 ## Session Continuity
 
-Last session: 2026-03-01
-Stopped at: Completed 42-02-PLAN.md — GameSession extended with Connected/suspended fields, progressionService platform integration functions built, clean build
+Last session: 2026-02-28
+Stopped at: Completed 42-03-PLAN.md — game routes wired with account context and gem award; Phase 42 complete
 Resume file: None
 
-Next action: Execute Phase 42-03 — wire service functions into game.ts routes (POST /game/start calls checkAccountContext, POST /game/complete calls awardPlatformGems + upsertPlayerStats)
+Next action: Execute Phase 43 — profile UUID migration (replace legacy User model in profile routes)
