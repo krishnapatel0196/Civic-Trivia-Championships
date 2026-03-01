@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
-import { authService } from '../services/authService';
+import { exchangeRefreshToken } from '../services/accountsApi';
 
 interface AuthInitializerProps {
   children: React.ReactNode;
@@ -11,11 +11,35 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      const storedRefresh = localStorage.getItem('ev_refresh_token');
+
+      // No stored refresh token — resolve immediately with no network call.
+      // New visitors and logged-out users skip the spinner entirely.
+      if (!storedRefresh) {
+        clearAuth();
+        setLoading(false);
+        return;
+      }
+
+      // Exchange stored refresh token for a new access token
       try {
-        const response = await authService.refresh();
-        setAuth(response.accessToken, response.user);
+        const data = await exchangeRefreshToken();
+
+        if (data) {
+          // Store the rotated refresh token
+          localStorage.setItem('ev_refresh_token', data.refresh_token);
+          setAuth(data.access_token, {
+            id: data.user?.id || '',
+            email: data.user?.email || '',
+            tier: data.user?.tier || 'inform',
+          });
+        } else {
+          // exchangeRefreshToken already removed the stale token from localStorage
+          clearAuth();
+        }
       } catch {
-        // No valid session - clear any stale state
+        // Any unexpected error — clear auth state
+        localStorage.removeItem('ev_refresh_token');
         clearAuth();
       } finally {
         setLoading(false);

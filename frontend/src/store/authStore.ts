@@ -1,13 +1,19 @@
 import { create } from 'zustand';
-import type { User, AuthState } from '../types/auth';
+import type { AccountsUser, Tier } from '../types/auth';
 
-interface AuthStore extends AuthState {
+interface AuthStore {
+  accessToken: string | null;
+  user: AccountsUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  tier: Tier | null;
+  displayName: string | null;
   timerMultiplier: number;
-  setAuth: (token: string, user: User) => void;
+  setAuth: (token: string, user: AccountsUser, extras?: { tier?: Tier; displayName?: string }) => void;
   clearAuth: () => void;
   setLoading: (loading: boolean) => void;
   setTimerMultiplier: (multiplier: number) => void;
-  setUserName: (name: string) => void;
+  setDisplayName: (name: string) => void;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -15,24 +21,32 @@ export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   isAuthenticated: false,
   isLoading: true,
+  tier: null,
+  displayName: null,
   timerMultiplier: 1.0,
 
-  setAuth: (token: string, user: User) =>
+  setAuth: (token: string, user: AccountsUser, extras?: { tier?: Tier; displayName?: string }) =>
     set({
       accessToken: token,
       user,
       isAuthenticated: true,
       isLoading: false,
+      tier: extras?.tier ?? user.tier ?? null,
+      displayName: extras?.displayName ?? null,
     }),
 
-  clearAuth: () =>
+  clearAuth: () => {
+    localStorage.removeItem('ev_refresh_token');
     set({
       accessToken: null,
       user: null,
       isAuthenticated: false,
       isLoading: false,
+      tier: null,
+      displayName: null,
       timerMultiplier: 1.0,
-    }),
+    });
+  },
 
   setLoading: (loading: boolean) =>
     set({
@@ -44,8 +58,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
       timerMultiplier: multiplier,
     }),
 
-  setUserName: (name: string) =>
-    set((state) => ({
-      user: state.user ? { ...state.user, name } : null,
-    })),
+  setDisplayName: (name: string) =>
+    set({
+      displayName: name,
+    }),
 }));

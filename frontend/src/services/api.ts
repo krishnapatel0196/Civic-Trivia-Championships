@@ -1,63 +1,54 @@
 import { useAuthStore } from '../store/authStore';
+import { exchangeRefreshToken } from './accountsApi';
 
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 let isRefreshing = false;
 
-async function refreshToken(): Promise<string | null> {
-  try {
-    const response = await fetch(`${API_URL}/auth/refresh`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    useAuthStore.getState().setAuth(data.accessToken, data.user);
-    return data.accessToken;
-  } catch {
-    return null;
-  }
-}
-
 export async function apiRequest<T>(
   url: string,
   options?: RequestInit
 ): Promise<T> {
-  const defaultOptions: RequestInit = {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  const { accessToken } = useAuthStore.getState();
+
+  const defaultHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
   };
 
+  // Automatically attach Bearer token from store when available.
+  // This removes the need for callers to manually add the auth header.
+  if (accessToken) {
+    defaultHeaders['Authorization'] = `Bearer ${accessToken}`;
+  }
+
   const mergedOptions: RequestInit = {
-    ...defaultOptions,
     ...options,
     headers: {
-      ...defaultOptions.headers,
+      ...defaultHeaders,
       ...options?.headers,
     },
   };
 
   const response = await fetch(API_URL + url, mergedOptions);
 
-  // Handle 401 with automatic token refresh
-  // Skip for refresh endpoint itself to avoid infinite loop
-  if (response.status === 401 && !isRefreshing && !url.includes('/auth/refresh')) {
+  // Handle 401 with automatic token refresh using localStorage-based refresh token.
+  // Uses exchangeRefreshToken from accountsApi (not cookie-based).
+  if (response.status === 401 && !isRefreshing) {
     isRefreshing = true;
 
     try {
-      const newToken = await refreshToken();
+      const refreshResult = await exchangeRefreshToken();
 
-      if (newToken) {
-        // Retry the original request with new token
+      if (refreshResult) {
+        const { access_token: newToken, refresh_token: newRefresh, user } = refreshResult;
+
+        // Store new refresh token
+        localStorage.setItem('ev_refresh_token', newRefresh);
+
+        // Update store with new access token
+        useAuthStore.getState().setAuth(newToken, user);
+
+        // Retry the original request with the new token
         const retryOptions: RequestInit = {
           ...mergedOptions,
           headers: {
@@ -69,13 +60,18 @@ export async function apiRequest<T>(
         const retryResponse = await fetch(API_URL + url, retryOptions);
 
         if (!retryResponse.ok) {
-          const errorData = await retryResponse.json();
+          let errorData: unknown;
+          try {
+            errorData = await retryResponse.json();
+          } catch {
+            errorData = { error: `Server error: ${retryResponse.status} ${retryResponse.statusText}` };
+          }
           throw errorData;
         }
 
         return retryResponse.json();
       } else {
-        // Refresh failed - clear auth, let React Router handle redirect
+        // Refresh failed — clear auth and let React Router handle redirect
         useAuthStore.getState().clearAuth();
         throw { error: 'Session expired' };
       }
@@ -85,7 +81,7 @@ export async function apiRequest<T>(
   }
 
   if (!response.ok) {
-    let errorData;
+    let errorData: unknown;
     try {
       errorData = await response.json();
     } catch {
