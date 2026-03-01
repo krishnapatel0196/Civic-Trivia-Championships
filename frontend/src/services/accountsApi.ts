@@ -3,6 +3,9 @@ import type { AccountsUser, AccountProfile } from '../types/auth';
 export const ACCOUNTS_API_URL =
   import.meta.env.VITE_EMPOWERED_ACCOUNTS_URL || 'http://localhost:3001';
 
+export const ACCOUNTS_WEB_URL =
+  import.meta.env.VITE_EMPOWERED_ACCOUNTS_WEB_URL || 'https://ev-accounts.onrender.com';
+
 /**
  * Dedicated fetch wrapper for the Empowered Accounts API.
  * Do NOT use credentials: 'include' — accounts API is a different origin

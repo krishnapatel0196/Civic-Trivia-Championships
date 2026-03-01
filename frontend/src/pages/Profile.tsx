@@ -6,7 +6,7 @@ import { XpIcon } from '../components/icons/XpIcon';
 import { GemIcon } from '../components/icons/GemIcon';
 import { fetchTriviaStats, updateTimerMultiplier } from '../services/profileService';
 import type { ProfileStats } from '../services/profileService';
-import { fetchAccountProfile, ACCOUNTS_API_URL } from '../services/accountsApi';
+import { fetchAccountProfile, ACCOUNTS_WEB_URL } from '../services/accountsApi';
 import type { AccountProfile } from '../types/auth';
 import { useAuthStore } from '../store/authStore';
 
@@ -137,7 +137,7 @@ export function Profile() {
 
                 {/* Manage account external link */}
                 <a
-                  href={ACCOUNTS_API_URL}
+                  href={ACCOUNTS_WEB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center space-x-1 text-teal-400 hover:text-teal-300 text-sm mt-2 transition-colors"
