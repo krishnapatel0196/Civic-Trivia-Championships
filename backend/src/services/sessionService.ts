@@ -252,9 +252,15 @@ export class SessionManager {
     if (!isFinalQuestion && session.userId !== 'anonymous') {
       // Skip flagging if correct (fast correct answers are legitimate knowledge)
       if (!isCorrect) {
-        // Fetch user's timer multiplier for threshold adjustment
-        const user = await User.findById(session.userId as number);
-        const timerMultiplier = user?.timerMultiplier ?? 1.0;
+        // Phase 41: UUID users skip User.findById (takes integer ID)
+        // timerMultiplier defaults to 1.0 — player_prefs migration is Phase 43
+        let timerMultiplier = 1.0;
+        if (typeof session.userId === 'number') {
+          // Legacy integer user path (will be removed in Phase 44)
+          const user = await User.findById(session.userId);
+          timerMultiplier = user?.timerMultiplier ?? 1.0;
+        }
+        // For UUID string users: timerMultiplier stays 1.0
 
         // Get difficulty-adjusted threshold
         // Runtime guard: if difficulty is not a valid key, fall back to 'hard' (strictest)

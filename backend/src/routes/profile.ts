@@ -61,7 +61,9 @@ router.use(authenticateToken);
  */
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.userId!;
+    // Phase 43: profile routes will be replaced with Supabase-based player_stats lookup.
+    // Until then, cast UUID string to satisfy the legacy User model's integer ID signature.
+    const userId = req.userId! as unknown as number;
 
     // Fetch user stats
     const stats = await User.getProfileStats(userId);
@@ -105,7 +107,8 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
  */
 router.patch('/settings', async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.userId!;
+    // Phase 43: legacy integer cast until profile routes are replaced
+    const userId = req.userId! as unknown as number;
     const { timerMultiplier } = req.body;
 
     // Validate timerMultiplier
@@ -132,7 +135,8 @@ router.patch('/settings', async (req: Request, res: Response): Promise<void> => 
  */
 router.patch('/name', updateNameValidation, validate, async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.userId!;
+    // Phase 43: legacy integer cast until profile routes are replaced
+    const userId = req.userId! as unknown as number;
     const { name } = req.body;
 
     await User.updateName(userId, name);
@@ -149,7 +153,8 @@ router.patch('/name', updateNameValidation, validate, async (req: Request, res: 
  */
 router.patch('/password', updatePasswordValidation, validate, async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.userId!;
+    // Phase 43: legacy integer cast until profile routes are replaced
+    const userId = req.userId! as unknown as number;
     const { currentPassword, newPassword } = req.body;
 
     // Fetch user to get current password hash
@@ -209,7 +214,8 @@ router.post(
       const avatarUrl = `/uploads/avatars/${req.file.filename}`;
 
       // Update user's avatar URL in database
-      const userId = req.userId!;
+      // Phase 43: legacy integer cast until profile routes are replaced
+      const userId = req.userId! as unknown as number;
       await User.updateAvatarUrl(userId, avatarUrl);
 
       res.json({ avatarUrl });
