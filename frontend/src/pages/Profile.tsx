@@ -57,10 +57,11 @@ export function Profile() {
         const profile = accountResult.value;
         setAccountData(profile);
         useAuthStore.getState().setDisplayName(profile.display_name);
-        if (profile.tier === 'inform') {
-          navigate('/signup', { replace: true });
-          return;
-        }
+        // TODO(43): re-enable inform-tier redirect once Connected accounts are available for testing
+        // if (profile.tier === 'inform') {
+        //   navigate('/signup', { replace: true });
+        //   return;
+        // }
       } else {
         setAccountError("Couldn't load account info");
       }
