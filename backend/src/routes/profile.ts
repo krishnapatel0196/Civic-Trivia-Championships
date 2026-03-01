@@ -9,6 +9,9 @@ import { authenticateToken } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { updateNameValidation, updatePasswordValidation } from '../utils/validation.js';
 import { User } from '../models/User.js';
+import { db } from '../db/index.js';
+import { playerStats, playerPrefs } from '../db/schema.js';
+import { eq } from 'drizzle-orm';
 
 export const router = Router();
 
@@ -61,40 +64,21 @@ router.use(authenticateToken);
  */
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    // Phase 43: profile routes will be replaced with Supabase-based player_stats lookup.
-    // Until then, cast UUID string to satisfy the legacy User model's integer ID signature.
-    const userId = req.userId! as unknown as number;
+    const userId = req.userId!;
 
-    // Fetch user stats
-    const stats = await User.getProfileStats(userId);
-    if (!stats) {
-      res.status(404).json({ error: 'User not found' });
-      return;
-    }
+    const [stats] = await db.select().from(playerStats).where(eq(playerStats.userId, userId));
+    const [prefs] = await db.select().from(playerPrefs).where(eq(playerPrefs.userId, userId));
 
-    // Also need name and email from full user record
-    const user = await User.findById(userId);
-    if (!user) {
-      res.status(404).json({ error: 'User not found' });
-      return;
-    }
-
-    // Calculate accuracy
     const overallAccuracy =
-      stats.totalQuestions > 0
+      stats && stats.totalQuestions > 0
         ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100)
         : 0;
 
     res.json({
-      totalXp: stats.totalXp,
-      totalGems: stats.totalGems,
-      gamesPlayed: stats.gamesPlayed,
-      bestScore: stats.bestScore,
+      gamesPlayed: stats?.gamesPlayed ?? 0,
+      bestScore: stats?.bestScore ?? 0,
       overallAccuracy,
-      avatarUrl: stats.avatarUrl,
-      name: user.name,
-      email: user.email,
-      timerMultiplier: stats.timerMultiplier,
+      timerMultiplier: prefs?.timerMultiplier ?? 1.0,
     });
   } catch (error) {
     console.error('Error fetching profile:', error);
@@ -107,21 +91,19 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
  */
 router.patch('/settings', async (req: Request, res: Response): Promise<void> => {
   try {
-    // Phase 43: legacy integer cast until profile routes are replaced
-    const userId = req.userId! as unknown as number;
+    const userId = req.userId!;
     const { timerMultiplier } = req.body;
 
-    // Validate timerMultiplier
     const validMultipliers = [1.0, 1.5, 2.0];
     if (!timerMultiplier || !validMultipliers.includes(timerMultiplier)) {
-      res.status(400).json({
-        error: 'Invalid timer multiplier. Must be 1.0, 1.5, or 2.0'
-      });
+      res.status(400).json({ error: 'Invalid timer multiplier. Must be 1.0, 1.5, or 2.0' });
       return;
     }
 
-    // Update setting
-    await User.updateTimerMultiplier(userId, timerMultiplier);
+    await db
+      .insert(playerPrefs)
+      .values({ userId, timerMultiplier })
+      .onConflictDoUpdate({ target: playerPrefs.userId, set: { timerMultiplier } });
 
     res.json({ timerMultiplier });
   } catch (error) {
