@@ -58,6 +58,9 @@ export interface GameSession {
   collectionId: number | null;    // null = Federal default (backward compat)
   collectionName: string | null;  // e.g. "Federal Civics"
   collectionSlug: string | null;  // e.g. "federal-civics"
+  isConnected: boolean;           // Whether user was Connected tier at session start (default: false)
+  isSuspended: boolean;           // Whether account_standing was 'suspended' at session start (default: false)
+  accessToken?: string;           // Raw JWT stored for downstream platform calls
   // Adaptive difficulty state (only set for easy-steps mode)
   adaptiveState?: {
     candidatePools: {
@@ -129,7 +132,8 @@ export class SessionManager {
   async createSession(
     userId: string | number,
     questions: Question[],
-    collectionMeta?: { id: number; name: string; slug: string }
+    collectionMeta?: { id: number; name: string; slug: string },
+    accountContext?: { isConnected: boolean; isSuspended: boolean; accessToken: string }
   ): Promise<string> {
     const sessionId = randomUUID();
     const now = new Date();
@@ -146,6 +150,9 @@ export class SessionManager {
       collectionId: collectionMeta?.id ?? null,
       collectionName: collectionMeta?.name ?? null,
       collectionSlug: collectionMeta?.slug ?? null,
+      isConnected: accountContext?.isConnected ?? false,
+      isSuspended: accountContext?.isSuspended ?? false,
+      ...(accountContext?.accessToken ? { accessToken: accountContext.accessToken } : {}),
     };
 
     await this.storage.set(sessionId, session, 3600); // 1 hour TTL
