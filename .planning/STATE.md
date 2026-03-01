@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 42 — Gem & Progression Integration (v1.8 Empowered Identity)
+**Current focus:** Phase 43 — Frontend Auth & Profile (v1.8 Empowered Identity)
 
 ## Current Position
 
@@ -90,6 +90,7 @@ Decisions logged in PROJECT.md Key Decisions table. Key v1.8 decisions:
 
 ### Pending Todos
 
+- [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards — code complete, runtime path blocked without this)
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
 - [ ] Assess Norwich by-election/MP terminology gap — editorial judgment for content review
 - [x] Confirm Supabase credentials — DONE (PAT provided, project kxsdzaojfaibhuzmclfq linked)
