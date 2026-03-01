@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { authenticateToken, requireAdmin } from '../middleware/auth.js';
+import { requireAuth, requireAdmin } from '../middleware/auth.js';
 import { db } from '../db/index.js';
 import { questions, collections, collectionQuestions, questionFlags, electionRaces } from '../db/schema.js';
 import { eq, and, or, lte, gt, lt, isNotNull, sql, inArray, ilike, desc, asc } from 'drizzle-orm';
@@ -15,7 +15,7 @@ import { lastCronRun } from '../cron/electionDetection.js';
 const router = Router();
 
 // Apply authentication and admin middleware to all admin routes
-router.use(authenticateToken, requireAdmin);
+router.use(requireAuth, requireAdmin);
 
 /**
  * GET /questions - List expired and expiring-soon questions

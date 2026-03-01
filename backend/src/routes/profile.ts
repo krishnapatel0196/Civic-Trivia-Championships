@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { authenticateToken } from '../middleware/auth.js';
+import { requireAuth } from '../middleware/auth.js';
 import { db } from '../db/index.js';
 import { playerStats, playerPrefs } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 export const router = Router();
 
 // Apply authentication to all profile routes
-router.use(authenticateToken);
+router.use(requireAuth);
 
 /**
  * GET / - Fetch profile stats

@@ -6,7 +6,7 @@
 
 import { Router, Request, Response } from 'express';
 import { body, param, validationResult } from 'express-validator';
-import { authenticateToken } from '../middleware/auth.js';
+import { requireAuth } from '../middleware/auth.js';
 import { flagRateLimiter } from '../middleware/rateLimiter.js';
 import { createFlag, deleteFlag, updateFlagElaborations } from '../services/feedbackService.js';
 import { db } from '../db/index.js';
@@ -18,12 +18,12 @@ const router = Router();
 /**
  * POST /flag - Create a flag for a question
  * Body: { questionId: string (externalId), sessionId: string }
- * Middleware: authenticateToken, flagRateLimiter
+ * Middleware: requireAuth, flagRateLimiter
  * Returns: { success: true, created: boolean, flagId: number }
  */
 router.post(
   '/flag',
-  authenticateToken,
+  requireAuth,
   flagRateLimiter,
   body('questionId').isString().notEmpty(),
   body('sessionId').isString().notEmpty(),
@@ -69,12 +69,12 @@ router.post(
 /**
  * DELETE /flag/:questionId - Remove a flag from a question
  * Params: questionId (externalId)
- * Middleware: authenticateToken (NO rate limiter)
+ * Middleware: requireAuth (NO rate limiter)
  * Returns: { success: true, deleted: boolean }
  */
 router.delete(
   '/flag/:questionId',
-  authenticateToken,
+  requireAuth,
   param('questionId').isString().notEmpty(),
   async (req: Request, res: Response) => {
     try {
@@ -117,12 +117,12 @@ router.delete(
 /**
  * PATCH /flags/batch - Update elaborations for multiple flagged questions
  * Body: { sessionId: string, elaborations: Array<{ questionId: string, reasons: string[], elaborationText: string }> }
- * Middleware: authenticateToken (NO rate limiter - infrequent post-game action)
+ * Middleware: requireAuth (NO rate limiter - infrequent post-game action)
  * Returns: { success: true, updatedCount: number }
  */
 router.patch(
   '/flags/batch',
-  authenticateToken,
+  requireAuth,
   body('sessionId').isString().notEmpty(),
   body('elaborations').isArray({ min: 1 }),
   body('elaborations.*.questionId').isString().notEmpty(),

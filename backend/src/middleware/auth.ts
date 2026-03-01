@@ -45,10 +45,6 @@ export async function requireAuth(
   }
 }
 
-// Backward-compat alias — existing callers importing authenticateToken continue to work
-// until Plan 02 migrates them to requireAuth
-export { requireAuth as authenticateToken };
-
 /**
  * Optional authentication — allows both authenticated and anonymous requests.
  * Sets req.userId and req.accessToken when a valid JWT is present.
@@ -80,30 +76,6 @@ export async function optionalAuth(
     req.userId = undefined;
     next();
   }
-}
-
-/**
- * Requires the authenticated user to have a verified connected_profiles row
- * in the connect schema. Must be used after requireAuth.
- * Returns 403 if no verified connected profile exists.
- */
-export async function requireConnected(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  const { data } = await (supabaseAdmin as any)
-    .schema('connect')
-    .from('connected_profiles')
-    .select('verification_status')
-    .eq('user_id', req.userId!)
-    .maybeSingle();
-
-  if (!data || data.verification_status !== 'verified') {
-    res.status(403).json({ error: 'Connected account required' });
-    return;
-  }
-  next();
 }
 
 /**

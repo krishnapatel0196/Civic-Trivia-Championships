@@ -123,7 +123,7 @@ export class SessionManager {
 
   /**
    * Create a new game session
-   * @param userId - User identifier (number for authenticated, 'anonymous' for unauthenticated)
+   * @param userId - User identifier (UUID string for authenticated users, or 'anonymous' for unauthenticated)
    * @param questions - Array of questions for this game
    * @param collectionMeta - Optional collection metadata (defaults to null for backward compat)
    * @returns Session ID
