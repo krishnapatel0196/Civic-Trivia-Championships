@@ -946,11 +946,10 @@ router.get('/flags/:questionId/detail', async (req: Request, res: Response) => {
 
     const questionData = result[0];
 
-    // Fetch individual flags with usernames - use raw SQL for users table JOIN
+    // Fetch individual flags - no users table JOIN (identity now in Supabase Auth)
     const flagsResult = await db.execute<{
       id: number;
-      user_id: number;
-      username: string | null;
+      user_id: string;
       reasons: string[];
       elaboration_text: string | null;
       created_at: string;
@@ -958,12 +957,10 @@ router.get('/flags/:questionId/detail', async (req: Request, res: Response) => {
       SELECT
         qf.id,
         qf.user_id,
-        COALESCE(u.name, u.email) as username,
         qf.reasons,
         qf.elaboration_text,
         qf.created_at
       FROM trivia.question_flags qf
-      LEFT JOIN users u ON qf.user_id = u.id
       WHERE qf.question_id = ${questionId}
       ORDER BY qf.created_at DESC
       LIMIT 20
@@ -972,7 +969,6 @@ router.get('/flags/:questionId/detail', async (req: Request, res: Response) => {
     const flags = flagsResult.rows.map(row => ({
       id: row.id,
       userId: row.user_id,
-      username: row.username || 'Unknown User',
       reasons: row.reasons || [],
       elaboration: row.elaboration_text,
       createdAt: row.created_at

@@ -8,7 +8,6 @@ import { calculateScore, calculateScoreWithPenalty, calculateResponseTime } from
 import { SessionStorage } from './storage/SessionStorage.js';
 import { MemoryStorage } from './storage/MemoryStorage.js';
 import { PLAUSIBILITY_THRESHOLDS, getAdjustedThreshold, type PlausibilityDifficulty } from '../config/plausibilityThresholds.js';
-import { User } from '../models/User.js';
 import type { DBQuestionRow } from './gameModes.js';
 
 // Question type matching backend data structure
@@ -48,7 +47,7 @@ export interface ServerAnswer {
 // Game session stored in memory
 export interface GameSession {
   sessionId: string;
-  userId: string | number;
+  userId: string;
   questions: Question[];
   answers: ServerAnswer[];
   createdAt: Date;
@@ -130,7 +129,7 @@ export class SessionManager {
    * @returns Session ID
    */
   async createSession(
-    userId: string | number,
+    userId: string,
     questions: Question[],
     collectionMeta?: { id: number; name: string; slug: string },
     accountContext?: { isConnected: boolean; isSuspended: boolean; accessToken: string }
@@ -259,15 +258,8 @@ export class SessionManager {
     if (!isFinalQuestion && session.userId !== 'anonymous') {
       // Skip flagging if correct (fast correct answers are legitimate knowledge)
       if (!isCorrect) {
-        // Phase 41: UUID users skip User.findById (takes integer ID)
-        // timerMultiplier defaults to 1.0 — player_prefs migration is Phase 43
-        let timerMultiplier = 1.0;
-        if (typeof session.userId === 'number') {
-          // Legacy integer user path (will be removed in Phase 44)
-          const user = await User.findById(session.userId);
-          timerMultiplier = user?.timerMultiplier ?? 1.0;
-        }
-        // For UUID string users: timerMultiplier stays 1.0
+        // timerMultiplier defaults to 1.0 for all users
+        const timerMultiplier = 1.0;
 
         // Get difficulty-adjusted threshold
         // Runtime guard: if difficulty is not a valid key, fall back to 'hard' (strictest)

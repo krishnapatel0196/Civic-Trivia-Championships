@@ -3,7 +3,6 @@
  * Handles rewards calculation and user stats updates after game completion
  */
 
-import { User } from '../models/User.js';
 import { supabaseAdmin } from '../config/supabase.js';
 import { db } from '../db/index.js';
 import { playerStats } from '../db/schema.js';
@@ -24,31 +23,6 @@ export function calculateProgression(
 
   // Gems formula: 10 base + 1 per correct answer
   const gemsEarned = 10 + correctAnswers;
-
-  return { xpEarned, gemsEarned };
-}
-
-/**
- * Update user progression after game completion
- * Calculates rewards and atomically updates user stats
- * @param userId - User ID
- * @param score - Total score achieved
- * @param correctAnswers - Number of correct answers
- * @param totalQuestions - Total questions in the game
- * @returns XP and gems earned
- * @deprecated GEMS-03: Legacy progression for integer users. UUID users use awardPlatformGems + upsertPlayerStats. Remove in Phase 44.
- */
-export async function updateUserProgression(
-  userId: number,
-  score: number,
-  correctAnswers: number,
-  totalQuestions: number
-): Promise<{ xpEarned: number; gemsEarned: number }> {
-  // Calculate progression rewards
-  const { xpEarned, gemsEarned } = calculateProgression(correctAnswers, totalQuestions);
-
-  // Update user stats atomically
-  await User.updateStats(userId, xpEarned, gemsEarned, score, correctAnswers, totalQuestions);
 
   return { xpEarned, gemsEarned };
 }

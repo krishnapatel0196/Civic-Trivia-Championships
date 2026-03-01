@@ -118,6 +118,14 @@ export class SessionStorageFactory {
   }
 
   /**
+   * Get the raw Redis client for direct Redis operations (e.g. rate limiting INCR/TTL)
+   * Returns null if storage is in degraded (MemoryStorage) mode
+   */
+  getRawClient(): RedisClientType<any, any, any> | null {
+    return this.redisClient;
+  }
+
+  /**
    * Shutdown storage backend (disconnect Redis if connected)
    */
   async shutdown(): Promise<void> {
@@ -136,27 +144,3 @@ export class SessionStorageFactory {
 
 // Export singleton instance
 export const storageFactory = new SessionStorageFactory();
-
-// Legacy Redis client export for backward compatibility (used by tokenUtils)
-// Only connect if REDIS_URL is set — skip localhost fallback to avoid error spam
-let legacyRedis: RedisClientType<any, any, any> | null = null;
-
-if (process.env.REDIS_URL) {
-  legacyRedis = createClient({
-    url: process.env.REDIS_URL
-  });
-
-  legacyRedis.on('connect', () => {
-    console.log('Redis connected (legacy token storage)');
-  });
-
-  legacyRedis.on('error', (err) => {
-    console.error('Redis connection error (legacy token storage):', err);
-  });
-
-  legacyRedis.connect().catch((err) => {
-    console.error('Failed to connect to Redis (legacy token storage):', err);
-  });
-}
-
-export { legacyRedis as redis };

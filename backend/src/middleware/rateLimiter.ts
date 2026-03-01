@@ -4,7 +4,7 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { redis } from '../config/redis.js';
+import { storageFactory } from '../config/redis.js';
 
 // Constants
 const RATE_LIMIT_WINDOW_SECONDS = 15 * 60; // 15 minutes
@@ -29,6 +29,7 @@ export async function flagRateLimiter(
   }
 
   const key = `rate_limit:flag:${userId}`;
+  const redis = storageFactory.getRawClient();
 
   try {
     // No Redis - fail open
@@ -70,6 +71,7 @@ export async function getRateLimitStatus(
   userId: string
 ): Promise<{ remaining: number; retryAfter: number | null }> {
   const key = `rate_limit:flag:${userId}`;
+  const redis = storageFactory.getRawClient();
 
   try {
     if (!redis) return { remaining: MAX_FLAGS_PER_WINDOW, retryAfter: null };

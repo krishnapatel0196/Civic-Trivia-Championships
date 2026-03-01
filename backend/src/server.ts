@@ -3,8 +3,6 @@ import './env.js';
 
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
-import { router as authRouter } from './routes/auth.js';
 import { router as gameRouter } from './routes/game.js';
 import { router as profileRouter } from './routes/profile.js';
 import { router as healthRouter } from './routes/health.js';
@@ -49,17 +47,10 @@ async function startServer() {
     },
     credentials: true
   }));
-  app.use(cookieParser());
   app.use(express.json());
-
-  // Static file serving for uploads
-  app.use('/uploads', express.static('uploads'));
 
   // Health check endpoint
   app.use('/health', healthRouter);
-
-  // Auth routes
-  app.use('/auth', authRouter);
 
   // Game routes
   app.use('/api/game', gameRouter);

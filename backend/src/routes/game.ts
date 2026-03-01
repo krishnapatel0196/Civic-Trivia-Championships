@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { sessionManager, Question } from '../services/sessionService.js';
 import { optionalAuth } from '../middleware/auth.js';
-import { updateUserProgression, calculateProgression, checkAccountContext, awardPlatformGems, upsertPlayerStats } from '../services/progressionService.js';
+import { calculateProgression, checkAccountContext, awardPlatformGems, upsertPlayerStats } from '../services/progressionService.js';
 import { storageFactory } from '../config/redis.js';
 import { selectQuestionsForGame, getCollectionMetadata, getFederalCollectionId, createAdaptiveSession, transformSingleDBQuestion, TOTAL_QUESTIONS } from '../services/questionService.js';
 import { getNextQuestionTier, selectNextAdaptiveQuestion } from '../services/gameModes.js';
@@ -37,14 +37,14 @@ function stripAnswer(question: Question): Omit<Question, 'correctAnswer'> {
 }
 
 // Track recent questions per user (last 30 question IDs)
-const recentQuestions = new Map<string | number, string[]>();
+const recentQuestions = new Map<string, string[]>();
 const MAX_RECENT = 30;
 
-function getRecentQuestionIds(userId: string | number): string[] {
+function getRecentQuestionIds(userId: string): string[] {
   return recentQuestions.get(userId) || [];
 }
 
-function recordPlayedQuestions(userId: string | number, questionIds: string[]): void {
+function recordPlayedQuestions(userId: string, questionIds: string[]): void {
   const existing = recentQuestions.get(userId) || [];
   const updated = [...questionIds, ...existing].slice(0, MAX_RECENT);
   recentQuestions.set(userId, updated);
@@ -392,54 +392,43 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
     let progression: any = null;
 
     if (session.userId && session.userId !== 'anonymous' && !session.progressionAwarded) {
-      if (typeof session.userId === 'number') {
-        // Legacy integer user path — TODO Phase 44: Remove when integer users are fully migrated
-        progression = await updateUserProgression(
+      // UUID user path — platform gem award + stats
+      const { gemsEarned } = calculateProgression(results.totalCorrect, results.totalQuestions);
+
+      let gemsConfirmed = false;
+      let gemError: string | undefined;
+
+      // Only award gems and write stats for Connected, non-suspended users
+      if (session.isConnected === true && session.isSuspended !== true) {
+        // Award gems via platform RPC
+        const gemResult = await awardPlatformGems(session.userId, gemsEarned);
+        gemsConfirmed = gemResult.confirmed;
+        gemError = gemResult.error;
+
+        // Write player stats (only count confirmed gems in lifetime_gems)
+        await upsertPlayerStats(
           session.userId,
           results.totalScore,
           results.totalCorrect,
-          results.totalQuestions
+          results.totalQuestions,
+          gemsConfirmed ? gemsEarned : 0
         );
-        session.progressionAwarded = true;
-      } else {
-        // UUID user path — platform gem award + stats
-        const { gemsEarned } = calculateProgression(results.totalCorrect, results.totalQuestions);
-
-        let gemsConfirmed = false;
-        let gemError: string | undefined;
-
-        // Only award gems and write stats for Connected, non-suspended users
-        if (session.isConnected === true && session.isSuspended !== true) {
-          // Award gems via platform RPC
-          const gemResult = await awardPlatformGems(session.userId as string, gemsEarned);
-          gemsConfirmed = gemResult.confirmed;
-          gemError = gemResult.error;
-
-          // Write player stats (only count confirmed gems in lifetime_gems)
-          await upsertPlayerStats(
-            session.userId as string,
-            results.totalScore,
-            results.totalCorrect,
-            results.totalQuestions,
-            gemsConfirmed ? gemsEarned : 0
-          );
-        }
-
-        progression = {
-          gemsEarned: (session.isConnected && !session.isSuspended) ? gemsEarned : 0,
-          gemsConfirmed,
-          stats: (session.isConnected && !session.isSuspended) ? {
-            gamesPlayed: 1,
-            totalCorrect: results.totalCorrect,
-            totalQuestions: results.totalQuestions,
-            bestScore: results.totalScore,
-          } : null,
-          ...((!gemsConfirmed && session.isConnected && !session.isSuspended)
-            ? { message: "We had trouble recording your rewards — we'll resolve this when your connection improves." }
-            : {}),
-        };
-        session.progressionAwarded = true;
       }
+
+      progression = {
+        gemsEarned: (session.isConnected && !session.isSuspended) ? gemsEarned : 0,
+        gemsConfirmed,
+        stats: (session.isConnected && !session.isSuspended) ? {
+          gamesPlayed: 1,
+          totalCorrect: results.totalCorrect,
+          totalQuestions: results.totalQuestions,
+          bestScore: results.totalScore,
+        } : null,
+        ...((!gemsConfirmed && session.isConnected && !session.isSuspended)
+          ? { message: "We had trouble recording your rewards — we'll resolve this when your connection improves." }
+          : {}),
+      };
+      session.progressionAwarded = true;
     }
 
     if (session.progressionAwarded) {
