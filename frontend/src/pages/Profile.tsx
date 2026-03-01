@@ -118,7 +118,7 @@ export function Profile() {
               {/* Avatar — display only, no upload */}
               <div className="flex-shrink-0">
                 <Avatar
-                  name={accountData.display_name}
+                  name={accountData.display_name || accountData.email}
                   imageUrl={accountData.avatar_url}
                   size={80}
                 />
@@ -128,7 +128,7 @@ export function Profile() {
               <div className="flex-1">
                 {/* Display name + tier badge inline */}
                 <div className="flex items-center space-x-3">
-                  <h1 className="text-3xl font-bold text-white">{accountData.display_name}</h1>
+                  <h1 className="text-3xl font-bold text-white">{accountData.display_name || accountData.email}</h1>
                   <TierBadge tier={accountData.tier} />
                 </div>
 
