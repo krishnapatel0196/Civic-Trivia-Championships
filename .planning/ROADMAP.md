@@ -100,163 +100,22 @@
 
 </details>
 
----
+<details>
+<summary>✅ v1.8 Empowered Identity (Phases 40–46) — SHIPPED 2026-03-01</summary>
 
-### ✅ v1.8 Empowered Identity (SHIPPED 2026-03-01)
+- [x] Phase 40: Database Migration (3/3 plans) — completed 2026-02-28
+- [x] Phase 41: Auth & Tier Integration (2/2 plans) — completed 2026-02-28
+- [x] Phase 42: Gem & Progression Integration (3/3 plans) — completed 2026-03-01
+- [x] Phase 43: Frontend Auth & Profile (3/3 plans) — completed 2026-03-01
+- [x] Phase 44: Deprecation & Cleanup (2/2 plans) — completed 2026-03-01
+- [x] Phase 45: Auth State Hardening (2/2 plans) — completed 2026-03-01
+- [x] Phase 46: Auth Cleanup (1/1 plan) — completed 2026-03-01
 
-**Milestone Goal:** Replace the custom auth/gem/admin system with the shared Empowered Accounts platform. Civic Trivia becomes a fully integrated feature of the Empowered Vote ecosystem: Supabase JWT for identity, shared gem ledger, Connected tier guards, platform-level admin roles, and complete removal of the legacy local auth stack.
+Full archive: [milestones/v1.8-ROADMAP.md](milestones/v1.8-ROADMAP.md)
 
-#### Phase 40: Database Migration
-
-**Goal**: Trivia tables exist under the `trivia` schema on the shared Supabase project with UUID user FKs, all 636 questions migrated, RLS policies in place, and TypeScript types regenerated.
-**Depends on**: Phase 39 (v1.7 complete)
-**Requirements**: DB-01, DB-02, DB-03, DB-04, DB-05, XP-01, ADMIN-03
-
-**Success Criteria** (what must be TRUE):
-1. All trivia tables are queryable under the `trivia` schema on the shared Supabase project (verified via psql or Supabase Studio)
-2. All 636 active questions and all collection records are present and intact in the migrated database
-3. Every user FK column in `trivia` schema tables is UUID type referencing `public.users(id)`, with no integer user columns remaining
-4. RLS policies are active on all `trivia` schema tables such that service role bypasses and user-scoped rows enforce ownership
-5. `supabase gen types` output includes `trivia` schema; generated types are committed and the TypeScript build passes
-
-**Plans**: 3 plans
-
-Plans:
-- [ ] 40-01: Schema creation, RLS policies, and player_stats/player_prefs table definitions
-- [ ] 40-02: Content migration (questions, collections, tags) from current Postgres to shared Supabase
-- [ ] 40-03: Type generation and build verification
-
----
-
-#### Phase 41: Auth & Tier Integration (Backend)
-
-**Goal**: The backend validates Supabase JWTs, extracts UUID user identity, enforces Connected tier guards, and checks admin status via the platform `admin_users` table — all existing admin routes working under the new guards.
-**Depends on**: Phase 40
-**Requirements**: AUTH-01, AUTH-02, AUTH-03, TIER-01, TIER-02, ADMIN-01, ADMIN-02
-
-**Success Criteria** (what must be TRUE):
-1. A request with a valid Supabase JWT reaches protected routes with `req.userId` set to the UUID from the JWT `sub` claim; an invalid or absent JWT returns 401
-2. Routes using `optionalAuth` accept both authenticated requests (with `req.userId` populated) and unauthenticated requests (userId undefined) without error
-3. A request from a Connected-tier user passes `requireConnected`; a request from an anonymous or Inform-tier user is rejected with 403
-4. All existing `/api/admin/*` routes return correct responses for a user whose UUID appears in `public.admin_users`, and 403 for any other user
-5. Anonymous play (game start and question fetch with no auth header) continues to work without error
-
-**Plans**: 2 plans
-
-Plans:
-- [x] 41-01-PLAN.md — Middleware foundation: install jose + supabase-js, create supabaseAdmin config, replace auth.ts with requireAuth/optionalAuth/requireConnected/requireAdmin
-- [x] 41-02-PLAN.md — Caller migration: update all route handlers from req.user to req.userId, fix sessionService plausibility, fix progression guard, verify build
-
----
-
-#### Phase 42: Gem & Progression Integration
-
-**Goal**: Gem awards flow through the platform `award_gems` RPC, gem balance is read from the accounts API, persistent stats are stored in `trivia.player_stats` for Connected users only, and the local `total_gems` column is removed.
-**Depends on**: Phase 41
-**Requirements**: GEMS-01, GEMS-02, GEMS-03, XP-02, XP-03, TIER-03, TIER-04
-
-**Success Criteria** (what must be TRUE):
-1. After a Connected user completes a game, the `award_gems` RPC is called with `p_gem_type: 'yellow'`, `p_source: 'civic_trivia'`, and `p_reason: 'game_completed'`; the gem balance visible on the accounts platform increases
-2. Stats (games played, best score, total correct, total questions) are written to `trivia.player_stats` for Connected users and not written for anonymous or Inform-tier players
-3. A suspended account (`account_standing = 'suspended'`) attempting game submission does not earn gems and its stats are not updated
-4. The `total_gems` column no longer exists in any trivia schema table and no backend code references it
-5. Anonymous play completes without error and no gem/stat writes occur
-
-**Plans**: 3 plans
-
-Plans:
-- [ ] 42-01-PLAN.md — Schema: add current_streak, best_streak, lifetime_gems to player_stats; update Drizzle schema; regenerate types
-- [ ] 42-02-PLAN.md — Services: extend GameSession with tier/suspension fields; build awardPlatformGems, upsertPlayerStats, checkAccountContext
-- [ ] 42-03-PLAN.md — Routes: wire account context into session start, gem award + stat write into results; GEMS-03 deprecation markers
-
----
-
-#### Phase 43: Frontend Auth & Profile
-
-**Goal**: Frontend login, signup, logout, and token refresh all call the Empowered Accounts API; the profile page shows trivia-specific stats plus accounts-sourced gem balance, tier badge, and display name, with identity management actions linking out to the accounts platform.
-**Depends on**: Phase 42
-**Requirements**: AUTH-04, AUTH-05, AUTH-06, AUTH-07, PROF-01, PROF-02, PROF-03, PROF-04
-
-**Success Criteria** (what must be TRUE):
-1. Clicking "Log In" submits credentials to Empowered Accounts `POST /api/auth/login`, stores the returned access token, and the user reaches the game home screen authenticated
-2. Clicking "Sign Up" initiates the Empowered Accounts `POST /api/auth/signup` flow; new accounts are created on the accounts platform, not locally
-3. Clicking "Log Out" calls Empowered Accounts `POST /api/auth/logout` and the frontend clears the stored token; subsequent requests are unauthenticated
-4. The profile page displays the Connected user's trivia stats (games played, accuracy, best score, XP), gem balance, tier badge, and display name sourced from respective APIs
-5. Identity management actions (name change, password, avatar) are absent from the trivia profile UI and replaced with a link to the accounts platform
-
-**Plans**: 3 plans
-
-Plans:
-- [ ] 43-01-PLAN.md — Auth infrastructure: types, accountsApi.ts, authService rewrite, authStore update, api.ts interceptor, AuthInitializer
-- [ ] 43-02-PLAN.md — Login/Signup pages rewire with return-to navigation, ProtectedRoute update
-- [ ] 43-03-PLAN.md — Profile page redesign: dual-API data, tier badge, remove identity management, accounts link
-
----
-
-#### Phase 44: Deprecation & Cleanup
-
-**Goal**: All legacy local auth infrastructure is removed — no bcrypt, no custom JWT utilities, no local users table, no orphaned auth routes, no stale env vars — leaving the codebase clean with only Supabase-based auth remaining.
-**Depends on**: Phase 43
-**Requirements**: DEP-01, DEP-02, DEP-03, DEP-04, DEP-05, DEP-06, DEP-07, DEP-08, DEP-09, DEP-10
-
-**Success Criteria** (what must be TRUE):
-1. The trivia backend has no `/api/auth/signup`, `/api/auth/login`, `/api/auth/logout`, or `/api/auth/refresh` routes; attempts to call them return 404
-2. The `bcrypt` package is absent from `package.json` and `node_modules`; `tokenUtils.ts`, `jwt.ts`, `authController.ts`, and `User.ts` do not exist in the codebase
-3. The local `users` table is dropped from the database; no active queries reference it
-4. `JWT_SECRET`, `JWT_REFRESH_SECRET`, and `ADMIN_EMAIL` are absent from `.env.example` and all env validation logic
-5. `.env.example` lists `SUPABASE_JWT_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, and `EMPOWERED_ACCOUNTS_URL`; the Redis token blacklist code path is fully removed
-
-**Plans**: 2 plans
-
-Plans:
-- [ ] 44-01-PLAN.md — Delete legacy auth files (9 files), uninstall dead packages (10 packages), surgically edit 7 remaining files to remove all dead imports and integer-user branches
-- [ ] 44-02-PLAN.md — Update env.ts and .env.example, create users table drop migration, full build verification and stale reference sweep
-
----
-
-#### Phase 45: Auth State Hardening
-
-**Goal**: Tier and admin status flow reliably from the accounts API to the auth store — fix the critical admin gate mismatch, tier loss after token refresh, and profile sync gap that were identified in the v1.8 audit. Formally verify Phase 43's frontend requirements.
-**Depends on**: Phase 44
-**Gap Closure**: Closes audit gaps from v1.8-MILESTONE-AUDIT.md
-
-**Success Criteria** (what must be TRUE):
-1. An admin user who reloads the page (triggering token refresh) can still reach `/admin/*` routes — both the frontend AdminGuard and backend `requireAdmin` grant access consistently
-2. After `AuthInitializer` completes on a page load, `authStore.tier` reflects the user's actual tier from the accounts API (not `user_metadata.tier` fallback)
-3. After `Profile.tsx` loads, the authStore tier is updated to match the authoritative value returned by `fetchAccountProfile`
-4. No `Authorization: Bearer ` header is sent with an empty/null token — null/undefined access tokens are handled before the header is attached
-5. A `VERIFICATION.md` exists for Phase 43 confirming AUTH-04–07 and PROF-01–04 are satisfied by the codebase
-
-**Plans**: 2 plans
-
-Plans:
-- [ ] 45-01-PLAN.md — Code fixes: AuthInitializer tier fetch, AdminGuard backend check, Profile.tsx store sync, accessToken null guard
-- [ ] 45-02-PLAN.md — Phase 43 formal verification (VERIFICATION.md) + ADMIN-01 requirement text update
-
----
-
-#### Phase 46: Auth Cleanup
-
-**Goal**: Remove residual tech debt from the v1.8 auth migration — rename the `authenticateToken` alias to `requireAuth` in all remaining callers, remove the unused `requireConnected` export, and fix a stale JSDoc comment — leaving the auth layer clean and internally consistent.
-**Depends on**: Phase 45
-**Gap Closure**: Closes low-severity tech debt items from v1.8 audit
-
-**Success Criteria** (what must be TRUE):
-1. No file in the backend imports or references `authenticateToken` — all three callers (`profile.ts`, `admin.ts`, `feedback.ts`) use `requireAuth`
-2. `requireConnected` is either removed from `auth.ts` exports or has at least one active consumer (no dead exports)
-3. The JSDoc comment on `sessionService.ts` line ~126 correctly describes the `userId` type as a UUID string, not "number for authenticated"
-4. TypeScript build passes with zero errors after all renames
-
-**Plans**: 1 plan
-
-Plans:
-- [x] 46-01-PLAN.md — Rename authenticateToken → requireAuth in 3 files, remove requireConnected export, fix stale JSDoc, verify build
-
----
+</details>
 
 ## Progress
-
-**Execution Order:** 40 → 41 → 42 → 43 → 44 → 45 → 46
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -268,10 +127,4 @@ Plans:
 | 27–30. Feedback Phases | v1.5 | 11/11 | Complete | 2026-02-22 |
 | 31–34. Scale Phases | v1.6 | 13/13 | Complete | 2026-02-24 |
 | 35–39. Election Phases | v1.7 | 10/10 | Complete | 2026-02-27 |
-| 40. Database Migration | v1.8 | 3/3 | Complete | 2026-02-28 |
-| 41. Auth & Tier Integration | v1.8 | 2/2 | Complete | 2026-02-28 |
-| 42. Gem & Progression Integration | v1.8 | 3/3 | Complete | 2026-03-01 |
-| 43. Frontend Auth & Profile | v1.8 | 3/3 | Complete | 2026-03-01 |
-| 44. Deprecation & Cleanup | v1.8 | 2/2 | Complete | 2026-03-01 |
-| 45. Auth State Hardening | v1.8 | 2/2 | Complete | 2026-03-01 |
-| 46. Auth Cleanup | v1.8 | 1/1 | Complete | 2026-03-01 |
+| 40–46. Empowered Identity Phases | v1.8 | 16/16 | Complete | 2026-03-01 |

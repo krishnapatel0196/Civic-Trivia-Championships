@@ -1,5 +1,34 @@
 # Project Milestones: Civic Trivia Championship
 
+## v1.8 Empowered Identity (Shipped: 2026-03-01)
+
+**Delivered:** Replaced the custom auth/gem/admin stack with the shared Empowered Accounts platform — Supabase JWT identity, Connected tier guards, shared gem ledger via award_gems RPC, platform admin roles, and full removal of all legacy local auth infrastructure.
+
+**Phases completed:** 40–46 (16 plans total)
+
+**Key accomplishments:**
+
+- Migrated all trivia tables to `trivia` schema on shared Supabase (kxsdzaojfaibhuzmclfq) — UUID FKs, 14 RLS policies, 953 questions, 7 collections, TypeScript types regenerated
+- Replaced custom bcrypt/JWT auth with Supabase JWT verification (jose jwtVerify); admin guard via `public.admin_users` table lookup
+- Wired gem awards through `award_gems` RPC (yellow gems, civic_trivia source); player stats in `trivia.player_stats` for Connected-tier users only; suspended accounts blocked
+- Rewrote frontend auth for Empowered Accounts API — login, signup, logout, token refresh via Supabase native endpoint; hybrid access/refresh token storage
+- Rebuilt profile page with trivia stats + accounts-sourced gem balance, tier badge, display name; identity management links out to accounts platform
+- Fully removed legacy auth stack: 9 files deleted, 10 packages removed, users table dropped, custom JWT env vars removed, Redis token blacklist removed
+- Hardened auth state with `tierResolved` flag in authStore — fixed AdminGuard race condition and admin access after expired-session re-login; dead exports (authenticateToken, requireConnected) removed
+
+**Stats:**
+
+- 106 files created/modified (14,012 insertions, 2,745 deletions)
+- ~37,549 lines of TypeScript total (frontend + backend)
+- 7 phases, 16 plans, 39 requirements delivered
+- 2 days from start to ship (2026-02-28 → 2026-03-01)
+
+**Git range:** `4be18d1` (docs(40): research) → `bb05597` (docs(46): complete)
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v1.7 Live Civic Intelligence (Shipped: 2026-02-27)
 
 **Delivered:** End-to-end election question pipeline with admin race management, daily auto-detection cron, current-term follow-up generation, plus Norwich England as the platform's first non-US collection and an address/phone advisory quality rule.

@@ -64,18 +64,19 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Norwich, England collection: 117 questions, en-GB locale, two-tier governance rules, playable in production — v1.7
 - ✓ `checkAddressPhone` advisory quality rule + audit script for 519 active questions — v1.7
 
+- ✓ Trivia tables migrated to `trivia` schema on shared Supabase (UUID FKs, 14 RLS policies, 953 questions, 7 collections) — v1.8
+- ✓ Supabase JWT auth (jose jwtVerify) replacing custom bcrypt/JWT; admin guard via `public.admin_users` table — v1.8
+- ✓ Gem awards via `award_gems` RPC (yellow gems, civic_trivia source); player stats in `trivia.player_stats` for Connected tier — v1.8
+- ✓ Frontend rewired to Empowered Accounts API — login, signup, logout, token refresh; hybrid token storage — v1.8
+- ✓ Profile page rebuilt: trivia stats + gem balance + tier badge + display name from accounts API — v1.8
+- ✓ Legacy auth stack fully removed: 9 files deleted, 10 packages removed, users table dropped, custom JWT env vars removed — v1.8
+- ✓ Auth state hardened: tierResolved flag, AdminGuard race condition fixed, dead exports removed — v1.8
+
 ### Active
 
-*(v1.8 — Empowered Identity)*
+*(v1.9 — TBD)*
 
-- Replace custom JWT/bcrypt auth with Supabase JWT verification against shared Empowered Accounts project
-- Migrate trivia tables to `trivia` schema on shared Supabase project (UUID user FKs, aligned with accounts)
-- Replace local gem tracking with `award_gems` RPC (yellow gems, platform-level ledger)
-- Add Connected tier guard: only identity-verified users earn gems and get persistent stats
-- Replace `is_admin` boolean with admin role check via `user_roles` table (accounts system)
-- Update frontend auth flow to call Empowered Accounts API for login/signup
-- Slim profile page to trivia stats + accounts-sourced tier/gem balance; link out for identity settings
-- Remove all deprecated local auth routes, JWT utilities, users table, and orphaned env vars
+- To be defined in next milestone planning session
 
 ### Out of Scope
 
@@ -98,20 +99,22 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v1.7 shipped 2026-02-27):**
-- 636 active questions across 7 collections (Federal 114, Indiana 97, California 91, Los Angeles CA 88, Bloomington IN 75, Fremont CA 54, Norwich UK 117)
-- Norwich, England is the platform's first non-US collection (en-GB locale, two-tier governance accuracy)
-- Election pipeline fully wired: `election_races` table → question generation → daily cron detection → current-term follow-up → admin lifecycle UI
-- Election questions are time-boxed: `expiresAt` tied to election day (local timezone, DST-safe); current-term questions expire at term end
-- Admin election management at `/admin/elections` with three-tab lifecycle (Active / Pending / Awaiting Follow-up)
-- Quality rules engine with 9 rules (8 from v1.6 + new `checkAddressPhone` advisory rule)
-- All questions deduplicated — 268 duplicates archived via embedding-based detection and human review
-- Zero active duplicates, zero quality violations across all collections
+**Current state (v1.8 shipped 2026-03-01):**
+- 953 active questions across 7 collections (Federal 114, Indiana 97, California 91, Los Angeles CA 88, Bloomington IN 75, Fremont CA 54, Norwich UK 117) — all on shared Supabase project (kxsdzaojfaibhuzmclfq)
+- Identity: Supabase JWT auth (jose jwtVerify), Connected tier guards, `public.admin_users` admin check — all legacy bcrypt/JWT removed
+- Gems: `award_gems` RPC (yellow, civic_trivia source); `trivia.player_stats` tracks games/score/accuracy for Connected users
+- Frontend: accounts API for auth flows, profile page shows trivia stats + tier badge + gem balance
+- Election pipeline: `election_races` table → question generation → daily 6 AM cron → current-term follow-up → admin lifecycle UI
+- Quality rules engine with 9 rules; zero active duplicates, zero quality violations across all collections
 - Self-validating AI generation pipeline: gap analysis → Claude → quality retry → semantic dedup → source diversity enforcement
-- LA (88), Bloomington (75), Fremont (54) confirmed source-exhausted at maximum achievable counts
 - Admin UI: question explorer, collection health, inline editing, flag review queue, duplicate review, election management
 - Player-driven quality curation: in-game flagging, post-game elaboration, admin triage
 - Gameplay telemetry tracking encounter/correct counts per question
+- Live: civic-trivia-frontend.onrender.com / civic-trivia-backend.onrender.com / ctc.empowered.vote
+
+**Tech stack:** React 18, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, Supabase (PostgreSQL), Redis (Upstash), jose, Drizzle ORM
+- Frontend: ~11,400 LOC TypeScript/React
+- Backend: ~26,000 LOC TypeScript/Express (estimated post-v1.8 cleanup)
 
 **Question quality philosophy:**
 - "Dinner party test" — would knowing this answer be worth sharing at dinner?
@@ -154,10 +157,10 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Constraints
 
-- **Tech stack**: React 18+, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, PostgreSQL, Redis, JWT — specified in design doc
+- **Tech stack**: React 18+, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, Supabase (PostgreSQL), Redis (Upstash), jose, Drizzle ORM
 - **Performance**: FCP <1.5s, TTI <3s, bundle <300KB gzipped
 - **Accessibility**: WCAG AA compliance required
-- **Content**: 519 active questions across 6 collections (zero duplicates, zero quality violations), all source URLs validated
+- **Content**: 953 active questions across 7 collections (zero duplicates, zero quality violations), all source URLs validated
 
 ## Key Decisions
 
@@ -217,19 +220,16 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Follow-up questions have `expiresAt = NULL` | "Who won?" is permanent historic fact — time-limiting it would silently hide civic history | Good — correct semantics |
 | Jurisdiction validation at runtime (no FK) | DB lookup against `collections.name` gives informative 400; FK would give opaque constraint error | Good — better error UX |
 | collectionSlug override with optional chaining | `req.body` may be undefined when frontend sends no body; `?.collectionSlug` prevents TypeError | Good — defensive practice |
-
-## Current Milestone: v1.8 Empowered Identity
-
-**Goal:** Replace the custom auth/gem/admin system with the shared Empowered Accounts platform, making Civic Trivia a fully integrated feature of the Empowered Vote ecosystem.
-
-**Target features:**
-- Auth: Supabase JWT from Empowered Accounts (drop custom bcrypt/JWT)
-- Database: All trivia tables migrated to `trivia` schema on shared Supabase project
-- Gems: `award_gems` RPC for yellow gems (drop local total_gems)
-- Tiers: Connected tier required for gem earning and persistent progression
-- Admin: Role-based check via `user_roles` (drop `is_admin` boolean)
-- Frontend: Login/signup → accounts API; profile page → trivia stats only
-- Cleanup: All deprecated auth infrastructure removed
+| Supabase JWT auth (jose jwtVerify) over custom middleware | Aligns with Empowered Accounts integration guide; SUPABASE_JWT_SECRET verified once per app start | Good — accounts alignment |
+| `admin_users` table lookup for admin check | Typed in database.types.ts; `user_roles` join was untyped — table approach is simpler and type-safe | Good — correct and typed |
+| `award_gems` RPC with `p_gem_type: 'yellow'` | Platform-level gem ledger; `civic_trivia` source enables per-app tracking on accounts platform | Good — correct RPC params |
+| Connected tier check at award time (not session start) | `checkAccountContext` fires at session start; tier gate applied at game result — separation of concerns | Good — clean architecture |
+| `tierResolved` flag in authStore | Prevents AdminGuard rendering before authoritative tier arrives from accounts API; all 4 AuthInitializer exits set it | Good — fixes race condition |
+| `requireConnected` removed from Express | Frontend handles tier gates; no Express route gated on Connected tier in trivia app | Good — correct removal |
+| `storageFactory.getRawClient()` for rate limiter | Rate limiter reuses the factory's Redis connection rather than importing a deleted legacyRedis export | Good — clean architecture |
+| Token refresh uses Supabase native `/auth/v1/token` | No custom `/api/auth/refresh` route documented in integration guide; direct Supabase endpoint is correct | Good — platform alignment |
+| `setAuth` sets `tierResolved: true` | Fixes admin access after expired-session re-login — login flow establishes complete auth state | Good — closes medium-severity gap |
+| Migration history repair via `supabase migration repair` | 24 pre-existing remote entries cleared before pushing new trivia schema; safe and correct approach | Good — migration hygiene |
 
 ---
-*Last updated: 2026-02-28 after v1.8 milestone started*
+*Last updated: 2026-03-01 after v1.8 milestone*
