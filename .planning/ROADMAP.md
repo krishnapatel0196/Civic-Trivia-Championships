@@ -116,7 +116,7 @@ Full archive: [milestones/v1.8-ROADMAP.md](milestones/v1.8-ROADMAP.md)
 
 </details>
 
-### 🚧 v1.9 Geographic Expansion (In Progress)
+### v1.9 Geographic Expansion (In Progress)
 
 **Milestone Goal:** Expand the playable collection set from 7 to 11 by activating two banked collections (Fremont CA, Norwich UK), adding two Massachusetts collections (Cambridge city, Massachusetts state), and two Texas collections (Plano city, Texas state). Eliminate hardcoded infrastructure debt that blocks future scaling.
 
@@ -144,10 +144,10 @@ Plans:
   1. The Fremont, CA collection card appears in the collection picker and a player can start and complete a game using Fremont questions
   2. The Norwich, England collection card appears in the collection picker and a player can start and complete a game using Norwich questions
   3. Both collections return ≥50 active questions via the collections API (is_active = true confirmed)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 48-01: TBD
+- [ ] 48-01-PLAN.md — Audit readiness, activate Fremont CA and Norwich UK, verify end-to-end playability
 
 #### Phase 49: Cambridge, MA Collection
 **Goal**: Cambridge, MA is a fully playable collection with ≥50 questions covering local civic topics
@@ -215,7 +215,7 @@ Plans:
 | 35–39. Election Phases | v1.7 | 10/10 | Complete | 2026-02-27 |
 | 40–46. Empowered Identity Phases | v1.8 | 16/16 | Complete | 2026-03-01 |
 | 47. Collection Infrastructure | v1.9 | 3/3 | Complete | 2026-03-02 |
-| 48. Activate Banked Collections | v1.9 | 0/TBD | Not started | - |
+| 48. Activate Banked Collections | v1.9 | 0/1 | Not started | - |
 | 49. Cambridge, MA Collection | v1.9 | 0/TBD | Not started | - |
 | 50. Massachusetts State Collection | v1.9 | 0/TBD | Not started | - |
 | 51. Plano, TX Collection | v1.9 | 0/TBD | Not started | - |
