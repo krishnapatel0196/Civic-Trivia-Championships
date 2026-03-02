@@ -128,10 +128,12 @@ Full archive: [milestones/v1.8-ROADMAP.md](milestones/v1.8-ROADMAP.md)
   1. The collection hierarchy displayed in the UI reads tier data from the database at runtime — no hardcoded display-name map exists in embeddings/types.ts
   2. Running `generate-locale-questions.ts --locale <state-slug>` works for state collections the same way it works for city collections
   3. Adding a new state config file registers it in the generator workflow without code changes to the workflow itself
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 47-01: TBD
+- [ ] 47-01-PLAN.md — Add tier column to collections DB, update schema and API response
+- [ ] 47-02-PLAN.md — Replace hardcoded COLLECTION_HIERARCHY with DB lookups, update scaffold CLI
+- [ ] 47-03-PLAN.md — Unify state config discovery in generate-locale-questions.ts
 
 #### Phase 48: Activate Banked Collections
 **Goal**: Fremont CA and Norwich UK are live and playable in production for all users
@@ -211,7 +213,7 @@ Plans:
 | 31–34. Scale Phases | v1.6 | 13/13 | Complete | 2026-02-24 |
 | 35–39. Election Phases | v1.7 | 10/10 | Complete | 2026-02-27 |
 | 40–46. Empowered Identity Phases | v1.8 | 16/16 | Complete | 2026-03-01 |
-| 47. Collection Infrastructure | v1.9 | 0/TBD | Not started | - |
+| 47. Collection Infrastructure | v1.9 | 0/3 | Not started | - |
 | 48. Activate Banked Collections | v1.9 | 0/TBD | Not started | - |
 | 49. Cambridge, MA Collection | v1.9 | 0/TBD | Not started | - |
 | 50. Massachusetts State Collection | v1.9 | 0/TBD | Not started | - |
