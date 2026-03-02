@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v1.9 Geographic Expansion — Phase 48: Activate Banked Collections
+**Current focus:** v1.9 Geographic Expansion — Phase 48: Activate Banked Collections COMPLETE
 
 ## Current Position
 
-Phase: 47 of 52 (Collection Infrastructure)
-Plan: 3 of 3 in current phase
-Status: Phase complete — all 3 plans done
-Last activity: 2026-03-02 — Completed 47-02-PLAN.md (DB-driven collection hierarchy, INFRA-01)
+Phase: 48 of 52 (Activate Banked Collections)
+Plan: 1 of 1 in current phase
+Status: Phase complete — all plans done
+Last activity: 2026-03-02 — Completed 48-01-PLAN.md (activate Fremont CA + Norwich England)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE (all 3 plans: 47-01, 47-02, 47-03)
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -22,8 +22,9 @@ Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com / https://ctc.empowered.vote
 - Backend LIVE: https://civic-trivia-backend.onrender.com
-- Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, 953 questions, TypeScript types generated
+- Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
+- Active collections (7): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana State, California State, Norwich England
 
 ## Accumulated Context
 
@@ -55,6 +56,12 @@ Key decisions relevant to v1.9:
 - Both generateBatch AND regenerateFn use buildStateSystemPrompt for state locales (retry path must match generation path)
 - generate-state-questions.ts deprecated with redirect notice, kept functional during transition
 
+**48-01 decisions:**
+- Both Fremont CA and Norwich England were already active in DB before this plan ran (prior session activation confirmed)
+- Fremont 25 remaining non-curated drafts intentionally left as draft (plan Pitfall 4 honored)
+- Norwich prefix is `nor` (not `nur`) — confirmed by locale-config externalIdPrefix
+- Standard collection activation workflow established: audit-collection-readiness.ts → curate (if needed) → activate-collection.ts → verify-post-activation.ts
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -76,7 +83,7 @@ Key decisions relevant to v1.9:
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Phase 47 complete — all 3 plans executed, verification passed (9/9), ROADMAP.md and REQUIREMENTS.md updated
+Stopped at: Phase 48 complete — 48-01-PLAN.md executed (Fremont CA + Norwich England verified live, 2 reusable scripts created)
 Resume file: None
 
-Next action: `/gsd:discuss-phase 48` or `/gsd:plan-phase 48`
+Next action: `/gsd:discuss-phase 49` or `/gsd:plan-phase 49`
