@@ -557,6 +557,29 @@ export function QuestionDetailPanel({
                         {/* View mode */}
                         {!isEditMode && questionDetail && !loading && (
                           <div className="space-y-6">
+                            {/* Quick actions bar */}
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <span className="text-sm text-gray-600">Quality Score:</span>
+                                {questionDetail.qualityScore !== null ? (
+                                  <span className={`text-2xl font-bold ${getQualityScoreColor(questionDetail.qualityScore)}`}>
+                                    {questionDetail.qualityScore}
+                                    <span className="text-sm font-normal text-gray-500">/100</span>
+                                  </span>
+                                ) : (
+                                  <span className="text-sm text-gray-400">Not scored</span>
+                                )}
+                              </div>
+                              {questionDetail.status !== 'archived' && (
+                                <button
+                                  onClick={handleArchive}
+                                  className="px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-300 hover:bg-red-100 rounded-md"
+                                >
+                                  Archive Question
+                                </button>
+                              )}
+                            </div>
+
                             {/* Question text */}
                             <div>
                               <h3 className="text-xl font-bold text-gray-900 mb-3">
@@ -817,25 +840,6 @@ export function QuestionDetailPanel({
                                 Quality Assessment
                               </h4>
 
-                              {/* Score */}
-                              <div className="mb-4">
-                                <div className="text-sm text-gray-600 mb-1">
-                                  Quality Score
-                                </div>
-                                {questionDetail.qualityScore !== null ? (
-                                  <div
-                                    className={`text-4xl font-bold ${getQualityScoreColor(
-                                      questionDetail.qualityScore
-                                    )}`}
-                                  >
-                                    {questionDetail.qualityScore}
-                                    <span className="text-lg text-gray-500">/100</span>
-                                  </div>
-                                ) : (
-                                  <div className="text-2xl text-gray-400">Not scored</div>
-                                )}
-                              </div>
-
                               {/* Violations list */}
                               <div>
                                 <div className="text-sm font-semibold text-gray-700 mb-2">
@@ -889,17 +893,6 @@ export function QuestionDetailPanel({
                               </div>
                             </div>
 
-                            {/* Archive section */}
-                            {questionDetail.status !== 'archived' && (
-                              <div className="border-t border-red-200 pt-6">
-                                <button
-                                  onClick={handleArchive}
-                                  className="px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-300 hover:bg-red-100 rounded-md"
-                                >
-                                  Archive Question
-                                </button>
-                              </div>
-                            )}
                           </div>
                         )}
                       </div>
