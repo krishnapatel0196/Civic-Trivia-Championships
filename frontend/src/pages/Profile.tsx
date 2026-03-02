@@ -10,6 +10,7 @@ import { fetchAccountProfile, ACCOUNTS_WEB_URL } from '../services/accountsApi';
 import type { AccountProfile } from '../types/auth';
 import { useAuthStore } from '../store/authStore';
 import { Link } from 'react-router-dom';
+import { apiRequest } from '../services/api';
 
 function TierBadge({ tier }: { tier: string }) {
   if (tier === 'connected') {
@@ -72,6 +73,17 @@ export function Profile() {
         // }
       } else {
         setAccountError("Couldn't load account info");
+      }
+
+      // Refresh admin status on every profile visit — ensures it's accurate
+      // even if the AuthInitializer fetch failed or the store was stale.
+      try {
+        const adminStatus = await apiRequest<{ isAdmin: boolean; isSuperAdmin: boolean }>(
+          '/api/users/profile/admin-status'
+        );
+        useAuthStore.getState().setAdminStatus(adminStatus.isAdmin, adminStatus.isSuperAdmin);
+      } catch {
+        // Non-critical — admin link simply won't show if this fails
       }
 
       setLoading(false);
