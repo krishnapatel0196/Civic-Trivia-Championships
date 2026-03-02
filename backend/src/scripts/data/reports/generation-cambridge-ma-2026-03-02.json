@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-03-02T15:32:04.780Z",
+  "target": "cambridge-ma",
+  "config": {
+    "targetQuestions": 130,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 236,
+    "passedValidation": 128,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 128
+  },
+  "breakdown": {
+    "byRule": {
+      "pure-lookup": 34,
+      "duplicate-text": 68,
+      "vague-qualifiers": 1,
+      "ambiguous-answers": 5
+    },
+    "byRetryAttempt": {
+      "0": 111,
+      "1": 14,
+      "2": 3
+    },
+    "byDifficulty": {
+      "easy": 48,
+      "medium": 58,
+      "hard": 22
+    },
+    "byTopic": {
+      "city-government": 25,
+      "civic-history": 25,
+      "elections-voting": 24,
+      "civic-firsts-policy": 16,
+      "neighborhoods-community": 17,
+      "schools-libraries": 21
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 907256,
+    "apiCalls": 92,
+    "tokensUsed": {
+      "input": 14021,
+      "output": 51500,
+      "cached": 1396635
+    },
+    "estimatedCostUsd": 1.2335535
+  }
+}
