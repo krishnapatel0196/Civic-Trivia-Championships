@@ -342,6 +342,13 @@ Return ONLY the JSON object for the single replacement question.
 async function main(): Promise<void> {
   const args = parseArgs();
 
+  // DEPRECATED: This script is superseded by the unified generator.
+  // Use generate-locale-questions.ts with --locale <state-slug> instead.
+  console.warn('\nDEPRECATED: generate-state-questions.ts is deprecated.');
+  console.warn('Use the unified command instead:');
+  console.warn(`  npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale ${args.state ? args.state + '-state' : '<state-slug>'}`);
+  console.warn('This script will be removed in a future version.\n');
+
   if (args.help) {
     printHelp();
     process.exit(0);

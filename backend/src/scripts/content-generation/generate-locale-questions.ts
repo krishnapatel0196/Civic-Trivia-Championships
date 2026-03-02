@@ -3,6 +3,8 @@
 //   npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale bloomington-in --batch 1 --dry-run
 //   npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale los-angeles-ca
 //   npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale los-angeles-ca --batch 2 --dry-run
+//   npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale indiana-state --dry-run
+//   npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale california-state --dry-run
 //   npx tsx src/scripts/content-generation/generate-locale-questions.ts --help
 //
 // Run from backend/ directory. Requires ANTHROPIC_API_KEY in .env or environment.
@@ -10,6 +12,9 @@
 //
 // Generates locale-specific civic trivia questions using Claude AI with RAG source documents.
 // Questions are validated with Zod schema and seeded to database with status='draft'.
+//
+// State locales are auto-discovered from locale-configs/state-configs/{locale}.ts —
+// no code changes needed to support new states.
 
 import 'dotenv/config';
 import { join } from 'path';
@@ -68,7 +73,9 @@ Usage: npx tsx src/scripts/content-generation/generate-locale-questions.ts [opti
 
 Options:
   --locale <slug>     Locale to generate questions for (required)
-                      Supported: bloomington-in, los-angeles-ca, fremont-ca, norwich-uk
+                      City: bloomington-in, los-angeles-ca, fremont-ca, norwich-uk
+                      State: auto-discovered from locale-configs/state-configs/{slug}.ts
+                      (e.g., indiana-state, california-state)
   --batch <N>         Generate only batch N (1-indexed). Default: all batches.
   --fetch-sources     Re-fetch and save RAG source documents before generating
   --dry-run           Generate and validate questions but do not seed to database
@@ -78,12 +85,19 @@ Examples:
   npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale bloomington-in --fetch-sources
   npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale bloomington-in --batch 1 --dry-run
   npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale los-angeles-ca
+  npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale indiana-state --dry-run
+  npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale california-state
 `);
 }
 
 // ─── Locale config loader ─────────────────────────────────────────────────────
 
-async function loadLocaleConfig(locale: string): Promise<LocaleConfig> {
+interface LoadedConfig {
+  config: LocaleConfig;
+  stateFeatures?: string;
+}
+
+async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
   const supportedLocales: Record<string, () => Promise<{ default?: LocaleConfig; [key: string]: unknown }>> = {
     'bloomington-in': () => import('./locale-configs/bloomington-in.js') as Promise<{ bloomingtonConfig: LocaleConfig }>,
     'los-angeles-ca': () => import('./locale-configs/los-angeles-ca.js') as Promise<{ losAngelesConfig: LocaleConfig }>,
@@ -92,20 +106,54 @@ async function loadLocaleConfig(locale: string): Promise<LocaleConfig> {
   };
 
   const loader = supportedLocales[locale];
-  if (!loader) {
-    const supported = Object.keys(supportedLocales).join(', ');
-    throw new Error(`Unknown locale "${locale}". Supported: ${supported}`);
+
+  if (loader) {
+    // City config — existing path
+    const module = await loader();
+
+    // Extract the config from the module (different export names per file)
+    const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig'];
+    for (const key of configKeys) {
+      if (module[key]) return { config: module[key] as LocaleConfig };
+    }
+
+    throw new Error(`Could not find config export in locale module for "${locale}"`);
   }
 
-  const module = await loader();
+  // State config fallback — auto-discover from state-configs/ subdirectory
+  try {
+    const stateModule = await import(`./locale-configs/state-configs/${locale}.js`);
 
-  // Extract the config from the module (different export names per file)
-  const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig'];
-  for (const key of configKeys) {
-    if (module[key]) return module[key] as LocaleConfig;
+    // Find the config export (pattern: *Config) and stateFeatures export (pattern: *StateFeatures)
+    let config: LocaleConfig | undefined;
+    let stateFeatures: string | undefined;
+
+    for (const [key, value] of Object.entries(stateModule)) {
+      if (key.endsWith('Config') && value && typeof value === 'object' && 'locale' in (value as Record<string, unknown>)) {
+        config = value as LocaleConfig;
+      }
+      if (key.endsWith('StateFeatures') && typeof value === 'string') {
+        stateFeatures = value;
+      }
+    }
+
+    if (!config) {
+      throw new Error(`No config export found in state-configs/${locale}.ts`);
+    }
+
+    return { config, stateFeatures };
+  } catch (importError: unknown) {
+    const err = importError as { code?: string; message?: string };
+    if (err.code === 'ERR_MODULE_NOT_FOUND' || err.message?.includes('Cannot find module')) {
+      const cityLocales = Object.keys(supportedLocales).join(', ');
+      throw new Error(
+        `Unknown locale "${locale}". ` +
+        `City locales: ${cityLocales}. ` +
+        `State locales are auto-discovered from locale-configs/state-configs/{locale}.ts`
+      );
+    }
+    throw importError;
   }
-
-  throw new Error(`Could not find config export in locale module for "${locale}"`);
 }
 
 // ─── Batch generation ─────────────────────────────────────────────────────────
@@ -118,7 +166,8 @@ async function generateBatch(
   batchIndex: number,
   totalBatches: number,
   sourceDocuments: string[],
-  existingExternalIds: Set<string>
+  existingExternalIds: Set<string>,
+  stateFeatures?: string
 ): Promise<{ questions: ValidatedQuestion[]; usage: { input: number; output: number; cached: number } }> {
   const batchNumber = batchIndex + 1;
   console.log(`\n--- Batch ${batchNumber}/${totalBatches} ---`);
@@ -142,7 +191,14 @@ async function generateBatch(
     ])
   );
 
-  const systemPromptText = buildSystemPrompt(config.name, batchTopicDistribution, config.locale);
+  // Use state system prompt when stateFeatures is present, otherwise use city system prompt
+  let systemPromptText: string;
+  if (stateFeatures) {
+    const { buildStateSystemPrompt } = await import('./prompts/state-system-prompt.js');
+    systemPromptText = buildStateSystemPrompt(config.name, stateFeatures, batchTopicDistribution);
+  } else {
+    systemPromptText = buildSystemPrompt(config.name, batchTopicDistribution, config.locale);
+  }
 
   // Determine next ID range for this batch
   const startId = batchIndex * config.batchSize + 1;
@@ -301,10 +357,13 @@ async function main(): Promise<void> {
   console.log(`Fetch sources: ${args.fetchSources}`);
   if (args.batch !== null) console.log(`Batch: ${args.batch}`);
 
-  // Load locale config
-  const config = await loadLocaleConfig(args.locale);
+  // Load locale config (city or state via auto-discovery)
+  const { config, stateFeatures } = await loadLocaleConfig(args.locale);
   const actualTarget = Math.ceil(config.targetQuestions * (config.overshootFactor ?? 1.0));
   console.log(`\nConfig: ${config.name}`);
+  if (stateFeatures) {
+    console.log(`Type: State collection (using state system prompt)`);
+  }
   console.log(`Target: ${config.targetQuestions} questions (${actualTarget} with overshoot) in ${Math.ceil(actualTarget / config.batchSize)} batches`);
 
   // Paths
@@ -386,6 +445,8 @@ async function main(): Promise<void> {
   let totalApiCalls = 0;
 
   // Define regenerateFn for quality validation retry loop
+  // stateFeatures is captured from loadLocaleConfig result above and used here
+  // for state collections to ensure the correct (state) system prompt is used on retries.
   const regenerateFn: RegenerateFn = async (failedQuestion, violationMessages) => {
     console.log(`    Regenerating question with feedback...`);
 
@@ -426,7 +487,14 @@ Return ONLY a JSON object with a "questions" array containing exactly 1 question
       messages.push({ role: 'user', content: userMessage });
     }
 
-    const systemPromptText = buildSystemPrompt(config.name, config.topicDistribution, config.locale);
+    // Use state system prompt when stateFeatures is present, otherwise use city system prompt
+    let systemPromptText: string;
+    if (stateFeatures) {
+      const { buildStateSystemPrompt } = await import('./prompts/state-system-prompt.js');
+      systemPromptText = buildStateSystemPrompt(config.name, stateFeatures, config.topicDistribution);
+    } else {
+      systemPromptText = buildSystemPrompt(config.name, config.topicDistribution, config.locale);
+    }
 
     const response = await client.messages.create({
       model: MODEL,
@@ -482,7 +550,8 @@ Return ONLY a JSON object with a "questions" array containing exactly 1 question
         batchIndex,
         totalBatches,
         sourceDocuments,
-        existingIds
+        existingIds,
+        stateFeatures
       );
 
       totalApiCalls++;
