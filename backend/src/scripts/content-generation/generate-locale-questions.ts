@@ -98,12 +98,12 @@ interface LoadedConfig {
 }
 
 async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
-  const supportedLocales: Record<string, () => Promise<{ default?: LocaleConfig; [key: string]: unknown     'cambridge-ma': () => import('./locale-configs/cambridge-ma.js') as Promise<{ cambridgeMaConfig: LocaleConfig }>,
-  }>> = {
+  const supportedLocales: Record<string, () => Promise<{ default?: LocaleConfig; [key: string]: unknown }>> = {
     'bloomington-in': () => import('./locale-configs/bloomington-in.js') as Promise<{ bloomingtonConfig: LocaleConfig }>,
     'los-angeles-ca': () => import('./locale-configs/los-angeles-ca.js') as Promise<{ losAngelesConfig: LocaleConfig }>,
     'fremont-ca': () => import('./locale-configs/fremont-ca.js') as Promise<{ fremontConfig: LocaleConfig }>,
     'norwich-uk': () => import('./locale-configs/norwich-uk.js') as Promise<{ norwichConfig: LocaleConfig }>,
+    'cambridge-ma': () => import('./locale-configs/cambridge-ma.js') as Promise<{ cambridgeMaConfig: LocaleConfig }>,
   };
 
   const loader = supportedLocales[locale];
