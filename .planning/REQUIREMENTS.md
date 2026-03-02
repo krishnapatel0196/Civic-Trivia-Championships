@@ -64,8 +64,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 47 | Pending |
-| INFRA-02 | Phase 47 | Pending |
+| INFRA-01 | Phase 47 | Complete |
+| INFRA-02 | Phase 47 | Complete |
 | ACT-01 | Phase 48 | Pending |
 | ACT-02 | Phase 48 | Pending |
 | CAMB-01 | Phase 49 | Pending |
