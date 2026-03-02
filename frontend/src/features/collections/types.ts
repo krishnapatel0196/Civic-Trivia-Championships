@@ -5,4 +5,5 @@ export interface CollectionSummary {
   description: string;
   themeColor: string;        // 7-char hex e.g. '#1E3A8A'
   questionCount: number;
+  tier: 'federal' | 'state' | 'city';
 }

@@ -90,8 +90,8 @@ async function loadStateConfig(state: string): Promise<{
     string,
     () => Promise<{ [key: string]: unknown }>
   > = {
-    indiana: () => import('./locale-configs/state-configs/indiana.js'),
-    california: () => import('./locale-configs/state-configs/california.js'),
+    indiana: () => import('./locale-configs/state-configs/indiana-state.js'),
+    california: () => import('./locale-configs/state-configs/california-state.js'),
   };
 
   const loader = supportedStates[state];

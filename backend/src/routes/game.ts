@@ -63,6 +63,7 @@ router.get('/collections', async (_req: Request, res: Response) => {
         slug: collections.slug,
         description: collections.description,
         themeColor: collections.themeColor,
+        tier: collections.tier,
         sortOrder: collections.sortOrder,
         questionCount: sql<number>`COUNT(DISTINCT ${collectionQuestions.questionId})::int`.as('questionCount')
       })
