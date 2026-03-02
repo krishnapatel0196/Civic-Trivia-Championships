@@ -101,7 +101,7 @@ Distribute difficulty across the full batch:
 - Questions requiring knowledge of other questions
 - Anything that could embarrass or politically compromise the civic education mission
 
-${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}`;
+${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}`;
 }
 
 /**
@@ -142,6 +142,99 @@ When writing a question about local services or governance, ensure the responsib
 
 ### Norwich City Council Lord Mayor
 Norwich has a Lord Mayor (ceremonial role), not an elected mayor. Do not confuse with executive mayors in other cities.`;
+}
+
+/**
+ * Builds Cambridge, MA voice and accuracy guidance for content generation.
+ * Ensures Plan E government structure, PR voting history, and accurate civic facts
+ * are represented correctly — with special attention to common misconceptions.
+ */
+function buildCambridgeVoiceGuidance(): string {
+  return `
+
+## Cambridge, MA — Specific Content Guidelines
+
+### Government Structure (CRITICAL accuracy requirement)
+
+Cambridge uses the **Plan E** City Manager form of government. The key distinction from most US cities:
+
+- **City Manager** (currently Yi-An Huang) = CHIEF EXECUTIVE. Appointed by City Council. Runs all city departments, implements policy, manages the budget. This is NOT an elected position.
+- **Mayor** = PRESIDING OFFICER of City Council. Elected by fellow City Councillors from among themselves, not directly by voters. The Mayor chairs Council meetings but does NOT have executive powers like a typical US mayor.
+- **City Council** = 9 members, ALL elected at-large (no districts). Voters can rank all candidates. Two-year terms. Elections in odd-numbered years (November).
+
+Questions about Cambridge leadership MUST reflect this distinction:
+- CORRECT: "In Cambridge's Plan E charter, who is the chief executive responsible for running city departments?"
+  → Answer: The City Manager
+- WRONG: Any question implying the Mayor has executive powers over city departments
+
+### Proportional Representation / Ranked-Choice Voting
+
+Cambridge has used proportional representation (PR) since 1941, following voter approval of Plan E in 1940.
+
+Key facts for accurate questions:
+- Cambridge voters REJECTED Plan E in November 1938 (margin: 1,767 votes)
+- Cambridge voters APPROVED Plan E in 1940 (margin: 7,552 votes)
+- First PR election: 1941; first Plan E government took office: January 1942
+- The system is PR (proportional representation) — a form of ranked-choice voting
+- Any group with more than 1/10th of votes cast can elect at least one of the nine council members
+- Five referenda to repeal PR (1952, 1953, 1957, 1961, 1965) — PR survived all five
+
+Do NOT describe Plan E as Cambridge "abolishing" PR in 1938 — PR did not exist in Cambridge before 1938. The 1938 vote rejected introducing it.
+
+### Living Wage Ordinance — Accurate Framing
+
+Cambridge passed a living wage ordinance in **May 1999** (not 1998).
+
+DO NOT frame this as Cambridge being the "first US city" — Baltimore passed the first US living wage ordinance in 1994. Cambridge's ordinance is still a significant civic fact worth covering; frame it accurately:
+- CORRECT: "Cambridge passed its living wage ordinance in what year?" → Answer: 1999
+- WRONG: "Cambridge became the first US city to pass a living wage ordinance in ____" → This is factually incorrect
+
+### Harvard and MIT — Strict Limitation
+
+This collection is NOT about Harvard or MIT.
+- Do NOT write questions where Harvard or MIT is the primary civic subject
+- Their civic/non-profit relationships to Cambridge city government MAY appear incidentally (e.g., PILOT payments, zoning agreements) but must not anchor a question
+- Any question where removing the university name makes it meaningless is NOT a valid Cambridge civic question
+
+### "Feel Seen" Standard — Represent the Whole City
+
+Cambridge has distinct communities beyond the university-adjacent population. Questions should reflect the whole city:
+- East Cambridge: Working-class history, Portuguese/Azorean community (St. Anthony's Church, 1902), furniture factories, later Brazilian community
+- Cambridgeport: Historical port community (designated port of delivery by Congress, 1805)
+- North Cambridge: Haitian community (arrived 1970s+)
+- Housing advocacy: Cambridge has a strong tenant and affordable housing movement
+- Generate at least some questions that would resonate with long-time Cambridge families, not just university-associated residents
+
+### Cambridge City Hall
+
+Cambridge City Hall (795 Massachusetts Ave) is **Richardsonian Romanesque** style, built in 1888. It is NOT neoclassical. It features heavy stone construction with Romanesque arches, built with funds donated by local benefactor Frederick Hastings Rindge.
+
+Do NOT describe it as neoclassical or as having classical columns.
+
+### Cambridge Rindge and Latin School (CRLS)
+
+CRLS is the city's only public high school, formed in 1977 by the merger of Rindge Technical School (founded 1888 as a national model vocational school) and Cambridge High and Latin School. It reflects the city's diverse demographics and civic values (Opportunity, Diversity, Respect). Questions about CRLS should focus on its civic role and history, not its notable alumni.
+
+### Expiration Dates for Elected Officials
+
+- City Council members (elected November 2025): expiresAt "2028-01-01T00:00:00Z"
+- Mayor (elected by Council after November 2025 election): expiresAt "2028-01-01T00:00:00Z"
+- City Manager (appointed, no fixed term): expiresAt null (or omit time-sensitive name questions; prefer structural questions about the City Manager role)
+- For structural questions (e.g., "How are City Council members elected?"): expiresAt null
+
+Per the CONTEXT.md, target roughly 50% expiring and 50% durable questions. Durable = structural/historical facts. Expiring = questions about specific current officeholders.
+
+### Difficulty Calibration
+
+Over-index on EASY questions — the Easy Steps design requires easy questions to let players get 2 correct before advancing.
+
+EASY = facts a civic-minded Cambridge resident would know or could figure out from general knowledge
+NEVER include questions whose answer is an address, phone number, or obscure budget line item.
+
+Apply the dinner party test: "Is this a tidbit a civic-minded person would be proud to share?"
+- PASS: "What form of government does Cambridge use, where voters rank all candidates for 9 council seats?"
+- PASS: "In what year did Cambridge adopt its Plan E charter, introducing the city manager form of government?"
+- FAIL: "What is the square footage of Cambridge City Hall?"`;
 }
 
 /**
