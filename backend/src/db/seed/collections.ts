@@ -97,4 +97,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 8
   },
+  {
+    name: 'Massachusetts State',
+    slug: 'massachusetts-state',
+    description: 'Test your Massachusetts State civic knowledge!',
+    localeCode: 'en-US',
+    localeName: 'Massachusetts State',
+    iconIdentifier: 'state',
+    themeColor: '#0C2340',
+    tier: 'state',
+    isActive: false,
+    sortOrder: 9
+  },
 ];
