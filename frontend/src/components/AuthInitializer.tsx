@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { exchangeRefreshToken, fetchAccountProfile } from '../services/accountsApi';
+import { API_URL } from '../services/api';
 
 interface AuthInitializerProps {
   children: React.ReactNode;
@@ -35,16 +36,28 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
             tier: data.user?.tier || 'inform',
           });
 
-          // Resolve authoritative tier from the accounts API.
-          // setLoading(false) is deferred until this resolves to prevent AdminGuard
-          // from briefly seeing stale JWT-metadata tier before the API call completes.
+          // Resolve authoritative tier and admin status in parallel.
+          // setLoading(false) is deferred until both resolve to prevent AdminGuard
+          // from briefly seeing stale state before the API calls complete.
           try {
-            const profile = await fetchAccountProfile(data.access_token);
-            useAuthStore.getState().setTier(profile.tier);
-            useAuthStore.getState().setDisplayName(profile.display_name);
+            const [profileResult, adminResult] = await Promise.allSettled([
+              fetchAccountProfile(data.access_token),
+              fetch(`${API_URL}/api/users/profile/admin-status`, {
+                headers: { Authorization: `Bearer ${data.access_token}` },
+              }).then((r) => r.ok ? r.json() : { isAdmin: false, isSuperAdmin: false }),
+            ]);
+
+            if (profileResult.status === 'fulfilled') {
+              useAuthStore.getState().setTier(profileResult.value.tier);
+              useAuthStore.getState().setDisplayName(profileResult.value.display_name);
+            }
+
+            if (adminResult.status === 'fulfilled') {
+              const { isAdmin, isSuperAdmin } = adminResult.value as { isAdmin: boolean; isSuperAdmin: boolean };
+              useAuthStore.getState().setAdminStatus(isAdmin, isSuperAdmin);
+            }
           } catch {
-            // Profile fetch failed — session is still valid; tier stays at JWT metadata value.
-            // Silently ignore so auth flow completes successfully.
+            // Fetch failures are non-critical — session is still valid.
           } finally {
             useAuthStore.getState().setTierResolved(true);
             setLoading(false);

@@ -105,3 +105,31 @@ export async function requireAdmin(
   }
   next();
 }
+
+/**
+ * Requires the authenticated user to be a super-admin in the admin_users table.
+ * Must be used after requireAuth.
+ * Returns 401 if not authenticated, 403 if not a super-admin.
+ */
+export async function requireSuperAdmin(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  if (!req.userId) {
+    res.status(401).json({ error: 'Authentication required' });
+    return;
+  }
+
+  const { data } = await supabaseAdmin
+    .from('admin_users')
+    .select('super_admin')
+    .eq('user_id', req.userId)
+    .maybeSingle();
+
+  if (!data?.super_admin) {
+    res.status(403).json({ error: 'Super-admin required' });
+    return;
+  }
+  next();
+}

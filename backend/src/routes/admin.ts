@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { requireAuth, requireAdmin } from '../middleware/auth.js';
+import { requireAuth, requireAdmin, requireSuperAdmin } from '../middleware/auth.js';
+import { supabaseAdmin } from '../config/supabase.js';
 import { db } from '../db/index.js';
 import { questions, collections, collectionQuestions, questionFlags, electionRaces } from '../db/schema.js';
 import { eq, and, or, lte, gt, lt, isNotNull, sql, inArray, ilike, desc, asc } from 'drizzle-orm';
@@ -1887,6 +1888,102 @@ router.delete('/election-races/:id', async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Failed to delete election race:', error);
     return res.status(500).json({ error: 'Failed to delete election race', detail: error?.message || String(error) });
+  }
+});
+
+// ─── Admin User Management (super-admin only) ───────────────────────────────
+
+/**
+ * GET /admins — List all admin users.
+ * Super-admin only.
+ */
+router.get('/admins', requireSuperAdmin, async (req: Request, res: Response) => {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('admin_users')
+      .select('user_id, super_admin, created_at')
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+
+    // Enrich with email from auth.users
+    const enriched = await Promise.all(
+      (data ?? []).map(async (row) => {
+        const { data: userData } = await supabaseAdmin.auth.admin.getUserById(row.user_id);
+        return {
+          userId: row.user_id,
+          email: userData?.user?.email ?? '(unknown)',
+          superAdmin: row.super_admin,
+          createdAt: row.created_at,
+        };
+      })
+    );
+
+    res.json(enriched);
+  } catch (error: any) {
+    console.error('Failed to list admins:', error);
+    res.status(500).json({ error: 'Failed to list admins' });
+  }
+});
+
+/**
+ * POST /admins — Add a user as admin by email.
+ * Body: { email: string, superAdmin?: boolean }
+ * Super-admin only.
+ */
+router.post('/admins', requireSuperAdmin, async (req: Request, res: Response) => {
+  try {
+    const { email, superAdmin = false } = req.body;
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({ error: 'email is required' });
+    }
+
+    // Look up user by email
+    const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+    if (listError) throw listError;
+
+    const user = listData.users.find((u) => u.email === email);
+    if (!user) {
+      return res.status(404).json({ error: `No user found with email: ${email}` });
+    }
+
+    const { error } = await supabaseAdmin
+      .from('admin_users')
+      .upsert({ user_id: user.id, super_admin: superAdmin }, { onConflict: 'user_id' });
+
+    if (error) throw error;
+
+    return res.status(201).json({ userId: user.id, email, superAdmin });
+  } catch (error: any) {
+    console.error('Failed to add admin:', error);
+    return res.status(500).json({ error: 'Failed to add admin' });
+  }
+});
+
+/**
+ * DELETE /admins/:userId — Remove admin access from a user.
+ * Super-admins cannot be removed by non-super-admins (enforced by requireSuperAdmin).
+ * A super-admin cannot remove themselves.
+ */
+router.delete('/admins/:userId', requireSuperAdmin, async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    if (userId === req.userId) {
+      return res.status(400).json({ error: 'You cannot remove your own admin access' });
+    }
+
+    const { error } = await supabaseAdmin
+      .from('admin_users')
+      .delete()
+      .eq('user_id', userId);
+
+    if (error) throw error;
+
+    return res.json({ deleted: true, userId });
+  } catch (error: any) {
+    console.error('Failed to remove admin:', error);
+    return res.status(500).json({ error: 'Failed to remove admin' });
   }
 });
 

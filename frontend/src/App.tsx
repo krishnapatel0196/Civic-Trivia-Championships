@@ -19,14 +19,15 @@ import { CollectionsPage } from './pages/admin/CollectionsPage';
 import { FlagReviewPage } from './pages/admin/FlagReviewPage';
 import { DuplicateReviewPage } from './pages/admin/DuplicateReviewPage';
 import { ElectionsPage } from './pages/admin/ElectionsPage';
+import { AdminsPage } from './pages/admin/AdminsPage';
 
-// AdminGuard component: checks for admin role
+// AdminGuard component: checks admin_users table (via isAdmin in store)
 function AdminGuard() {
-  const { isAuthenticated, user, isLoading, tier, tierResolved } = useAuthStore();
+  const { isAuthenticated, isLoading, tierResolved, isAdmin } = useAuthStore();
 
   if (isLoading || !tierResolved) return null;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (!user || tier !== 'empowered') return <Forbidden />;
+  if (!isAdmin) return <Forbidden />;
 
   return <Outlet />;
 }
@@ -64,6 +65,7 @@ function App() {
                 <Route path="flags" element={<FlagReviewPage />} />
                 <Route path="duplicates" element={<DuplicateReviewPage />} />
                 <Route path="elections" element={<ElectionsPage />} />
+                <Route path="admins" element={<AdminsPage />} />
               </Route>
             </Route>
           </Routes>

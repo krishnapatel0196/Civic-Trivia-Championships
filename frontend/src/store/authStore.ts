@@ -10,6 +10,8 @@ interface AuthStore {
   tierResolved: boolean;
   displayName: string | null;
   timerMultiplier: number;
+  isAdmin: boolean;
+  isSuperAdmin: boolean;
   setAuth: (token: string, user: AccountsUser, extras?: { tier?: Tier; displayName?: string }) => void;
   clearAuth: () => void;
   setLoading: (loading: boolean) => void;
@@ -17,6 +19,7 @@ interface AuthStore {
   setDisplayName: (name: string) => void;
   setTier: (tier: Tier) => void;
   setTierResolved: (resolved: boolean) => void;
+  setAdminStatus: (isAdmin: boolean, isSuperAdmin: boolean) => void;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -28,6 +31,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
   tierResolved: false,
   displayName: null,
   timerMultiplier: 1.0,
+  isAdmin: false,
+  isSuperAdmin: false,
 
   setAuth: (token: string, user: AccountsUser, extras?: { tier?: Tier; displayName?: string }) =>
     set({
@@ -36,6 +41,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       isAuthenticated: true,
       isLoading: false,
       tier: extras?.tier ?? user.tier ?? null,
+      tierResolved: true,
       displayName: extras?.displayName ?? null,
     }),
 
@@ -50,6 +56,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
       tierResolved: false,
       displayName: null,
       timerMultiplier: 1.0,
+      isAdmin: false,
+      isSuperAdmin: false,
     });
   },
 
@@ -77,4 +85,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({
       tierResolved: resolved,
     }),
+
+  setAdminStatus: (isAdmin: boolean, isSuperAdmin: boolean) =>
+    set({ isAdmin, isSuperAdmin }),
 }));
