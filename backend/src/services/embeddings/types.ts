@@ -22,20 +22,31 @@ export interface QuestionForDedup {
 
 export type CollectionTier = 'federal' | 'state' | 'city';
 
-export const COLLECTION_HIERARCHY: Record<string, CollectionTier> = {
-  'Federal Civics': 'federal',
-  'Indiana': 'state',
-  'California': 'state',
-  'Bloomington, IN': 'city',
-  'Los Angeles, CA': 'city',
-  'Fremont, CA': 'city',
-};
-
 export const TIER_RANK: Record<CollectionTier, number> = {
   federal: 3,
   state: 2,
   city: 1,
 };
+
+/**
+ * Load collection tier map from database at runtime.
+ * Returns Map<collectionName, CollectionTier> keyed by the DB `name` column.
+ *
+ * IMPORTANT: The DB uses full display names like 'Indiana State' and
+ * 'California State' — NOT the stale short names ('Indiana', 'California')
+ * that the old COLLECTION_HIERARCHY used. All callers must pass DB-consistent
+ * names when looking up tiers.
+ */
+export async function loadCollectionTierMap(): Promise<Map<string, CollectionTier>> {
+  const { db } = await import('../../db/index.js');
+  const { collections } = await import('../../db/schema.js');
+  const rows = await db.select({ name: collections.name, tier: collections.tier }).from(collections);
+  const map = new Map<string, CollectionTier>();
+  for (const row of rows) {
+    map.set(row.name, row.tier as CollectionTier);
+  }
+  return map;
+}
 
 export interface ClusterRecommendation {
   keep: string; // externalId to keep

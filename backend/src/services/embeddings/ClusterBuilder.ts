@@ -11,11 +11,16 @@ import type {
   SimilarityTier,
   CollectionTier,
 } from './types.js';
-import { COLLECTION_HIERARCHY, TIER_RANK } from './types.js';
+import { TIER_RANK } from './types.js';
 
 export class ClusterBuilder {
   private parent: Map<string, string> = new Map();
   private rank: Map<string, number> = new Map();
+  private tierMap: Map<string, CollectionTier>;
+
+  constructor(tierMap: Map<string, CollectionTier>) {
+    this.tierMap = tierMap;
+  }
 
   /**
    * Find root with path compression
@@ -83,7 +88,7 @@ export class ClusterBuilder {
       let highestRank = 0;
 
       for (const collection of q.collections) {
-        const tier = COLLECTION_HIERARCHY[collection];
+        const tier = this.tierMap.get(collection);
         if (tier) {
           const rank = TIER_RANK[tier];
           if (rank > highestRank) {

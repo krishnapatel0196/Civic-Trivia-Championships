@@ -4,7 +4,6 @@
  */
 
 import {
-  COLLECTION_HIERARCHY,
   TIER_RANK,
   type CollectionTier,
   type QuestionForDedup,
@@ -22,7 +21,14 @@ export interface DuplicateCheckResult {
 }
 
 export class CollectionHierarchy {
-  constructor(private embeddingService: OpenAIEmbeddingService) {}
+  private tierMap: Map<string, CollectionTier>;
+
+  constructor(
+    private embeddingService: OpenAIEmbeddingService,
+    tierMap: Map<string, CollectionTier>
+  ) {
+    this.tierMap = tierMap;
+  }
 
   /**
    * Check if generated question is a semantic duplicate of existing questions,
@@ -59,7 +65,7 @@ export class CollectionHierarchy {
     const generatedEmbedding = await this.embeddingService.embed(preparedText);
 
     // 3. Determine target collection tier
-    const targetTier = CollectionHierarchy.getCollectionTier(targetCollection);
+    const targetTier = this.getCollectionTier(targetCollection);
     if (!targetTier) {
       console.warn(`⚠️  Unknown collection "${targetCollection}", treating as city tier`);
     }
@@ -105,8 +111,8 @@ export class CollectionHierarchy {
         // Found semantic duplicate - apply hierarchy policy
         for (const existingCollection of existing.collections) {
           // Case 1: Duplicate in parent collection (higher tier) - REJECT
-          if (CollectionHierarchy.isParentOrSame(existingCollection, targetCollection)) {
-            const existingTier = CollectionHierarchy.getCollectionTier(existingCollection);
+          if (this.isParentOrSame(existingCollection, targetCollection)) {
+            const existingTier = this.getCollectionTier(existingCollection);
             return {
               isDuplicate: true,
               duplicateOf: existing.externalId,
@@ -126,23 +132,23 @@ export class CollectionHierarchy {
   }
 
   /**
-   * Get collection tier from COLLECTION_HIERARCHY map
+   * Get collection tier from the DB-sourced tier map
    */
-  static getCollectionTier(collectionName: string): CollectionTier | undefined {
-    return COLLECTION_HIERARCHY[collectionName];
+  getCollectionTier(collectionName: string): CollectionTier | undefined {
+    return this.tierMap.get(collectionName);
   }
 
   /**
    * Check if existingCollection is the same as or a parent of targetCollection
    * Returns true if existing is same or higher tier
    */
-  static isParentOrSame(existingCollection: string, targetCollection: string): boolean {
+  isParentOrSame(existingCollection: string, targetCollection: string): boolean {
     if (existingCollection === targetCollection) {
       return true; // Same collection - reject
     }
 
-    const existingTier = CollectionHierarchy.getCollectionTier(existingCollection);
-    const targetTier = CollectionHierarchy.getCollectionTier(targetCollection);
+    const existingTier = this.getCollectionTier(existingCollection);
+    const targetTier = this.getCollectionTier(targetCollection);
 
     if (!existingTier || !targetTier) {
       return false; // Unknown tier - allow by default

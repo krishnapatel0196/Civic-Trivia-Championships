@@ -29,17 +29,18 @@ import { auditQuestion } from '../services/qualityRules/index.js';
 import { OpenAIEmbeddingService } from '../services/embeddings/OpenAIEmbeddingService.js';
 import { SemanticDupDetector } from '../services/embeddings/SemanticDupDetector.js';
 import type { QuestionForDedup } from '../services/embeddings/types.js';
+import { loadCollectionTierMap } from '../services/embeddings/types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Collection metadata
+// Collection metadata — names must match the DB `name` column exactly
 const COLLECTION_NAMES: Record<string, string> = {
-  'federal': 'Federal Civics',
+  'federal': 'United States',
   'bloomington-in': 'Bloomington, IN',
   'los-angeles-ca': 'Los Angeles, CA',
-  'indiana': 'Indiana',
-  'california': 'California',
+  'indiana-state': 'Indiana State',
+  'california-state': 'California State',
   'fremont-ca': 'Fremont, CA',
 };
 
@@ -47,8 +48,8 @@ const COLLECTION_PREFIXES: Record<string, string> = {
   'federal': 'fed',
   'bloomington-in': 'bloom',
   'los-angeles-ca': 'la',
-  'indiana': 'ind',
-  'california': 'cal',
+  'indiana-state': 'ind',
+  'california-state': 'cal',
   'fremont-ca': 'fre',
 };
 
@@ -56,8 +57,8 @@ const JSON_FILE_MAP: Record<string, string> = {
   'federal': 'questions.json',
   'bloomington-in': 'bloomington-in-questions.json',
   'los-angeles-ca': 'los-angeles-ca-questions.json',
-  'indiana': 'indiana-state-questions.json',
-  'california': 'california-state-questions.json',
+  'indiana-state': 'indiana-state-questions.json',
+  'california-state': 'california-state-questions.json',
   'fremont-ca': 'fremont-ca-questions.json',
 };
 
@@ -106,7 +107,7 @@ function parseArgs(): CLIArgs | null {
     console.error('  npx tsx src/scripts/generateQuestions.ts --collection bloomington-in --target 90 --limit 10');
     console.error('');
     console.error('Options:');
-    console.error('  --collection <slug>   Collection slug (federal, bloomington-in, los-angeles-ca, indiana, california, fremont-ca)');
+    console.error('  --collection <slug>   Collection slug (federal, bloomington-in, los-angeles-ca, indiana-state, california-state, fremont-ca)');
     console.error('  --target <number>     Target total question count for collection');
     console.error('  --dry-run             Show gap analysis only, do not generate');
     console.error('  --limit <number>      Maximum questions to generate (for testing)');
@@ -459,7 +460,8 @@ async function main() {
     apiKey: process.env.OPENAI_API_KEY,
     cacheDir: resolve(__dirname, '..', '..', '.embedding-cache'),
   });
-  const hierarchyChecker = new CollectionHierarchy(embeddingService);
+  const tierMap = await loadCollectionTierMap();
+  const hierarchyChecker = new CollectionHierarchy(embeddingService, tierMap);
   const claudeClient = new Anthropic();
 
   // 5. Run gap analysis
