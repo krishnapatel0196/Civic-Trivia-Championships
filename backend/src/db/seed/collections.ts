@@ -84,5 +84,17 @@ export const collectionsData: NewCollection[] = [
     tier: 'city',
     isActive: false,      // activated after questions are seeded
     sortOrder: 7
-  }
+  },
+  {
+    name: 'Cambridge, MA',
+    slug: 'cambridge-ma',
+    description: 'Test your Cambridge, MA civic knowledge!',
+    localeCode: 'en-US',
+    localeName: 'Cambridge, Massachusetts',
+    iconIdentifier: 'flag-ma',
+    themeColor: '#1E3A5F',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 8
+  },
 ];
