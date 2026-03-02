@@ -77,7 +77,7 @@ export function QuestionsPage() {
   const order = searchParams.get('order') || 'asc';
   const collection = searchParams.get('collection') || '';
   const difficulty = searchParams.get('difficulty') || '';
-  const status = searchParams.get('status') ?? 'active';
+  const status = searchParams.get('status') ?? '';
   const search = searchParams.get('search') || '';
 
   // Sync debounced search to URL
@@ -322,6 +322,7 @@ export function QuestionsPage() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
           >
             <option value="">All statuses</option>
+            <option value="draft">Draft</option>
             <option value="active">Active</option>
             <option value="archived">Archived</option>
             <option value="expired">Expired</option>
