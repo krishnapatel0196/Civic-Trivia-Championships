@@ -330,13 +330,17 @@ async function runActivateMode() {
   }
 
   // Verify activation
-  const activeCount = await db.execute(sql`
-    SELECT COUNT(*) as count FROM civic_trivia.questions q
-    JOIN civic_trivia.collection_questions cq ON q.id = cq.question_id
-    WHERE cq.collection_id = ${collectionId} AND q.status = 'active'
-  `);
-
-  console.log(`Total active Fremont questions: ${activeCount.rows[0].count}\n`);
+  const [activeCountResult] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(questions)
+    .innerJoin(collectionQuestions, eq(questions.id, collectionQuestions.questionId))
+    .where(
+      and(
+        eq(collectionQuestions.collectionId, collectionId),
+        eq(questions.status, 'active')
+      )
+    );
+  console.log(`Total active Fremont questions: ${activeCountResult?.count ?? 0}\n`);
   console.log('✓ Activation complete\n');
 }
 
