@@ -85,7 +85,7 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - Norwich, England collection active and playable in production
 
 **New collections:**
-- Cambridge, MA — scaffold, generate (50+ questions), curate, activate
+- ✓ Cambridge, MA — scaffold, generate (125 questions), curate, activate
 - Massachusetts State — scaffold, generate (50+ questions), curate, activate
 - Plano, TX — scaffold, generate (50+ questions), curate, activate
 - Texas State — scaffold, generate (50+ questions), curate, activate
@@ -111,8 +111,8 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v1.8 shipped 2026-03-01):**
-- 953 active questions across 7 collections (Federal 114, Indiana 97, California 91, Los Angeles CA 88, Bloomington IN 75, Fremont CA 54, Norwich UK 117) — all on shared Supabase project (kxsdzaojfaibhuzmclfq)
+**Current state (v1.8 shipped 2026-03-01, Phase 49 complete 2026-03-02):**
+- 8 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana State, California State, Fremont CA, Norwich UK, Cambridge MA (125 questions) — all on shared Supabase project (kxsdzaojfaibhuzmclfq)
 - Identity: Supabase JWT auth (jose jwtVerify), Connected tier guards, `public.admin_users` admin check — all legacy bcrypt/JWT removed
 - Gems: `award_gems` RPC (yellow, civic_trivia source); `trivia.player_stats` tracks games/score/accuracy for Connected users
 - Frontend: accounts API for auth flows, profile page shows trivia stats + tier badge + gem balance
