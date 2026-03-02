@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-01)
 
 ## Current Position
 
-Phase: 48 of 52 (Activate Banked Collections)
-Plan: 1 of 1 in current phase
-Status: Phase complete — all plans done
-Last activity: 2026-03-02 — Completed 48-01-PLAN.md (activate Fremont CA + Norwich England)
+Phase: 49 of 52 (Cambridge, MA Collection)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-03-02 — Completed 49-01 (scaffold Cambridge MA collection)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 IN PROGRESS (1/3)
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -62,6 +62,13 @@ Key decisions relevant to v1.9:
 - Norwich prefix is `nor` (not `nur`) — confirmed by locale-config externalIdPrefix
 - Standard collection activation workflow established: audit-collection-readiness.ts → curate (if needed) → activate-collection.ts → verify-post-activation.ts
 
+**49-01 decisions:**
+- scaffold-collection.ts has two bugs: (1) missing trailing comma before inserted entry in collections.ts; (2) step3 inserts locale entry into type declaration line rather than object body in generate-locale-questions.ts — both are Rule 1 auto-fixable
+- Research-verified facts override CONTEXT.md: living wage May 1999 (not 1998, not first US city); City Hall Richardsonian Romanesque (not neoclassical)
+- Harvard/MIT strict limitation: universities cannot anchor any Cambridge civic question
+- City Manager vs Mayor distinction is CRITICAL accuracy requirement for Cambridge (Plan E charter)
+- cambridgeMaConfig variable name is correct (scaffold derives from slug: cambridge-ma → cambridgeMa + Config)
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -82,8 +89,8 @@ Key decisions relevant to v1.9:
 
 ## Session Continuity
 
-Last session: 2026-03-02
-Stopped at: Phase 48 complete — 48-01-PLAN.md executed (Fremont CA + Norwich England verified live, 2 reusable scripts created)
+Last session: 2026-03-02T15:09:39Z
+Stopped at: Completed 49-01-PLAN.md (scaffold Cambridge MA collection)
 Resume file: None
 
-Next action: `/gsd:discuss-phase 49` or `/gsd:plan-phase 49`
+Next action: `/gsd:execute-phase 49` (will run plan 49-02: generate+curate)
