@@ -158,10 +158,12 @@ Plans:
   1. A Cambridge, MA locale config exists with Cambridge-specific topics (city government, Harvard/MIT civic context, housing policy, Cambridge City Council, elections) and source URLs, and the collection is registered in the generator hierarchy
   2. The Cambridge collection contains ≥50 active questions that pass all quality rules with zero blocking violations
   3. The Cambridge collection card is visible in the collection picker with a banner image and a player can complete a full game
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 49-01: TBD
+- [ ] 49-01-PLAN.md — Scaffold collection, author Cambridge locale config, add Cambridge voice guidance to system-prompt.ts
+- [ ] 49-02-PLAN.md — Generate Cambridge questions, curate to ≥50 passing quality gate, human review checkpoint
+- [ ] 49-03-PLAN.md — Banner image, activate collection, verify end-to-end playability in production
 
 #### Phase 50: Massachusetts State Collection
 **Goal**: Massachusetts State is a fully playable collection with ≥50 questions covering state civic topics
@@ -217,7 +219,7 @@ Plans:
 | 40–46. Empowered Identity Phases | v1.8 | 16/16 | Complete | 2026-03-01 |
 | 47. Collection Infrastructure | v1.9 | 3/3 | Complete | 2026-03-02 |
 | 48. Activate Banked Collections | v1.9 | 1/1 | Complete | 2026-03-03 |
-| 49. Cambridge, MA Collection | v1.9 | 0/TBD | Not started | - |
+| 49. Cambridge, MA Collection | v1.9 | 0/3 | Not started | - |
 | 50. Massachusetts State Collection | v1.9 | 0/TBD | Not started | - |
 | 51. Plano, TX Collection | v1.9 | 0/TBD | Not started | - |
 | 52. Texas State Collection | v1.9 | 0/TBD | Not started | - |
