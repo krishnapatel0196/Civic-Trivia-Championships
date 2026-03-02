@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-01)
 ## Current Position
 
 Phase: 47 of 52 (Collection Infrastructure)
-Plan: 1 of 3 in current phase
-Status: In progress
-Last activity: 2026-03-02 — Completed 47-01-PLAN.md (tier column added to collections)
+Plan: 3 of 3 in current phase
+Status: In progress (plan 02 still pending)
+Last activity: 2026-03-02 — Completed 47-03-PLAN.md (state config auto-discovery in unified generator)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 in progress (Phase 47, plan 1/3 done)
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 in progress (Phase 47, plans 1 and 3 done, plan 2 pending)
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -42,6 +42,12 @@ Key decisions relevant to v1.9:
 - DEFAULT 'city' — most common tier, new collections default correctly
 - State config files renamed to match slug convention (indiana-state, california-state)
 
+**47-03 decisions:**
+- State config auto-discovery via dynamic import fallback — no registry to maintain, drop file in state-configs/ and it works
+- LoadedConfig interface replaces `as any` side-channel for stateFeatures
+- Both generateBatch AND regenerateFn use buildStateSystemPrompt for state locales (retry path must match generation path)
+- generate-state-questions.ts deprecated with redirect notice, kept functional during transition
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -62,8 +68,8 @@ Key decisions relevant to v1.9:
 
 ## Session Continuity
 
-Last session: 2026-03-02T01:11:00Z
-Stopped at: Completed 47-01-PLAN.md — tier column in collections, API and frontend type updated
+Last session: 2026-03-02T01:10:19Z
+Stopped at: Completed 47-03-PLAN.md — state config auto-discovery in unified generator
 Resume file: None
 
-Next action: `/gsd:execute-phase 47` (continue with plan 47-02)
+Next action: `/gsd:execute-phase 47` (execute plan 47-02: Collection Hierarchy DB-driven runtime)
