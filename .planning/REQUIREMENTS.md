@@ -82,10 +82,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEX-03 | Phase 52 | Pending |
 
 **Coverage:**
-- v1.9 requirements: 14 total
-- Mapped to phases: 14
+- v1.9 requirements: 16 total
+- Mapped to phases: 16
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-01*
-*Last updated: 2026-03-01 after initial definition*
+*Last updated: 2026-03-01 after roadmap creation*

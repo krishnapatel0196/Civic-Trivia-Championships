@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v1.9 Geographic Expansion — defining requirements
+**Current focus:** v1.9 Geographic Expansion — Phase 47: Collection Infrastructure
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements for v1.9
-Last activity: 2026-03-01 — Milestone v1.9 Geographic Expansion started
+Phase: 47 of 52 (Collection Infrastructure)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-03-01 — Roadmap created for v1.9 Geographic Expansion
 
-Progress: [██████████] v1.0–v1.8 (Phases 1–46) — ALL SHIPPED
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 not started (Phases 47–52)
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -31,22 +31,18 @@ Progress: [██████████] v1.0–v1.8 (Phases 1–46) — ALL S
 
 Full decision log in PROJECT.md Key Decisions table.
 
-Key v1.8 decisions:
-- Auth: `jwtVerify` (jose) against `SUPABASE_JWT_SECRET` — per accounts integration guide
-- Admin: `admin_users` table UUID lookup (typed in database.types.ts)
-- Gems: `award_gems` RPC, `p_gem_type: 'yellow'`, `p_source: 'civic_trivia'`
-- Stats: `trivia.player_stats` is trivia-specific; not shared platform XP
-- Anonymous play: preserved — only Connected tier earns gems and persistent stats
-- `tierResolved` flag in authStore fixes AdminGuard race condition
-- `requireConnected` removed from Express — tier enforcement is frontend-only
-- `setAuth` sets `tierResolved: true` — fixes admin access after expired session
+Key decisions relevant to v1.9:
+- Collection hierarchy: DB-driven at runtime (INFRA-01 eliminates hardcoded map)
+- State configs gap: state-configs/ registered in generate-locale-questions.ts workflow (INFRA-02)
+- Generation strategy: overshoot-and-curate, quality-gate, semantic dedup — established pipeline
+- Quality over quantity: 50 compelling questions is the floor; don't force past source exhaustion
 
 ### Pending Todos
 
-- [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards — code complete, runtime path blocked without this)
+- [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
-- [ ] Assess Norwich by-election/MP terminology gap — editorial judgment for content review
-- [ ] "Manage your Empowered Account" link on profile — ACCOUNTS_API_URL points to API; needs VITE_EMPOWERED_ACCOUNTS_WEB_URL env var or hardcoded platform URL
+- [ ] Assess Norwich by-election/MP terminology gap — editorial judgment
+- [ ] "Manage your Empowered Account" link on profile — needs VITE_EMPOWERED_ACCOUNTS_WEB_URL
 
 ### Blockers/Concerns
 
@@ -62,7 +58,7 @@ Key v1.8 decisions:
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed quick task 023 — scaffold-collection and activate-collection CLIs
+Stopped at: Roadmap created for v1.9 Geographic Expansion (Phases 47–52)
 Resume file: None
 
-Next action: `/gsd:plan-phase 47` after requirements and roadmap complete
+Next action: `/gsd:plan-phase 47`

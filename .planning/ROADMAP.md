@@ -11,6 +11,7 @@
 - ✅ **v1.6 Content Quality & Scale** — Phases 31–34 (shipped 2026-02-24)
 - ✅ **v1.7 Live Civic Intelligence** — Phases 35–39 (shipped 2026-02-27)
 - ✅ **v1.8 Empowered Identity** — Phases 40–46 (shipped 2026-03-01)
+- 🚧 **v1.9 Geographic Expansion** — Phases 47–52 (in progress)
 
 ## Phases
 
@@ -115,6 +116,88 @@ Full archive: [milestones/v1.8-ROADMAP.md](milestones/v1.8-ROADMAP.md)
 
 </details>
 
+### 🚧 v1.9 Geographic Expansion (In Progress)
+
+**Milestone Goal:** Expand the playable collection set from 7 to 11 by activating two banked collections (Fremont CA, Norwich UK), adding two Massachusetts collections (Cambridge city, Massachusetts state), and two Texas collections (Plano city, Texas state). Eliminate hardcoded infrastructure debt that blocks future scaling.
+
+#### Phase 47: Collection Infrastructure
+**Goal**: The generation and hierarchy system is database-driven and works uniformly for all collection types
+**Depends on**: Phase 46
+**Requirements**: INFRA-01, INFRA-02
+**Success Criteria** (what must be TRUE):
+  1. The collection hierarchy displayed in the UI reads tier data from the database at runtime — no hardcoded display-name map exists in embeddings/types.ts
+  2. Running `generate-locale-questions.ts --locale <state-slug>` works for state collections the same way it works for city collections
+  3. Adding a new state config file registers it in the generator workflow without code changes to the workflow itself
+**Plans**: TBD
+
+Plans:
+- [ ] 47-01: TBD
+
+#### Phase 48: Activate Banked Collections
+**Goal**: Fremont CA and Norwich UK are live and playable in production for all users
+**Depends on**: Phase 47
+**Requirements**: ACT-01, ACT-02
+**Success Criteria** (what must be TRUE):
+  1. The Fremont, CA collection card appears in the collection picker and a player can start and complete a game using Fremont questions
+  2. The Norwich, England collection card appears in the collection picker and a player can start and complete a game using Norwich questions
+  3. Both collections return ≥50 active questions via the collections API (is_active = true confirmed)
+**Plans**: TBD
+
+Plans:
+- [ ] 48-01: TBD
+
+#### Phase 49: Cambridge, MA Collection
+**Goal**: Cambridge, MA is a fully playable collection with ≥50 questions covering local civic topics
+**Depends on**: Phase 48
+**Requirements**: CAMB-01, CAMB-02, CAMB-03
+**Success Criteria** (what must be TRUE):
+  1. A Cambridge, MA locale config exists with Cambridge-specific topics (city government, Harvard/MIT civic context, housing policy, Cambridge City Council, elections) and source URLs, and the collection is registered in the generator hierarchy
+  2. The Cambridge collection contains ≥50 active questions that pass all quality rules with zero blocking violations
+  3. The Cambridge collection card is visible in the collection picker with a banner image and a player can complete a full game
+**Plans**: TBD
+
+Plans:
+- [ ] 49-01: TBD
+
+#### Phase 50: Massachusetts State Collection
+**Goal**: Massachusetts State is a fully playable collection with ≥50 questions covering state civic topics
+**Depends on**: Phase 49
+**Requirements**: MASS-01, MASS-02, MASS-03
+**Success Criteria** (what must be TRUE):
+  1. A Massachusetts State locale config exists with state-level topics (legislature, governor, constitutional history, public policy, civic landmarks) and the collection is registered in the generator hierarchy
+  2. The Massachusetts State collection contains ≥50 active questions that pass all quality rules with zero blocking violations
+  3. The Massachusetts State collection is active and playable in production — collection card visible and full game completable
+**Plans**: TBD
+
+Plans:
+- [ ] 50-01: TBD
+
+#### Phase 51: Plano, TX Collection
+**Goal**: Plano, TX is a fully playable collection with ≥50 questions covering local civic topics
+**Depends on**: Phase 50
+**Requirements**: PLAN-01, PLAN-02, PLAN-03
+**Success Criteria** (what must be TRUE):
+  1. A Plano, TX locale config exists with Plano-specific topics (city government, Collin County, city services, local history, elections) and source URLs, and the collection is registered in the generator hierarchy
+  2. The Plano collection contains ≥50 active questions that pass all quality rules with zero blocking violations
+  3. The Plano collection card is visible in the collection picker with a banner image and a player can complete a full game
+**Plans**: TBD
+
+Plans:
+- [ ] 51-01: TBD
+
+#### Phase 52: Texas State Collection
+**Goal**: Texas State is a fully playable collection with ≥50 questions covering state civic topics
+**Depends on**: Phase 51
+**Requirements**: TEX-01, TEX-02, TEX-03
+**Success Criteria** (what must be TRUE):
+  1. A Texas State locale config exists with state-level topics (legislature, governor, constitutional history, public policy, civic landmarks) and the collection is registered in the generator hierarchy
+  2. The Texas State collection contains ≥50 active questions that pass all quality rules with zero blocking violations
+  3. The Texas State collection is active and playable in production — collection card visible and full game completable
+**Plans**: TBD
+
+Plans:
+- [ ] 52-01: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -128,3 +211,9 @@ Full archive: [milestones/v1.8-ROADMAP.md](milestones/v1.8-ROADMAP.md)
 | 31–34. Scale Phases | v1.6 | 13/13 | Complete | 2026-02-24 |
 | 35–39. Election Phases | v1.7 | 10/10 | Complete | 2026-02-27 |
 | 40–46. Empowered Identity Phases | v1.8 | 16/16 | Complete | 2026-03-01 |
+| 47. Collection Infrastructure | v1.9 | 0/TBD | Not started | - |
+| 48. Activate Banked Collections | v1.9 | 0/TBD | Not started | - |
+| 49. Cambridge, MA Collection | v1.9 | 0/TBD | Not started | - |
+| 50. Massachusetts State Collection | v1.9 | 0/TBD | Not started | - |
+| 51. Plano, TX Collection | v1.9 | 0/TBD | Not started | - |
+| 52. Texas State Collection | v1.9 | 0/TBD | Not started | - |
