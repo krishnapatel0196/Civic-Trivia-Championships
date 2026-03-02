@@ -1,11 +1,13 @@
 /**
  * scaffold-collection.ts
  *
- * CLI that automates 4 manual steps when adding a new collection:
- *   1. Insert seed entry into backend/src/db/seed/collections.ts
+ * CLI that automates 3 manual steps when adding a new collection:
+ *   1. Insert seed entry into backend/src/db/seed/collections.ts (includes tier field)
  *   2. Create locale config file in backend/src/scripts/content-generation/locale-configs/{slug}.ts
  *   3. Register locale in generate-locale-questions.ts (supportedLocales + configKeys)
- *   4. Add to COLLECTION_HIERARCHY in backend/src/services/embeddings/types.ts
+ *
+ * Tier data flows through the seed entry into the database — no TypeScript source
+ * files need editing for tier mapping. The dedup system reads tier from the DB at runtime.
  *
  * Usage:
  *   cd backend
@@ -275,6 +277,7 @@ function step1InsertSeedEntry(args: ParsedArgs, sortOrder: number, localeName: s
     localeName: '${localeName}',
     iconIdentifier: '${iconIdentifier}',
     themeColor: '${args.theme}',
+    tier: '${args.tier}',
     isActive: false,
     sortOrder: ${sortOrder}
   },\n`;
@@ -436,49 +439,6 @@ function step3RegisterLocale(args: ParsedArgs, configVarName: string): void {
   console.log(`  - backend/src/scripts/content-generation/generate-locale-questions.ts (locale registered)`);
 }
 
-// ─── Step 4: Add to COLLECTION_HIERARCHY in types.ts ─────────────────────────
-
-function step4AddToHierarchy(args: ParsedArgs): void {
-  const filePath = resolve(process.cwd(), 'src/services/embeddings/types.ts');
-  let content = readFileSync(filePath, 'utf-8');
-
-  // Find the COLLECTION_HIERARCHY object's closing `};`
-  const hierarchyStart = content.indexOf('COLLECTION_HIERARCHY:');
-  if (hierarchyStart === -1) {
-    console.error('Error: Could not find `COLLECTION_HIERARCHY:` in types.ts');
-    process.exit(1);
-  }
-
-  // Find the closing `};` of the COLLECTION_HIERARCHY object
-  let braceDepth = 0;
-  let inObject = false;
-  let objectClosePos = -1;
-
-  for (let i = hierarchyStart; i < content.length; i++) {
-    if (content[i] === '{') {
-      braceDepth++;
-      inObject = true;
-    } else if (content[i] === '}' && inObject) {
-      braceDepth--;
-      if (braceDepth === 0) {
-        objectClosePos = i;
-        break;
-      }
-    }
-  }
-
-  if (objectClosePos === -1) {
-    console.error('Error: Could not locate end of COLLECTION_HIERARCHY object');
-    process.exit(1);
-  }
-
-  const hierarchyEntry = `  '${args.name}': '${args.tier}',\n`;
-  content = content.slice(0, objectClosePos) + hierarchyEntry + content.slice(objectClosePos);
-
-  writeFileSync(filePath, content, 'utf-8');
-  console.log(`  - backend/src/services/embeddings/types.ts (hierarchy entry added)`);
-}
-
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 function main(): void {
@@ -526,21 +486,19 @@ function main(): void {
   step1InsertSeedEntry(args, sortOrder, localeName, iconIdentifier, description);
   const localeConfigPath = step2CreateLocaleConfig(args, configVarName);
   step3RegisterLocale(args, configVarName);
-  step4AddToHierarchy(args);
 
   console.log(`
 Collection scaffolded successfully!
 
 Files modified:
-  - backend/src/db/seed/collections.ts (new seed entry)
+  - backend/src/db/seed/collections.ts (new seed entry with tier: '${args.tier}')
   - backend/src/scripts/content-generation/locale-configs/${slug}.ts (created)
   - backend/src/scripts/content-generation/generate-locale-questions.ts (locale registered)
-  - backend/src/services/embeddings/types.ts (hierarchy entry added)
 
 Next steps:
   1. Edit locale config: ${localeConfigPath.replace(/\\/g, '/')}
      - Customize topic categories and source URLs
-  2. Seed the collection to DB:
+  2. Seed the collection to DB (tier flows through the seed entry automatically):
      cd backend && npx tsx src/db/seed/seed.ts
   3. Generate questions:
      cd backend && npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale ${slug} --fetch-sources

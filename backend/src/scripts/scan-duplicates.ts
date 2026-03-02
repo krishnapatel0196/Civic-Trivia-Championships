@@ -26,6 +26,9 @@ import {
   DuplicateCluster,
   SimilarityTier,
   AdvancedFlag,
+  CollectionTier,
+  TIER_RANK,
+  loadCollectionTierMap,
 } from '../services/embeddings/types.js';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { resolve, dirname } from 'path';
@@ -135,7 +138,10 @@ function generateJsonReport(clusters: DuplicateCluster[], advancedFlags: Advance
  * Determine which question to keep in a cluster (used by splitCrossCollectionClusters)
  * Duplicates the logic from ClusterBuilder.recommendKeep
  */
-function recommendKeepForCluster(clusterQuestions: QuestionForDedup[]): {
+function recommendKeepForCluster(
+  clusterQuestions: QuestionForDedup[],
+  tierMap: Map<string, CollectionTier>
+): {
   keep: string;
   archive: string[];
   reason: string;
@@ -152,30 +158,14 @@ function recommendKeepForCluster(clusterQuestions: QuestionForDedup[]): {
     };
   }
 
-  // Import collection hierarchy from types
-  const COLLECTION_HIERARCHY: Record<string, 'federal' | 'state' | 'local'> = {
-    'Federal': 'federal',
-    'California': 'state',
-    'Indiana': 'state',
-    'Bloomington, IN': 'local',
-    'Fremont, CA': 'local',
-    'Los Angeles, CA': 'local',
-  };
-
-  const TIER_RANK = {
-    federal: 3,
-    state: 2,
-    local: 1,
-  };
-
-  // Determine the collection tier for each question
+  // Determine the collection tier for each question using DB-sourced tier map
   const questionsWithTier = clusterQuestions.map((q) => {
     // Find the highest tier among this question's collections
-    let highestTier: 'federal' | 'state' | 'local' | null = null;
+    let highestTier: CollectionTier | null = null;
     let highestRank = 0;
 
     for (const collection of q.collections) {
-      const tier = COLLECTION_HIERARCHY[collection];
+      const tier = tierMap.get(collection);
       if (tier) {
         const rank = TIER_RANK[tier];
         if (rank > highestRank) {
@@ -249,7 +239,8 @@ function recommendKeepForCluster(clusterQuestions: QuestionForDedup[]): {
  */
 function splitCrossCollectionClusters(
   clusters: DuplicateCluster[],
-  questionMap: Map<string, QuestionForDedupFull>
+  questionMap: Map<string, QuestionForDedupFull>,
+  tierMap: Map<string, CollectionTier>
 ): DuplicateCluster[] {
   const resultClusters: DuplicateCluster[] = [];
 
@@ -318,7 +309,7 @@ function splitCrossCollectionClusters(
       }
 
       // Generate new recommendation for this sub-cluster
-      const recommendation = recommendKeepForCluster(groupQuestions);
+      const recommendation = recommendKeepForCluster(groupQuestions, tierMap);
 
       // Generate sub-cluster ID
       const subClusterId = subClusterIndex === 0
@@ -589,15 +580,16 @@ async function main() {
     console.log(`Filtered out ${filteredCount} cross-collection pairs with different answers`);
     console.log(`Remaining pairs: ${filteredPairs.length}`);
 
-    // 8. Build clusters
-    const clusterBuilder = new ClusterBuilder();
+    // 8. Build clusters (load tier map from DB for hierarchy-aware recommendations)
+    const tierMap = await loadCollectionTierMap();
+    const clusterBuilder = new ClusterBuilder(tierMap);
     let clusters = clusterBuilder.buildClusters(filteredPairs, questionMap);
     console.log(`Grouped into ${clusters.length} duplicate clusters`);
 
     // 8b. Split cross-collection clusters with different answers
     console.log('Splitting cross-collection clusters with different answers...');
     const clustersBefore = clusters.length;
-    clusters = splitCrossCollectionClusters(clusters, questionMap);
+    clusters = splitCrossCollectionClusters(clusters, questionMap, tierMap);
     const splitCount = clusters.length - clustersBefore;
     if (splitCount > 0) {
       console.log(`Split ${splitCount} clusters (now ${clusters.length} total clusters)`);

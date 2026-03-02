@@ -9,6 +9,7 @@ export const collectionsData: NewCollection[] = [
     localeName: 'United States',
     iconIdentifier: 'flag-us',
     themeColor: '#1E3A8A', // deep blue
+    tier: 'federal',
     isActive: true,
     sortOrder: 1
   },
@@ -20,6 +21,7 @@ export const collectionsData: NewCollection[] = [
     localeName: 'Bloomington, Indiana',
     iconIdentifier: 'flag-in',
     themeColor: '#991B1B', // deep red - Indiana
+    tier: 'city',
     isActive: true,
     sortOrder: 2
   },
@@ -31,6 +33,7 @@ export const collectionsData: NewCollection[] = [
     localeName: 'Fremont, California',
     iconIdentifier: 'flag-ca',
     themeColor: '#047857', // emerald green
+    tier: 'city',
     isActive: false, // Activate in Phase 25 after questions reviewed
     sortOrder: 3
   },
@@ -42,6 +45,7 @@ export const collectionsData: NewCollection[] = [
     localeName: 'Los Angeles, California',
     iconIdentifier: 'flag-ca',
     themeColor: '#0369A1', // ocean blue - California
+    tier: 'city',
     isActive: true,
     sortOrder: 4 // Updated from 3 to accommodate Fremont
   },
@@ -53,6 +57,7 @@ export const collectionsData: NewCollection[] = [
     localeName: 'Indiana State',
     iconIdentifier: 'state',
     themeColor: '#1E3A8A', // deep blue - state
+    tier: 'state',
     isActive: true,
     sortOrder: 5
   },
@@ -64,6 +69,7 @@ export const collectionsData: NewCollection[] = [
     localeName: 'California State',
     iconIdentifier: 'state',
     themeColor: '#92400E', // golden brown - California
+    tier: 'state',
     isActive: true,
     sortOrder: 6
   },
@@ -75,6 +81,7 @@ export const collectionsData: NewCollection[] = [
     localeName: 'Norwich, England',
     iconIdentifier: 'flag-gb',
     themeColor: '#1B4332', // deep forest green (visually distinct from all existing colors)
+    tier: 'city',
     isActive: false,      // activated after questions are seeded
     sortOrder: 7
   }
