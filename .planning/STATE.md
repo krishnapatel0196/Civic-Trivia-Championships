@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v1.9 Geographic Expansion — Phase 49: Cambridge, MA Collection
+**Current focus:** v1.9 Geographic Expansion — Phase 50: Massachusetts State Collection
 
 ## Current Position
 
-Phase: 49 of 52 (Cambridge, MA Collection)
+Phase: 50 of 52 (Massachusetts State Collection)
 Plan: 1 of 3 in current phase
 Status: In progress
-Last activity: 2026-03-02 — Completed 49-01 (scaffold Cambridge MA collection)
+Last activity: 2026-03-02 — Completed 50-01 (scaffold Massachusetts State collection)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 IN PROGRESS (1/3)
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 IN PROGRESS (1/3)
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -69,6 +69,13 @@ Key decisions relevant to v1.9:
 - City Manager vs Mayor distinction is CRITICAL accuracy requirement for Cambridge (Plan E charter)
 - cambridgeMaConfig variable name is correct (scaffold derives from slug: cambridge-ma → cambridgeMa + Config)
 
+**50-01 decisions:**
+- massachusettsStateConfig.name is 'Massachusetts' (not 'Massachusetts State') — matches display pattern for state collections
+- scaffold step3 bug confirmed again: inserts into type annotation line not object body — same fix applies (revert generate-locale-questions.ts to HEAD; state auto-discovery handles registration)
+- 8 topic categories: general-court and governors-council each get own topic slug (both uniquely distinctive MA civic features)
+- Governor's Council allocated 8 dedicated questions — one of MA's most surprising civic facts
+- state-courts minimized to 5 questions (General Court and 1780 Constitution are more uniquely Massachusetts)
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -89,8 +96,8 @@ Key decisions relevant to v1.9:
 
 ## Session Continuity
 
-Last session: 2026-03-02T15:09:39Z
-Stopped at: Completed 49-01-PLAN.md (scaffold Cambridge MA collection)
+Last session: 2026-03-02T23:18:01Z
+Stopped at: Completed 50-01-PLAN.md (scaffold Massachusetts State collection)
 Resume file: None
 
-Next action: `/gsd:execute-phase 49` (will run plan 49-02: generate+curate)
+Next action: `/gsd:execute-phase 50` (will run plan 50-02: generate+curate)
