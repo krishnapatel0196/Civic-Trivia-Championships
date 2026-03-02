@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-01)
 ## Current Position
 
 Phase: 47 of 52 (Collection Infrastructure)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-01 — Roadmap created for v1.9 Geographic Expansion
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-03-02 — Completed 47-01-PLAN.md (tier column added to collections)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 not started (Phases 47–52)
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 in progress (Phase 47, plan 1/3 done)
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -37,6 +37,11 @@ Key decisions relevant to v1.9:
 - Generation strategy: overshoot-and-curate, quality-gate, semantic dedup — established pipeline
 - Quality over quantity: 50 compelling questions is the floor; don't force past source exhaustion
 
+**47-01 decisions:**
+- Tier stored as text column (not enum) — easier to extend without DDL changes
+- DEFAULT 'city' — most common tier, new collections default correctly
+- State config files renamed to match slug convention (indiana-state, california-state)
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -57,8 +62,8 @@ Key decisions relevant to v1.9:
 
 ## Session Continuity
 
-Last session: 2026-03-01
-Stopped at: Roadmap created for v1.9 Geographic Expansion (Phases 47–52)
+Last session: 2026-03-02T01:11:00Z
+Stopped at: Completed 47-01-PLAN.md — tier column in collections, API and frontend type updated
 Resume file: None
 
-Next action: `/gsd:plan-phase 47`
+Next action: `/gsd:execute-phase 47` (continue with plan 47-02)
