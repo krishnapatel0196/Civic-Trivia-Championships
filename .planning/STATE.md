@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v1.9 Geographic Expansion — Phase 47: Collection Infrastructure
+**Current focus:** v1.9 Geographic Expansion — Phase 47: Collection Infrastructure (COMPLETE)
 
 ## Current Position
 
 Phase: 47 of 52 (Collection Infrastructure)
 Plan: 3 of 3 in current phase
-Status: In progress (plan 02 still pending)
-Last activity: 2026-03-02 — Completed 47-03-PLAN.md (state config auto-discovery in unified generator)
+Status: Phase complete — all 3 plans done
+Last activity: 2026-03-02 — Completed 47-02-PLAN.md (DB-driven collection hierarchy, INFRA-01)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 in progress (Phase 47, plans 1 and 3 done, plan 2 pending)
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE (all 3 plans: 47-01, 47-02, 47-03)
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -32,8 +32,8 @@ Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) 
 Full decision log in PROJECT.md Key Decisions table.
 
 Key decisions relevant to v1.9:
-- Collection hierarchy: DB-driven at runtime (INFRA-01 eliminates hardcoded map)
-- State configs gap: state-configs/ registered in generate-locale-questions.ts workflow (INFRA-02)
+- Collection hierarchy: DB-driven at runtime (INFRA-01 eliminates hardcoded map) — COMPLETE
+- State configs gap: state-configs/ registered in generate-locale-questions.ts workflow (INFRA-02) — COMPLETE
 - Generation strategy: overshoot-and-curate, quality-gate, semantic dedup — established pipeline
 - Quality over quantity: 50 compelling questions is the floor; don't force past source exhaustion
 
@@ -41,6 +41,13 @@ Key decisions relevant to v1.9:
 - Tier stored as text column (not enum) — easier to extend without DDL changes
 - DEFAULT 'city' — most common tier, new collections default correctly
 - State config files renamed to match slug convention (indiana-state, california-state)
+
+**47-02 decisions:**
+- Dynamic imports in loadCollectionTierMap() to avoid circular dependency (types.ts imported early)
+- Constructor injection for tierMap: ClusterBuilder(tierMap) and CollectionHierarchy(embeddingService, tierMap)
+- CollectionHierarchy static methods converted to instance methods (consistent with injected state)
+- COLLECTION_NAMES keys corrected from 'indiana'/'california' to 'indiana-state'/'california-state' (slug alignment)
+- All 7 seed entries get explicit tier values for correctness on dev re-seed
 
 **47-03 decisions:**
 - State config auto-discovery via dynamic import fallback — no registry to maintain, drop file in state-configs/ and it works
@@ -68,8 +75,8 @@ Key decisions relevant to v1.9:
 
 ## Session Continuity
 
-Last session: 2026-03-02T01:10:19Z
-Stopped at: Completed 47-03-PLAN.md — state config auto-discovery in unified generator
+Last session: 2026-03-02T01:23:59Z
+Stopped at: Completed 47-02-PLAN.md — COLLECTION_HIERARCHY eliminated, DB-driven tier lookups
 Resume file: None
 
-Next action: `/gsd:execute-phase 47` (execute plan 47-02: Collection Hierarchy DB-driven runtime)
+Next action: Phase 47 complete. Ready to plan/execute Phase 48 (next v1.9 phase per roadmap).
