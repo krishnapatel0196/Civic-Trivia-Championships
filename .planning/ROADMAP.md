@@ -136,10 +136,11 @@ Plans:
 - [x] 47-02-PLAN.md — Replace hardcoded COLLECTION_HIERARCHY with DB lookups, update scaffold CLI
 - [x] 47-03-PLAN.md — Unify state config discovery in generate-locale-questions.ts
 
-#### Phase 48: Activate Banked Collections
+#### Phase 48: Activate Banked Collections ✅
 **Goal**: Fremont CA and Norwich UK are live and playable in production for all users
 **Depends on**: Phase 47
 **Requirements**: ACT-01, ACT-02
+**Completed**: 2026-03-03
 **Success Criteria** (what must be TRUE):
   1. The Fremont, CA collection card appears in the collection picker and a player can start and complete a game using Fremont questions
   2. The Norwich, England collection card appears in the collection picker and a player can start and complete a game using Norwich questions
@@ -147,7 +148,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 48-01-PLAN.md — Audit readiness, activate Fremont CA and Norwich UK, verify end-to-end playability
+- [x] 48-01-PLAN.md — Audit readiness, activate Fremont CA and Norwich UK, verify end-to-end playability
 
 #### Phase 49: Cambridge, MA Collection
 **Goal**: Cambridge, MA is a fully playable collection with ≥50 questions covering local civic topics
@@ -215,7 +216,7 @@ Plans:
 | 35–39. Election Phases | v1.7 | 10/10 | Complete | 2026-02-27 |
 | 40–46. Empowered Identity Phases | v1.8 | 16/16 | Complete | 2026-03-01 |
 | 47. Collection Infrastructure | v1.9 | 3/3 | Complete | 2026-03-02 |
-| 48. Activate Banked Collections | v1.9 | 0/1 | Not started | - |
+| 48. Activate Banked Collections | v1.9 | 1/1 | Complete | 2026-03-03 |
 | 49. Cambridge, MA Collection | v1.9 | 0/TBD | Not started | - |
 | 50. Massachusetts State Collection | v1.9 | 0/TBD | Not started | - |
 | 51. Plano, TX Collection | v1.9 | 0/TBD | Not started | - |

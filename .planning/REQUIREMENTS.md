@@ -14,8 +14,8 @@ Requirements for the Geographic Expansion milestone. Phases start at 47.
 
 ### Activate Banked Collections
 
-- [ ] **ACT-01**: Fremont, CA collection is active and playable in production (is_active = true, ≥50 active questions visible via collections API)
-- [ ] **ACT-02**: Norwich, England collection is active and playable in production (is_active = true, ≥50 active questions visible via collections API)
+- [x] **ACT-01**: Fremont, CA collection is active and playable in production (is_active = true, ≥50 active questions visible via collections API)
+- [x] **ACT-02**: Norwich, England collection is active and playable in production (is_active = true, ≥50 active questions visible via collections API)
 
 ### Cambridge, MA Collection
 
@@ -66,8 +66,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | INFRA-01 | Phase 47 | Complete |
 | INFRA-02 | Phase 47 | Complete |
-| ACT-01 | Phase 48 | Pending |
-| ACT-02 | Phase 48 | Pending |
+| ACT-01 | Phase 48 | Complete |
+| ACT-02 | Phase 48 | Complete |
 | CAMB-01 | Phase 49 | Pending |
 | CAMB-02 | Phase 49 | Pending |
 | CAMB-03 | Phase 49 | Pending |

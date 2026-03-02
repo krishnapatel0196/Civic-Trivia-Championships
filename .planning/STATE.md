@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v1.9 Geographic Expansion — Phase 48: Activate Banked Collections COMPLETE
+**Current focus:** v1.9 Geographic Expansion — Phase 49: Cambridge, MA Collection
 
 ## Current Position
 
