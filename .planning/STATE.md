@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Planning next milestone (v1.9)
+**Current focus:** v1.9 Geographic Expansion — defining requirements
 
 ## Current Position
 
-Phase: Not started (next milestone not yet planned)
-Plan: Not started
-Status: Ready to plan next milestone
-Last activity: 2026-03-01 — Completed quick task 023: Scaffold and activate collection CLIs
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements for v1.9
+Last activity: 2026-03-01 — Milestone v1.9 Geographic Expansion started
 
 Progress: [██████████] v1.0–v1.8 (Phases 1–46) — ALL SHIPPED
 
@@ -65,4 +65,4 @@ Last session: 2026-03-01
 Stopped at: Completed quick task 023 — scaffold-collection and activate-collection CLIs
 Resume file: None
 
-Next action: `/gsd:new-milestone` to plan v1.9
+Next action: `/gsd:plan-phase 47` after requirements and roadmap complete

@@ -74,9 +74,21 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ### Active
 
-*(v1.9 — TBD)*
+*(v1.9 Geographic Expansion — in progress)*
 
-- To be defined in next milestone planning session
+**Infrastructure:**
+- DB-driven COLLECTION_HIERARCHY (eliminate hardcoded display-name map in embeddings/types.ts)
+- State collection configs registered in standard generator workflow (fix state-configs/ gap)
+
+**Activate banked collections:**
+- Fremont, CA collection active and playable in production
+- Norwich, England collection active and playable in production
+
+**New collections:**
+- Cambridge, MA — scaffold, generate (50+ questions), curate, activate
+- Massachusetts State — scaffold, generate (50+ questions), curate, activate
+- Plano, TX — scaffold, generate (50+ questions), curate, activate
+- Texas State — scaffold, generate (50+ questions), curate, activate
 
 ### Out of Scope
 
@@ -232,4 +244,4 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Migration history repair via `supabase migration repair` | 24 pre-existing remote entries cleared before pushing new trivia schema; safe and correct approach | Good — migration hygiene |
 
 ---
-*Last updated: 2026-03-01 after v1.8 milestone*
+*Last updated: 2026-03-01 after v1.9 milestone start*
