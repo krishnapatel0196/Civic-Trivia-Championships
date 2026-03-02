@@ -14,6 +14,7 @@ export const collections = triviaSchema.table('collections', {
   localeName: text('locale_name').notNull(),
   iconIdentifier: text('icon_identifier').notNull(),
   themeColor: text('theme_color').notNull(), // 7-char hex like '#1E3A8A'
+  tier: text('tier').notNull().default('city'), // 'federal' | 'state' | 'city'
   isActive: boolean('is_active').notNull().default(false),
   sortOrder: integer('sort_order').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
