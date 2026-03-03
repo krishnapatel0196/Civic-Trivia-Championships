@@ -101,7 +101,7 @@ Distribute difficulty across the full batch:
 - Questions requiring knowledge of other questions
 - Anything that could embarrass or politically compromise the civic education mission
 
-${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}`;
+${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}${localeSlug === 'plano-tx' ? buildPlanoVoiceGuidance() : ''}`;
 }
 
 /**
@@ -235,6 +235,103 @@ Apply the dinner party test: "Is this a tidbit a civic-minded person would be pr
 - PASS: "What form of government does Cambridge use, where voters rank all candidates for 9 council seats?"
 - PASS: "In what year did Cambridge adopt its Plan E charter, introducing the city manager form of government?"
 - FAIL: "What is the square footage of Cambridge City Hall?"`;
+}
+
+/**
+ * Builds Plano, TX voice and accuracy guidance for content generation.
+ * Ensures Council-Manager government structure, corporate civic framing,
+ * and Balloon Capital of Texas history are represented correctly.
+ */
+function buildPlanoVoiceGuidance(): string {
+  return `
+
+## Plano, TX — Specific Content Guidelines
+
+### Government Structure (CRITICAL accuracy requirement)
+
+Plano uses the **Council-Manager** form of government:
+
+- **City Manager** (currently Mark Israelson, appointed May 2019) = CHIEF EXECUTIVE. Appointed by City Council. Manages all city departments and day-to-day operations. NOT elected.
+- **Mayor** (currently John B. Muns, assumed office May 10, 2021; second term through 2029) = DIRECTLY ELECTED. Presides over City Council. Has one vote on Council like all other members.
+- **City Council** = Mayor + 7 council members, ALL elected at-large (no districts). Four-year staggered terms. Two-term limit. Elections in odd-numbered years. Eight council places total.
+
+### Balloon Capital of Texas (key durable topic)
+
+- Governor Bill Clements proclaimed Plano the "Balloon Capital of Texas" in **1980**
+- First Plano Balloon Rally: 1980 (50 pilots, 5 balloon launches, no official spectator area)
+- In 1981, renamed Plano Hot Air Balloon Festival, relocated to Bob Woodruff Park
+- Now held annually each September at Oak Point Park and Nature Preserve
+- This is a DURABLE TOPIC — not time-sensitive, highly shareable civic trivia
+
+### Founding and Name Origin (durable history)
+
+- Settled by Peters Colony settlers, 1840s
+- Post office established 1852; name "Plano" (Spanish for "flat") suggested by Dr. Henry Dye
+- Houston and Texas Central Railway connected Plano to Dallas in **1872** — key growth catalyst
+- Officially incorporated **1873** — elected mayor and board of aldermen
+- 1881 fire destroyed 52 buildings, temporarily reduced to tent city — recovery by 1888
+
+### Growth Story Calibration
+
+- 1970 population: 17,872
+- 1980 population: 72,000+ (more than quadrupled in one decade)
+- 1990 population: 128,713 (72 square miles)
+- Growth driven by Dallas expansion, Sun Belt migration, infrastructure investment
+- City planners "kept up" with sewers, schools, and streets due to flat geography and grid planning
+
+### Corporate Civic Angle (STRICT framing rules)
+
+Mention companies ONLY in civic context:
+
+- Frito-Lay: moved HQ to Plano **1985** → civic significance = thousands of jobs, economic development anchor
+- JCPenney: moved HQ from New York City to Plano **1992** → civic significance = one of first major corporate relocations, city becoming business hub
+- Toyota: announced North American HQ move from Torrance, CA to Plano; broke ground **January 2015**, operational by 2017 → civic significance = $350 million investment, 100-acre campus, accelerated Legacy West development
+- Legacy West: 240-acre mixed-use development triggered by JCPenney's 2011 land development RFP → civic significance = city-planned urban development, brought JP Morgan Chase, Liberty Mutual, FedEx Office
+
+FORBIDDEN: Product names, stock prices, production targets, Elon Musk (not a Plano story), corporate financial performance
+
+### Collin County vs. City of Plano (avoid attribution errors)
+
+Collin County provides: elections/voter registration, courts, property tax billing, vehicle registration, county sheriff, county jail, District Attorney, unincorporated road maintenance.
+
+City of Plano provides: city planning and zoning, fire-rescue, parks and recreation, utilities, library system, animal services, environmental health, building permits.
+
+Do NOT attribute county responsibilities to the City of Plano or vice versa.
+
+### Community Identity (inclusive framing)
+
+Plano's Asian American and South Asian community is the largest Asian ethnic group in the city (31,363 Asian Indian residents per recent census data; total Asian population ~22% of city). Reference as civic facts where they arise naturally — do NOT isolate as a separate identity topic. Examples:
+- Cultural organizations, civic participation patterns
+- Demographic change as part of the growth story
+
+Plano ISD: serves over 50,000 students, consistently among top-performing Texas districts. Civic role = the school district as an institution shaped Plano's growth story and is a source of civic pride. Focus on the district's civic role, not specific school programs.
+
+### Expiration Dates for Elected Officials
+
+- Mayor John B. Muns (re-elected May 3, 2025): expiresAt "2029-05-01T00:00:00Z"
+- City Council members (four-year terms, staggered odd-year elections): set expiresAt based on which "Place" and their election year
+  - Places 2, 4, 6, 8 on 2023 cycle → next election 2027: expiresAt "2027-06-01T00:00:00Z"
+  - Places 1, 3, 5, 7 on 2025 cycle (including 2026 special election Place 7) → next election 2029: expiresAt "2029-06-01T00:00:00Z"
+- City Manager (appointed, no fixed term): expiresAt null — prefer structural questions about the City Manager ROLE over current-officeholder name questions
+- For structural questions (e.g., "What form of government does Plano use?"): expiresAt null
+
+### Difficulty Calibration (Plano-specific)
+
+Over-index on EASY questions — the Easy Steps design requires accessible entry points.
+
+EASY: civic-minded person is proud to share the tidbit
+- "What Texas designation did Governor Clements give Plano in 1980?" → Balloon Capital of Texas
+- "What form of government does Plano use, where an appointed professional manages city operations?" → Council-Manager
+- "In what year was Plano officially incorporated?" → 1873
+
+NEVER ask for:
+- Addresses or phone numbers
+- Internal process details
+- Obscure budget line items
+- Questions where only a city employee would know the answer
+
+Apply the dinner party test rigorously.
+`;
 }
 
 /**
