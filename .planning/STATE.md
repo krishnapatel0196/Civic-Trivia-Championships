@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v1.9 Geographic Expansion — Phase 50: Massachusetts State Collection
+**Current focus:** v1.9 Geographic Expansion — Phase 51: Plano TX Collection
 
 ## Current Position
 
-Phase: 50 of 52 (Massachusetts State Collection)
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-03-02 — Completed 50-03 (activate Massachusetts State collection — 90 questions live, human-approved)
+Phase: 51 of 52 (Plano TX Collection)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-03-02 — Completed 51-01 (scaffold Plano TX collection — locale config, voice guidance, seed entry)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 Plan 1 COMPLETE
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -76,6 +76,15 @@ Key decisions relevant to v1.9:
 - Governor's Council allocated 8 dedicated questions — one of MA's most surprising civic facts
 - state-courts minimized to 5 questions (General Court and 1780 Constitution are more uniquely Massachusetts)
 
+**51-01 decisions:**
+- planoTxConfig variable name derived from slug: plano-tx -> planoTx + Config (scaffold convention)
+- Bug 2 confirmed again: scaffold step3 inserts locale entry into type annotation line — fixed by moving into object body in generate-locale-questions.ts
+- 5 topic categories chosen: city-government (30%), civic-history (25%), growth-story (20%), economic-development (15%), community-identity (10%)
+- overshootFactor: 1.3 — generates 130 candidates, curate to 100
+- Balloon Capital of Texas (1980, Governor Clements) flagged as DURABLE TOPIC in voice guidance
+- Corporate civic angle rules: Frito-Lay 1985, JCPenney 1992, Toyota 2017 — civic significance only, no brand promotion
+- Collin County vs. City of Plano disambiguation in voice guidance — common LLM attribution error
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -97,7 +106,7 @@ Key decisions relevant to v1.9:
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 50-03-PLAN.md (activate Massachusetts State collection — 90 questions live, human-approved)
+Stopped at: Completed 51-01-PLAN.md (scaffold Plano TX collection — locale config, voice guidance, DB seeded)
 Resume file: None
 
-Next action: `/gsd:plan-phase 51` (next collection — or activate banked Fremont CA / Norwich England)
+Next action: Execute 51-02 (generate Plano TX questions — `generate-locale-questions.ts --locale plano-tx --fetch-sources`)
