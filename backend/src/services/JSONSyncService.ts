@@ -20,8 +20,8 @@ const COLLECTION_TO_FILE_MAP: Record<string, string> = {
   'Federal Civics': 'questions.json',
   'Bloomington, IN': 'bloomington-in-questions.json',
   'Los Angeles, CA': 'los-angeles-ca-questions.json',
-  'Indiana State': 'indiana-state-questions.json',
-  'California State': 'california-state-questions.json',
+  'Indiana': 'indiana-state-questions.json',
+  'California': 'california-state-questions.json',
   'Fremont, CA': 'fremont-ca-questions.json',
 };
 

@@ -50,11 +50,11 @@ export const collectionsData: NewCollection[] = [
     sortOrder: 4 // Updated from 3 to accommodate Fremont
   },
   {
-    name: 'Indiana State',
+    name: 'Indiana',
     slug: 'indiana-state',
     description: 'How well do you know the Crossroads of America?',
     localeCode: 'en-US',
-    localeName: 'Indiana State',
+    localeName: 'Indiana',
     iconIdentifier: 'state',
     themeColor: '#1E3A8A', // deep blue - state
     tier: 'state',
@@ -62,11 +62,11 @@ export const collectionsData: NewCollection[] = [
     sortOrder: 5
   },
   {
-    name: 'California State',
+    name: 'California',
     slug: 'california-state',
     description: 'The Golden State awaits — test your California civics!',
     localeCode: 'en-US',
-    localeName: 'California State',
+    localeName: 'California',
     iconIdentifier: 'state',
     themeColor: '#92400E', // golden brown - California
     tier: 'state',
@@ -88,7 +88,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Cambridge, MA',
     slug: 'cambridge-ma',
-    description: 'Test your Cambridge, MA civic knowledge!',
+    description: 'From Harvard Square to City Hall — think you know Cambridge, MA?',
     localeCode: 'en-US',
     localeName: 'Cambridge, Massachusetts',
     iconIdentifier: 'flag-ma',
@@ -98,11 +98,11 @@ export const collectionsData: NewCollection[] = [
     sortOrder: 8
   },
   {
-    name: 'Massachusetts State',
+    name: 'Massachusetts',
     slug: 'massachusetts-state',
-    description: 'Test your Massachusetts State civic knowledge!',
+    description: "Can the Bay State's oldest democracy stump you?",
     localeCode: 'en-US',
-    localeName: 'Massachusetts State',
+    localeName: 'Massachusetts',
     iconIdentifier: 'state',
     themeColor: '#0C2340',
     tier: 'state',
@@ -112,7 +112,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Plano, TX',
     slug: 'plano-tx',
-    description: 'Test your Plano, TX civic knowledge!',
+    description: 'The City of Excellence awaits — how well do you know Plano, TX?',
     localeCode: 'en-US',
     localeName: 'Plano, Texas',
     iconIdentifier: 'flag-tx',
@@ -124,7 +124,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Texas',
     slug: 'texas-state',
-    description: 'Test your Texas civic knowledge!',
+    description: "Everything's bigger in Texas. So is the civics challenge.",
     localeCode: 'en-US',
     localeName: 'Texas',
     iconIdentifier: 'state',

@@ -32,10 +32,9 @@ export const TIER_RANK: Record<CollectionTier, number> = {
  * Load collection tier map from database at runtime.
  * Returns Map<collectionName, CollectionTier> keyed by the DB `name` column.
  *
- * IMPORTANT: The DB uses full display names like 'Indiana State' and
- * 'California State' — NOT the stale short names ('Indiana', 'California')
- * that the old COLLECTION_HIERARCHY used. All callers must pass DB-consistent
- * names when looking up tiers.
+ * IMPORTANT: State collections use short names ('Indiana', 'California',
+ * 'Massachusetts', 'Texas') — NOT names with 'State' suffix. All callers
+ * must pass DB-consistent names when looking up tiers.
  */
 export async function loadCollectionTierMap(): Promise<Map<string, CollectionTier>> {
   const { db } = await import('../../db/index.js');
