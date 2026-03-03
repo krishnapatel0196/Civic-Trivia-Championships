@@ -198,17 +198,19 @@ Plans:
 - [x] 51-03-PLAN.md — Banner image (hot air balloon), activate collection, verify end-to-end playability in production
 
 #### Phase 52: Texas State Collection
-**Goal**: Texas State is a fully playable collection with ≥50 questions covering state civic topics
+**Goal**: Texas State is a fully playable collection with ≥50 questions covering state civic topics, using the new mixed-durability pattern (both durable and expiring questions)
 **Depends on**: Phase 51
 **Requirements**: TEX-01, TEX-02, TEX-03
 **Success Criteria** (what must be TRUE):
   1. A Texas State locale config exists with state-level topics (legislature, governor, constitutional history, public policy, civic landmarks) and the collection is registered in the generator hierarchy
   2. The Texas State collection contains ≥50 active questions that pass all quality rules with zero blocking violations
   3. The Texas State collection is active and playable in production — collection card visible and full game completable
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 52-01: TBD
+- [ ] 52-01-PLAN.md — Scaffold collection, write full state config with texasStateFeatures voice guidance (mixed-durability pattern), seed to DB
+- [ ] 52-02-PLAN.md — Generate Texas State questions, curate to ≥50 passing quality gate, human review checkpoint for mixed-durability
+- [ ] 52-03-PLAN.md — Banner image (Texas State Capitol), activate collection, verify end-to-end playability in production
 
 ## Progress
 
@@ -228,4 +230,4 @@ Plans:
 | 49. Cambridge, MA Collection | v1.9 | 0/3 | Not started | - |
 | 50. Massachusetts State Collection | v1.9 | 3/3 | Complete | 2026-03-02 |
 | 51. Plano, TX Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
-| 52. Texas State Collection | v1.9 | 0/TBD | Not started | - |
+| 52. Texas State Collection | v1.9 | 0/3 | Not started | - |
