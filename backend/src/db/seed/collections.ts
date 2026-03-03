@@ -109,4 +109,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 9
   },
+  {
+    name: 'Plano, TX',
+    slug: 'plano-tx',
+    description: 'Test your Plano, TX civic knowledge!',
+    localeCode: 'en-US',
+    localeName: 'Plano, Texas',
+    iconIdentifier: 'flag-tx',
+    themeColor: '#B45309',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 10
+  },
 ];
