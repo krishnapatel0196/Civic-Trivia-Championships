@@ -39,8 +39,8 @@ const COLLECTION_NAMES: Record<string, string> = {
   'federal': 'United States',
   'bloomington-in': 'Bloomington, IN',
   'los-angeles-ca': 'Los Angeles, CA',
-  'indiana-state': 'Indiana State',
-  'california-state': 'California State',
+  'indiana-state': 'Indiana',
+  'california-state': 'California',
   'fremont-ca': 'Fremont, CA',
 };
 
