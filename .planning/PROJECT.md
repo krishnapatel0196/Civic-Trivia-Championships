@@ -72,23 +72,18 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Legacy auth stack fully removed: 9 files deleted, 10 packages removed, users table dropped, custom JWT env vars removed — v1.8
 - ✓ Auth state hardened: tierResolved flag, AdminGuard race condition fixed, dead exports removed — v1.8
 
+- ✓ DB-driven `COLLECTION_HIERARCHY` (runtime DB tier lookup; zero hardcoded display-name maps) — v1.9
+- ✓ State collection configs registered in standard generator workflow (state-configs/ auto-discovery via dynamic import) — v1.9
+- ✓ Fremont, CA collection active and playable in production (54 questions) — v1.9
+- ✓ Norwich, England collection active and playable in production (117 questions) — v1.9
+- ✓ Cambridge, MA — scaffold, generate (125 questions), curate, activate — v1.9
+- ✓ Massachusetts State — scaffold, generate (90 questions), curate, activate — v1.9
+- ✓ Plano, TX — scaffold, generate (85 questions), curate, activate — v1.9
+- ✓ Texas State — scaffold, generate (60 questions, mixed-durability), curate, activate — v1.9
+
 ### Active
 
-*(v1.9 Geographic Expansion — in progress)*
-
-**Infrastructure:**
-- DB-driven COLLECTION_HIERARCHY (eliminate hardcoded display-name map in embeddings/types.ts)
-- State collection configs registered in standard generator workflow (fix state-configs/ gap)
-
-**Activate banked collections:**
-- Fremont, CA collection active and playable in production
-- Norwich, England collection active and playable in production
-
-**New collections:**
-- ✓ Cambridge, MA — scaffold, generate (125 questions), curate, activate
-- Massachusetts State — scaffold, generate (50+ questions), curate, activate
-- Plano, TX — scaffold, generate (50+ questions), curate, activate
-- Texas State — scaffold, generate (50+ questions), curate, activate
+*(v2.0 requirements TBD — start with `/gsd:new-milestone`)*
 
 ### Out of Scope
 
@@ -111,13 +106,15 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v1.8 shipped 2026-03-01, Phase 49 complete 2026-03-02):**
-- 8 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana State, California State, Fremont CA, Norwich UK, Cambridge MA (125 questions) — all on shared Supabase project (kxsdzaojfaibhuzmclfq)
+**Current state (v1.9 shipped 2026-03-03):**
+- 12 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60) — all on shared Supabase project (kxsdzaojfaibhuzmclfq)
+- Collection infrastructure: DB-driven tier lookups, state configs auto-discovered — zero hardcoded maps; `audit-collection-readiness.ts` + `verify-post-activation.ts` standardize activation workflow
 - Identity: Supabase JWT auth (jose jwtVerify), Connected tier guards, `public.admin_users` admin check — all legacy bcrypt/JWT removed
 - Gems: `award_gems` RPC (yellow, civic_trivia source); `trivia.player_stats` tracks games/score/accuracy for Connected users
 - Frontend: accounts API for auth flows, profile page shows trivia stats + tier badge + gem balance
 - Election pipeline: `election_races` table → question generation → daily 6 AM cron → current-term follow-up → admin lifecycle UI
 - Quality rules engine with 9 rules; zero active duplicates, zero quality violations across all collections
+- Mixed-durability pattern established: Texas State has both durable (null expiresAt) and expiring (2027-01-19) questions in one collection
 - Self-validating AI generation pipeline: gap analysis → Claude → quality retry → semantic dedup → source diversity enforcement
 - Admin UI: question explorer, collection health, inline editing, flag review queue, duplicate review, election management
 - Player-driven quality curation: in-game flagging, post-game elaboration, admin triage
@@ -125,8 +122,8 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - Live: civic-trivia-frontend.onrender.com / civic-trivia-backend.onrender.com / ctc.empowered.vote
 
 **Tech stack:** React 18, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, Supabase (PostgreSQL), Redis (Upstash), jose, Drizzle ORM
-- Frontend: ~11,400 LOC TypeScript/React
-- Backend: ~26,000 LOC TypeScript/Express (estimated post-v1.8 cleanup)
+- Frontend: ~11,500 LOC TypeScript/React
+- Backend: ~28,000 LOC TypeScript/Express
 
 **Question quality philosophy:**
 - "Dinner party test" — would knowing this answer be worth sharing at dinner?
@@ -137,10 +134,6 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - Easy questions are welcome — "Who is your mayor?" feels fair and memorable
 - Quality rules codified as TypeScript functions with blocking/advisory severity
 
-**Tech stack:** React 18, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, PostgreSQL (Supabase), Redis (Upstash), JWT
-- Frontend: ~11,400 LOC TypeScript/React
-- Backend: ~15,200 LOC TypeScript/Express
-- Live: civic-trivia-frontend.onrender.com / civic-trivia-backend.onrender.com
 
 **Design principles (from design doc):**
 1. Play, Not Study — Game show aesthetics, exciting pacing, friendly competition
@@ -242,6 +235,13 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Token refresh uses Supabase native `/auth/v1/token` | No custom `/api/auth/refresh` route documented in integration guide; direct Supabase endpoint is correct | Good — platform alignment |
 | `setAuth` sets `tierResolved: true` | Fixes admin access after expired-session re-login — login flow establishes complete auth state | Good — closes medium-severity gap |
 | Migration history repair via `supabase migration repair` | 24 pre-existing remote entries cleared before pushing new trivia schema; safe and correct approach | Good — migration hygiene |
+| DB-driven tier column (text NOT NULL DEFAULT 'city') | Replaces hardcoded COLLECTION_HIERARCHY; runtime query enables zero-hardcoded-map architecture | Good — infinite scalability |
+| State config auto-discovery via dynamic import fallback | Drop `.ts` file in `locale-configs/state-configs/` → auto-registered; no code changes to generator | Good — zero-friction collection scaling |
+| Mixed-durability generation pattern (Texas State) | texasStateFeatures instructs both expiring (expiresAt) and durable (null) questions in one run; no fixed ratio | Good — flexible for state collections |
+| Harvard/MIT strict limitation in Cambridge voice guidance | Universities cannot be primary civic subject; only incidental civic relationships permitted | Good — prevents common LLM over-reliance on universities |
+| Governor's Council dedicated topic (Massachusetts) | 8 questions for one of MA's most surprising civic facts; own topic slug separates from general-court | Good — distinctive content that "feels seen" |
+| State-only curation rule for state collections | City/regional landmarks explicitly prohibited by name; statewide historical events kept | Good — consistent quality signal across state collections |
+| ERCOT cluster reduction (Texas) | 12-question ERCOT cluster reduced to 3 best angles (uniqueness, %, transmission miles) | Good — eliminates near-duplicate saturation |
 
 ---
-*Last updated: 2026-03-01 after v1.9 milestone start*
+*Last updated: 2026-03-03 after v1.9 milestone*

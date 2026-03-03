@@ -1,5 +1,33 @@
 # Project Milestones: Civic Trivia Championship
 
+## v1.9 Geographic Expansion (Shipped: 2026-03-03)
+
+**Delivered:** Expanded the playable collection set from 7 to 11 by activating two banked collections (Fremont CA, Norwich UK), launching four net-new collections (Cambridge MA, Massachusetts, Plano TX, Texas), and replacing all hardcoded collection infrastructure with a DB-driven, auto-discovery architecture.
+
+**Phases completed:** 47–52 (16 plans total)
+
+**Key accomplishments:**
+
+- Eliminated hardcoded infrastructure debt: `COLLECTION_HIERARCHY` replaced with runtime DB tier lookups; state configs auto-discovered from `locale-configs/state-configs/` — zero hardcoded maps, all 12 collections work uniformly
+- Activated two banked collections: Fremont CA (54 questions) and Norwich England (117 questions) with reusable `audit-collection-readiness.ts` + `verify-post-activation.ts` standardizing the activation workflow
+- Launched Cambridge MA: 125 questions covering Plan E city manager governance, PR voting history, research-corrected civic facts (living wage May 1999, Richardsonian Romanesque City Hall), Harvard/MIT strict limits
+- Launched Massachusetts State: 90 questions covering General Court, Governor's Council (8 dedicated — one of MA's most surprising civic facts), 1780 Constitution — Massachusetts State House gold dome banner
+- Launched Plano TX: 85 questions covering Balloon Capital of Texas designation, Collin County context, corporate civic history (Frito-Lay, JCPenney, Toyota) — hot air balloon festival banner
+- Launched Texas State: 60 curated questions (57 durable + 3 expiring) — biennial legislature, Railroad Commission, two courts of last resort, plural executive; established the **mixed-durability pattern** for future collections
+
+**Stats:**
+
+- ~125 files created/modified (~12,000 insertions)
+- ~39,500 lines of TypeScript total (frontend + backend)
+- 6 phases, 16 plans
+- 2 days from first phase to ship (2026-03-01 → 2026-03-03)
+
+**Git range:** `feat(47-01)` → `feat(52-03)` → `chore(audit): v1.9`
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v1.8 Empowered Identity (Shipped: 2026-03-01)
 
 **Delivered:** Replaced the custom auth/gem/admin stack with the shared Empowered Accounts platform — Supabase JWT identity, Connected tier guards, shared gem ledger via award_gems RPC, platform admin roles, and full removal of all legacy local auth infrastructure.

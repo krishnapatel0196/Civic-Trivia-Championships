@@ -2,29 +2,29 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-01)
+See: .planning/PROJECT.md (updated 2026-03-03)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v1.9 Geographic Expansion — Phase 52 Texas State Collection IN PROGRESS
+**Current focus:** Planning next milestone (v2.0)
 
 ## Current Position
 
-Phase: 52 of 52 (Texas State Collection) — In progress
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-03-03 — Completed 52-02 (generate + curate Texas State questions: 93 generated, 33 archived, 60 net — READY)
+Phase: N/A — v1.9 complete, planning next milestone
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-03-03 — v1.9 Geographic Expansion milestone complete (Phases 47–52, 16 plans)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 COMPLETE | v1.9 Phase 52 Plans 1–2 COMPLETE
+Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | Ready for v2.0
 
 **Milestone history:**
-- v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
+- v1.0–v1.9 (Phases 1–52): All Complete — see .planning/MILESTONES.md
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com / https://ctc.empowered.vote
 - Backend LIVE: https://civic-trivia-backend.onrender.com
 - Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
-- Active collections (9 + Federal = 10 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana State, California State, Norwich England, Massachusetts State, Plano TX
+- Active collections (11 + Federal = 12 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas
 
 ## Accumulated Context
 
@@ -32,7 +32,7 @@ Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) 
 
 Full decision log in PROJECT.md Key Decisions table.
 
-Key decisions relevant to v1.9:
+Key decisions relevant to v2.0 (from v1.9):
 - Collection hierarchy: DB-driven at runtime (INFRA-01 eliminates hardcoded map) — COMPLETE
 - State configs gap: state-configs/ registered in generate-locale-questions.ts workflow (INFRA-02) — COMPLETE
 - Generation strategy: overshoot-and-curate, quality-gate, semantic dedup — established pipeline
@@ -139,7 +139,7 @@ Key decisions relevant to v1.9:
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 52-02-PLAN.md (generate + curate Texas State questions — 60 net drafts, READY)
+Stopped at: v1.9 milestone complete — all 12 collections live
 Resume file: None
 
-Next action: Execute 52-03 (activate Texas State collection)
+Next action: `/gsd:new-milestone` to plan v2.0
