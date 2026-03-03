@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v1.9 Geographic Expansion — Phase 51: Plano TX Collection
+**Current focus:** v1.9 Geographic Expansion — Phase 51 COMPLETE, ready for Phase 52
 
 ## Current Position
 
-Phase: 51 of 52 (Plano TX Collection)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-03-02 — Completed 51-02 (generate Plano TX questions — 87 draft questions in DB, human approved)
+Phase: 51 of 52 (Plano TX Collection) — COMPLETE
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-03-03 — Completed 51-03 (activate Plano TX collection — 85 questions live, human approved)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 Plans 1–2 COMPLETE
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 COMPLETE
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -24,7 +24,7 @@ Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) 
 - Backend LIVE: https://civic-trivia-backend.onrender.com
 - Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
-- Active collections (8): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana State, California State, Norwich England, Massachusetts State
+- Active collections (9 + Federal = 10 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana State, California State, Norwich England, Massachusetts State, Plano TX
 
 ## Accumulated Context
 
@@ -91,6 +91,10 @@ Key decisions relevant to v1.9:
 - Collection is overwhelmingly durable (86/87) — voice guidance successfully suppressed current-officeholder trivia
 - Near-duplicate detection gap: pipeline catches exact text matches only; semantic dedup requires manual pass — consistent pattern across city collections
 
+**51-03 decisions:**
+- Banner image: hot air balloon festival photo — directly evokes Balloon Capital of Texas designation (Governor Clements, 1980)
+- 85 of 87 draft questions activated (2 already archived prior to activation run)
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -111,8 +115,8 @@ Key decisions relevant to v1.9:
 
 ## Session Continuity
 
-Last session: 2026-03-02
-Stopped at: Completed 51-02-PLAN.md (generate Plano TX questions — 87 draft questions in DB, human approved)
+Last session: 2026-03-03
+Stopped at: Completed 51-03-PLAN.md (activate Plano TX collection — 85 questions live, human approved)
 Resume file: None
 
-Next action: Execute 51-03 (activate Plano TX collection — `activate-collection.ts --slug plano-tx --prefix pla`)
+Next action: /gsd:plan-phase 52
