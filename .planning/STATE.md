@@ -120,6 +120,11 @@ Key decisions relevant to v1.9:
 - [ ] Assess Norwich by-election/MP terminology gap — editorial judgment
 - [ ] "Manage your Empowered Account" link on profile — needs VITE_EMPOWERED_ACCOUNTS_WEB_URL
 
+### v2.0 Backlog (collection quality)
+
+- [ ] **Enforce 15–30% expiring question ratio** — add `targetExpiringRatio` to `LocaleConfig`, check ratio in `audit-collection-readiness.ts`, warn during curation if below threshold
+- [ ] **Auto-regenerate expired questions** — extend `expirationSweep.ts` to detect collections below minimum active count after expiry, trigger the generation pipeline for that collection, and queue output for human review
+
 ### Blockers/Concerns
 
 - VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY not confirmed as frontend env vars — token refresh may fall back to ACCOUNTS_API_URL if absent

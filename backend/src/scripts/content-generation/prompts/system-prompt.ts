@@ -99,6 +99,7 @@ Distribute difficulty across the full batch:
 - Questions with multiple defensible correct answers
 - Trivia about individual private citizens
 - Questions requiring knowledge of other questions
+- Phone numbers, street addresses, or contact information in answer options — these test memorization of contact details, not civic knowledge
 - Anything that could embarrass or politically compromise the civic education mission
 
 ${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}${localeSlug === 'plano-tx' ? buildPlanoVoiceGuidance() : ''}`;

@@ -149,7 +149,8 @@ Optional:
   --tier <type>          city | state | federal  (default: city)
   --sort-order <n>       Sort order integer (default: auto-detect max+1)
   --locale-code <code>   Locale code (default: en-US)
-  --description <text>   Collection description (default: auto-generated)
+  --description <text>   Collection tagline shown on the card — REQUIRED for production
+                         (a distinctive one-liner, e.g. "B-Town bragging rights are on the line!")
   --help, -h             Show this help message
 
 Examples:
@@ -471,6 +472,10 @@ function main(): void {
   const iconIdentifier = deriveIconIdentifier(slug, args.tier);
   const configVarName = deriveConfigVarName(slug);
   const description = args.description ?? `Test your ${name} civic knowledge!`;
+  if (!args.description) {
+    console.warn(`\n⚠  No --description provided. Placeholder tagline will be used.`);
+    console.warn(`   Replace it in collections.ts AND the database before activating.\n`);
+  }
 
   console.log(`\nScaffolding collection: ${name} (${slug})`);
   console.log(`  Prefix: ${prefix}`);
@@ -498,13 +503,19 @@ Files modified:
 Next steps:
   1. Edit locale config: ${localeConfigPath.replace(/\\/g, '/')}
      - Customize topic categories and source URLs
-  2. Seed the collection to DB (tier flows through the seed entry automatically):
+     - Add voice guidance (expiration dates, accuracy notes, what to avoid)
+  2. Write a distinctive tagline and update it in collections.ts${args.description ? '' : '\n     ⚠  Currently using a generic placeholder — replace before activating!'}
+     Style guide: rhetorical question or punchy one-liner using a local nickname or fact
+     Examples: "B-Town bragging rights are on the line!"
+               "Five towns, one city — how well do you know Fremont?"
+               "Can the Bay State's oldest democracy stump you?"
+  3. Seed the collection to DB (tier flows through the seed entry automatically):
      cd backend && npx tsx src/db/seed/seed.ts
-  3. Generate questions:
+  4. Generate questions:
      cd backend && npx tsx src/scripts/content-generation/generate-locale-questions.ts --locale ${slug} --fetch-sources
-  4. Add banner image:
-     frontend/public/images/collections/${slug}.jpg
-  5. Activate when ready:
+  5. Add banner image:
+     frontend/public/images/collections/${slug}.jpg${args.tier === 'state' ? '\n     ⚠  STATE COLLECTION: use a photo of the state capitol building.' : ''}
+  6. Activate when ready:
      cd backend && npx tsx src/scripts/activate-collection.ts --slug ${slug} --prefix ${prefix}
 `);
 }

@@ -144,7 +144,7 @@ ${QUALITY_GUIDELINES}
 - Questions with multiple defensible correct answers
 - Obscure dates/years unless foundational (statehood date = OK, specific bill passage year = avoid)
 - Questions requiring knowledge of other questions
-- Pure bureaucratic trivia (phone numbers, office addresses, department acronyms)
+- Phone numbers, street addresses, or contact information in answer options — these test memorization of contact details, not civic knowledge
 - Anything that could embarrass or politically compromise the civic education mission
 - Academic jargon — write for a general audience
 
