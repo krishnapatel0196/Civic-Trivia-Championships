@@ -189,10 +189,12 @@ Plans:
   1. A Plano, TX locale config exists with Plano-specific topics (city government, Collin County, city services, local history, elections) and source URLs, and the collection is registered in the generator hierarchy
   2. The Plano collection contains ≥50 active questions that pass all quality rules with zero blocking violations
   3. The Plano collection card is visible in the collection picker with a banner image and a player can complete a full game
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 51-01: TBD
+- [ ] 51-01-PLAN.md — Scaffold collection, author Plano locale config, add Plano voice guidance to system-prompt.ts
+- [ ] 51-02-PLAN.md — Generate Plano questions, curate to ≥50 passing quality gate, human review checkpoint
+- [ ] 51-03-PLAN.md — Banner image (hot air balloon), activate collection, verify end-to-end playability in production
 
 #### Phase 52: Texas State Collection
 **Goal**: Texas State is a fully playable collection with ≥50 questions covering state civic topics
@@ -224,5 +226,5 @@ Plans:
 | 48. Activate Banked Collections | v1.9 | 1/1 | Complete | 2026-03-03 |
 | 49. Cambridge, MA Collection | v1.9 | 0/3 | Not started | - |
 | 50. Massachusetts State Collection | v1.9 | 3/3 | Complete | 2026-03-02 |
-| 51. Plano, TX Collection | v1.9 | 0/TBD | Not started | - |
+| 51. Plano, TX Collection | v1.9 | 0/3 | Not started | - |
 | 52. Texas State Collection | v1.9 | 0/TBD | Not started | - |
