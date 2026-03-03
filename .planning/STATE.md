@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-01)
 ## Current Position
 
 Phase: 51 of 52 (Plano TX Collection)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-03-02 — Completed 51-01 (scaffold Plano TX collection — locale config, voice guidance, seed entry)
+Last activity: 2026-03-02 — Completed 51-02 (generate Plano TX questions — 87 draft questions in DB, human approved)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 Plan 1 COMPLETE
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 Plans 1–2 COMPLETE
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -85,6 +85,12 @@ Key decisions relevant to v1.9:
 - Corporate civic angle rules: Frito-Lay 1985, JCPenney 1992, Toyota 2017 — civic significance only, no brand promotion
 - Collin County vs. City of Plano disambiguation in voice guidance — common LLM attribution error
 
+**51-02 decisions:**
+- Generated 150 candidates → 135 passed validation → 47 near-duplicates archived manually post-review (semantic dedup gap in pipeline)
+- pla-007 archived: "current" City Manager with no expiresAt — structural coverage handled by pla-002 and pla-015
+- Collection is overwhelmingly durable (86/87) — voice guidance successfully suppressed current-officeholder trivia
+- Near-duplicate detection gap: pipeline catches exact text matches only; semantic dedup requires manual pass — consistent pattern across city collections
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -106,7 +112,7 @@ Key decisions relevant to v1.9:
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 51-01-PLAN.md (scaffold Plano TX collection — locale config, voice guidance, DB seeded)
+Stopped at: Completed 51-02-PLAN.md (generate Plano TX questions — 87 draft questions in DB, human approved)
 Resume file: None
 
-Next action: Execute 51-02 (generate Plano TX questions — `generate-locale-questions.ts --locale plano-tx --fetch-sources`)
+Next action: Execute 51-03 (activate Plano TX collection — `activate-collection.ts --slug plano-tx --prefix pla`)
