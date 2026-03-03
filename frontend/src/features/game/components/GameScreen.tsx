@@ -459,7 +459,7 @@ export function GameScreen({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
-            className="flex-1 flex flex-col items-center justify-center gap-1 md:gap-3 max-w-[700px] mx-auto w-full px-4 min-h-0 overflow-y-auto"
+            className="flex-1 flex flex-col items-center justify-start pt-4 md:pt-6 gap-1 md:gap-3 max-w-[700px] mx-auto w-full px-4 min-h-0 overflow-y-auto"
           >
             {/* Final question badge */}
             {isFinalQuestion && (
