@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-01)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v1.9 Geographic Expansion — Phase 51 COMPLETE, ready for Phase 52
+**Current focus:** v1.9 Geographic Expansion — Phase 52 Texas State Collection IN PROGRESS
 
 ## Current Position
 
-Phase: 51 of 52 (Plano TX Collection) — COMPLETE
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-03-03 — Completed 51-03 (activate Plano TX collection — 85 questions live, human approved)
+Phase: 52 of 52 (Texas State Collection) — In progress
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-03-03 — Completed 52-01 (scaffold Texas State collection + full state config with mixed-durability voice guidance)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 COMPLETE
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 COMPLETE | v1.9 Phase 52 Plan 1 COMPLETE
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -95,6 +95,16 @@ Key decisions relevant to v1.9:
 - Banner image: hot air balloon festival photo — directly evokes Balloon Capital of Texas designation (Governor Clements, 1980)
 - 85 of 87 draft questions activated (2 already archived prior to activation run)
 
+**52-01 decisions:**
+- texasStateConfig.name is 'Texas' (not 'Texas State') — matches state collection display pattern
+- targetQuestions: 70 with overshootFactor: 1.3 — generates 91 candidates for curation to 70
+- Mixed-durability pattern (FIRST collection): texasStateFeatures instructs both expiring (expiresAt) and durable (null) questions; no fixed ratio
+- expiresAt: "2027-01-19T00:00:00Z" for all current-officeholder questions (November 2026 election)
+- Comptroller caution: Glenn Hegar resigned February 2025; Kelly Hancock acting — voice guidance focuses on role/powers, not current name
+- 8 topic categories: state-legislature(14), governor-executive(12), distinctive-institutions(10), texas-history-identity(12), state-judiciary(6), texas-constitution(6), civic-landmarks(5), public-policy(5)
+- Scaffold Bug 2 confirmed again: step3 inserts into type annotation line — reverted to HEAD; state auto-discovery handles registration
+- Import path in state-configs/ must be '../bloomington-in.js' (parent directory traversal required)
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -116,7 +126,7 @@ Key decisions relevant to v1.9:
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 51-03-PLAN.md (activate Plano TX collection — 85 questions live, human approved)
+Stopped at: Completed 52-01-PLAN.md (scaffold Texas State + full state config with mixed-durability voice guidance — ready for question generation)
 Resume file: None
 
-Next action: /gsd:plan-phase 52
+Next action: Execute 52-02 (generate Texas State questions)
