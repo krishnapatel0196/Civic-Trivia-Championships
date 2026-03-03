@@ -38,6 +38,8 @@ export function QuestionsPage() {
     null
   );
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
+  const [pendingSelectFirst, setPendingSelectFirst] = useState(false);
+  const [pendingSelectLast, setPendingSelectLast] = useState(false);
 
   // Deep-link: auto-open detail panel if ?id=X is in URL
   useEffect(() => {
@@ -182,21 +184,43 @@ export function QuestionsPage() {
     setSelectedQuestionIndex(index);
   };
 
+  // Auto-select first/last question after page loads (cross-page navigation)
+  useEffect(() => {
+    if (!questions || questions.length === 0) return;
+    if (pendingSelectFirst) {
+      setSelectedQuestionIndex(0);
+      setSelectedQuestionId(questions[0].id);
+      setPendingSelectFirst(false);
+    } else if (pendingSelectLast) {
+      const lastIndex = questions.length - 1;
+      setSelectedQuestionIndex(lastIndex);
+      setSelectedQuestionId(questions[lastIndex].id);
+      setPendingSelectLast(false);
+    }
+  }, [questions]);
+
   // Handle detail panel navigation
   const handlePanelNavigate = (direction: 'prev' | 'next') => {
     if (!questions) return;
 
-    if (direction === 'prev' && selectedQuestionIndex > 0) {
-      const newIndex = selectedQuestionIndex - 1;
-      setSelectedQuestionIndex(newIndex);
-      setSelectedQuestionId(questions[newIndex].id);
-    } else if (
-      direction === 'next' &&
-      selectedQuestionIndex < questions.length - 1
-    ) {
-      const newIndex = selectedQuestionIndex + 1;
-      setSelectedQuestionIndex(newIndex);
-      setSelectedQuestionId(questions[newIndex].id);
+    if (direction === 'prev') {
+      if (selectedQuestionIndex > 0) {
+        const newIndex = selectedQuestionIndex - 1;
+        setSelectedQuestionIndex(newIndex);
+        setSelectedQuestionId(questions[newIndex].id);
+      } else if (page > 1) {
+        setPendingSelectLast(true);
+        handlePageChange(page - 1);
+      }
+    } else if (direction === 'next') {
+      if (selectedQuestionIndex < questions.length - 1) {
+        const newIndex = selectedQuestionIndex + 1;
+        setSelectedQuestionIndex(newIndex);
+        setSelectedQuestionId(questions[newIndex].id);
+      } else if (pagination && page < pagination.totalPages) {
+        setPendingSelectFirst(true);
+        handlePageChange(page + 1);
+      }
     }
   };
 
@@ -395,8 +419,8 @@ export function QuestionsPage() {
         questionId={selectedQuestionId}
         onClose={handlePanelClose}
         onNavigate={handlePanelNavigate}
-        hasPrev={selectedQuestionIndex > 0}
-        hasNext={questions ? selectedQuestionIndex < questions.length - 1 : false}
+        hasPrev={selectedQuestionIndex > 0 || page > 1}
+        hasNext={questions ? selectedQuestionIndex < questions.length - 1 || page < (pagination?.totalPages ?? 1) : false}
         onQuestionUpdated={handleQuestionUpdated}
       />
     </div>

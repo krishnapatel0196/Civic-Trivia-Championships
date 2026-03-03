@@ -308,11 +308,6 @@ export function QuestionDetailPanel({
   const handleArchive = async () => {
     if (!questionDetail) return;
 
-    const confirmed = window.confirm(
-      'Are you sure you want to archive this question? It will be removed from active rotation.'
-    );
-    if (!confirmed) return;
-
     try {
       const response = await fetch(
         `${API_URL}/api/admin/questions/${questionDetail.id}/archive`,
@@ -328,13 +323,8 @@ export function QuestionDetailPanel({
         throw new Error('Failed to archive question');
       }
 
-      // Update local state
-      setQuestionDetail({
-        ...questionDetail,
-        status: 'archived',
-      });
+      setQuestionDetail({ ...questionDetail, status: 'archived' });
 
-      // Notify parent to update table row
       if (onQuestionUpdated) {
         onQuestionUpdated({
           id: questionDetail.id,
@@ -347,6 +337,42 @@ export function QuestionDetailPanel({
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to archive question');
+    }
+  };
+
+  // Handle restore to draft
+  const handleRestore = async () => {
+    if (!questionDetail) return;
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/admin/questions/${questionDetail.id}/restore`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to restore question');
+      }
+
+      setQuestionDetail({ ...questionDetail, status: 'draft' });
+
+      if (onQuestionUpdated) {
+        onQuestionUpdated({
+          id: questionDetail.id,
+          text: questionDetail.text,
+          difficulty: questionDetail.difficulty,
+          qualityScore: questionDetail.qualityScore,
+          violationCount: questionDetail.violations.length,
+          status: 'draft',
+        });
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to restore question');
     }
   };
 
@@ -365,10 +391,11 @@ export function QuestionDetailPanel({
   const getStatusBadge = (status: string) => {
     const badges = {
       active: 'bg-green-100 text-green-800',
+      draft: 'bg-blue-100 text-blue-800',
       archived: 'bg-red-100 text-red-800',
       expired: 'bg-yellow-100 text-yellow-800',
     };
-    return badges[status as keyof typeof badges] || badges.active;
+    return badges[status as keyof typeof badges] || 'bg-gray-100 text-gray-800';
   };
 
   const getQualityScoreColor = (score: number | null) => {
@@ -570,14 +597,24 @@ export function QuestionDetailPanel({
                                   <span className="text-sm text-gray-400">Not scored</span>
                                 )}
                               </div>
-                              {questionDetail.status !== 'archived' && (
-                                <button
-                                  onClick={handleArchive}
-                                  className="px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-300 hover:bg-red-100 rounded-md"
-                                >
-                                  Archive Question
-                                </button>
-                              )}
+                              <div className="flex items-center gap-2">
+                                {questionDetail.status !== 'archived' && (
+                                  <button
+                                    onClick={handleArchive}
+                                    className="px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-300 hover:bg-red-100 rounded-md"
+                                  >
+                                    Archive
+                                  </button>
+                                )}
+                                {questionDetail.status === 'archived' && (
+                                  <button
+                                    onClick={handleRestore}
+                                    className="px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-300 hover:bg-blue-100 rounded-md"
+                                  >
+                                    Restore to Draft
+                                  </button>
+                                )}
+                              </div>
                             </div>
 
                             {/* Question text */}

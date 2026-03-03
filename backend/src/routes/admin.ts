@@ -239,6 +239,48 @@ router.post('/questions/:id/archive', async (req: Request, res: Response) => {
 });
 
 /**
+ * POST /questions/:id/restore - Restore an archived question back to draft
+ */
+router.post('/questions/:id/restore', async (req: Request, res: Response) => {
+  try {
+    const questionId = parseInt(req.params.id, 10);
+    if (isNaN(questionId)) {
+      return res.status(400).json({ error: 'Invalid question ID' });
+    }
+
+    const [question] = await db
+      .select()
+      .from(questions)
+      .where(eq(questions.id, questionId))
+      .limit(1);
+
+    if (!question) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+
+    const historyEntry = {
+      action: 'restored' as const,
+      timestamp: new Date().toISOString()
+    };
+
+    const [updatedQuestion] = await db
+      .update(questions)
+      .set({
+        status: 'draft',
+        expirationHistory: sql`${questions.expirationHistory} || ${JSON.stringify([historyEntry])}::jsonb`,
+        updatedAt: new Date()
+      })
+      .where(eq(questions.id, questionId))
+      .returning();
+
+    res.json(updatedQuestion);
+  } catch (error) {
+    console.error('Error restoring question:', error);
+    res.status(500).json({ error: 'Failed to restore question' });
+  }
+});
+
+/**
  * Zod schema for validating question updates
  */
 const UpdateQuestionSchema = z.object({
