@@ -121,4 +121,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 10
   },
+  {
+    name: 'Texas',
+    slug: 'texas-state',
+    description: 'Test your Texas civic knowledge!',
+    localeCode: 'en-US',
+    localeName: 'Texas',
+    iconIdentifier: 'state',
+    themeColor: '#BF0D3E',
+    tier: 'state',
+    isActive: false,
+    sortOrder: 11
+  },
 ];
