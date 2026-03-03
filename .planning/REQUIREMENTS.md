@@ -25,9 +25,9 @@ Requirements for the Geographic Expansion milestone. Phases start at 47.
 
 ### Massachusetts State Collection
 
-- [ ] **MASS-01**: Massachusetts State collection scaffolded — seed row, locale config, generator registration, hierarchy entry
-- [ ] **MASS-02**: Massachusetts State has ≥50 active questions covering state civic topics (state legislature, governor, constitutional history, public policy, civic landmarks)
-- [ ] **MASS-03**: Massachusetts State collection active and playable in production
+- [x] **MASS-01**: Massachusetts State collection scaffolded — seed row, locale config, generator registration, hierarchy entry
+- [x] **MASS-02**: Massachusetts State has ≥50 active questions covering state civic topics (state legislature, governor, constitutional history, public policy, civic landmarks)
+- [x] **MASS-03**: Massachusetts State collection active and playable in production
 
 ### Plano, TX Collection
 
@@ -71,9 +71,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CAMB-01 | Phase 49 | Pending |
 | CAMB-02 | Phase 49 | Pending |
 | CAMB-03 | Phase 49 | Pending |
-| MASS-01 | Phase 50 | Pending |
-| MASS-02 | Phase 50 | Pending |
-| MASS-03 | Phase 50 | Pending |
+| MASS-01 | Phase 50 | Complete |
+| MASS-02 | Phase 50 | Complete |
+| MASS-03 | Phase 50 | Complete |
 | PLAN-01 | Phase 51 | Pending |
 | PLAN-02 | Phase 51 | Pending |
 | PLAN-03 | Phase 51 | Pending |

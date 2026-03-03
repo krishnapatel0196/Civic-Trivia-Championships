@@ -165,10 +165,11 @@ Plans:
 - [ ] 49-02-PLAN.md — Generate Cambridge questions, curate to ≥50 passing quality gate, human review checkpoint
 - [ ] 49-03-PLAN.md — Banner image, activate collection, verify end-to-end playability in production
 
-#### Phase 50: Massachusetts State Collection
+#### Phase 50: Massachusetts State Collection ✅
 **Goal**: Massachusetts State is a fully playable collection with ≥50 questions covering state civic topics
 **Depends on**: Phase 49
 **Requirements**: MASS-01, MASS-02, MASS-03
+**Completed**: 2026-03-02
 **Success Criteria** (what must be TRUE):
   1. A Massachusetts State locale config exists with state-level topics (legislature, governor, constitutional history, public policy, civic landmarks) and the collection is registered in the generator hierarchy
   2. The Massachusetts State collection contains ≥50 active questions that pass all quality rules with zero blocking violations
@@ -176,9 +177,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 50-01-PLAN.md — Scaffold collection, write full state config with massachusettsStateFeatures voice guidance, seed to DB
-- [ ] 50-02-PLAN.md — Generate Massachusetts State questions, curate to ≥50 passing quality gate, human review checkpoint
-- [ ] 50-03-PLAN.md — Banner image (State House gold dome), activate collection, verify end-to-end playability in production
+- [x] 50-01-PLAN.md — Scaffold collection, write full state config with massachusettsStateFeatures voice guidance, seed to DB
+- [x] 50-02-PLAN.md — Generate Massachusetts State questions, curate to ≥50 passing quality gate, human review checkpoint
+- [x] 50-03-PLAN.md — Banner image (State House gold dome), activate collection, verify end-to-end playability in production
 
 #### Phase 51: Plano, TX Collection
 **Goal**: Plano, TX is a fully playable collection with ≥50 questions covering local civic topics
@@ -222,6 +223,6 @@ Plans:
 | 47. Collection Infrastructure | v1.9 | 3/3 | Complete | 2026-03-02 |
 | 48. Activate Banked Collections | v1.9 | 1/1 | Complete | 2026-03-03 |
 | 49. Cambridge, MA Collection | v1.9 | 0/3 | Not started | - |
-| 50. Massachusetts State Collection | v1.9 | 0/3 | Not started | - |
+| 50. Massachusetts State Collection | v1.9 | 3/3 | Complete | 2026-03-02 |
 | 51. Plano, TX Collection | v1.9 | 0/TBD | Not started | - |
 | 52. Texas State Collection | v1.9 | 0/TBD | Not started | - |
