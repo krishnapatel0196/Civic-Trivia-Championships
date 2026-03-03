@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-03-03T02:37:02.715Z",
+  "target": "plano-tx",
+  "config": {
+    "targetQuestions": 130,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 248,
+    "passedValidation": 135,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 135
+  },
+  "breakdown": {
+    "byRule": {
+      "pure-lookup": 38,
+      "duplicate-text": 72,
+      "ambiguous-answers": 3
+    },
+    "byRetryAttempt": {
+      "0": 102,
+      "1": 19,
+      "2": 8,
+      "3": 6
+    },
+    "byDifficulty": {
+      "easy": 39,
+      "medium": 66,
+      "hard": 30
+    },
+    "byTopic": {
+      "city-government": 28,
+      "civic-history": 22,
+      "growth-story": 30,
+      "economic-development": 28,
+      "community-identity": 27
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 857030,
+    "apiCalls": 104,
+    "tokensUsed": {
+      "input": 16997,
+      "output": 57119,
+      "cached": 776582
+    },
+    "estimatedCostUsd": 1.1407506
+  }
+}
