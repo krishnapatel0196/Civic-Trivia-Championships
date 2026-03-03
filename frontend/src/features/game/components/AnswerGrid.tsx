@@ -120,7 +120,7 @@ export function AnswerGrid({
   return (
     <div className="w-full max-w-3xl mx-auto px-2 md:px-6">
       {/* Answer grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mb-3 md:mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 mb-2 md:mb-3">
         {options.map((option, index) => (
           <motion.button
             key={index}
@@ -158,7 +158,7 @@ export function AnswerGrid({
               boxShadow: reducedMotion ? { duration: 0 } : { duration: 0.75, repeat: Infinity, ease: 'easeInOut' },
             }}
             className={`
-              relative p-3 md:p-4 rounded-lg border-2 transition-all duration-300
+              relative p-2.5 md:p-3 rounded-lg border-2 transition-all duration-300
               flex items-center gap-4 text-left min-h-[48px]
               disabled:cursor-not-allowed
               ${canSelect ? 'cursor-pointer' : 'cursor-default'}
@@ -233,7 +233,7 @@ export function AnswerGrid({
           )}
 
           {/* Explanation */}
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-4">
+          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-2">
             <div className="text-slate-300 text-base leading-relaxed">
               {explanation}
             </div>

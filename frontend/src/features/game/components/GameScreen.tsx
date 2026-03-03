@@ -352,7 +352,7 @@ export function GameScreen({
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-x-hidden"
+      className={`h-screen h-[100dvh] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative ${state.phase === 'revealing' ? 'overflow-y-auto' : 'overflow-hidden'}`}
       onClick={() => {
         if (state.phase === 'revealing' && !isLearnMoreOpen) {
           nextQuestion();
@@ -369,9 +369,9 @@ export function GameScreen({
       <CelebrationEffects streak={state.currentStreak} />
 
       {/* Main content container */}
-      <div className="relative min-h-screen flex flex-col py-4 md:py-8 px-4">
+      <div className="relative h-full flex flex-col py-2 md:py-4 px-4">
         {/* Top HUD - Score, Timer, Collection name, Progress dots */}
-        <div className="flex flex-col items-center mb-6 md:mb-[120px] max-w-5xl mx-auto w-full">
+        <div className="flex flex-col items-center mb-2 md:mb-4 max-w-5xl mx-auto w-full flex-shrink-0">
           {/* Controls row - three equal columns for true centering */}
           <div className="grid grid-cols-3 items-center w-full">
             {/* Score display (left) */}
@@ -459,7 +459,7 @@ export function GameScreen({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
-            className="flex-1 flex flex-col items-center pt-0 md:pt-2 gap-2 md:gap-8 max-w-[700px] mx-auto w-full px-4"
+            className="flex-1 flex flex-col items-center justify-center gap-1 md:gap-3 max-w-[700px] mx-auto w-full px-4 min-h-0 overflow-y-auto"
           >
             {/* Final question badge */}
             {isFinalQuestion && (
@@ -497,7 +497,7 @@ export function GameScreen({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4 }}
-                  className="w-full pt-2 md:pt-[20px] pb-4 md:pb-[40px]"
+                  className="w-full pt-1 md:pt-2 pb-2 md:pb-3"
                 >
                   <AnswerGrid
                     options={currentQuestion.options}
