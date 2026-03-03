@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-01)
 ## Current Position
 
 Phase: 52 of 52 (Texas State Collection) — In progress
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-03-03 — Completed 52-01 (scaffold Texas State collection + full state config with mixed-durability voice guidance)
+Last activity: 2026-03-03 — Completed 52-02 (generate + curate Texas State questions: 93 generated, 33 archived, 60 net — READY)
 
-Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 COMPLETE | v1.9 Phase 52 Plan 1 COMPLETE
+Progress: [██████████] v1.0–v1.8 complete (Phases 1–46) | v1.9 Phase 47 COMPLETE | v1.9 Phase 48 COMPLETE | v1.9 Phase 49 COMPLETE | v1.9 Phase 50 COMPLETE | v1.9 Phase 51 COMPLETE | v1.9 Phase 52 Plans 1–2 COMPLETE
 
 **Milestone history:**
 - v1.0–v1.8 (Phases 1–46): All Complete — see .planning/MILESTONES.md
@@ -105,6 +105,14 @@ Key decisions relevant to v1.9:
 - Scaffold Bug 2 confirmed again: step3 inserts into type annotation line — reverted to HEAD; state auto-discovery handles registration
 - Import path in state-configs/ must be '../bloomington-in.js' (parent directory traversal required)
 
+**52-02 decisions:**
+- ERCOT cluster reduced to 3 best questions from 12: tex-019 (90% electric load), tex-082 (55,000 miles transmission), tex-091 (TX grid uniqueness vs US grids)
+- State-only rule strictly applied: Port Isabel Lighthouse, Presidio La Bahia, Casa Navarro, French Legation, Fulton Mansion archived as city/regional sites
+- Washington-on-the-Brazos and San Jacinto Battleground kept — statewide historical events, not city-specific
+- tex-023 expiresAt corrected to NULL — 89th Legislature convened date is historical fact, not expiring officeholder data
+- Final set: 93 generated → 33 archived → 60 net (57 durable, 3 expiring: Abbott, Paxton, Burrows)
+- Near-duplicate detection gap persists: 17 semantic near-dups required manual pass (same pattern as city collections)
+
 ### Pending Todos
 
 - [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
@@ -126,7 +134,7 @@ Key decisions relevant to v1.9:
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 52-01-PLAN.md (scaffold Texas State + full state config with mixed-durability voice guidance — ready for question generation)
+Stopped at: Completed 52-02-PLAN.md (generate + curate Texas State questions — 60 net drafts, READY)
 Resume file: None
 
-Next action: Execute 52-02 (generate Texas State questions)
+Next action: Execute 52-03 (activate Texas State collection)
