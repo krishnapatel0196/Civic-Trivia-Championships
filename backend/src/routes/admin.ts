@@ -411,7 +411,7 @@ router.put('/questions/:id', async (req: Request, res: Response) => {
  *   - order: 'asc' | 'desc' (default: 'asc')
  *   - collection: string (collection slug filter)
  *   - difficulty: 'easy' | 'medium' | 'hard'
- *   - status: 'active' | 'archived' | 'expired'
+ *   - status: 'active' | 'draft' | 'archived' | 'expired'
  *   - search: string (ILIKE search across text, options, explanation)
  */
 router.get('/questions/explore', async (req: Request, res: Response) => {
@@ -444,7 +444,7 @@ router.get('/questions/explore', async (req: Request, res: Response) => {
       filters.push(eq(questions.difficulty, difficultyFilter));
     }
 
-    if (statusFilter && ['active', 'archived', 'expired'].includes(statusFilter)) {
+    if (statusFilter && ['active', 'draft', 'archived', 'expired'].includes(statusFilter)) {
       filters.push(eq(questions.status, statusFilter));
     }
 
