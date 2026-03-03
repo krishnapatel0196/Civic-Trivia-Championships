@@ -181,10 +181,11 @@ Plans:
 - [x] 50-02-PLAN.md — Generate Massachusetts State questions, curate to ≥50 passing quality gate, human review checkpoint
 - [x] 50-03-PLAN.md — Banner image (State House gold dome), activate collection, verify end-to-end playability in production
 
-#### Phase 51: Plano, TX Collection
+#### Phase 51: Plano, TX Collection ✅
 **Goal**: Plano, TX is a fully playable collection with ≥50 questions covering local civic topics
 **Depends on**: Phase 50
 **Requirements**: PLAN-01, PLAN-02, PLAN-03
+**Completed**: 2026-03-03
 **Success Criteria** (what must be TRUE):
   1. A Plano, TX locale config exists with Plano-specific topics (city government, Collin County, city services, local history, elections) and source URLs, and the collection is registered in the generator hierarchy
   2. The Plano collection contains ≥50 active questions that pass all quality rules with zero blocking violations
@@ -192,9 +193,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 51-01-PLAN.md — Scaffold collection, author Plano locale config, add Plano voice guidance to system-prompt.ts
-- [ ] 51-02-PLAN.md — Generate Plano questions, curate to ≥50 passing quality gate, human review checkpoint
-- [ ] 51-03-PLAN.md — Banner image (hot air balloon), activate collection, verify end-to-end playability in production
+- [x] 51-01-PLAN.md — Scaffold collection, author Plano locale config, add Plano voice guidance to system-prompt.ts
+- [x] 51-02-PLAN.md — Generate Plano questions, curate to ≥50 passing quality gate, human review checkpoint
+- [x] 51-03-PLAN.md — Banner image (hot air balloon), activate collection, verify end-to-end playability in production
 
 #### Phase 52: Texas State Collection
 **Goal**: Texas State is a fully playable collection with ≥50 questions covering state civic topics
@@ -226,5 +227,5 @@ Plans:
 | 48. Activate Banked Collections | v1.9 | 1/1 | Complete | 2026-03-03 |
 | 49. Cambridge, MA Collection | v1.9 | 0/3 | Not started | - |
 | 50. Massachusetts State Collection | v1.9 | 3/3 | Complete | 2026-03-02 |
-| 51. Plano, TX Collection | v1.9 | 0/3 | Not started | - |
+| 51. Plano, TX Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 52. Texas State Collection | v1.9 | 0/TBD | Not started | - |
