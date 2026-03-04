@@ -24,10 +24,13 @@ import type { LocaleConfig } from './bloomington-in.js';
  * together account for 30 of 90 questions (33%), with norfolk-county and
  * elections-democracy adding further civic coverage.
  *
- * ELECTION SCHEDULE:
+ * ELECTION SCOPE — LOCAL ONLY:
+ * Do NOT generate questions about MPs, Westminster, parliamentary constituencies,
+ * or by-elections. Stick to Norwich City Council and Norfolk County Council elections.
+ * Reason: MP questions expire unpredictably (any by-election can change the seat),
+ * and parliamentary terminology is unfamiliar to the primarily US audience.
  * - Norwich City Council: Elections by thirds in three out of four years
  * - Norfolk County Council: Full council elections every four years
- * - Norwich South & Norwich North MPs: General elections (last: July 2024)
  * - Sources: norwich.gov.uk/elections, norfolk.gov.uk
  */
 export const norwichConfig: LocaleConfig = {
@@ -78,7 +81,7 @@ export const norwichConfig: LocaleConfig = {
     {
       slug: 'elections-democracy',
       name: 'Elections & Democracy',
-      description: 'UK local elections, wards, by-elections, MPs for Norwich, voter participation',
+      description: 'UK local elections, wards, Norwich City Council voting, voter participation — LOCAL elections only, not parliamentary',
     },
   ],
 

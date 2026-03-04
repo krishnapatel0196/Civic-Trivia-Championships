@@ -115,9 +115,7 @@ Key decisions relevant to v2.0 (from v1.9):
 
 ### Pending Todos
 
-- [ ] Set EMPOWERED_ACCOUNTS_URL in backend/.env (required for gem awards)
 - [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
-- [ ] Assess Norwich by-election/MP terminology gap — editorial judgment
 - [ ] "Manage your Empowered Account" link on profile — needs VITE_EMPOWERED_ACCOUNTS_WEB_URL
 
 ### v2.0 Backlog (collection quality)
