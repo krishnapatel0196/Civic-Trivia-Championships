@@ -51,9 +51,9 @@ async function fetchQuestions(): Promise<QuestionRow[]> {
       q.difficulty,
       q.source,
       array_agg(c.name ORDER BY c.name) as "collectionNames"
-    FROM civic_trivia.questions q
-    JOIN civic_trivia.collection_questions cq ON q.id = cq.question_id
-    JOIN civic_trivia.collections c ON cq.collection_id = c.id
+    FROM trivia.questions q
+    JOIN trivia.collection_questions cq ON q.id = cq.question_id
+    JOIN trivia.collections c ON cq.collection_id = c.id
     WHERE q.status = 'active'
     GROUP BY q.id, q.external_id, q.text, q.options, q.correct_answer, q.explanation, q.difficulty, q.source
     ORDER BY q.id

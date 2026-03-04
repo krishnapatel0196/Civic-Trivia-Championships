@@ -115,7 +115,6 @@ Key decisions relevant to v2.0 (from v1.9):
 
 ### Pending Todos
 
-- [ ] Admin review of audit-address-phone report (QUAL-04 advisory items)
 - [ ] "Manage your Empowered Account" link on profile — needs VITE_EMPOWERED_ACCOUNTS_WEB_URL
 
 ### v2.0 Backlog (collection quality)
