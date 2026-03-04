@@ -135,11 +135,12 @@ Key decisions relevant to v2.0 (from v1.9):
 |---|-------------|------|-----------|
 | 022 | What would it take to make a new collection of questions? | 2026-03-01 | [022-what-would-it-take-to-make-a-new-collect](./quick/022-what-would-it-take-to-make-a-new-collect/) |
 | 023 | Scaffold and activate collection CLIs | 2026-03-01 | [023-scaffold-and-activate-collection-cli](./quick/023-scaffold-and-activate-collection-cli/) |
+| 024 | Responsive game UI layout — no scrolling to see answers or timer | 2026-03-03 | [024-game-ui-responsive-layout-fixes](./quick/024-game-ui-responsive-layout-fixes/) |
 
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: v1.9 milestone complete — all 12 collections live
+Stopped at: Completed quick task 024 — responsive game UI layout fixes
 Resume file: None
 
 Next action: `/gsd:new-milestone` to plan v2.0
