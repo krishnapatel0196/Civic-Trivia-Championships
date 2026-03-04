@@ -26,7 +26,7 @@ export function Dashboard() {
           </div>
 
           {/* Start Game Button */}
-          <div className="text-center py-2 -mt-6 sm:-mt-8 h-16 sm:h-20 flex items-center justify-center">
+          <div className="text-center py-2 -mt-6 sm:-mt-8 h-16 sm:h-20 flex items-center justify-center mb-16 sm:mb-0">
             <button
               onClick={() => navigate('/play', { state: { collectionId: selectedId } })}
               onPointerDown={() => setPlayPressed(true)}
