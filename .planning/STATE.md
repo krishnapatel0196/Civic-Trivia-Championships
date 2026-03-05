@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 
 ## Current Position
 
-Phase: Not started (defining requirements for v2.0)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-05 — Milestone v2.0 XP Integration started
+Phase: 53 of v2.0 (53-xp-backend-integration)
+Plan: 1 of 1 in phase
+Status: Phase 53 complete
+Last activity: 2026-03-05 — Completed 53-01-PLAN.md (XP Backend Integration)
 
-Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in planning
+Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (53/54+ complete)
 
 **Milestone history:**
 - v1.0–v1.9 (Phases 1–52): All Complete — see .planning/MILESTONES.md
@@ -113,6 +113,13 @@ Key decisions relevant to v2.0 (from v1.9):
 - Final set: 93 generated → 33 archived → 60 net (57 durable, 3 expiring: Abbott, Paxton, Burrows)
 - Near-duplicate detection gap persists: 17 semantic near-dups required manual pass (same pattern as city collections)
 
+**53-01 decisions:**
+- EMPOWERED_ACCOUNTS_API_URL is distinct from EMPOWERED_ACCOUNTS_URL — kept separate for independent configuration; existing EMPOWERED_ACCOUNTS_URL is used by checkAccountContext() and must not be renamed
+- Idempotency key = ctc-game-{sessionId}-{userId} — sessionId is already server-generated randomUUID, serves as game identifier for XP deduplication without additional field
+- is_duplicate: true from XP API treated as success — xpResult.confirmed=true, isDuplicate=true; no error, no retry
+- XP award ordered before upsertPlayerStats — follows same pattern as gems (award platform resource first, then record local stats)
+- awardPlatformXp() mirrors awardPlatformGems() pattern exactly: withRetry, never throws, returns result object
+
 ### Pending Todos
 
 
@@ -136,7 +143,7 @@ Key decisions relevant to v2.0 (from v1.9):
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Started v2.0 milestone — requirements definition in progress
+Stopped at: Completed 53-01-PLAN.md — XP Backend Integration
 Resume file: None
 
-Next action: `/gsd:plan-phase 53` — XP Backend Integration
+Next action: `/gsd:plan-phase 54` — XP Frontend UI (consumes xp field from progression response)
