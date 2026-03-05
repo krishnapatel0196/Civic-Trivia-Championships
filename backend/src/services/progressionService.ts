@@ -120,6 +120,109 @@ export async function awardPlatformGems(
   }
 }
 
+// ---------------------------------------------------------------------------
+// Platform XP integration (Phase 53)
+// ---------------------------------------------------------------------------
+
+export interface XpAwardResult {
+  confirmed: boolean;
+  isDuplicate?: boolean;
+  transactionId?: string;
+  amount?: number;
+  level?: number;
+  totalXp?: number;
+  xpInLevel?: number;
+  xpToNextLevel?: number;
+  error?: string;
+}
+
+/**
+ * Calculate XP to award based on game performance.
+ * Range: 50 XP (0/10 correct) → 200 XP (10/10 correct)
+ *
+ * @param correctAnswers - Number of correct answers
+ * @param totalQuestions - Total questions in the game
+ * @returns XP amount to award (50–200)
+ */
+export function calculateXpAmount(correctAnswers: number, totalQuestions: number): number {
+  const BASE_XP = 50;
+  const VARIABLE_XP = 150;
+  const scoreRatio = totalQuestions > 0 ? correctAnswers / totalQuestions : 0;
+  return BASE_XP + Math.round(scoreRatio * VARIABLE_XP);
+}
+// Range: 50 XP (0/10 correct) → 200 XP (10/10 correct)
+
+/**
+ * Award platform XP to a Connected-tier user via the Empowered Accounts XP award API.
+ * Uses withRetry for resilience. Never throws — returns a result object.
+ * Idempotent: same idempotencyKey returns is_duplicate: true with no double-award.
+ *
+ * @param userId - UUID of the user to award XP to
+ * @param amount - XP amount to award
+ * @param idempotencyKey - Unique key to prevent double-awards (use ctc-game-{sessionId}-{userId})
+ * @returns XpAwardResult with confirmed flag and level metadata
+ */
+export async function awardPlatformXp(
+  userId: string,
+  amount: number,
+  idempotencyKey: string
+): Promise<XpAwardResult> {
+  const accountsUrl = process.env.EMPOWERED_ACCOUNTS_API_URL;
+  const serviceKey = process.env.TRIVIA_SERVICE_KEY;
+
+  if (!accountsUrl || !serviceKey) {
+    console.warn('[progressionService] EMPOWERED_ACCOUNTS_API_URL or TRIVIA_SERVICE_KEY not set — skipping XP award');
+    return { confirmed: false, error: 'Missing env vars' };
+  }
+
+  const result = await withRetry(async () => {
+    const resp = await fetch(`${accountsUrl}/api/xp/award`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Service-Key': serviceKey,
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        source: 'civic_trivia_championship_score',
+        amount,
+        idempotency_key: idempotencyKey,
+        metadata: { game_id: idempotencyKey },
+      }),
+    });
+    if (!resp.ok) {
+      const text = await resp.text();
+      throw new Error(`XP award API returned ${resp.status}: ${text}`);
+    }
+    return resp.json() as Promise<{
+      transaction_id: string;
+      amount: number;
+      level: number;
+      total_xp: number;
+      xp_in_level: number;
+      xp_to_next_level: number;
+      is_duplicate: boolean;
+    }>;
+  });
+
+  if (result.success) {
+    const data = result.result;
+    return {
+      confirmed: true,
+      isDuplicate: data.is_duplicate,
+      transactionId: data.transaction_id,
+      amount: data.amount,
+      level: data.level,
+      totalXp: data.total_xp,
+      xpInLevel: data.xp_in_level,
+      xpToNextLevel: data.xp_to_next_level,
+    };
+  } else {
+    console.error(`[progressionService] awardPlatformXp failed after retries: ${result.error}`);
+    return { confirmed: false, error: result.error };
+  }
+}
+
 /**
  * Upsert per-game stats into trivia.player_stats for a Connected-tier user.
  * Uses Drizzle onConflictDoUpdate so the first game inserts a row and subsequent

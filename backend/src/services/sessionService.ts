@@ -9,6 +9,7 @@ import { SessionStorage } from './storage/SessionStorage.js';
 import { MemoryStorage } from './storage/MemoryStorage.js';
 import { PLAUSIBILITY_THRESHOLDS, getAdjustedThreshold, type PlausibilityDifficulty } from '../config/plausibilityThresholds.js';
 import type { DBQuestionRow } from './gameModes.js';
+import type { XpAwardResult } from './progressionService.js';
 
 // Question type matching backend data structure
 export interface Question {
@@ -60,6 +61,7 @@ export interface GameSession {
   isConnected: boolean;           // Whether user was Connected tier at session start (default: false)
   isSuspended: boolean;           // Whether account_standing was 'suspended' at session start (default: false)
   accessToken?: string;           // Raw JWT stored for downstream platform calls
+  xpResult?: XpAwardResult | null;  // Set after XP award attempt (Phase 53)
   // Adaptive difficulty state (only set for easy-steps mode)
   adaptiveState?: {
     candidatePools: {
