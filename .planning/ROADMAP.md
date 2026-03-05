@@ -137,12 +137,16 @@ Full archive: [milestones/v1.9-ROADMAP.md](milestones/v1.9-ROADMAP.md)
 ### Phase 53: XP Backend Integration
 **Goal:** Award XP server-side after each game for Connected players
 **Requirements:** XP-01, XP-02, XP-03, XP-04, XP-05
+**Plans:** 1 plan
 **Success criteria:**
 1. Connected player completes a game → XP award call made to Empowered Accounts API
 2. Awarded amount reflects score-proportional formula with participation floor
 3. Repeating the same gameId returns `is_duplicate: true` — no double-award
 4. Inform/anonymous player completes a game → no award call made, no error
 5. `TRIVIA_SERVICE_KEY` and `EMPOWERED_ACCOUNTS_API_URL` env vars documented and validated at startup
+
+Plans:
+- [ ] 53-01-PLAN.md — XpAwardResult interface, calculateXpAmount, awardPlatformXp, game.ts wiring, env docs
 
 ### Phase 54: XP Game UI (Start + End Screen)
 **Goal:** Connected players see their level/XP before and after every game
@@ -164,7 +168,7 @@ Full archive: [milestones/v1.9-ROADMAP.md](milestones/v1.9-ROADMAP.md)
 3. History loads paginated and handles empty state gracefully
 4. Panel is only visible to Connected players; hidden for Inform/anonymous
 
-- [ ] Phase 53: XP Backend Integration (0/? plans)
+- [ ] Phase 53: XP Backend Integration (0/1 plans)
 - [ ] Phase 54: XP Game UI (0/? plans)
 - [ ] Phase 55: XP History Panel (0/? plans)
 
@@ -189,6 +193,6 @@ Full archive: [milestones/v1.9-ROADMAP.md](milestones/v1.9-ROADMAP.md)
 | 50. Massachusetts State Collection | v1.9 | 3/3 | Complete | 2026-03-02 |
 | 51. Plano, TX Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 52. Texas State Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
-| 53. XP Backend Integration | v2.0 | 0/? | Pending | — |
+| 53. XP Backend Integration | v2.0 | 0/1 | Pending | — |
 | 54. XP Game UI | v2.0 | 0/? | Pending | — |
 | 55. XP History Panel | v2.0 | 0/? | Pending | — |
