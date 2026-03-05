@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { sessionManager, Question } from '../services/sessionService.js';
 import { optionalAuth } from '../middleware/auth.js';
-import { calculateProgression, checkAccountContext, awardPlatformGems, upsertPlayerStats } from '../services/progressionService.js';
+import { calculateProgression, checkAccountContext, awardPlatformGems, upsertPlayerStats, calculateXpAmount, awardPlatformXp } from '../services/progressionService.js';
 import { storageFactory } from '../config/redis.js';
 import { selectQuestionsForGame, getCollectionMetadata, getFederalCollectionId, createAdaptiveSession, transformSingleDBQuestion, TOTAL_QUESTIONS } from '../services/questionService.js';
 import { getNextQuestionTier, selectNextAdaptiveQuestion } from '../services/gameModes.js';
@@ -406,6 +406,11 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
         gemsConfirmed = gemResult.confirmed;
         gemError = gemResult.error;
 
+        // Award XP via platform API
+        const xpAmount = calculateXpAmount(results.totalCorrect, results.totalQuestions);
+        const idempotencyKey = `ctc-game-${session.sessionId}-${session.userId}`;
+        session.xpResult = await awardPlatformXp(session.userId, xpAmount, idempotencyKey);
+
         // Write player stats (only count confirmed gems in lifetime_gems)
         await upsertPlayerStats(
           session.userId,
@@ -419,6 +424,7 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
       progression = {
         gemsEarned: (session.isConnected && !session.isSuspended) ? gemsEarned : 0,
         gemsConfirmed,
+        xp: session.xpResult ?? null,
         stats: (session.isConnected && !session.isSuspended) ? {
           gamesPlayed: 1,
           totalCorrect: results.totalCorrect,
