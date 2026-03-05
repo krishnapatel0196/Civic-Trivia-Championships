@@ -168,7 +168,7 @@ Plans:
 3. History loads paginated and handles empty state gracefully
 4. Panel is only visible to Connected players; hidden for Inform/anonymous
 
-- [ ] Phase 53: XP Backend Integration (0/1 plans)
+- [x] Phase 53: XP Backend Integration (1/1 plans) — completed 2026-03-05
 - [ ] Phase 54: XP Game UI (0/? plans)
 - [ ] Phase 55: XP History Panel (0/? plans)
 
@@ -193,6 +193,6 @@ Plans:
 | 50. Massachusetts State Collection | v1.9 | 3/3 | Complete | 2026-03-02 |
 | 51. Plano, TX Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 52. Texas State Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
-| 53. XP Backend Integration | v2.0 | 0/1 | Pending | — |
+| 53. XP Backend Integration | v2.0 | 1/1 | Complete | 2026-03-05 |
 | 54. XP Game UI | v2.0 | 0/? | Pending | — |
 | 55. XP History Panel | v2.0 | 0/? | Pending | — |
