@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-03)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Planning next milestone (v2.0)
+**Current focus:** v2.0 XP Integration
 
 ## Current Position
 
-Phase: N/A — v1.9 complete, planning next milestone
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-03-03 — v1.9 Geographic Expansion milestone complete (Phases 47–52, 16 plans)
+Phase: Not started (defining requirements for v2.0)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-05 — Milestone v2.0 XP Integration started
 
-Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | Ready for v2.0
+Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in planning
 
 **Milestone history:**
 - v1.0–v1.9 (Phases 1–52): All Complete — see .planning/MILESTONES.md
@@ -115,7 +115,6 @@ Key decisions relevant to v2.0 (from v1.9):
 
 ### Pending Todos
 
-- [ ] "Manage your Empowered Account" link on profile — needs VITE_EMPOWERED_ACCOUNTS_WEB_URL
 
 ### v2.0 Backlog (collection quality)
 
@@ -136,8 +135,8 @@ Key decisions relevant to v2.0 (from v1.9):
 
 ## Session Continuity
 
-Last session: 2026-03-03
-Stopped at: Completed quick task 024 — responsive game UI layout fixes
+Last session: 2026-03-05
+Stopped at: Started v2.0 milestone — requirements definition in progress
 Resume file: None
 
-Next action: `/gsd:new-milestone` to plan v2.0
+Next action: `/gsd:plan-phase 53` to start execution

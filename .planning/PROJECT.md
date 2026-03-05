@@ -83,7 +83,14 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ### Active
 
-*(v2.0 requirements TBD — start with `/gsd:new-milestone`)*
+*(v2.0 requirements defined — see REQUIREMENTS.md)*
+
+**v2.0 XP Integration goals:**
+- Award XP via Empowered Accounts API after each game (server-to-server, service key, score-proportional formula, idempotent)
+- Show current level + progress bar on game start screen for Connected players
+- Show XP earned + level-up animation on end screen; handle `is_duplicate` gracefully
+- Non-Connected players: hide XP panel, show "link account to earn XP" prompt
+- XP transaction history panel on profile page (`GET /api/xp/me/history`)
 
 ### Out of Scope
 
@@ -244,4 +251,4 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | ERCOT cluster reduction (Texas) | 12-question ERCOT cluster reduced to 3 best angles (uniqueness, %, transmission miles) | Good — eliminates near-duplicate saturation |
 
 ---
-*Last updated: 2026-03-03 after v1.9 milestone*
+*Last updated: 2026-03-05 after v2.0 milestone start*
