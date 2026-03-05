@@ -12,6 +12,7 @@
 - ✅ **v1.7 Live Civic Intelligence** — Phases 35–39 (shipped 2026-02-27)
 - ✅ **v1.8 Empowered Identity** — Phases 40–46 (shipped 2026-03-01)
 - ✅ **v1.9 Geographic Expansion** — Phases 47–52 (shipped 2026-03-03)
+- 🔄 **v2.0 XP Integration** — Phases 53–55 (in planning)
 
 ## Phases
 
@@ -130,6 +131,45 @@ Full archive: [milestones/v1.9-ROADMAP.md](milestones/v1.9-ROADMAP.md)
 
 </details>
 
+<details open>
+<summary>🔄 v2.0 XP Integration (Phases 53–55) — IN PROGRESS</summary>
+
+### Phase 53: XP Backend Integration
+**Goal:** Award XP server-side after each game for Connected players
+**Requirements:** XP-01, XP-02, XP-03, XP-04, XP-05
+**Success criteria:**
+1. Connected player completes a game → XP award call made to Empowered Accounts API
+2. Awarded amount reflects score-proportional formula with participation floor
+3. Repeating the same gameId returns `is_duplicate: true` — no double-award
+4. Inform/anonymous player completes a game → no award call made, no error
+5. `TRIVIA_SERVICE_KEY` and `EMPOWERED_ACCOUNTS_API_URL` env vars documented and validated at startup
+
+### Phase 54: XP Game UI (Start + End Screen)
+**Goal:** Connected players see their level/XP before and after every game
+**Requirements:** XPS-01, XPS-02, XPE-01, XPE-02, XPE-03, XPE-04
+**Success criteria:**
+1. Connected player on start screen sees current level and XP progress bar
+2. Non-Connected player on start screen sees "Link account to earn XP" prompt (not XP panel)
+3. End screen shows `+{amount} XP` after game results
+4. Level-up triggers a visible animation; no animation when level unchanged
+5. Progress bar shows post-award position in current level
+6. `is_duplicate` response shows neutral message — no reward animation
+
+### Phase 55: XP History Panel
+**Goal:** Players can review their CTC XP transaction history on the profile page
+**Requirements:** XPH-01, XPH-02
+**Success criteria:**
+1. Profile page has an XP history section listing past game sessions
+2. Each entry shows date, XP earned, and game context (score, correct answers)
+3. History loads paginated and handles empty state gracefully
+4. Panel is only visible to Connected players; hidden for Inform/anonymous
+
+- [ ] Phase 53: XP Backend Integration (0/? plans)
+- [ ] Phase 54: XP Game UI (0/? plans)
+- [ ] Phase 55: XP History Panel (0/? plans)
+
+</details>
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -149,3 +189,6 @@ Full archive: [milestones/v1.9-ROADMAP.md](milestones/v1.9-ROADMAP.md)
 | 50. Massachusetts State Collection | v1.9 | 3/3 | Complete | 2026-03-02 |
 | 51. Plano, TX Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 52. Texas State Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
+| 53. XP Backend Integration | v2.0 | 0/? | Pending | — |
+| 54. XP Game UI | v2.0 | 0/? | Pending | — |
+| 55. XP History Panel | v2.0 | 0/? | Pending | — |
