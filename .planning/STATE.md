@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 54 of v2.0 (54-xp-game-ui)
-Plan: 2 of 5 in phase
+Plan: 3 of 5 in phase
 Status: In progress
-Last activity: 2026-03-06 — Completed 54-02-PLAN.md (usePlayerXp hook + XpStrip component)
+Last activity: 2026-03-06 — Completed 54-03-PLAN.md (XP End-Screen Components: XpReveal + LevelUpOverlay)
 
 Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (54/54+ in progress)
 
@@ -132,6 +132,13 @@ Key decisions relevant to v2.0 (from v1.9):
 - XP fraction math: xpNeeded = xpInLevel + xpToNextLevel; display is "xpInLevel / xpNeeded XP"
 - XpStrip returns null when xpData is null — parent needs no conditional logic
 
+**54-03 decisions:**
+- Progress bar math: xpNeeded = xpInLevel + xpToNextLevel; progressPercent = xpInLevel / xpNeeded * 100
+- LevelUpOverlay calls onDismiss after 300ms exit animation delay (reducedMotion: 0ms) to avoid flash
+- XpIcon (existing SVG lightning bolt) used — no emoji fallback needed
+- bg-cyan-500 progress bar fill, text-cyan-400 XP amount — consistent with XpStrip Plan 02 colors
+- z-50 for LevelUpOverlay (higher than CelebrationEffects z-40) — renders on top of all overlays
+
 ### Pending Todos
 
 
@@ -155,7 +162,7 @@ Key decisions relevant to v2.0 (from v1.9):
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 54-02-PLAN.md — usePlayerXp hook + XpStrip component
+Stopped at: Completed 54-03-PLAN.md — XP End-Screen Components (XpReveal + LevelUpOverlay)
 Resume file: None
 
-Next action: Execute 54-03-PLAN.md — next plan in Phase 54 XP Game UI
+Next action: Execute 54-04-PLAN.md — next plan in Phase 54 XP Game UI
