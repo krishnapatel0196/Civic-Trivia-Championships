@@ -8,6 +8,7 @@ import { announce } from '../utils/announce';
 import { useAuthStore } from '../store/authStore';
 import { API_URL } from '../services/api';
 import { usePlayerXp } from '../hooks/usePlayerXp';
+import { XpStrip } from '../features/game/components/XpStrip';
 
 export function Game() {
   const navigate = useNavigate();
@@ -276,10 +277,12 @@ export function Game() {
     );
   }
 
-  // Hide idle screen flash when auto-starting from Dashboard
+  // Show XpStrip while session loads (auto-starting from Dashboard)
   if (state.phase === 'idle' && collectionId !== undefined) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" />
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        {isXpConnected && <XpStrip xpData={xpData} isLoading={isXpLoading} />}
+      </div>
     );
   }
 
