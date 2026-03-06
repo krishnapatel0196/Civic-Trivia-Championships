@@ -296,12 +296,12 @@ export function useGameState(): UseGameStateReturn {
             const xpResult: XpResult | null = raw.xp
               ? {
                   confirmed: raw.xp.confirmed ?? false,
-                  isDuplicate: raw.xp.is_duplicate,
+                  isDuplicate: raw.xp.isDuplicate,
                   amount: raw.xp.amount,
                   level: raw.xp.level,
-                  totalXp: raw.xp.total_xp,
-                  xpInLevel: raw.xp.xp_in_level,
-                  xpToNextLevel: raw.xp.xp_to_next_level,
+                  totalXp: raw.xp.totalXp,
+                  xpInLevel: raw.xp.xpInLevel,
+                  xpToNextLevel: raw.xp.xpToNextLevel,
                   error: raw.xp.error,
                 }
               : null;

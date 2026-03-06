@@ -38,11 +38,7 @@ export function Game() {
 
   // XP data for start screen and level-up detection
   const userId = useAuthStore((s) => s.user?.id ?? null);
-  const tier = useAuthStore((s) => s.tier);
-  const isConnectedTier = tier === 'connected' || tier === 'empowered';
-  const { xpData, isLoading: isXpLoading, isConnected: isXpConnected } = usePlayerXp(
-    isConnectedTier ? userId : null
-  );
+  const { xpData, isLoading: isXpLoading, isConnected: isXpConnected } = usePlayerXp(userId);
 
   // Capture level before game starts for level-up detection on end screen
   const [priorLevel, setPriorLevel] = useState<number | null>(null);
