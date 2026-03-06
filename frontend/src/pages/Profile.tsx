@@ -189,7 +189,11 @@ export function Profile() {
                   <div className="flex items-center space-x-2">
                     <XpIcon className="w-6 h-6 text-cyan-400" />
                     <span className="text-2xl font-bold text-cyan-400">
-                      {(accountData.connected_profile?.xp ?? 0).toLocaleString()}
+                      {(() => {
+                        const raw = accountData.connected_profile?.xp;
+                        const n = typeof raw === 'object' && raw !== null ? raw.total_xp : raw;
+                        return (n ?? 0).toLocaleString();
+                      })()}
                     </span>
                     <span className="text-slate-400">XP</span>
                   </div>

@@ -14,7 +14,8 @@ export interface AccountProfile {
   tier: Tier;
   account_standing: string;
   connected_profile?: {
-    xp: number;
+    // xp may be a plain number (legacy) or a rich object from the XP system
+    xp: number | { total_xp: number; level?: number; xp_in_level?: number; xp_to_next_level?: number };
     gem_balance: number;
     display_name: string;
     verification_status?: string;
