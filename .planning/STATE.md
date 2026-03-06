@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 
 ## Current Position
 
-Phase: 53 of v2.0 (53-xp-backend-integration)
-Plan: 1 of 1 in phase
-Status: Phase 53 complete
-Last activity: 2026-03-05 — Completed 53-01-PLAN.md (XP Backend Integration)
+Phase: 54 of v2.0 (54-xp-game-ui)
+Plan: 1 of 5 in phase
+Status: In progress
+Last activity: 2026-03-06 — Completed 54-01-PLAN.md (XP Type Foundation)
 
-Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (53/54+ complete)
+Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (54/54+ in progress)
 
 **Milestone history:**
 - v1.0–v1.9 (Phases 1–52): All Complete — see .planning/MILESTONES.md
@@ -120,6 +120,12 @@ Key decisions relevant to v2.0 (from v1.9):
 - XP award ordered before upsertPlayerStats — follows same pattern as gems (award platform resource first, then record local stats)
 - awardPlatformXp() mirrors awardPlatformGems() pattern exactly: withRetry, never throws, returns result object
 
+**54-01 decisions:**
+- XpResult fields are all optional (except confirmed) — partial API responses remain valid; xp award may fail partially
+- apiRequest<{ progression: any }> intentionally uses any to accept snake_case raw API shape before mapping
+- gemsConfirmed: boolean added to Progression to track gem award confirmation (maps from raw.gemsConfirmed)
+- xpMotionValue animates to xp?.amount ?? 0 — amount is per-game XP awarded (not cumulative totalXp)
+
 ### Pending Todos
 
 
@@ -142,8 +148,8 @@ Key decisions relevant to v2.0 (from v1.9):
 
 ## Session Continuity
 
-Last session: 2026-03-05
-Stopped at: Completed 53-01-PLAN.md — XP Backend Integration
+Last session: 2026-03-06
+Stopped at: Completed 54-01-PLAN.md — XP Type Foundation
 Resume file: None
 
-Next action: `/gsd:plan-phase 54` — XP Frontend UI (consumes xp field from progression response)
+Next action: Execute 54-02-PLAN.md — next plan in Phase 54 XP Game UI
