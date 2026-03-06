@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 54 of v2.0 (54-xp-game-ui)
-Plan: 3 of 5 in phase
+Plan: 4 of 5 in phase
 Status: In progress
-Last activity: 2026-03-06 — Completed 54-03-PLAN.md (XP End-Screen Components: XpReveal + LevelUpOverlay)
+Last activity: 2026-03-06 — Completed 54-04-PLAN.md (XP Start Screen Wiring: Game.tsx + GameScreen idle phase)
 
 Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (54/54+ in progress)
 
@@ -139,6 +139,12 @@ Key decisions relevant to v2.0 (from v1.9):
 - bg-cyan-500 progress bar fill, text-cyan-400 XP amount — consistent with XpStrip Plan 02 colors
 - z-50 for LevelUpOverlay (higher than CelebrationEffects z-40) — renders on top of all overlays
 
+**54-04 decisions:**
+- isConnectedTier local var (not selector) — tier check runs inline before usePlayerXp call
+- priorLevel useEffect guards with priorLevel === null — only sets once; Plan 05 resets via onLevelCaptured
+- Non-Connected prompt hidden while isXpLoading is true — avoids flash of prompt before fetch resolves
+- onLevelCaptured typed as any pending Plan 05 ResultsScreen interface update — expected TS error
+
 ### Pending Todos
 
 
@@ -162,7 +168,7 @@ Key decisions relevant to v2.0 (from v1.9):
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 54-03-PLAN.md — XP End-Screen Components (XpReveal + LevelUpOverlay)
+Stopped at: Completed 54-04-PLAN.md — XP Start Screen Wiring (Game.tsx + GameScreen idle phase)
 Resume file: None
 
-Next action: Execute 54-04-PLAN.md — next plan in Phase 54 XP Game UI
+Next action: Execute 54-05-PLAN.md — final plan in Phase 54 XP Game UI
