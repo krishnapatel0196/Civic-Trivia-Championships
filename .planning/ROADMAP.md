@@ -151,6 +151,7 @@ Plans:
 ### Phase 54: XP Game UI (Start + End Screen)
 **Goal:** Connected players see their level/XP before and after every game
 **Requirements:** XPS-01, XPS-02, XPE-01, XPE-02, XPE-03, XPE-04
+**Plans:** 5 plans
 **Success criteria:**
 1. Connected player on start screen sees current level and XP progress bar
 2. Non-Connected player on start screen sees "Link account to earn XP" prompt (not XP panel)
@@ -158,6 +159,13 @@ Plans:
 4. Level-up triggers a visible animation; no animation when level unchanged
 5. Progress bar shows post-award position in current level
 6. `is_duplicate` response shows neutral message — no reward animation
+
+Plans:
+- [ ] 54-01-PLAN.md — Fix Progression type (XpResult), update useGameState mapping
+- [ ] 54-02-PLAN.md — usePlayerXp hook, XpStrip component
+- [ ] 54-03-PLAN.md — XpReveal component, LevelUpOverlay component
+- [ ] 54-04-PLAN.md — Wire GameScreen idle (XpStrip/prompt), Game.tsx priorLevel state
+- [ ] 54-05-PLAN.md — Update ResultsScreen: integrate XpReveal, LevelUpOverlay, non-Connected prompt
 
 ### Phase 55: XP History Panel
 **Goal:** Players can review their CTC XP transaction history on the profile page
@@ -169,7 +177,7 @@ Plans:
 4. Panel is only visible to Connected players; hidden for Inform/anonymous
 
 - [x] Phase 53: XP Backend Integration (1/1 plans) — completed 2026-03-05
-- [ ] Phase 54: XP Game UI (0/? plans)
+- [ ] Phase 54: XP Game UI (0/5 plans)
 - [ ] Phase 55: XP History Panel (0/? plans)
 
 </details>
@@ -194,5 +202,5 @@ Plans:
 | 51. Plano, TX Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 52. Texas State Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 53. XP Backend Integration | v2.0 | 1/1 | Complete | 2026-03-05 |
-| 54. XP Game UI | v2.0 | 0/? | Pending | — |
+| 54. XP Game UI | v2.0 | 0/5 | Pending | — |
 | 55. XP History Panel | v2.0 | 0/? | Pending | — |
