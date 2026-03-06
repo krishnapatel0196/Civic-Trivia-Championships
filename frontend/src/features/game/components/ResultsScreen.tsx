@@ -4,11 +4,13 @@ import type { GameResult, Question, LearningContent } from '../../../types/game'
 import { TOPIC_ICONS, TOPIC_LABELS } from './TopicIcon';
 import { LearnMoreModal } from './LearnMoreModal';
 import { FlagButton } from './FlagButton';
-import { XpIcon } from '../../../components/icons/XpIcon';
 import { GemIcon } from '../../../components/icons/GemIcon';
 import { useConfettiStore } from '../../../store/confettiStore';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { announce } from '../../../utils/announce';
+import { XpReveal } from './XpReveal';
+import { LevelUpOverlay } from './LevelUpOverlay';
+import { ACCOUNTS_WEB_URL } from '../../../services/accountsApi';
 
 interface ResultsScreenProps {
   result: GameResult;
@@ -18,13 +20,14 @@ interface ResultsScreenProps {
   onHome: () => void;
   flaggedQuestions?: Set<string>;
   onFlagToggle?: (questionId: string) => void;  // Interactive flag toggles (authenticated users only)
+  priorLevel?: number | null;
+  onLevelCaptured?: (level: number) => void;
 }
 
-export function ResultsScreen({ result, questions, collectionName, onPlayAgain, onHome, flaggedQuestions, onFlagToggle }: ResultsScreenProps) {
+export function ResultsScreen({ result, questions, collectionName, onPlayAgain, onHome, flaggedQuestions, onFlagToggle, priorLevel, onLevelCaptured }: ResultsScreenProps) {
   const [expandedQuestions, setExpandedQuestions] = useState<Set<number>>(new Set());
   const [learnMoreQuestion, setLearnMoreQuestion] = useState<{ content: LearningContent; userAnswer: number | null; correctAnswer: number } | null>(null);
   const motionScore = useMotionValue(0);
-  const xpMotionValue = useMotionValue(0);
   const gemsMotionValue = useMotionValue(0);
 
   // Refs for accordion keyboard navigation
@@ -69,29 +72,26 @@ export function ResultsScreen({ result, questions, collectionName, onPlayAgain, 
     return unsubscribe;
   }, [motionScore]);
 
-  // Animate XP with spring physics (if progression exists)
-  useEffect(() => {
-    if (result.progression) {
-      const controls = animate(xpMotionValue, result.progression.xp?.amount ?? 0, {
-        type: 'spring',
-        stiffness: 100,
-        damping: 20,
-        mass: 0.5,
-        duration: 1.5,
-      });
+  // Level-up overlay state
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const levelUpShownRef = useRef(false);
 
-      return () => controls.stop();
+  // Trigger level-up overlay when level increases
+  useEffect(() => {
+    if (levelUpShownRef.current) return;
+    const xp = result.progression?.xp;
+    if (
+      xp?.confirmed &&
+      !xp.isDuplicate &&
+      xp.level !== undefined &&
+      priorLevel !== null &&
+      priorLevel !== undefined &&
+      xp.level > priorLevel
+    ) {
+      levelUpShownRef.current = true;
+      setShowLevelUp(true);
     }
-  }, [result.progression, xpMotionValue]);
-
-  // Subscribe to XP motion value for display
-  const [displayXP, setDisplayXP] = useState(0);
-  useEffect(() => {
-    const unsubscribe = xpMotionValue.on('change', (latest) => {
-      setDisplayXP(Math.round(latest));
-    });
-    return unsubscribe;
-  }, [xpMotionValue]);
+  }, [result.progression, priorLevel]);
 
   // Animate gems with spring physics (if progression exists)
   useEffect(() => {
@@ -216,20 +216,17 @@ export function ResultsScreen({ result, questions, collectionName, onPlayAgain, 
               </motion.div>
             )}
 
-            {/* XP and gems display (only for authenticated users) */}
-            {result.progression && (
+            {/* XP and gems display */}
+            {result.progression ? (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15, duration: 0.3 }}
-                className="flex items-center justify-center gap-8 mt-4"
+                className="flex flex-col items-center gap-4 mt-4"
               >
-                <div className="flex items-center gap-2">
-                  <XpIcon className={`w-6 h-6 ${isPerfectGame ? 'text-yellow-400' : 'text-cyan-400'}`} />
-                  <span className={`text-2xl font-bold ${isPerfectGame ? 'text-yellow-400' : 'text-cyan-400'}`}>
-                    +{displayXP}
-                  </span>
-                </div>
+                {result.progression.xp && result.progression.xp.confirmed && (
+                  <XpReveal xpResult={result.progression.xp} />
+                )}
                 <div className="flex items-center gap-2">
                   <GemIcon className={`w-6 h-6 ${isPerfectGame ? 'text-yellow-400' : 'text-purple-400'}`} />
                   <span className={`text-2xl font-bold ${isPerfectGame ? 'text-yellow-400' : 'text-purple-400'}`}>
@@ -237,6 +234,15 @@ export function ResultsScreen({ result, questions, collectionName, onPlayAgain, 
                   </span>
                 </div>
               </motion.div>
+            ) : (
+              <div className="mt-4">
+                <a
+                  href={ACCOUNTS_WEB_URL}
+                  className="text-slate-500 hover:text-slate-400 text-sm transition-colors"
+                >
+                  Link account to earn XP
+                </a>
+              </div>
             )}
           </motion.div>
 
@@ -690,6 +696,18 @@ export function ResultsScreen({ result, questions, collectionName, onPlayAgain, 
           correctAnswer={learnMoreQuestion?.correctAnswer ?? 0}
         />
       </div>
+
+      {showLevelUp && result.progression?.xp?.level && (
+        <LevelUpOverlay
+          newLevel={result.progression.xp.level}
+          onDismiss={() => {
+            setShowLevelUp(false);
+            if (result.progression?.xp?.level && onLevelCaptured) {
+              onLevelCaptured(result.progression.xp.level);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
