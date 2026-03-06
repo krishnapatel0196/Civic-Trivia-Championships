@@ -1,7 +1,7 @@
 import { useReducer, useEffect, useRef, useState } from 'react';
 import { gameReducer, initialGameState } from '../gameReducer';
 import { createGameSession, submitAnswer } from '../../../services/gameService';
-import type { GameState, Question, GameResult, Progression } from '../../../types/game';
+import type { GameState, Question, GameResult, Progression, XpResult } from '../../../types/game';
 import { apiRequest } from '../../../services/api';
 import { useAuthStore } from '../../../store/authStore';
 
@@ -285,9 +285,31 @@ export function useGameState(): UseGameStateReturn {
 
       if (isAuthenticated) {
         // Fetch results from server to get progression data
-        apiRequest<{ progression: Progression | null }>(`/api/game/results/${sessionIdRef.current}`)
+        apiRequest<{ progression: any }>(`/api/game/results/${sessionIdRef.current}`)
           .then((response) => {
-            setProgression(response.progression);
+            const raw = response.progression;
+            if (!raw) {
+              setProgression(null);
+              return;
+            }
+            // Map snake_case API response to camelCase XpResult
+            const xpResult: XpResult | null = raw.xp
+              ? {
+                  confirmed: raw.xp.confirmed ?? false,
+                  isDuplicate: raw.xp.is_duplicate,
+                  amount: raw.xp.amount,
+                  level: raw.xp.level,
+                  totalXp: raw.xp.total_xp,
+                  xpInLevel: raw.xp.xp_in_level,
+                  xpToNextLevel: raw.xp.xp_to_next_level,
+                  error: raw.xp.error,
+                }
+              : null;
+            setProgression({
+              gemsEarned: raw.gemsEarned ?? 0,
+              gemsConfirmed: raw.gemsConfirmed ?? false,
+              xp: xpResult,
+            });
           })
           .catch((error) => {
             console.error('Failed to fetch progression:', error);

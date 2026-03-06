@@ -72,7 +72,7 @@ export function ResultsScreen({ result, questions, collectionName, onPlayAgain, 
   // Animate XP with spring physics (if progression exists)
   useEffect(() => {
     if (result.progression) {
-      const controls = animate(xpMotionValue, result.progression.xpEarned, {
+      const controls = animate(xpMotionValue, result.progression.xp?.amount ?? 0, {
         type: 'spring',
         stiffness: 100,
         damping: 20,
