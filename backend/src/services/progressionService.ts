@@ -103,12 +103,12 @@ export async function awardPlatformGems(
   amount: number
 ): Promise<{ confirmed: boolean; error?: string }> {
   const result = await withRetry(async () => {
-    const { error } = await (supabaseAdmin as any).rpc('award_gems', {
+    const { error } = await (supabaseAdmin as any).schema('connect').rpc('credit_gems', {
       p_user_id: userId,
       p_gem_type: 'yellow',
       p_amount: amount,
-      p_reason: 'game_completed',
-      p_source: 'civic_trivia',
+      p_transaction_type: 'game_completed',
+      p_source_ref: 'civic_trivia',
     });
     if (error) throw new Error(error.message);
   });
