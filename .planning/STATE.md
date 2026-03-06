@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 54 of v2.0 (54-xp-game-ui)
-Plan: 1 of 5 in phase
+Plan: 2 of 5 in phase
 Status: In progress
-Last activity: 2026-03-06 — Completed 54-01-PLAN.md (XP Type Foundation)
+Last activity: 2026-03-06 — Completed 54-02-PLAN.md (usePlayerXp hook + XpStrip component)
 
 Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (54/54+ in progress)
 
@@ -126,6 +126,12 @@ Key decisions relevant to v2.0 (from v1.9):
 - gemsConfirmed: boolean added to Progression to track gem award confirmation (maps from raw.gemsConfirmed)
 - xpMotionValue animates to xp?.amount ?? 0 — amount is per-game XP awarded (not cumulative totalXp)
 
+**54-02 decisions:**
+- 404 from /api/xp/:userId = not Connected (isConnected: false) — not an error; normal path for non-linked users
+- No Authorization header on XP fetch — endpoint is public
+- XP fraction math: xpNeeded = xpInLevel + xpToNextLevel; display is "xpInLevel / xpNeeded XP"
+- XpStrip returns null when xpData is null — parent needs no conditional logic
+
 ### Pending Todos
 
 
@@ -149,7 +155,7 @@ Key decisions relevant to v2.0 (from v1.9):
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 54-01-PLAN.md — XP Type Foundation
+Stopped at: Completed 54-02-PLAN.md — usePlayerXp hook + XpStrip component
 Resume file: None
 
-Next action: Execute 54-02-PLAN.md — next plan in Phase 54 XP Game UI
+Next action: Execute 54-03-PLAN.md — next plan in Phase 54 XP Game UI
