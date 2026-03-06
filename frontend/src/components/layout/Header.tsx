@@ -2,12 +2,17 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { authService } from '../../services/authService';
+import { usePlayerXp } from '../../hooks/usePlayerXp';
 
 export function Header() {
   const { user, accessToken, clearAuth, isAuthenticated, displayName } = useAuthStore();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const userId = useAuthStore((s) => s.user?.id ?? null);
+  const { xpData, isConnected: isXpConnected } = usePlayerXp(userId);
+  const xpNeeded = xpData ? xpData.xpInLevel + xpData.xpToNextLevel : 0;
+  const progressPercent = xpNeeded > 0 ? Math.round((xpData!.xpInLevel / xpNeeded) * 100) : 0;
 
   const handleLogout = async () => {
     try {
@@ -62,9 +67,21 @@ export function Header() {
           {/* User info and hamburger menu / Sign in links */}
           {isAuthenticated && user ? (
             <div className="flex items-center space-x-4">
-              <span className="hidden sm:block text-sm text-slate-300">
-                {displayName || user.email}
-              </span>
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-sm text-slate-300">{displayName || user.email}</span>
+                {isXpConnected && xpData && (
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-xs text-slate-400">Lv {xpData.level}</span>
+                    <div className="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-cyan-500 rounded-full"
+                        style={{ width: `${progressPercent}%` }}
+                      />
+                    </div>
+                    <span className="text-xs text-slate-500">{xpData.xpInLevel.toLocaleString()} XP</span>
+                  </div>
+                )}
+              </div>
 
               {/* Hamburger menu */}
               <div className="relative" ref={menuRef}>
