@@ -21,6 +21,8 @@ import { useConfettiStore } from '../../../store/confettiStore';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { announce } from '../../../utils/announce';
 import type { GameState, Question, LearningContent } from '../../../types/game';
+import { XpStrip } from './XpStrip';
+import { ACCOUNTS_WEB_URL } from '../../../services/accountsApi';
 
 const QUESTION_DURATION = 20; // seconds
 const FINAL_QUESTION_DURATION = 50; // seconds for final question
@@ -45,6 +47,9 @@ interface GameScreenProps {
   flaggedQuestions: Set<string>;
   isRateLimited: boolean;
   onFlagToggle: (questionId: string) => void;
+  xpData: import('../../../hooks/usePlayerXp').PlayerXpData | null;
+  isXpLoading: boolean;
+  isXpConnected: boolean;
 }
 
 export function GameScreen({
@@ -66,6 +71,9 @@ export function GameScreen({
   flaggedQuestions,
   isRateLimited,
   onFlagToggle,
+  xpData,
+  isXpLoading,
+  isXpConnected,
 }: GameScreenProps) {
 
   const [showTimeoutFlash, setShowTimeoutFlash] = useState(false);
@@ -321,6 +329,23 @@ export function GameScreen({
           >
             Quick Play
           </button>
+
+          {/* XP panel for Connected players */}
+          {isXpConnected && (
+            <XpStrip xpData={xpData} isLoading={isXpLoading} />
+          )}
+
+          {/* Non-Connected prompt */}
+          {!isXpConnected && !isXpLoading && (
+            <div className="mt-4">
+              <a
+                href={ACCOUNTS_WEB_URL}
+                className="text-slate-500 hover:text-slate-400 text-sm transition-colors"
+              >
+                Link account to earn XP
+              </a>
+            </div>
+          )}
         </motion.div>
       </div>
     );
