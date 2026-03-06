@@ -191,7 +191,7 @@ export function Profile() {
                     <span className="text-2xl font-bold text-cyan-400">
                       {(() => {
                         const raw = accountData.connected_profile?.xp;
-                        const n = typeof raw === 'object' && raw !== null ? raw.total_xp : raw;
+                        const n = typeof raw === 'object' && raw !== null ? (raw.total_xp ?? raw.total) : raw;
                         return (n ?? 0).toLocaleString();
                       })()}
                     </span>
