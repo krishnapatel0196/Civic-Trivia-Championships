@@ -7,6 +7,7 @@ import { FeedbackElaborationScreen } from '../features/game/components/FeedbackE
 import { announce } from '../utils/announce';
 import { useAuthStore } from '../store/authStore';
 import { API_URL } from '../services/api';
+import { usePlayerXp } from '../hooks/usePlayerXp';
 
 export function Game() {
   const navigate = useNavigate();
@@ -35,6 +36,17 @@ export function Game() {
   // Auth state for conditional flag UI
   const accessToken = useAuthStore((state) => state.accessToken);
 
+  // XP data for start screen and level-up detection
+  const userId = useAuthStore((s) => s.user?.id ?? null);
+  const tier = useAuthStore((s) => s.tier);
+  const isConnectedTier = tier === 'connected' || tier === 'empowered';
+  const { xpData, isLoading: isXpLoading, isConnected: isXpConnected } = usePlayerXp(
+    isConnectedTier ? userId : null
+  );
+
+  // Capture level before game starts for level-up detection on end screen
+  const [priorLevel, setPriorLevel] = useState<number | null>(null);
+
   // Flag state management
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
   const [isRateLimited, setIsRateLimited] = useState(false);
@@ -48,6 +60,14 @@ export function Game() {
       startGame(collectionId);
     }
   }, []);
+
+  // Capture priorLevel when XP loads on idle screen (before game starts)
+  // Only set once (priorLevel === null) — Plan 05 updates it after each game via onLevelCaptured
+  useEffect(() => {
+    if (state.phase === 'idle' && xpData !== null && priorLevel === null) {
+      setPriorLevel(xpData.level);
+    }
+  }, [state.phase, xpData, priorLevel]);
 
   // Reset flag state when game starts
   useEffect(() => {
@@ -254,6 +274,8 @@ export function Game() {
         onHome={handleHome}
         flaggedQuestions={flaggedQuestions}
         onFlagToggle={accessToken ? handleFlagToggle : undefined}
+        priorLevel={priorLevel}
+        onLevelCaptured={(newLevel) => setPriorLevel(newLevel)}
       />
     );
   }
@@ -286,6 +308,9 @@ export function Game() {
       flaggedQuestions={flaggedQuestions}
       isRateLimited={isRateLimited}
       onFlagToggle={handleFlagToggle}
+      xpData={xpData}
+      isXpLoading={isXpLoading}
+      isXpConnected={isXpConnected}
     />
   );
 }
