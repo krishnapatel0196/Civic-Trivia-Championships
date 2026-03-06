@@ -60,9 +60,21 @@ export type GameAnswer = {
   wager?: number; // Optional wager amount (only present for Q10)
 };
 
+export type XpResult = {
+  confirmed: boolean;
+  isDuplicate?: boolean;
+  amount?: number;       // XP awarded this game
+  level?: number;        // new level after award
+  totalXp?: number;      // cumulative XP (mapped from total_xp)
+  xpInLevel?: number;    // current position in level (mapped from xp_in_level)
+  xpToNextLevel?: number; // XP needed to reach next level (mapped from xp_to_next_level)
+  error?: string;
+};
+
 export type Progression = {
-  xpEarned: number;
   gemsEarned: number;
+  gemsConfirmed: boolean;
+  xp: XpResult | null;
 };
 
 export type GameResult = {
