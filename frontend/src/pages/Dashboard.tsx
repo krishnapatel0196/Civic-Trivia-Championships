@@ -50,12 +50,12 @@ export function Dashboard() {
 
           {/* XP strip for Connected players, link prompt for others */}
           {isXpConnected && (
-            <div className="flex justify-center -mt-12 sm:-mt-14 mb-4">
+            <div className="flex justify-center mb-4">
               <XpStrip xpData={xpData} isLoading={isXpLoading} />
             </div>
           )}
           {!isXpConnected && !isXpLoading && isAuthenticated && (
-            <div className="text-center -mt-12 sm:-mt-14 mb-4">
+            <div className="text-center mb-4">
               <a
                 href={ACCOUNTS_WEB_URL}
                 className="text-slate-500 hover:text-slate-400 text-sm transition-colors"
