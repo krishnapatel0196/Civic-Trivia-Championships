@@ -14,7 +14,7 @@ Plan: 1 of 1 in phase
 Status: Phase complete
 Last activity: 2026-03-08 — Completed 56-01 (Post-v2.0 XP tech debt); Phase 56 fully shipped
 
-Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (54/54+ in progress)
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | v2.0 SHIPPED
 
 **Milestone history:**
 - v1.0–v1.9 (Phases 1–52): All Complete — see .planning/MILESTONES.md

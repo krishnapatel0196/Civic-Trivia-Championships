@@ -12,7 +12,7 @@
 - ✅ **v1.7 Live Civic Intelligence** — Phases 35–39 (shipped 2026-02-27)
 - ✅ **v1.8 Empowered Identity** — Phases 40–46 (shipped 2026-03-01)
 - ✅ **v1.9 Geographic Expansion** — Phases 47–52 (shipped 2026-03-03)
-- ✅ **v2.0 XP Integration** — Phases 53–55 (shipped 2026-03-08)
+- ✅ **v2.0 XP Integration** — Phases 53–56 (shipped 2026-03-08)
 
 ## Phases
 
@@ -132,7 +132,7 @@ Full archive: [milestones/v1.9-ROADMAP.md](milestones/v1.9-ROADMAP.md)
 </details>
 
 <details open>
-<summary>🔧 v2.0 XP Integration (Phases 53–56) — in progress</summary>
+<summary>✅ v2.0 XP Integration (Phases 53–56) — SHIPPED 2026-03-08</summary>
 
 ### Phase 53: XP Backend Integration
 **Goal:** Award XP server-side after each game for Connected players
@@ -192,12 +192,12 @@ Plans:
 3. XP result persisted beyond Redis TTL so repeated `/results` calls return correct state for Connected players
 
 Plans:
-- [ ] 56-01-PLAN.md — env startup validation, isDuplicate two-pass fix, xpResult persistence
+- [x] 56-01-PLAN.md — env startup validation, isDuplicate two-pass fix, xpResult persistence
 
 - [x] Phase 53: XP Backend Integration (1/1 plans) — completed 2026-03-05
 - [x] Phase 54: XP Game UI (5/5 plans) — completed 2026-03-08
 - [x] Phase 55: XP History Panel (3/3 plans) — completed 2026-03-08
-- [ ] Phase 56: Post-v2.0 XP Tech Debt (0/1 plans) — pending
+- [x] Phase 56: Post-v2.0 XP Tech Debt (1/1 plans) — completed 2026-03-08
 
 </details>
 
@@ -223,4 +223,4 @@ Plans:
 | 53. XP Backend Integration | v2.0 | 1/1 | Complete | 2026-03-05 |
 | 54. XP Game UI | v2.0 | 5/5 | Complete | 2026-03-08 |
 | 55. XP History Panel | v2.0 | 3/3 | Complete | 2026-03-08 |
-| 56. Post-v2.0 XP Tech Debt | v2.0 | 0/1 | Pending | — |
+| 56. Post-v2.0 XP Tech Debt | v2.0 | 1/1 | Complete | 2026-03-08 |
