@@ -170,15 +170,21 @@ Plans:
 ### Phase 55: XP History Panel
 **Goal:** Players can review their CTC XP transaction history on the profile page
 **Requirements:** XPH-01, XPH-02
+**Plans:** 3 plans
 **Success criteria:**
 1. Profile page has an XP history section listing past game sessions
 2. Each entry shows date, XP earned, and game context (score, correct answers)
 3. History loads paginated and handles empty state gracefully
 4. Panel is only visible to Connected players; hidden for Inform/anonymous
 
+Plans:
+- [ ] 55-01-PLAN.md — Enrich awardPlatformXp() metadata (score, correctAnswers, collectionSlug)
+- [ ] 55-02-PLAN.md — Add GET /api/users/profile/xp/history proxy route
+- [ ] 55-03-PLAN.md — Profile.tsx two-tab layout and XP History panel (frontend)
+
 - [x] Phase 53: XP Backend Integration (1/1 plans) — completed 2026-03-05
 - [x] Phase 54: XP Game UI (5/5 plans) — completed 2026-03-08
-- [ ] Phase 55: XP History Panel (0/? plans)
+- [ ] Phase 55: XP History Panel (0/3 plans)
 
 </details>
 
@@ -203,4 +209,4 @@ Plans:
 | 52. Texas State Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 53. XP Backend Integration | v2.0 | 1/1 | Complete | 2026-03-05 |
 | 54. XP Game UI | v2.0 | 5/5 | Complete | 2026-03-08 |
-| 55. XP History Panel | v2.0 | 0/? | Pending | — |
+| 55. XP History Panel | v2.0 | 0/3 | Pending | — |
