@@ -30,3 +30,25 @@ export async function updateTimerMultiplier(multiplier: number): Promise<{ timer
     body: JSON.stringify({ timerMultiplier: multiplier }),
   });
 }
+
+export interface XpHistoryEntry {
+  id: string;
+  createdAt: string;
+  amount: number;
+  isDuplicate: boolean;
+  score: number | null;
+  correctAnswers: number | null;
+  collectionSlug: string | null;
+}
+
+export interface XpHistoryResponse {
+  entries: XpHistoryEntry[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export async function fetchXpHistory(page: number = 1): Promise<XpHistoryResponse> {
+  return apiRequest<XpHistoryResponse>(`/api/users/profile/xp/history?page=${page}`);
+}
