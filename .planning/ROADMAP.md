@@ -132,7 +132,7 @@ Full archive: [milestones/v1.9-ROADMAP.md](milestones/v1.9-ROADMAP.md)
 </details>
 
 <details open>
-<summary>✅ v2.0 XP Integration (Phases 53–55) — SHIPPED 2026-03-08</summary>
+<summary>🔧 v2.0 XP Integration (Phases 53–56) — in progress</summary>
 
 ### Phase 53: XP Backend Integration
 **Goal:** Award XP server-side after each game for Connected players
@@ -182,9 +182,22 @@ Plans:
 - [x] 55-02-PLAN.md — Add GET /api/users/profile/xp/history proxy route
 - [x] 55-03-PLAN.md — Profile.tsx two-tab layout and XP History panel (frontend)
 
+### Phase 56: Post-v2.0 XP Tech Debt
+**Goal:** Close three low-impact tech debt items identified in v2.0 audit
+**Plans:** 1 plan
+**Gap Closure:** TD-1, TD-2, TD-3 from v2.0-MILESTONE-AUDIT.md
+**Success criteria:**
+1. `env.ts` logs a startup warning when `TRIVIA_SERVICE_KEY` or `EMPOWERED_ACCOUNTS_API_URL` are absent
+2. `isDuplicate` in XP award metadata is set from API response (not placeholder `false`) — or confirmed RPC sources from platform flag
+3. XP result persisted beyond Redis TTL so repeated `/results` calls return correct state for Connected players
+
+Plans:
+- [ ] 56-01-PLAN.md — env startup validation, isDuplicate two-pass fix, xpResult persistence
+
 - [x] Phase 53: XP Backend Integration (1/1 plans) — completed 2026-03-05
 - [x] Phase 54: XP Game UI (5/5 plans) — completed 2026-03-08
 - [x] Phase 55: XP History Panel (3/3 plans) — completed 2026-03-08
+- [ ] Phase 56: Post-v2.0 XP Tech Debt (0/1 plans) — pending
 
 </details>
 
@@ -210,3 +223,4 @@ Plans:
 | 53. XP Backend Integration | v2.0 | 1/1 | Complete | 2026-03-05 |
 | 54. XP Game UI | v2.0 | 5/5 | Complete | 2026-03-08 |
 | 55. XP History Panel | v2.0 | 3/3 | Complete | 2026-03-08 |
+| 56. Post-v2.0 XP Tech Debt | v2.0 | 0/1 | Pending | — |
