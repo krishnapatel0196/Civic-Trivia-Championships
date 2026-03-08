@@ -98,6 +98,9 @@ export async function checkAccountContext(
  * @param amount - Number of gems to award
  * @returns confirmed: true on success, confirmed: false with error on failure
  */
+// TODO: Route through accounts API (POST /api/gems/award) using X-Service-Key,
+// same pattern as awardPlatformXp(). Currently calls connect.credit_gems RPC
+// directly via service role, bypassing user validation on the accounts side.
 export async function awardPlatformGems(
   userId: string,
   amount: number
