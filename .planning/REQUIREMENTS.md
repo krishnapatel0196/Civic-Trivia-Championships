@@ -52,14 +52,14 @@
 | XP-03 | Phase 53 | Complete |
 | XP-04 | Phase 53 | Complete |
 | XP-05 | Phase 53 | Complete |
-| XPS-01 | Phase 54 | Pending |
-| XPS-02 | Phase 54 | Pending |
-| XPE-01 | Phase 54 | Pending |
-| XPE-02 | Phase 54 | Pending |
-| XPE-03 | Phase 54 | Pending |
-| XPE-04 | Phase 54 | Pending |
-| XPH-01 | Phase 55 | Pending |
-| XPH-02 | Phase 55 | Pending |
+| XPS-01 | Phase 54 | Complete |
+| XPS-02 | Phase 54 | Complete |
+| XPE-01 | Phase 54 | Complete |
+| XPE-02 | Phase 54 | Complete |
+| XPE-03 | Phase 54 | Complete |
+| XPE-04 | Phase 54 | Complete |
+| XPH-01 | Phase 55 | Complete |
+| XPH-02 | Phase 55 | Complete |
 
 **Coverage:**
 - v2.0 requirements: 13 total

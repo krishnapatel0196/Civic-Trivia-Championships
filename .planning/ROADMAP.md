@@ -12,7 +12,7 @@
 - ✅ **v1.7 Live Civic Intelligence** — Phases 35–39 (shipped 2026-02-27)
 - ✅ **v1.8 Empowered Identity** — Phases 40–46 (shipped 2026-03-01)
 - ✅ **v1.9 Geographic Expansion** — Phases 47–52 (shipped 2026-03-03)
-- 🔄 **v2.0 XP Integration** — Phases 53–55 (in planning)
+- ✅ **v2.0 XP Integration** — Phases 53–55 (shipped 2026-03-08)
 
 ## Phases
 
@@ -132,7 +132,7 @@ Full archive: [milestones/v1.9-ROADMAP.md](milestones/v1.9-ROADMAP.md)
 </details>
 
 <details open>
-<summary>🔄 v2.0 XP Integration (Phases 53–55) — IN PROGRESS</summary>
+<summary>✅ v2.0 XP Integration (Phases 53–55) — SHIPPED 2026-03-08</summary>
 
 ### Phase 53: XP Backend Integration
 **Goal:** Award XP server-side after each game for Connected players
@@ -178,13 +178,13 @@ Plans:
 4. Panel is only visible to Connected players; hidden for Inform/anonymous
 
 Plans:
-- [ ] 55-01-PLAN.md — Enrich awardPlatformXp() metadata (score, correctAnswers, collectionSlug)
-- [ ] 55-02-PLAN.md — Add GET /api/users/profile/xp/history proxy route
-- [ ] 55-03-PLAN.md — Profile.tsx two-tab layout and XP History panel (frontend)
+- [x] 55-01-PLAN.md — Enrich awardPlatformXp() metadata (score, correctAnswers, collectionSlug)
+- [x] 55-02-PLAN.md — Add GET /api/users/profile/xp/history proxy route
+- [x] 55-03-PLAN.md — Profile.tsx two-tab layout and XP History panel (frontend)
 
 - [x] Phase 53: XP Backend Integration (1/1 plans) — completed 2026-03-05
 - [x] Phase 54: XP Game UI (5/5 plans) — completed 2026-03-08
-- [ ] Phase 55: XP History Panel (0/3 plans)
+- [x] Phase 55: XP History Panel (3/3 plans) — completed 2026-03-08
 
 </details>
 
@@ -209,4 +209,4 @@ Plans:
 | 52. Texas State Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 53. XP Backend Integration | v2.0 | 1/1 | Complete | 2026-03-05 |
 | 54. XP Game UI | v2.0 | 5/5 | Complete | 2026-03-08 |
-| 55. XP History Panel | v2.0 | 0/3 | Pending | — |
+| 55. XP History Panel | v2.0 | 3/3 | Complete | 2026-03-08 |
