@@ -155,7 +155,7 @@ Key decisions relevant to v2.0 (from v1.9):
 
 ### Blockers/Concerns
 
-- VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY not confirmed as frontend env vars — token refresh may fall back to ACCOUNTS_API_URL if absent
+None.
 
 ### Quick Tasks Completed
 
