@@ -413,7 +413,6 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
           score: results.totalScore,
           correctAnswers: results.totalCorrect,
           collectionSlug: session.collectionSlug ?? 'federal-civics',
-          isDuplicate: false,  // placeholder — is_duplicate comes back in the response, not known at call time
         });
 
         // Write player stats (only count confirmed gems in lifetime_gems)

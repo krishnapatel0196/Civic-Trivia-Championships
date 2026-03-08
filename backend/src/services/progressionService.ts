@@ -174,7 +174,6 @@ export async function awardPlatformXp(
     score?: number;
     correctAnswers?: number;
     collectionSlug?: string;
-    isDuplicate?: boolean;
   }
 ): Promise<XpAwardResult> {
   const accountsUrl = process.env.EMPOWERED_ACCOUNTS_API_URL;
