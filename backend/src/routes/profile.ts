@@ -95,69 +95,36 @@ router.patch('/settings', async (req: Request, res: Response): Promise<void> => 
 });
 
 /**
- * GET /xp/history - Proxy XP transaction history from the Empowered Accounts API.
- * Converts CTC page-based pagination (?page=N) to accounts API limit/offset.
- * Returns reshaped response with entries[], total, page, pageSize, totalPages.
+ * GET /xp/history - Fetch XP transaction history directly from Supabase via
+ * the get_ctc_xp_history() SECURITY DEFINER function (bypasses PostgREST
+ * schema exposure issues with the connect schema).
  * Only accessible to authenticated users (requireAuth applied at router level).
  */
 router.get('/xp/history', async (req: Request, res: Response): Promise<void> => {
-  const accountsUrl = process.env.EMPOWERED_ACCOUNTS_URL;
-  if (!accountsUrl) {
-    res.status(503).json({ error: 'XP history service unavailable' });
-    return;
-  }
-
   const page = Math.max(1, parseInt((req.query.page as string) ?? '1', 10) || 1);
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
-  try {
-    const upstream = await fetch(
-      `${accountsUrl}/api/xp/me/history?limit=${pageSize}&offset=${offset}`,
-      {
-        headers: { Authorization: `Bearer ${req.accessToken}` },
-      }
-    );
+  const { data, error } = await supabaseAdmin.rpc('get_ctc_xp_history' as any, {
+    p_user_id: req.userId!,
+    p_limit: pageSize,
+    p_offset: offset,
+  });
 
-    if (!upstream.ok) {
-      const text = await upstream.text();
-      console.error(`[profile] XP history upstream returned ${upstream.status}: ${text}`);
-      res.status(upstream.status === 401 ? 401 : 502).json({ error: 'Failed to fetch XP history' });
-      return;
-    }
-
-    const data = await upstream.json() as {
-      transactions: Array<{
-        id: string;
-        created_at: string;
-        amount: number;
-        is_duplicate?: boolean;
-        metadata?: Record<string, unknown>;
-      }>;
-      total: number;
-      limit: number;
-      offset: number;
-    };
-
-    const totalPages = Math.ceil(data.total / pageSize);
-
-    res.json({
-      entries: data.transactions.map(tx => ({
-        id: tx.id,
-        createdAt: tx.created_at,
-        amount: tx.amount,
-        isDuplicate: tx.is_duplicate ?? false,
-        score: (tx.metadata?.score as number | undefined) ?? null,
-        correctAnswers: (tx.metadata?.correctAnswers as number | undefined) ?? null,
-        collectionSlug: (tx.metadata?.collectionSlug as string | undefined) ?? null,
-      })),
-      total: data.total,
-      page,
-      pageSize,
-      totalPages,
-    });
-  } catch (err: any) {
-    console.error('[profile] XP history fetch failed:', err?.message);
-    res.status(502).json({ error: 'Failed to fetch XP history' });
+  if (error) {
+    console.error('[profile] get_ctc_xp_history error:', error.message);
+    res.status(500).json({ error: 'Failed to fetch XP history' });
+    return;
   }
+
+  const result = data as unknown as { entries: any[]; total: number };
+  const totalPages = Math.ceil(result.total / pageSize);
+
+  res.json({
+    entries: result.entries,
+    total: result.total,
+    page,
+    pageSize,
+    totalPages,
+  });
 });
