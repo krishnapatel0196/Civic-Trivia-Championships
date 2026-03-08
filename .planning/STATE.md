@@ -11,8 +11,8 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 
 Phase: 55 of v2.0 (55-xp-history-panel)
 Plan: 3 of 3 in phase
-Status: In progress — awaiting checkpoint approval
-Last activity: 2026-03-08 — Executed 55-03 tasks 1 & 2; paused at human-verify checkpoint
+Status: Phase complete
+Last activity: 2026-03-08 — Completed 55-03 (XP History panel frontend); Phase 55 fully shipped
 
 Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (54/54+ in progress)
 
@@ -156,6 +156,13 @@ Key decisions relevant to v2.0 (from v1.9):
 - metadata fields use safe cast with null fallback — transactions without enriched metadata return null (not undefined) for consistent frontend handling
 - is_duplicate used from transaction record directly — platform stores this from idempotency check, not from our metadata field
 - pageSize fixed at 20 — not configurable via query param
+- POST-CHECKPOINT FIX (ad2108f): Accounts API proxy replaced with direct Supabase RPC call to get_ctc_xp_history() SECURITY DEFINER function — connect schema not exposed via PostgREST; SECURITY DEFINER function is the correct pattern for cross-schema access from CTC backend
+
+**55-03 decisions:**
+- Tab bar renders only when tierResolved && isConnected — prevents flash of tab chrome before account fetch resolves
+- heroSection always visible regardless of active tab — XP/gem totals stay anchored at top for Connected players
+- formatDate() module-level function (no library) — relative within 7 days, absolute beyond
+- Non-Connected players rendered via early return before tab state — zero structural impact on existing layout path
 
 ### Pending Todos
 
@@ -180,7 +187,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: 55-03 tasks 1 & 2 complete — paused at human-verify checkpoint (Task 3)
+Stopped at: Completed 55-03 — XP History panel frontend; Phase 55 fully complete
 Resume file: None
 
 Next action: Execute 55-03 — Frontend XP History panel (calls GET /api/users/profile/xp/history)
