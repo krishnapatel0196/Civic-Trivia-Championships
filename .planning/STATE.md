@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 55 of v2.0 (55-xp-history-panel)
-Plan: 0 of ? in phase
-Status: Planning needed
-Last activity: 2026-03-08 — Completed Phase 54 (XP Game UI: all 5 plans, verified live)
+Plan: 2 of 3 in phase
+Status: In progress
+Last activity: 2026-03-08 — Completed 55-02 (XP history backend proxy endpoint)
 
 Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (54/54+ in progress)
 
@@ -145,6 +145,13 @@ Key decisions relevant to v2.0 (from v1.9):
 - Non-Connected prompt hidden while isXpLoading is true — avoids flash of prompt before fetch resolves
 - onLevelCaptured typed as any pending Plan 05 ResultsScreen interface update — expected TS error
 
+**55-02 decisions:**
+- EMPOWERED_ACCOUNTS_URL (not EMPOWERED_ACCOUNTS_API_URL) — user-JWT path, same as checkAccountContext()
+- req.accessToken forwarded as Bearer — set by requireAuth middleware already applied at router level
+- metadata fields use safe cast with null fallback — transactions without enriched metadata return null (not undefined) for consistent frontend handling
+- is_duplicate used from transaction record directly — platform stores this from idempotency check, not from our metadata field
+- pageSize fixed at 20 — not configurable via query param
+
 ### Pending Todos
 
 
@@ -168,7 +175,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Completed Phase 54 — XP Game UI, verified live
+Stopped at: Completed 55-02 — XP history backend proxy endpoint
 Resume file: None
 
-Next action: Plan Phase 55 — XP History Panel (profile page XP transaction history for Connected players)
+Next action: Execute 55-03 — Frontend XP History panel (calls GET /api/users/profile/xp/history)
