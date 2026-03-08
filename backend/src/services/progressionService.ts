@@ -163,12 +163,19 @@ export function calculateXpAmount(correctAnswers: number, totalQuestions: number
  * @param userId - UUID of the user to award XP to
  * @param amount - XP amount to award
  * @param idempotencyKey - Unique key to prevent double-awards (use ctc-game-{sessionId}-{userId})
+ * @param metadata - Optional enrichment fields stored in the transaction record for history display
  * @returns XpAwardResult with confirmed flag and level metadata
  */
 export async function awardPlatformXp(
   userId: string,
   amount: number,
-  idempotencyKey: string
+  idempotencyKey: string,
+  metadata?: {
+    score?: number;
+    correctAnswers?: number;
+    collectionSlug?: string;
+    isDuplicate?: boolean;
+  }
 ): Promise<XpAwardResult> {
   const accountsUrl = process.env.EMPOWERED_ACCOUNTS_API_URL;
   const serviceKey = process.env.TRIVIA_SERVICE_KEY;
@@ -190,7 +197,7 @@ export async function awardPlatformXp(
         source: 'civic_trivia_championship_score',
         amount,
         idempotency_key: idempotencyKey,
-        metadata: { game_id: idempotencyKey },
+        metadata: { game_id: idempotencyKey, ...metadata },
       }),
     });
     if (!resp.ok) {
