@@ -161,11 +161,11 @@ Plans:
 6. `is_duplicate` response shows neutral message — no reward animation
 
 Plans:
-- [ ] 54-01-PLAN.md — Fix Progression type (XpResult), update useGameState mapping
-- [ ] 54-02-PLAN.md — usePlayerXp hook, XpStrip component
-- [ ] 54-03-PLAN.md — XpReveal component, LevelUpOverlay component
-- [ ] 54-04-PLAN.md — Wire GameScreen idle (XpStrip/prompt), Game.tsx priorLevel state
-- [ ] 54-05-PLAN.md — Update ResultsScreen: integrate XpReveal, LevelUpOverlay, non-Connected prompt
+- [x] 54-01-PLAN.md — Fix Progression type (XpResult), update useGameState mapping
+- [x] 54-02-PLAN.md — usePlayerXp hook, XpStrip component
+- [x] 54-03-PLAN.md — XpReveal component, LevelUpOverlay component
+- [x] 54-04-PLAN.md — Wire GameScreen idle (XpStrip/prompt), Game.tsx priorLevel state
+- [x] 54-05-PLAN.md — Update ResultsScreen: integrate XpReveal, LevelUpOverlay, non-Connected prompt
 
 ### Phase 55: XP History Panel
 **Goal:** Players can review their CTC XP transaction history on the profile page
@@ -177,7 +177,7 @@ Plans:
 4. Panel is only visible to Connected players; hidden for Inform/anonymous
 
 - [x] Phase 53: XP Backend Integration (1/1 plans) — completed 2026-03-05
-- [ ] Phase 54: XP Game UI (0/5 plans)
+- [x] Phase 54: XP Game UI (5/5 plans) — completed 2026-03-08
 - [ ] Phase 55: XP History Panel (0/? plans)
 
 </details>
@@ -202,5 +202,5 @@ Plans:
 | 51. Plano, TX Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 52. Texas State Collection | v1.9 | 3/3 | Complete | 2026-03-03 |
 | 53. XP Backend Integration | v2.0 | 1/1 | Complete | 2026-03-05 |
-| 54. XP Game UI | v2.0 | 0/5 | Pending | — |
+| 54. XP Game UI | v2.0 | 5/5 | Complete | 2026-03-08 |
 | 55. XP History Panel | v2.0 | 0/? | Pending | — |
