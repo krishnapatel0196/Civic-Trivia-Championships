@@ -181,8 +181,8 @@ export class SessionManager {
    * Use when mutating session fields (e.g., adaptiveState) outside of submitAnswer
    * @param session - Modified session to save
    */
-  async saveSession(session: GameSession): Promise<void> {
-    await this.storage.set(session.sessionId, session, 3600);
+  async saveSession(session: GameSession, ttlSeconds: number = 3600): Promise<void> {
+    await this.storage.set(session.sessionId, session, ttlSeconds);
   }
 
   /**

@@ -443,7 +443,7 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
     }
 
     if (session.progressionAwarded) {
-      await sessionManager.saveSession(session);
+      await sessionManager.saveSession(session, 86400);  // 24h — preserves xpResult beyond default 1h TTL
     }
 
     // Strip flagged field from all answer records (keep server-internal only)
