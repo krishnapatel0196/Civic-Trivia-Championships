@@ -145,6 +145,11 @@ Key decisions relevant to v2.0 (from v1.9):
 - Non-Connected prompt hidden while isXpLoading is true — avoids flash of prompt before fetch resolves
 - onLevelCaptured typed as any pending Plan 05 ResultsScreen interface update — expected TS error
 
+**55-01 decisions:**
+- isDuplicate: false at call time — actual duplicate status comes back in API response (session.xpResult.isDuplicate); history display should read is_duplicate from the transaction record itself, not our metadata field
+- metadata parameter is optional — zero-arg callers compile without changes, no existing other callers to update
+- collectionSlug fallback to 'federal-civics' in metadata mirrors the same fallback already used in results response body
+
 **55-02 decisions:**
 - EMPOWERED_ACCOUNTS_URL (not EMPOWERED_ACCOUNTS_API_URL) — user-JWT path, same as checkAccountContext()
 - req.accessToken forwarded as Bearer — set by requireAuth middleware already applied at router level
