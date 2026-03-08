@@ -409,7 +409,12 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
         // Award XP via platform API
         const xpAmount = calculateXpAmount(results.totalCorrect, results.totalQuestions);
         const idempotencyKey = `ctc-game-${session.sessionId}-${session.userId}`;
-        session.xpResult = await awardPlatformXp(session.userId, xpAmount, idempotencyKey);
+        session.xpResult = await awardPlatformXp(session.userId, xpAmount, idempotencyKey, {
+          score: results.totalScore,
+          correctAnswers: results.totalCorrect,
+          collectionSlug: session.collectionSlug ?? 'federal-civics',
+          isDuplicate: false,  // placeholder — is_duplicate comes back in the response, not known at call time
+        });
 
         // Write player stats (only count confirmed gems in lifetime_gems)
         await upsertPlayerStats(
