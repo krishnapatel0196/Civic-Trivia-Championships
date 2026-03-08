@@ -11,6 +11,14 @@ export const router = Router();
 router.use(requireAuth);
 
 /**
+ * GET /identity - Return the authenticated user's UUID for cross-app identity debugging.
+ * Used to verify the same user_id is seen by CTC and other Empowered platform apps.
+ */
+router.get('/identity', (req: Request, res: Response): void => {
+  res.json({ user_id: req.userId });
+});
+
+/**
  * GET /admin-status - Check whether the current user is an admin/super-admin.
  * Returns { isAdmin: boolean, isSuperAdmin: boolean }.
  * Used by the frontend AdminGuard; does NOT require admin role itself.
