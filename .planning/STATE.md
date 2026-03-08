@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 
 ## Current Position
 
-Phase: 55 of v2.0 (55-xp-history-panel)
-Plan: 3 of 3 in phase
+Phase: 56 of v2.0 (56-post-v2-xp-tech-debt)
+Plan: 1 of 1 in phase
 Status: Phase complete
-Last activity: 2026-03-08 — Completed 55-03 (XP History panel frontend); Phase 55 fully shipped
+Last activity: 2026-03-08 — Completed 56-01 (Post-v2.0 XP tech debt); Phase 56 fully shipped
 
 Progress: [██████████] v1.0–v1.9 complete (Phases 1–52) | 12 collections live | v2.0 in progress (54/54+ in progress)
 
@@ -164,6 +164,13 @@ Key decisions relevant to v2.0 (from v1.9):
 - formatDate() module-level function (no library) — relative within 7 days, absolute beyond
 - Non-Connected players rendered via early return before tab state — zero structural impact on existing layout path
 
+**56-01 decisions:**
+- console.warn not process.exit for missing XP env vars — local dev must start cleanly without these vars set
+- Underscore-prefixed _requiredForXp and _missing to avoid linter unused-var warnings in module scope
+- saveSession optional ttlSeconds defaults to 3600 — all existing callers unchanged
+- 86400s TTL only on post-award save — submitAnswer and adaptive-state saves keep 1h default
+- isDuplicate removed from metadata input; XpAwardResult.isDuplicate (return type) preserved
+
 ### Pending Todos
 
 
@@ -187,7 +194,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Completed 55-03 — XP History panel frontend; Phase 55 fully complete
+Stopped at: Completed 56-01 — Post-v2.0 XP tech debt; Phase 56 fully complete
 Resume file: None
 
-Next action: Audit and complete v2.0 milestone — all phases 53–55 shipped
+Next action: v2.0 milestone complete — all phases 53–56 shipped; ready for next planning cycle
