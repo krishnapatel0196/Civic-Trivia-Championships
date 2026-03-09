@@ -3,6 +3,9 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
 import { API_URL } from '../../../services/api';
+import { useTheme } from '../../../hooks/useTheme';
+
+const ADMIN_ACCENT = '#FF5740';
 
 interface FlagEntry {
   id: number;
@@ -42,7 +45,6 @@ interface FlagDetailPanelProps {
   onRefreshNeeded: () => void;
 }
 
-// Toast state and hook
 interface ToastState {
   message: string;
   undoCallback: (() => void) | null;
@@ -50,24 +52,12 @@ interface ToastState {
 }
 
 function useUndoToast() {
-  const [toast, setToast] = useState<ToastState>({
-    message: '',
-    undoCallback: null,
-    visible: false,
-  });
+  const [toast, setToast] = useState<ToastState>({ message: '', undoCallback: null, visible: false });
   const timeoutRef = useRef<number>();
 
   const showToast = (message: string, undoCallback: () => void) => {
-    // Clear existing timeout
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    setToast({
-      message,
-      undoCallback,
-      visible: true,
-    });
-
-    // Auto-hide after 5 seconds
+    setToast({ message, undoCallback, visible: true });
     timeoutRef.current = setTimeout(() => {
       setToast((prev) => ({ ...prev, visible: false }));
     }, 5000);
@@ -81,30 +71,31 @@ function useUndoToast() {
   return { toast, showToast, hideToast };
 }
 
-// Toast component
-function Toast({
-  message,
-  undoCallback,
-  visible,
-  onClose,
-  onUndo,
-}: ToastState & { onClose: () => void; onUndo: () => void }) {
+function Toast({ message, undoCallback, visible, onClose, onUndo }: ToastState & { onClose: () => void; onUndo: () => void }) {
   if (!visible) return null;
-
   return (
-    <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 z-50">
-      <span>{message}</span>
+    <div style={{
+      position: 'fixed',
+      bottom: '24px',
+      right: '24px',
+      backgroundColor: '#1C1510',
+      color: '#ECE7D9',
+      padding: '12px 16px',
+      borderRadius: '2px',
+      border: '1px solid #3D2E22',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      zIndex: 50,
+      boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+    }}>
+      <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px' }}>{message}</span>
       {undoCallback && (
-        <button
-          onClick={onUndo}
-          className="text-amber-400 hover:text-amber-300 font-medium"
-        >
-          Undo
+        <button onClick={onUndo} style={{ color: '#D4A017', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Bebas Neue', sans-serif", fontSize: '13px', letterSpacing: '0.1em' }}>
+          UNDO
         </button>
       )}
-      <button onClick={onClose} className="text-gray-400 hover:text-gray-300">
-        ×
-      </button>
+      <button onClick={onClose} style={{ color: '#7A6A5A', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', lineHeight: 1 }}>×</button>
     </div>
   );
 }
@@ -118,9 +109,8 @@ export function FlagDetailPanel({
   onRefreshNeeded,
 }: FlagDetailPanelProps) {
   const { accessToken } = useAuthStore();
-  const [questionDetail, setQuestionDetail] = useState<QuestionDetail | null>(
-    null
-  );
+  const { C } = useTheme();
+  const [questionDetail, setQuestionDetail] = useState<QuestionDetail | null>(null);
   const [flags, setFlags] = useState<FlagEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -129,7 +119,6 @@ export function FlagDetailPanel({
 
   const { toast, showToast, hideToast } = useUndoToast();
 
-  // Fetch question detail when questionId changes
   useEffect(() => {
     if (questionId === null || !accessToken) {
       setQuestionDetail(null);
@@ -140,21 +129,11 @@ export function FlagDetailPanel({
     const fetchDetail = async () => {
       setLoading(true);
       setError(null);
-
       try {
-        const response = await fetch(
-          `${API_URL}/api/admin/flags/${questionId}/detail`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch flag details');
-        }
-
+        const response = await fetch(`${API_URL}/api/admin/flags/${questionId}/detail`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (!response.ok) throw new Error('Failed to fetch flag details');
         const data: FlagDetailResponse = await response.json();
         setQuestionDetail(data.question);
         setFlags(data.flags);
@@ -168,25 +147,16 @@ export function FlagDetailPanel({
     fetchDetail();
   }, [questionId, accessToken]);
 
-  // Handle archive with undo
   const handleArchive = async () => {
     if (!questionDetail || pendingAction) return;
-
     setPendingAction('archiving');
-
-    // Optimistically update parent
     onQuestionArchived(questionDetail.id);
     onClose();
-
-    // Show undo toast
     showToast('Question archived', async () => {
-      // Undo: restore the question
       try {
         await fetch(`${API_URL}/api/admin/flags/${questionDetail.id}/restore`, {
           method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         });
         onRefreshNeeded();
       } catch (err) {
@@ -194,22 +164,12 @@ export function FlagDetailPanel({
         onRefreshNeeded();
       }
     });
-
-    // Call archive API
     try {
-      const response = await fetch(
-        `${API_URL}/api/admin/flags/${questionDetail.id}/archive`,
-        {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to archive question');
-      }
+      const response = await fetch(`${API_URL}/api/admin/flags/${questionDetail.id}/archive`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!response.ok) throw new Error('Failed to archive question');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to archive');
       onRefreshNeeded();
@@ -218,36 +178,19 @@ export function FlagDetailPanel({
     }
   };
 
-  // Handle dismiss (with confirmation, no undo)
   const handleDismiss = async () => {
     if (!questionDetail || pendingAction) return;
-
-    const confirmed = window.confirm(
-      'Dismiss all flags for this question? This will remove all player feedback.'
-    );
+    const confirmed = window.confirm('Dismiss all flags for this question? This will remove all player feedback.');
     if (!confirmed) return;
-
     setPendingAction('dismissing');
-
-    // Optimistically update parent
     onFlagsDismissed(questionDetail.id);
     onClose();
-
-    // Call dismiss API
     try {
-      const response = await fetch(
-        `${API_URL}/api/admin/flags/${questionDetail.id}/dismiss`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to dismiss flags');
-      }
+      const response = await fetch(`${API_URL}/api/admin/flags/${questionDetail.id}/dismiss`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!response.ok) throw new Error('Failed to dismiss flags');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to dismiss flags');
       onRefreshNeeded();
@@ -256,31 +199,17 @@ export function FlagDetailPanel({
     }
   };
 
-  // Handle restore
   const handleRestore = async () => {
     if (!questionDetail || pendingAction) return;
-
     setPendingAction('restoring');
-
-    // Optimistically update parent
     onQuestionRestored(questionDetail.id);
     onClose();
-
-    // Call restore API
     try {
-      const response = await fetch(
-        `${API_URL}/api/admin/flags/${questionDetail.id}/restore`,
-        {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to restore question');
-      }
+      const response = await fetch(`${API_URL}/api/admin/flags/${questionDetail.id}/restore`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!response.ok) throw new Error('Failed to restore question');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to restore');
       onRefreshNeeded();
@@ -289,20 +218,14 @@ export function FlagDetailPanel({
     }
   };
 
-  // Toggle flag elaboration expansion
   const toggleFlagExpansion = (flagId: number) => {
     setExpandedFlags((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(flagId)) {
-        newSet.delete(flagId);
-      } else {
-        newSet.add(flagId);
-      }
+      if (newSet.has(flagId)) newSet.delete(flagId); else newSet.add(flagId);
       return newSet;
     });
   };
 
-  // Aggregate flag summary
   const getAggregateReasonSummary = () => {
     const breakdown: Record<string, number> = {};
     for (const flag of flags) {
@@ -313,22 +236,46 @@ export function FlagDetailPanel({
     return breakdown;
   };
 
-  const getReasonLabel = (reason: string) => {
-    const labels: Record<string, { label: string; color: string }> = {
-      'confusing-wording': { label: 'Confusing', color: 'bg-amber-100 text-amber-800 border-amber-300' },
-      'outdated-info': { label: 'Outdated', color: 'bg-blue-100 text-blue-800 border-blue-300' },
-      'wrong-answer': { label: 'Wrong', color: 'bg-red-100 text-red-800 border-red-300' },
-      'not-interesting': { label: 'Boring', color: 'bg-gray-100 text-gray-800 border-gray-300' },
+  const getReasonStyle = (reason: string): { label: string; bg: string; color: string } => {
+    const map: Record<string, { label: string; bg: string; color: string }> = {
+      'confusing-wording': { label: 'Confusing', bg: 'rgba(184,134,11,0.12)', color: '#92400E' },
+      'outdated-info':     { label: 'Outdated',  bg: 'rgba(30,90,138,0.12)',  color: '#1E5A8A' },
+      'wrong-answer':      { label: 'Wrong',     bg: 'rgba(192,21,42,0.12)',  color: C.incorrect },
+      'not-interesting':   { label: 'Boring',    bg: C.ruleLight,             color: C.muted },
     };
-    return labels[reason] || { label: reason, color: 'bg-gray-100 text-gray-800 border-gray-300' };
+    return map[reason] || { label: reason, bg: C.ruleLight, color: C.muted };
   };
 
   const isOpen = questionId !== null;
 
+  const btnPrimary: React.CSSProperties = {
+    padding: '8px 16px',
+    backgroundColor: ADMIN_ACCENT,
+    color: '#fff',
+    border: 'none',
+    borderRadius: '2px',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '13px',
+    letterSpacing: '0.1em',
+    cursor: 'pointer',
+  };
+
+  const btnSecondary: React.CSSProperties = {
+    padding: '8px 16px',
+    backgroundColor: 'transparent',
+    color: C.muted,
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '13px',
+    letterSpacing: '0.1em',
+    cursor: 'pointer',
+  };
+
   return (
     <>
       <Transition show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-50" onClose={onClose}>
+        <Dialog as="div" style={{ position: 'relative', zIndex: 50 }} onClose={onClose}>
           {/* Backdrop */}
           <Transition.Child
             as={Fragment}
@@ -339,13 +286,13 @@ export function FlagDetailPanel({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/30" />
+            <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)' }} />
           </Transition.Child>
 
           {/* Panel */}
-          <div className="fixed inset-0 overflow-hidden">
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+          <div style={{ position: 'fixed', inset: 0, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+              <div style={{ pointerEvents: 'none', position: 'fixed', top: 0, bottom: 0, right: 0, display: 'flex', maxWidth: '100%', paddingLeft: '40px' }}>
                 <Transition.Child
                   as={Fragment}
                   enter="transform transition ease-in-out duration-300"
@@ -355,174 +302,116 @@ export function FlagDetailPanel({
                   leaveFrom="translate-x-0"
                   leaveTo="translate-x-full"
                 >
-                  <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl">
-                    <div className="flex h-full flex-col bg-white shadow-xl">
+                  <Dialog.Panel style={{ pointerEvents: 'auto', width: '100vw', maxWidth: '672px' }}>
+                    <div style={{ display: 'flex', height: '100%', flexDirection: 'column', backgroundColor: C.paper, borderLeft: `1px solid ${C.rule}` }}>
                       {/* Header */}
-                      <div className="bg-red-900 px-6 py-4">
-                        <div className="flex items-center justify-between">
-                          <Dialog.Title className="text-lg font-semibold text-white">
-                            Flag Details
-                          </Dialog.Title>
-                          <div className="flex items-center space-x-2">
-                            {/* Close button */}
-                            <button
-                              onClick={onClose}
-                              className="p-2 text-white hover:bg-red-800 rounded"
-                              aria-label="Close panel"
-                            >
-                              <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M6 18L18 6M6 6l12 12"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
+                      <div style={{ backgroundColor: '#3D2E22', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+                        <Dialog.Title style={{
+                          fontFamily: "'Bebas Neue', sans-serif",
+                          fontSize: '18px',
+                          letterSpacing: '0.12em',
+                          color: '#ECE7D9',
+                          margin: 0,
+                        }}>
+                          FLAG DETAILS
+                        </Dialog.Title>
+                        <button
+                          onClick={onClose}
+                          style={{ padding: '6px', color: '#C8BAA6', background: 'none', border: 'none', cursor: 'pointer', borderRadius: '2px' }}
+                          aria-label="Close panel"
+                        >
+                          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
                       </div>
 
                       {/* Body */}
-                      <div className="flex-1 overflow-y-auto px-6 py-6">
-                        {/* Loading state */}
+                      <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
                         {loading && (
-                          <div className="space-y-4 animate-pulse">
-                            <div className="h-8 bg-gray-200 rounded w-3/4" />
-                            <div className="h-4 bg-gray-200 rounded w-full" />
-                            <div className="h-4 bg-gray-200 rounded w-5/6" />
-                            <div className="space-y-2">
-                              <div className="h-6 bg-gray-200 rounded w-full" />
-                              <div className="h-6 bg-gray-200 rounded w-full" />
-                              <div className="h-6 bg-gray-200 rounded w-full" />
-                              <div className="h-6 bg-gray-200 rounded w-full" />
-                            </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', opacity: 0.5 }}>
+                            {[...Array(4)].map((_, i) => (
+                              <div key={i} style={{ height: i === 0 ? '32px' : '14px', backgroundColor: C.ruleLight, borderRadius: '2px', width: i === 0 ? '75%' : '100%' }} />
+                            ))}
                           </div>
                         )}
 
-                        {/* Error state */}
                         {error && !loading && (
-                          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md">
-                            {error}
+                          <div style={{ border: `1px solid ${C.incorrect}`, borderRadius: '2px', padding: '12px 16px' }}>
+                            <p style={{ fontFamily: "'Lora', Georgia, serif", color: C.incorrect, margin: 0, fontSize: '13px' }}>{error}</p>
                           </div>
                         )}
 
-                        {/* Content */}
                         {!loading && questionDetail && (
-                          <div className="space-y-6">
-                            {/* Flag Summary Section */}
-                            <div className="bg-red-50 p-4 rounded-md border border-red-200">
-                              <div className="flex items-center gap-2 mb-2">
-                                <svg
-                                  className="w-5 h-5 text-red-600"
-                                  fill="currentColor"
-                                  viewBox="0 0 20 20"
-                                >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z"
-                                    clipRule="evenodd"
-                                  />
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                            {/* Flag Summary */}
+                            <div style={{ padding: '16px', border: `1px solid ${C.rule}`, borderRadius: '2px', backgroundColor: C.ruleLight }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                <svg width="18" height="18" style={{ color: ADMIN_ACCENT }} fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clipRule="evenodd" />
                                 </svg>
-                                <h4 className="text-sm font-semibold text-red-900">
-                                  {flags.length} {flags.length === 1 ? 'flag' : 'flags'}
-                                </h4>
+                                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '14px', letterSpacing: '0.1em', color: C.ink }}>
+                                  {flags.length} {flags.length === 1 ? 'FLAG' : 'FLAGS'}
+                                </span>
                               </div>
-                              <div className="flex flex-wrap gap-1">
-                                {Object.entries(getAggregateReasonSummary()).map(
-                                  ([reason, count]) => {
-                                    const { label, color } = getReasonLabel(reason);
-                                    return (
-                                      <span
-                                        key={reason}
-                                        className={`px-2 py-1 text-xs font-medium rounded border ${color}`}
-                                      >
-                                        {label} x{count}
-                                      </span>
-                                    );
-                                  }
-                                )}
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                {Object.entries(getAggregateReasonSummary()).map(([reason, count]) => {
+                                  const { label, bg, color } = getReasonStyle(reason);
+                                  return (
+                                    <span key={reason} style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', padding: '3px 8px', borderRadius: '2px', backgroundColor: bg, color }}>
+                                      {label} ×{count}
+                                    </span>
+                                  );
+                                })}
                               </div>
                             </div>
 
-                            {/* Action Buttons Section */}
-                            <div className="flex gap-3">
+                            {/* Action Buttons */}
+                            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                               {questionDetail.status === 'active' ? (
                                 <>
-                                  <button
-                                    onClick={handleArchive}
-                                    disabled={!!pendingAction}
-                                    className="px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-300 hover:bg-red-100 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                  >
-                                    Archive Question
+                                  <button onClick={handleArchive} disabled={!!pendingAction} style={{ ...btnPrimary, backgroundColor: C.incorrect, opacity: pendingAction ? 0.5 : 1, cursor: pendingAction ? 'not-allowed' : 'pointer' }}>
+                                    ARCHIVE QUESTION
                                   </button>
-                                  <button
-                                    onClick={handleDismiss}
-                                    disabled={!!pendingAction}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 hover:bg-gray-100 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                  >
-                                    Dismiss Flags
+                                  <button onClick={handleDismiss} disabled={!!pendingAction} style={{ ...btnSecondary, opacity: pendingAction ? 0.5 : 1, cursor: pendingAction ? 'not-allowed' : 'pointer' }}>
+                                    DISMISS FLAGS
                                   </button>
                                 </>
                               ) : (
-                                <button
-                                  onClick={handleRestore}
-                                  disabled={!!pendingAction}
-                                  className="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-300 hover:bg-green-100 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                  Restore Question
+                                <button onClick={handleRestore} disabled={!!pendingAction} style={{ ...btnPrimary, backgroundColor: C.correct, opacity: pendingAction ? 0.5 : 1, cursor: pendingAction ? 'not-allowed' : 'pointer' }}>
+                                  RESTORE QUESTION
                                 </button>
                               )}
                             </div>
 
-                            {/* Question Context Section */}
+                            {/* Question Context */}
                             <div>
-                              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                              <h3 style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '18px', fontWeight: 700, color: C.ink, margin: '0 0 16px 0' }}>
                                 {questionDetail.text}
                               </h3>
 
                               {/* Answer options */}
-                              <div className="mb-4">
-                                <h4 className="text-sm font-semibold text-gray-700 mb-2">
-                                  Answer Options
-                                </h4>
-                                <div className="space-y-2">
+                              <div style={{ marginBottom: '16px' }}>
+                                <h4 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.14em', color: C.muted, margin: '0 0 8px 0' }}>ANSWER OPTIONS</h4>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                   {questionDetail.options.map((optionText, idx) => {
                                     const isCorrect = questionDetail.correctAnswer === idx;
-                                    const label = String.fromCharCode(65 + idx); // A, B, C, D
-
+                                    const label = String.fromCharCode(65 + idx);
                                     return (
-                                      <div
-                                        key={idx}
-                                        className={`flex items-start p-3 rounded-md border ${
-                                          isCorrect
-                                            ? 'bg-green-50 border-green-300'
-                                            : 'bg-gray-50 border-gray-200'
-                                        }`}
-                                      >
-                                        <span className="font-semibold text-gray-700 mr-2">
-                                          {label}.
-                                        </span>
-                                        <div className="flex-1">
-                                          <span className="text-gray-900">
-                                            {optionText}
-                                          </span>
+                                      <div key={idx} style={{
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        padding: '10px 12px',
+                                        borderRadius: '2px',
+                                        border: `1px solid ${isCorrect ? C.correct : C.rule}`,
+                                        backgroundColor: isCorrect ? 'rgba(37,92,63,0.08)' : 'transparent',
+                                      }}>
+                                        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '14px', letterSpacing: '0.08em', color: C.muted, marginRight: '8px', flexShrink: 0 }}>{label}.</span>
+                                        <div style={{ flex: 1 }}>
+                                          <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink }}>{optionText}</span>
                                           {isCorrect && (
-                                            <svg
-                                              className="inline-block w-5 h-5 ml-2 text-green-600"
-                                              fill="currentColor"
-                                              viewBox="0 0 20 20"
-                                            >
-                                              <path
-                                                fillRule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clipRule="evenodd"
-                                              />
+                                            <svg width="18" height="18" style={{ display: 'inline', marginLeft: '6px', color: C.correct, verticalAlign: 'middle' }} fill="currentColor" viewBox="0 0 20 20">
+                                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                             </svg>
                                           )}
                                         </div>
@@ -533,46 +422,25 @@ export function FlagDetailPanel({
                               </div>
 
                               {/* Explanation */}
-                              <div className="mb-4">
-                                <h4 className="text-sm font-semibold text-gray-700 mb-2">
-                                  Explanation
-                                </h4>
-                                <div className="bg-gray-50 p-4 rounded-md">
-                                  <p className="text-gray-900">
-                                    {questionDetail.explanation}
-                                  </p>
+                              <div style={{ marginBottom: '16px' }}>
+                                <h4 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.14em', color: C.muted, margin: '0 0 8px 0' }}>EXPLANATION</h4>
+                                <div style={{ padding: '12px 16px', border: `1px solid ${C.rule}`, borderRadius: '2px' }}>
+                                  <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink, margin: 0 }}>{questionDetail.explanation}</p>
                                 </div>
                               </div>
 
                               {/* Learn More */}
-                              <div className="mb-4">
-                                <h4 className="text-sm font-semibold text-gray-700 mb-2">
-                                  Learn More
-                                </h4>
+                              <div style={{ marginBottom: '16px' }}>
+                                <h4 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.14em', color: C.muted, margin: '0 0 8px 0' }}>LEARN MORE</h4>
                                 {questionDetail.source.url ? (
-                                  <a
-                                    href={questionDetail.source.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-red-600 hover:text-red-700 underline"
-                                  >
+                                  <a href={questionDetail.source.url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: ADMIN_ACCENT, textDecoration: 'underline' }}>
                                     {questionDetail.source.name}
-                                    <svg
-                                      className="inline-block w-4 h-4 ml-1"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                      />
+                                    <svg width="14" height="14" style={{ display: 'inline', marginLeft: '4px', verticalAlign: 'middle' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                     </svg>
                                   </a>
                                 ) : (
-                                  <span className="text-gray-500">
+                                  <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.mutedFg }}>
                                     {questionDetail.source.name || 'No source provided'}
                                   </span>
                                 )}
@@ -580,13 +448,11 @@ export function FlagDetailPanel({
 
                               {/* Learning Content */}
                               {questionDetail.learningContent && (
-                                <div className="mb-4">
-                                  <h4 className="text-sm font-semibold text-gray-700 mb-2">
-                                    Learning Content
-                                  </h4>
-                                  <div className="bg-gray-50 p-4 rounded-md prose prose-sm max-w-none">
-                                    {questionDetail.learningContent.split('\n').map((para, idx) => (
-                                      <p key={idx} className="text-gray-900 mb-2 last:mb-0">
+                                <div style={{ marginBottom: '16px' }}>
+                                  <h4 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.14em', color: C.muted, margin: '0 0 8px 0' }}>LEARNING CONTENT</h4>
+                                  <div style={{ padding: '12px 16px', border: `1px solid ${C.rule}`, borderRadius: '2px' }}>
+                                    {questionDetail.learningContent.split('\n').map((para, idx, arr) => (
+                                      <p key={idx} style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink, margin: idx === arr.length - 1 ? '0' : '0 0 8px 0' }}>
                                         {para}
                                       </p>
                                     ))}
@@ -599,29 +465,26 @@ export function FlagDetailPanel({
                                 <Link
                                   to={`/admin/questions?id=${questionDetail.id}`}
                                   onClick={onClose}
-                                  className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                                  style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.1em', color: ADMIN_ACCENT, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
                                 >
-                                  Edit in Explorer
-                                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  EDIT IN EXPLORER
+                                  <svg width="14" height="14" style={{ marginLeft: '4px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                   </svg>
                                 </Link>
                               </div>
                             </div>
 
-                            {/* Individual Flags Section */}
-                            <div className="border-t pt-6">
-                              <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                                Player Feedback ({flags.length}{' '}
-                                {flags.length === 1 ? 'flag' : 'flags'})
+                            {/* Individual Flags */}
+                            <div style={{ borderTop: `1px solid ${C.rule}`, paddingTop: '24px' }}>
+                              <h4 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '14px', letterSpacing: '0.12em', color: C.ink, margin: '0 0 16px 0' }}>
+                                PLAYER FEEDBACK ({flags.length} {flags.length === 1 ? 'FLAG' : 'FLAGS'})
                               </h4>
 
                               {flags.length === 0 ? (
-                                <p className="text-sm text-gray-600 italic">
-                                  No flag entries available
-                                </p>
+                                <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', fontSize: '13px', color: C.mutedFg }}>No flag entries available</p>
                               ) : (
-                                <div className="space-y-3">
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                   {flags.map((flag) => {
                                     const hasReasons = flag.reasons && flag.reasons.length > 0;
                                     const hasElaboration = flag.elaboration && flag.elaboration.trim();
@@ -632,30 +495,18 @@ export function FlagDetailPanel({
                                       : flag.elaboration;
 
                                     return (
-                                      <div
-                                        key={flag.id}
-                                        className="bg-gray-50 p-4 rounded-md border border-gray-200"
-                                      >
-                                        {/* Top row: username + date */}
-                                        <div className="flex items-center justify-between mb-2">
-                                          <span className="font-semibold text-gray-900">
-                                            {flag.username}
-                                          </span>
-                                          <span className="text-sm text-gray-500">
-                                            {new Date(flag.createdAt).toLocaleDateString()}
-                                          </span>
+                                      <div key={flag.id} style={{ padding: '12px 16px', border: `1px solid ${C.rule}`, borderRadius: '2px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                          <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', fontWeight: 600, color: C.ink }}>{flag.username}</span>
+                                          <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '12px', color: C.mutedFg }}>{new Date(flag.createdAt).toLocaleDateString()}</span>
                                         </div>
 
-                                        {/* Reasons row */}
                                         {hasReasons && (
-                                          <div className="flex flex-wrap gap-1 mb-2">
+                                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
                                             {flag.reasons.map((reason) => {
-                                              const { label, color } = getReasonLabel(reason);
+                                              const { label, bg, color } = getReasonStyle(reason);
                                               return (
-                                                <span
-                                                  key={reason}
-                                                  className={`px-2 py-0.5 text-xs font-medium rounded border ${color}`}
-                                                >
+                                                <span key={reason} style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: '2px', backgroundColor: bg, color }}>
                                                   {label}
                                                 </span>
                                               );
@@ -663,28 +514,22 @@ export function FlagDetailPanel({
                                           </div>
                                         )}
 
-                                        {/* Elaboration text */}
                                         {hasElaboration && (
                                           <div>
-                                            <p className="text-sm text-gray-900 mb-1">
-                                              {displayText}
-                                            </p>
+                                            <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink, margin: '0 0 4px 0' }}>{displayText}</p>
                                             {needsTruncation && (
                                               <button
                                                 onClick={() => toggleFlagExpansion(flag.id)}
-                                                className="text-xs text-red-600 hover:text-red-700 font-medium"
+                                                style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', color: ADMIN_ACCENT, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                                               >
-                                                {isExpanded ? 'Show less' : 'Show more'}
+                                                {isExpanded ? 'SHOW LESS' : 'SHOW MORE'}
                                               </button>
                                             )}
                                           </div>
                                         )}
 
-                                        {/* No details case */}
                                         {!hasReasons && !hasElaboration && (
-                                          <p className="text-sm text-gray-500 italic">
-                                            Flagged without details
-                                          </p>
+                                          <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', fontSize: '13px', color: C.mutedFg, margin: 0 }}>Flagged without details</p>
                                         )}
                                       </div>
                                     );
@@ -704,7 +549,6 @@ export function FlagDetailPanel({
         </Dialog>
       </Transition>
 
-      {/* Toast */}
       <Toast
         {...toast}
         onClose={hideToast}
