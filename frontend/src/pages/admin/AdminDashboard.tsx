@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { API_URL } from '../../services/api';
+import { useTheme } from '../../hooks/useTheme';
+
+const ADMIN_ACCENT = '#FF5740';
 
 interface CollectionHealth {
   id: number;
@@ -21,6 +24,7 @@ interface CollectionHealth {
 
 export function AdminDashboard() {
   const { user, accessToken } = useAuthStore();
+  const { C } = useTheme();
   const [collections, setCollections] = useState<CollectionHealth[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -82,25 +86,55 @@ export function AdminDashboard() {
     return hasLowCount || hasLowQuality;
   });
 
+  const sectionHeaderStyle: React.CSSProperties = {
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '12px',
+    letterSpacing: '0.22em',
+    color: C.muted,
+    borderTop: `1px solid ${C.rule}`,
+    paddingTop: '12px',
+    marginBottom: '16px',
+  };
+
+  const statCardStyle: React.CSSProperties = {
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    padding: '24px',
+    backgroundColor: 'transparent',
+  };
+
   return (
-    <div className="max-w-7xl mx-auto">
+    <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
       {/* Welcome section */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
+      <div style={{ marginBottom: '32px' }}>
+        <h1 style={{
+          fontFamily: "'Bebas Neue', sans-serif",
+          fontSize: 'clamp(28px, 5vw, 40px)',
+          color: C.ink,
+          letterSpacing: '0.06em',
+          margin: 0,
+        }}>
           Welcome, {user?.email || 'Admin'}
         </h1>
-        <p className="mt-2 text-gray-600">
+        <p style={{
+          fontFamily: "'Lora', Georgia, serif",
+          fontStyle: 'italic',
+          color: C.muted,
+          marginTop: '8px',
+          marginBottom: 0,
+        }}>
           Overview of content health and admin tools
         </p>
       </div>
 
       {/* Loading state */}
       {loading && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '32px' }}
+          className="lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-lg border border-gray-200 p-6 animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-1/2 mb-3" />
-              <div className="h-8 bg-gray-200 rounded w-3/4" />
+            <div key={i} style={{ ...statCardStyle, opacity: 0.5 }}>
+              <div style={{ height: '12px', backgroundColor: C.ruleLight, borderRadius: '2px', width: '50%', marginBottom: '12px' }} />
+              <div style={{ height: '32px', backgroundColor: C.ruleLight, borderRadius: '2px', width: '75%' }} />
             </div>
           ))}
         </div>
@@ -108,90 +142,202 @@ export function AdminDashboard() {
 
       {/* Error state */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <svg className="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-sm text-red-800">{error}</p>
-            </div>
-            <button
-              onClick={fetchCollections}
-              className="px-3 py-1 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-100 rounded transition-colors"
-            >
-              Retry
-            </button>
+        <div style={{
+          border: `1px solid ${C.incorrect}`,
+          borderRadius: '2px',
+          padding: '16px',
+          marginBottom: '32px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <svg width="20" height="20" style={{ color: C.incorrect, marginRight: '8px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '14px', color: C.ink, margin: 0 }}>{error}</p>
           </div>
+          <button
+            onClick={fetchCollections}
+            style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '13px',
+              letterSpacing: '0.1em',
+              color: ADMIN_ACCENT,
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '4px 8px',
+            }}
+          >
+            RETRY
+          </button>
         </div>
       )}
 
       {/* Stats overview row */}
       {!loading && !error && (
         <>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '32px' }}
+            className="lg:grid-cols-4">
             {/* Total Active Questions */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-              <div className="text-sm font-medium text-gray-500 mb-2">Total Active Questions</div>
-              <div className="text-3xl font-bold text-gray-900">{totalActiveQuestions.toLocaleString()}</div>
+            <div style={statCardStyle}>
+              <div style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '11px',
+                letterSpacing: '0.16em',
+                color: C.mutedFg,
+                marginBottom: '8px',
+              }}>
+                TOTAL ACTIVE QUESTIONS
+              </div>
+              <div style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '40px',
+                color: C.ink,
+                lineHeight: 1,
+              }}>
+                {totalActiveQuestions.toLocaleString()}
+              </div>
             </div>
 
             {/* Total Collections */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-              <div className="text-sm font-medium text-gray-500 mb-2">Total Collections</div>
-              <div className="text-3xl font-bold text-gray-900">{totalCollections}</div>
+            <div style={statCardStyle}>
+              <div style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '11px',
+                letterSpacing: '0.16em',
+                color: C.mutedFg,
+                marginBottom: '8px',
+              }}>
+                ACTIVE COLLECTIONS
+              </div>
+              <div style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '40px',
+                color: C.ink,
+                lineHeight: 1,
+              }}>
+                {totalCollections}
+              </div>
             </div>
 
             {/* Avg Quality Score */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-              <div className="text-sm font-medium text-gray-500 mb-2">Avg Quality Score</div>
-              <div className="flex items-baseline gap-2">
-                <div className="text-3xl font-bold text-gray-900">
+            <div style={statCardStyle}>
+              <div style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '11px',
+                letterSpacing: '0.16em',
+                color: C.mutedFg,
+                marginBottom: '8px',
+              }}>
+                AVG QUALITY SCORE
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                <div style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '40px',
+                  color: C.ink,
+                  lineHeight: 1,
+                }}>
                   {avgQualityScore !== null ? Math.round(avgQualityScore) : 'N/A'}
                 </div>
                 {avgQualityScore !== null && (
-                  <div
-                    className={`w-3 h-3 rounded-full ${
-                      avgQualityScore >= 70 ? 'bg-green-600' : avgQualityScore >= 50 ? 'bg-yellow-500' : 'bg-red-600'
-                    }`}
-                  />
+                  <div style={{
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    backgroundColor:
+                      avgQualityScore >= 70 ? C.correct :
+                      avgQualityScore >= 50 ? '#B8860B' : C.incorrect,
+                  }} />
                 )}
               </div>
             </div>
 
             {/* Overall Correct Rate */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-              <div className="text-sm font-medium text-gray-500 mb-2">Overall Correct Rate</div>
-              <div className="text-3xl font-bold text-gray-900">
+            <div style={statCardStyle}>
+              <div style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '11px',
+                letterSpacing: '0.16em',
+                color: C.mutedFg,
+                marginBottom: '8px',
+              }}>
+                OVERALL CORRECT RATE
+              </div>
+              <div style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '40px',
+                color: C.ink,
+                lineHeight: 1,
+              }}>
                 {overallCorrectRate !== null ? `${Math.round(overallCorrectRate * 100)}%` : 'N/A'}
               </div>
             </div>
           </div>
 
           {/* Collections needing attention */}
-          <div className="mb-8 bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Collections Needing Attention</h2>
+          <div style={{ marginBottom: '32px' }}>
+            <div style={sectionHeaderStyle}>COLLECTIONS NEEDING ATTENTION</div>
             {collectionsNeedingAttention.length === 0 ? (
-              <div className="flex items-center text-green-700 bg-green-50 border border-green-200 rounded-lg p-4">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                border: `1px solid ${C.correct}`,
+                borderRadius: '2px',
+                padding: '16px',
+              }}>
+                <svg width="20" height="20" style={{ color: C.correct, marginRight: '8px', flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-sm font-medium">All collections healthy</span>
+                <span style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '13px',
+                  letterSpacing: '0.1em',
+                  color: C.correct,
+                }}>
+                  ALL COLLECTIONS HEALTHY
+                </span>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {collectionsNeedingAttention.map(c => {
                   const hasLowCount = c.stats.activeCount < 50;
                   const hasLowQuality = c.stats.quality.avgScore !== null && c.stats.quality.avgScore < 70;
-                  const healthStatus = c.stats.activeCount < 50 || (c.stats.quality.avgScore !== null && c.stats.quality.avgScore < 50) ? 'red' : 'yellow';
+                  const isCritical = c.stats.activeCount < 50 || (c.stats.quality.avgScore !== null && c.stats.quality.avgScore < 50);
 
                   return (
-                    <div key={c.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-2.5 h-2.5 rounded-full ${healthStatus === 'red' ? 'bg-red-600' : 'bg-yellow-500'}`} />
+                    <div key={c.id} style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '12px 16px',
+                      border: `1px solid ${C.ruleLight}`,
+                      borderRadius: '2px',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          flexShrink: 0,
+                          backgroundColor: isCritical ? C.incorrect : '#B8860B',
+                        }} />
                         <div>
-                          <div className="font-medium text-gray-900">{c.name}</div>
-                          <div className="text-sm text-gray-600">
+                          <div style={{
+                            fontFamily: "'Bebas Neue', sans-serif",
+                            fontSize: '14px',
+                            letterSpacing: '0.08em',
+                            color: C.ink,
+                          }}>
+                            {c.name}
+                          </div>
+                          <div style={{
+                            fontFamily: "'Lora', Georgia, serif",
+                            fontSize: '12px',
+                            color: C.muted,
+                          }}>
                             {hasLowCount && `Only ${c.stats.activeCount} active questions`}
                             {hasLowCount && hasLowQuality && ' • '}
                             {hasLowQuality && `Low quality score (${Math.round(c.stats.quality.avgScore!)})`}
@@ -200,9 +346,15 @@ export function AdminDashboard() {
                       </div>
                       <Link
                         to="/admin/collections"
-                        className="text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
+                        style={{
+                          fontFamily: "'Bebas Neue', sans-serif",
+                          fontSize: '12px',
+                          letterSpacing: '0.1em',
+                          color: ADMIN_ACCENT,
+                          textDecoration: 'none',
+                        }}
                       >
-                        Investigate
+                        INVESTIGATE
                       </Link>
                     </div>
                   );
@@ -213,38 +365,105 @@ export function AdminDashboard() {
 
           {/* Quick links section */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div style={sectionHeaderStyle}>QUICK LINKS</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }} className="md:grid-cols-2">
               {/* Question Explorer card */}
               <Link
                 to="/admin/questions"
-                className="bg-white rounded-lg border-2 border-red-100 p-6 hover:border-red-200 hover:shadow-md transition-all group"
+                style={{
+                  display: 'block',
+                  border: `1px solid ${C.rule}`,
+                  borderRadius: '2px',
+                  padding: '24px',
+                  textDecoration: 'none',
+                  backgroundColor: 'transparent',
+                  transition: 'border-color 150ms',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = ADMIN_ACCENT)}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = C.rule)}
               >
-                <div className="flex items-center justify-center w-12 h-12 bg-red-50 rounded-lg mb-4 group-hover:bg-red-100 transition-colors">
-                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px',
+                  border: `1px solid ${C.rule}`,
+                  borderRadius: '2px',
+                  marginBottom: '16px',
+                }}>
+                  <svg width="20" height="20" style={{ color: ADMIN_ACCENT }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Question Explorer</h3>
-                <p className="text-sm text-gray-600">Browse, filter, and inspect all questions</p>
+                <h3 style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '18px',
+                  letterSpacing: '0.1em',
+                  color: C.ink,
+                  margin: '0 0 8px 0',
+                }}>
+                  Question Explorer
+                </h3>
+                <p style={{
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontSize: '13px',
+                  color: C.muted,
+                  margin: 0,
+                }}>
+                  Browse, filter, and inspect all questions
+                </p>
               </Link>
 
               {/* Collection Health card */}
               <Link
                 to="/admin/collections"
-                className="bg-white rounded-lg border-2 border-red-100 p-6 hover:border-red-200 hover:shadow-md transition-all group"
+                style={{
+                  display: 'block',
+                  border: `1px solid ${C.rule}`,
+                  borderRadius: '2px',
+                  padding: '24px',
+                  textDecoration: 'none',
+                  backgroundColor: 'transparent',
+                  transition: 'border-color 150ms',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = ADMIN_ACCENT)}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = C.rule)}
               >
-                <div className="flex items-center justify-center w-12 h-12 bg-red-50 rounded-lg mb-4 group-hover:bg-red-100 transition-colors">
-                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px',
+                  border: `1px solid ${C.rule}`,
+                  borderRadius: '2px',
+                  marginBottom: '16px',
+                }}>
+                  <svg width="20" height="20" style={{ color: ADMIN_ACCENT }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Collection Health</h3>
-                <p className="text-sm text-gray-600">Monitor question counts and quality</p>
+                <h3 style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '18px',
+                  letterSpacing: '0.1em',
+                  color: C.ink,
+                  margin: '0 0 8px 0',
+                }}>
+                  Collection Health
+                </h3>
+                <p style={{
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontSize: '13px',
+                  color: C.muted,
+                  margin: 0,
+                }}>
+                  Monitor question counts and quality
+                </p>
               </Link>
             </div>
           </div>
-
         </>
       )}
     </div>
