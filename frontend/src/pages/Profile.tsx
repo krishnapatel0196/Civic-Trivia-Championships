@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { Avatar } from '../components/Avatar';
 import { XpIcon } from '../components/icons/XpIcon';
-import { GemIcon } from '../components/icons/GemIcon';
 import { fetchTriviaStats, updateTimerMultiplier, fetchXpHistory } from '../services/profileService';
 import type { ProfileStats, XpHistoryResponse } from '../services/profileService';
 import { fetchAccountProfile, ACCOUNTS_WEB_URL } from '../services/accountsApi';
