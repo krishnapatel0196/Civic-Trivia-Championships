@@ -15,6 +15,21 @@ interface AnswerGridProps {
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
 
+// Design tokens (game screen dark palette)
+const G = {
+  surface:      '#1A1510',
+  border:       '#2E2620',
+  borderHover:  '#5C4A30',
+  ink:          '#F5EDD8',
+  inkMuted:     '#9A8878',
+  accent:       '#E8A020',
+  accentBg:     'rgba(232,160,32,0.10)',
+  correct:      '#2D9B5F',
+  correctBg:    'rgba(45,155,95,0.14)',
+  incorrect:    '#C0152A',
+  incorrectBg:  'rgba(192,21,42,0.12)',
+} as const;
+
 export function AnswerGrid({
   options,
   selectedOption,
@@ -26,60 +41,104 @@ export function AnswerGrid({
 }: AnswerGridProps) {
   const isAnswering = phase === 'answering' || phase === 'selected';
   const isRevealing = phase === 'revealing';
-  const isLocked = phase === 'locked';
+  const isLocked    = phase === 'locked';
   const reducedMotion = useReducedMotion();
 
-  // Keyboard navigation state
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const lockInButtonRef = useRef<HTMLButtonElement>(null);
-
-  const getOptionStyle = (index: number) => {
-    // Revealing phase styling
-    if (isRevealing) {
-      if (index === correctAnswer) {
-        return 'bg-green-600/30 border-green-500 border-2 shadow-lg shadow-green-500/50';
-      }
-      if (index === selectedOption && index !== correctAnswer) {
-        return 'bg-red-600/30 border-red-500 border-2';
-      }
-      // Other wrong options
-      return 'bg-slate-800/30 border-slate-700 opacity-30';
-    }
-
-    // Selected option during answering/selected phase
-    if (selectedOption === index && (phase === 'selected' || isLocked)) {
-      return 'bg-teal-600/40 border-teal-500 border-2 shadow-lg shadow-teal-500/30';
-    }
-
-    // Default state - bold hover effect
-    return 'bg-slate-800 border-slate-500 hover:border-teal-400 hover:bg-slate-700 hover:shadow-lg hover:shadow-teal-400/20 transition-all duration-200';
-  };
-
-  const getOptionScale = (index: number) => {
-    if (isRevealing && index === correctAnswer) {
-      return 1.05;
-    }
-    return 1;
-  };
+  const [focusedIndex, setFocusedIndex]   = useState<number | null>(null);
+  const buttonRefs                         = useRef<(HTMLButtonElement | null)[]>([]);
+  const lockInButtonRef                    = useRef<HTMLButtonElement>(null);
+  const [hoveredIndex, setHoveredIndex]   = useState<number | null>(null);
 
   const canSelect = isAnswering && !isLocked;
 
-  // Reset focused index when can't select anymore
   useEffect(() => {
-    if (!canSelect) {
-      setFocusedIndex(null);
-    }
+    if (!canSelect) setFocusedIndex(null);
   }, [canSelect]);
 
-  // Focus the button when focusedIndex changes
   useEffect(() => {
     if (focusedIndex !== null && buttonRefs.current[focusedIndex]) {
       buttonRefs.current[focusedIndex]?.focus();
     }
   }, [focusedIndex]);
 
-  // Keyboard handler for answer buttons
+  // Returns the inline style object for each button based on phase/selection state
+  const getButtonStyle = (index: number): React.CSSProperties => {
+    const isSelected = selectedOption === index;
+    const isCorrectAnswer = index === correctAnswer;
+    const isHovered = hoveredIndex === index;
+
+    if (isRevealing) {
+      if (isCorrectAnswer) {
+        return {
+          background: G.correctBg,
+          border: `2px solid ${G.correct}`,
+        };
+      }
+      if (isSelected && !isCorrectAnswer) {
+        return {
+          background: G.incorrectBg,
+          border: `2px solid ${G.incorrect}`,
+        };
+      }
+      return {
+        background: G.surface,
+        border: `2px solid ${G.border}`,
+        opacity: 0.2,
+      };
+    }
+
+    if ((phase === 'selected' || isLocked) && isSelected) {
+      return {
+        background: G.accentBg,
+        border: `2px solid ${G.accent}`,
+      };
+    }
+
+    if (canSelect && isHovered) {
+      return {
+        background: '#241C14',
+        border: `2px solid ${G.borderHover}`,
+      };
+    }
+
+    return {
+      background: G.surface,
+      border: `2px solid ${G.border}`,
+    };
+  };
+
+  // Letter badge style
+  const getBadgeStyle = (index: number): React.CSSProperties => {
+    const isSelected = selectedOption === index;
+    const isCorrectAnswer = index === correctAnswer;
+
+    if (isRevealing) {
+      if (isCorrectAnswer) {
+        return { background: G.correct, color: '#F5EDD8', borderColor: G.correct };
+      }
+      if (isSelected && !isCorrectAnswer) {
+        return { background: G.incorrect, color: '#F5EDD8', borderColor: G.incorrect };
+      }
+      return { background: 'transparent', color: G.inkMuted, borderColor: G.border };
+    }
+
+    if ((phase === 'selected' || isLocked) && isSelected) {
+      return { background: G.accent, color: '#0F0D09', borderColor: G.accent };
+    }
+
+    return { background: 'transparent', color: G.inkMuted, borderColor: G.border };
+  };
+
+  const getOptionScale = (index: number) => {
+    if (isRevealing && index === correctAnswer) return 1.02;
+    return 1;
+  };
+
+  const getOpacity = (index: number) => {
+    if (phase === 'locked' && selectedOption !== null && index !== selectedOption) return 0.3;
+    return 1;
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     if (!canSelect) return;
 
@@ -120,77 +179,99 @@ export function AnswerGrid({
   return (
     <div className="w-full max-w-3xl mx-auto px-2 md:px-6">
       {/* Answer grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 mb-2 md:mb-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2.5 mb-2 md:mb-3">
         {options.map((option, index) => (
           <motion.button
             key={index}
-            ref={(el) => (buttonRefs.current[index] = el)}
+            ref={el => (buttonRefs.current[index] = el)}
             onClick={() => canSelect && onSelect(index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
+            onKeyDown={e => handleKeyDown(e, index)}
+            onMouseEnter={() => canSelect && setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
             disabled={!canSelect}
             tabIndex={focusedIndex === index ? 0 : index === 0 && focusedIndex === null ? 0 : -1}
             aria-label={`Option ${OPTION_LETTERS[index]}: ${option}`}
-            whileTap={canSelect && !reducedMotion ? { scale: 0.95 } : undefined}
+            whileTap={canSelect && !reducedMotion ? { scale: 0.97 } : undefined}
             animate={{
               scale: getOptionScale(index),
-              opacity: (() => {
-                // During locked phase (suspense): dim non-selected
-                if (phase === 'locked' && selectedOption !== null && index !== selectedOption) return 0.3;
-                // During reveal: dim non-selected, non-correct
-                if (isRevealing && index !== correctAnswer && index !== selectedOption) return 0.3;
-                return 1;
-              })(),
+              opacity: getOpacity(index),
               ...(phase === 'locked' && selectedOption === index
                 ? reducedMotion
-                  ? { boxShadow: '0 0 16px rgba(20, 184, 166, 0.6)' }  // Static glow
+                  ? { boxShadow: `0 0 16px rgba(232,160,32,0.5)` }
                   : {
                       boxShadow: [
-                        '0 0 8px rgba(20, 184, 166, 0.4)',
-                        '0 0 24px rgba(20, 184, 166, 0.8)',
-                        '0 0 8px rgba(20, 184, 166, 0.4)',
+                        '0 0 8px rgba(232,160,32,0.3)',
+                        '0 0 24px rgba(232,160,32,0.7)',
+                        '0 0 8px rgba(232,160,32,0.3)',
                       ],
                     }
                 : { boxShadow: '0 0 0px rgba(0,0,0,0)' }),
             }}
             transition={{
-              scale: { type: 'spring', stiffness: 400, damping: 17 },
-              opacity: { duration: 0.3 },
-              boxShadow: reducedMotion ? { duration: 0 } : { duration: 0.75, repeat: Infinity, ease: 'easeInOut' },
+              scale:     { type: 'spring', stiffness: 400, damping: 17 },
+              opacity:   { duration: 0.3 },
+              boxShadow: reducedMotion ? { duration: 0 } : { duration: 0.7, repeat: Infinity, ease: 'easeInOut' },
             }}
-            className={`
-              relative p-2.5 md:p-3 rounded-lg border-2 transition-all duration-300
-              flex items-center gap-4 text-left min-h-[48px]
-              disabled:cursor-not-allowed
-              ${canSelect ? 'cursor-pointer' : 'cursor-default'}
-              ${getOptionStyle(index)}
-            `}
+            style={{
+              position: 'relative',
+              padding: '10px 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              textAlign: 'left',
+              minHeight: '52px',
+              cursor: canSelect ? 'pointer' : 'default',
+              borderRadius: '3px',
+              transition: 'background 0.15s, border-color 0.15s',
+              outline: 'none',
+              ...getButtonStyle(index),
+            }}
           >
-            {/* Letter label */}
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-slate-900/50 border border-slate-500 flex items-center justify-center text-white font-bold text-lg">
+            {/* Letter badge — square, Bebas Neue */}
+            <div style={{
+              flexShrink: 0,
+              width: '34px',
+              height: '34px',
+              border: '1px solid',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '18px',
+              letterSpacing: '0.05em',
+              borderRadius: '2px',
+              transition: 'background 0.15s, color 0.15s, border-color 0.15s',
+              ...getBadgeStyle(index),
+            }}>
               {OPTION_LETTERS[index]}
             </div>
 
             {/* Option text */}
-            <div className="text-white text-lg font-medium flex-1">
+            <div style={{
+              fontFamily: "'Lora', Georgia, serif",
+              color: G.ink,
+              fontSize: '15px',
+              lineHeight: 1.4,
+              flex: 1,
+            }}>
               {option}
             </div>
 
-            {/* Status icons - shown during reveal phase */}
+            {/* Status icons during reveal */}
             {isRevealing && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.25 }}
+                style={{ flexShrink: 0 }}
               >
                 {index === correctAnswer && (
-                  // Checkmark for correct answer
-                  <svg className="w-6 h-6 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <svg style={{ width: '20px', height: '20px', color: G.correct }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 )}
                 {index === selectedOption && index !== correctAnswer && (
-                  // X icon for incorrect selected answer
-                  <svg className="w-6 h-6 text-red-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <svg style={{ width: '20px', height: '20px', color: G.incorrect }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 )}
@@ -200,47 +281,77 @@ export function AnswerGrid({
         ))}
       </div>
 
-      {/* Lock In button (shown in 'selected' phase) */}
+      {/* Lock In button */}
       {phase === 'selected' && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex justify-center mb-6"
+          className="flex justify-center mb-4"
         >
           <button
             ref={lockInButtonRef}
             onClick={onLockIn}
-            className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg rounded-lg shadow-lg transition-colors focus-ring-primary"
+            style={{
+              padding: '12px 36px',
+              background: G.accent,
+              color: '#0F0D09',
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '20px',
+              letterSpacing: '0.12em',
+              border: 'none',
+              borderRadius: '2px',
+              cursor: 'pointer',
+              minHeight: '48px',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#C88010')}
+            onMouseLeave={e => (e.currentTarget.style.background = G.accent)}
           >
-            Lock In
+            LOCK IN
           </button>
         </motion.div>
       )}
 
-      {/* Revealing phase - explanation and feedback */}
+      {/* Reveal phase — explanation */}
       {isRevealing && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="text-center"
+          transition={{ delay: 0.45 }}
+          style={{ textAlign: 'center' }}
         >
-          {/* Feedback message */}
           {selectedOption !== null && selectedOption !== correctAnswer && (
-            <div className="text-yellow-400 text-lg font-medium mb-2">
-              Not quite
+            <div style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              letterSpacing: '0.12em',
+              fontSize: '16px',
+              color: G.incorrect,
+              marginBottom: '10px',
+            }}>
+              NOT QUITE
             </div>
           )}
 
-          {/* Explanation */}
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-2">
-            <div className="text-slate-300 text-base leading-relaxed">
+          <div style={{
+            background: '#1A1510',
+            border: `1px solid #2E2620`,
+            borderLeft: `3px solid #2E2620`,
+            padding: '14px 16px',
+            marginBottom: '8px',
+            borderRadius: '2px',
+          }}>
+            <div style={{
+              fontFamily: "'Lora', Georgia, serif",
+              color: '#C8B89A',
+              fontSize: '14px',
+              lineHeight: 1.65,
+              fontStyle: 'italic',
+            }}>
               {explanation}
             </div>
           </div>
         </motion.div>
       )}
-
     </div>
   );
 }

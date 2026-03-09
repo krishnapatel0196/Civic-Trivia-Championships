@@ -11,7 +11,6 @@ interface ScoreDisplayProps {
 export function ScoreDisplay({ score, shouldShake, showRedFlash, compact = false }: ScoreDisplayProps) {
   const motionScore = useMotionValue(0);
 
-  // Animate score changes with spring physics
   useEffect(() => {
     const controls = animate(motionScore, score, {
       type: 'spring',
@@ -19,14 +18,11 @@ export function ScoreDisplay({ score, shouldShake, showRedFlash, compact = false
       damping: 20,
       mass: 0.5,
     });
-
     return () => controls.stop();
   }, [score, motionScore]);
 
-  // Subscribe to motion value for display
   const displayScore = Math.round(motionScore.get());
 
-  // Update display on every frame
   useEffect(() => {
     const unsubscribe = motionScore.on('change', () => {
       // Force re-render when motion value changes
@@ -39,38 +35,44 @@ export function ScoreDisplay({ score, shouldShake, showRedFlash, compact = false
       {/* Red flash overlay */}
       {showRedFlash && (
         <motion.div
-          initial={{ opacity: 0.3 }}
+          initial={{ opacity: 0.4 }}
           animate={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="absolute inset-0 bg-red-600 rounded-lg pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: '#C0152A', borderRadius: '2px' }}
         />
       )}
 
-      {/* Score container with shake animation */}
+      {/* Score — just the number, no card */}
       <motion.div
         animate={
           shouldShake
-            ? {
-                x: [0, -10, 10, -10, 10, 0],
-                transition: { duration: 0.5 },
-              }
+            ? { x: [0, -8, 8, -8, 8, 0], transition: { duration: 0.4 } }
             : {}
         }
-        className={`relative bg-slate-800/80 backdrop-blur-sm rounded-lg border border-slate-700 ${compact ? 'px-3 py-1.5' : 'px-6 py-3'}`}
+        className="relative"
       >
-        <div className="text-center">
-          <motion.div
-            key={displayScore}
-            className={`font-bold text-teal-400 tabular-nums ${compact ? 'text-xl' : 'text-3xl'}`}
-          >
-            {displayScore.toLocaleString()}
-          </motion.div>
-          {!compact && (
-            <div className="text-slate-400 text-xs mt-0.5 uppercase tracking-wide">
-              pts
-            </div>
-          )}
+        <div style={{
+          fontFamily: "'Bebas Neue', sans-serif",
+          color: '#E8A020',
+          letterSpacing: '0.02em',
+          lineHeight: 1,
+          fontSize: compact ? '22px' : '36px',
+          tabularNums: 'tabular-nums',
+        } as React.CSSProperties}>
+          {displayScore.toLocaleString()}
         </div>
+        {!compact && (
+          <div style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: '10px',
+            letterSpacing: '0.2em',
+            color: '#9A8878',
+            marginTop: '2px',
+          }}>
+            PTS
+          </div>
+        )}
       </motion.div>
     </div>
   );

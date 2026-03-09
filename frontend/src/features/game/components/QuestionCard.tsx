@@ -8,14 +8,30 @@ interface QuestionCardProps {
 
 export function QuestionCard({ question, questionNumber, totalQuestions }: QuestionCardProps) {
   return (
-    <div className="flex flex-col items-center gap-1 md:gap-2 max-w-3xl mx-auto px-2 md:px-6" role="region" aria-label={`Question ${questionNumber} of ${totalQuestions}`}>
+    <div
+      className="flex flex-col items-center gap-2 max-w-3xl mx-auto px-2 md:px-6"
+      role="region"
+      aria-label={`Question ${questionNumber} of ${totalQuestions}`}
+    >
       {/* Topic badge */}
-      <div className="text-teal-400/70 text-xs font-medium uppercase tracking-wider">
+      <div style={{
+        fontFamily: "'Bebas Neue', sans-serif",
+        letterSpacing: '0.22em',
+        fontSize: '11px',
+        color: '#9A8878',
+      }}>
         {question.topic}
       </div>
 
       {/* Question text */}
-      <div className="text-white text-lg md:text-2xl lg:text-3xl font-bold text-center leading-snug">
+      <div style={{
+        fontFamily: "'Lora', Georgia, serif",
+        color: '#F5EDD8',
+        fontSize: 'clamp(18px, 4vw, 26px)',
+        fontWeight: 600,
+        textAlign: 'center',
+        lineHeight: 1.35,
+      }}>
         {question.text}
       </div>
     </div>

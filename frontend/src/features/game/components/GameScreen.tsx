@@ -314,20 +314,43 @@ export function GameScreen({
   // Idle state - show start button
   if (state.phase === 'idle') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0F0D09' }}>
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
           className="text-center"
+          style={{ padding: '0 24px' }}
         >
-          <h1 className="text-5xl font-bold text-white mb-8">
+          <h1 style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 'clamp(40px, 10vw, 72px)',
+            color: '#F5EDD8',
+            letterSpacing: '0.06em',
+            lineHeight: 1,
+            marginBottom: '32px',
+          }}>
             Civic Trivia Challenge
           </h1>
           <button
             onClick={startGame}
-            className="px-12 py-4 bg-teal-600 hover:bg-teal-700 text-white text-xl font-bold rounded-lg shadow-2xl transition-all transform hover:scale-105"
+            style={{
+              padding: '16px 48px',
+              background: '#E8A020',
+              color: '#0F0D09',
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '22px',
+              letterSpacing: '0.14em',
+              border: 'none',
+              borderRadius: '2px',
+              cursor: 'pointer',
+              minHeight: '56px',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#C88010')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#E8A020')}
           >
-            Quick Play
+            QUICK PLAY
           </button>
 
           {/* XP panel for Connected players */}
@@ -340,7 +363,7 @@ export function GameScreen({
             <div className="mt-4">
               <a
                 href={ACCOUNTS_WEB_URL}
-                className="text-slate-500 hover:text-slate-400 text-sm transition-colors"
+                style={{ color: '#5C4A30', fontSize: '13px', fontStyle: 'italic', textDecoration: 'underline' }}
               >
                 Link account to earn XP
               </a>
@@ -377,7 +400,8 @@ export function GameScreen({
 
   return (
     <div
-      className={`h-screen h-[100dvh] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative ${state.phase === 'revealing' ? 'overflow-y-auto' : 'overflow-hidden'}`}
+      className={`h-screen h-[100dvh] relative ${state.phase === 'revealing' ? 'overflow-y-auto' : 'overflow-hidden'}`}
+      style={{ background: '#0F0D09' }}
       onClick={() => {
         if (state.phase === 'revealing' && !isLearnMoreOpen) {
           nextQuestion();
@@ -387,8 +411,10 @@ export function GameScreen({
       {/* Degraded mode banner - shown only when backend is in fallback mode */}
       <DegradedBanner visible={state.degraded} />
 
-      {/* Radial gradient bloom effect */}
-      <div className="absolute inset-0 bg-gradient-radial from-teal-900/10 via-transparent to-transparent opacity-30" />
+      {/* Radial warm glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: 'radial-gradient(ellipse 70% 50% at 50% 40%, rgba(232,160,32,0.05) 0%, transparent 70%)',
+      }} />
 
       {/* Celebration effects for streaks */}
       <CelebrationEffects streak={state.currentStreak} />
@@ -426,7 +452,12 @@ export function GameScreen({
             {/* Collection name + Progress dots + question counter (right) */}
             <div className="flex flex-col items-end gap-0.5 justify-self-end">
               {state.collectionName && (
-                <div className="text-xs text-slate-500 font-medium tracking-wide uppercase truncate max-w-[160px]">
+                <div className="truncate max-w-[160px]" style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '11px',
+                  letterSpacing: '0.16em',
+                  color: '#5C4A30',
+                }}>
                   {state.collectionName}
                 </div>
               )}
@@ -436,8 +467,13 @@ export function GameScreen({
                   total={state.totalQuestions}
                 />
               </div>
-              <span className="text-slate-500 text-[10px] font-medium uppercase tracking-wider">
-                Q{state.currentQuestionIndex + 1} of {state.totalQuestions}
+              <span style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '11px',
+                letterSpacing: '0.16em',
+                color: '#5C4A30',
+              }}>
+                Q{state.currentQuestionIndex + 1} / {state.totalQuestions}
               </span>
             </div>
           </div>
@@ -452,11 +488,17 @@ export function GameScreen({
               exit={{ opacity: 0, scale: 0.8 }}
               className="fixed inset-0 flex items-center justify-center z-30 pointer-events-none"
             >
-              <div className="bg-red-600 text-white text-3xl font-bold px-12 py-6 rounded-lg shadow-2xl flex items-center gap-3">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Time's up!
+              <div style={{
+                background: '#C0152A',
+                color: '#F5EDD8',
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '36px',
+                letterSpacing: '0.12em',
+                padding: '20px 48px',
+                borderRadius: '2px',
+                boxShadow: '0 0 40px rgba(192,21,42,0.5)',
+              }}>
+                TIME'S UP
               </div>
             </motion.div>
           )}
@@ -489,14 +531,26 @@ export function GameScreen({
             {/* Final question badge */}
             {isFinalQuestion && (
               <div className="flex justify-center">
-                <div className="bg-amber-500/20 text-amber-400 border border-amber-500/40 px-3 py-1 rounded-full text-sm font-bold">
+                <div style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '13px',
+                  letterSpacing: '0.22em',
+                  color: '#E8A020',
+                  border: '1px solid rgba(232,160,32,0.4)',
+                  padding: '4px 16px',
+                  borderRadius: '2px',
+                }}>
                   FINAL QUESTION
                 </div>
               </div>
             )}
 
             {/* Question card - with amber glow for final question and flag button during reveal */}
-            <div className={`relative ${isFinalQuestion ? 'border border-amber-500/40 shadow-[0_0_30px_rgba(245,158,11,0.15)] rounded-xl p-1' : ''}`}>
+            <div className="relative" style={isFinalQuestion ? {
+              border: '1px solid rgba(232,160,32,0.25)',
+              boxShadow: '0 0 30px rgba(232,160,32,0.08)',
+              padding: '4px',
+            } : {}}>
               <QuestionCard
                 question={currentQuestion}
                 questionNumber={state.currentQuestionIndex + 1}
