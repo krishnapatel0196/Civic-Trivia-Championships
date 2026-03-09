@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { DifficultyRate } from './DifficultyRate';
+import { useTheme } from '../../../hooks/useTheme';
 
 export interface QuestionRow {
   id: number;
@@ -26,17 +27,17 @@ interface QuestionTableProps {
 }
 
 const COLUMNS = [
-  { key: 'text',         label: 'Question Text',  sortKey: null,            defaultWidth: 300 },
-  { key: 'collections',  label: 'Collection(s)',   sortKey: null,            defaultWidth: 150 },
-  { key: 'difficulty',   label: 'Difficulty',      sortKey: 'difficulty',    defaultWidth: 100 },
-  { key: 'qualityScore', label: 'Quality Score',   sortKey: 'quality_score', defaultWidth: 115 },
+  { key: 'text',         label: 'Question Text',  sortKey: null,              defaultWidth: 300 },
+  { key: 'collections',  label: 'Collection(s)',   sortKey: null,              defaultWidth: 150 },
+  { key: 'difficulty',   label: 'Difficulty',      sortKey: 'difficulty',      defaultWidth: 100 },
+  { key: 'qualityScore', label: 'Quality Score',   sortKey: 'quality_score',   defaultWidth: 115 },
   { key: 'encounters',   label: 'Encounters',      sortKey: 'encounter_count', defaultWidth: 105 },
-  { key: 'correctRate',  label: 'Correct Rate',    sortKey: 'correct_count', defaultWidth: 110 },
-  { key: 'status',       label: 'Status',          sortKey: null,            defaultWidth: 90  },
-  { key: 'created',      label: 'Created',         sortKey: 'created_at',    defaultWidth: 100 },
-  { key: 'expires',      label: 'Expires',         sortKey: null,            defaultWidth: 100 },
-  { key: 'violations',   label: 'Violations',      sortKey: null,            defaultWidth: 95  },
-  { key: 'flags',        label: 'Flags',           sortKey: 'flag_count',    defaultWidth: 70  },
+  { key: 'correctRate',  label: 'Correct Rate',    sortKey: 'correct_count',   defaultWidth: 110 },
+  { key: 'status',       label: 'Status',          sortKey: null,              defaultWidth: 90  },
+  { key: 'created',      label: 'Created',         sortKey: 'created_at',      defaultWidth: 100 },
+  { key: 'expires',      label: 'Expires',         sortKey: null,              defaultWidth: 100 },
+  { key: 'violations',   label: 'Violations',      sortKey: null,              defaultWidth: 95  },
+  { key: 'flags',        label: 'Flags',           sortKey: 'flag_count',      defaultWidth: 70  },
 ] as const;
 
 type ColKey = typeof COLUMNS[number]['key'];
@@ -59,7 +60,9 @@ export function QuestionTable({
   onSortChange,
   onQuestionClick,
 }: QuestionTableProps) {
+  const { C } = useTheme();
   const [colWidths, setColWidths] = useState<ColWidths>(buildDefaultWidths);
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
   const dragRef = useRef<DragState | null>(null);
 
   const startResize = useCallback((e: React.MouseEvent, col: ColKey) => {
@@ -92,49 +95,67 @@ export function QuestionTable({
 
   const renderSortIcon = (sortKey: string | null) => {
     if (!sortKey || sort !== sortKey) return null;
-    return <span className="ml-1">{order === 'asc' ? '↑' : '↓'}</span>;
+    return <span style={{ marginLeft: '4px' }}>{order === 'asc' ? '↑' : '↓'}</span>;
   };
 
-  const getDifficultyBadge = (difficulty: string) => {
-    const badges = { easy: 'bg-green-100 text-green-800', medium: 'bg-yellow-100 text-yellow-800', hard: 'bg-red-100 text-red-800' };
-    return badges[difficulty as keyof typeof badges] || badges.medium;
+  const getDifficultyStyle = (difficulty: string): React.CSSProperties => {
+    const map: Record<string, React.CSSProperties> = {
+      easy:   { backgroundColor: 'rgba(37,92,63,0.15)',   color: C.correct },
+      medium: { backgroundColor: 'rgba(212,160,23,0.15)', color: C.amber },
+      hard:   { backgroundColor: 'rgba(192,21,42,0.12)',  color: C.incorrect },
+    };
+    return map[difficulty] ?? map.medium;
   };
 
-  const getStatusBadge = (status: string) => {
-    const badges = { active: 'bg-green-100 text-green-800', archived: 'bg-red-100 text-red-800', expired: 'bg-yellow-100 text-yellow-800' };
-    return badges[status as keyof typeof badges] || badges.active;
+  const getStatusStyle = (status: string): React.CSSProperties => {
+    const map: Record<string, React.CSSProperties> = {
+      active:   { backgroundColor: 'rgba(37,92,63,0.15)',   color: C.correct },
+      archived: { backgroundColor: 'rgba(192,21,42,0.12)',  color: C.incorrect },
+      expired:  { backgroundColor: 'rgba(212,160,23,0.15)', color: C.amber },
+    };
+    return map[status] ?? { backgroundColor: C.ruleLight, color: C.muted };
   };
 
-  const getFlagCountBadge = (count: number) => {
-    if (count > 5) return 'bg-red-100 text-red-600 font-bold';
-    if (count > 2) return 'bg-orange-100 text-orange-600 font-bold';
-    if (count > 0) return 'bg-gray-100 text-gray-600';
-    return '';
+  const thStyle: React.CSSProperties = {
+    padding: '10px 12px 10px 12px',
+    textAlign: 'left',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '11px',
+    letterSpacing: '0.14em',
+    color: '#C8BAA6',
+    backgroundColor: '#3D2E22',
+    position: 'relative',
+    userSelect: 'none',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
   };
 
-  const thBase = 'py-3 pl-3 pr-1 text-left text-xs font-medium text-white uppercase tracking-wider relative select-none overflow-hidden';
-  const tdBase = 'py-4 px-3 overflow-hidden';
+  const tdStyle: React.CSSProperties = {
+    padding: '12px',
+    overflow: 'hidden',
+    borderBottom: `1px solid ${C.rule}`,
+  };
 
   // Loading skeleton
   if (!questions) {
     return (
-      <div className="overflow-x-auto">
-        <table className="divide-y divide-gray-200" style={{ tableLayout: 'fixed', width: totalWidth }}>
-          <thead className="bg-red-900">
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ tableLayout: 'fixed', width: totalWidth, borderCollapse: 'collapse' }}>
+          <thead>
             <tr>
               {COLUMNS.map(col => (
-                <th key={col.key} className={thBase} style={{ width: colWidths[col.key] }}>
+                <th key={col.key} style={{ ...thStyle, width: colWidths[col.key] }}>
                   {col.label}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody style={{ backgroundColor: C.paper }}>
             {[...Array(10)].map((_, i) => (
-              <tr key={i} className="animate-pulse">
+              <tr key={i}>
                 {COLUMNS.map(col => (
-                  <td key={col.key} className={tdBase}>
-                    <div className="h-4 bg-gray-200 rounded w-3/4" />
+                  <td key={col.key} style={tdStyle}>
+                    <div style={{ height: '16px', backgroundColor: C.rule, borderRadius: '2px', width: '75%', opacity: 0.5 }} />
                   </td>
                 ))}
               </tr>
@@ -146,23 +167,22 @@ export function QuestionTable({
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="divide-y divide-gray-200" style={{ tableLayout: 'fixed', width: totalWidth }}>
-        <thead className="bg-red-900">
+    <div style={{ overflowX: 'auto' }}>
+      <table style={{ tableLayout: 'fixed', width: totalWidth, borderCollapse: 'collapse' }}>
+        <thead>
           <tr>
             {COLUMNS.map(col => (
               <th
                 key={col.key}
-                className={`${thBase}${col.sortKey ? ' cursor-pointer hover:bg-red-800' : ''}`}
-                style={{ width: colWidths[col.key] }}
+                style={{ ...thStyle, width: colWidths[col.key], cursor: col.sortKey ? 'pointer' : 'default' }}
                 onClick={col.sortKey ? () => onSortChange(col.sortKey!) : undefined}
               >
-                <span className="truncate block pr-2">
+                <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', paddingRight: '8px' }}>
                   {col.label} {renderSortIcon(col.sortKey)}
                 </span>
                 {/* Resize handle */}
                 <div
-                  className="absolute right-0 top-0 h-full w-2 cursor-col-resize hover:bg-white/40 z-10"
+                  style={{ position: 'absolute', right: 0, top: 0, height: '100%', width: '8px', cursor: 'col-resize', zIndex: 10 }}
                   onMouseDown={e => startResize(e, col.key)}
                   onClick={e => e.stopPropagation()}
                 />
@@ -170,68 +190,83 @@ export function QuestionTable({
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody>
           {questions.map((question, index) => (
             <tr
               key={question.id}
               onClick={() => onQuestionClick(question.id, index)}
-              className="hover:bg-gray-50 cursor-pointer transition-colors"
+              onMouseEnter={() => setHoveredId(question.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              style={{ backgroundColor: hoveredId === question.id ? C.ruleLight : C.paper, cursor: 'pointer', transition: 'background-color 0.1s' }}
             >
-              <td className={tdBase}>
-                <div className="text-sm text-gray-900 truncate">{question.text}</div>
+              <td style={tdStyle}>
+                <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {question.text}
+                </span>
               </td>
-              <td className={tdBase}>
-                <div className="text-sm text-gray-900 truncate">{question.collectionNames.join(', ')}</div>
+              <td style={tdStyle}>
+                <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {question.collectionNames.join(', ')}
+                </span>
               </td>
-              <td className={tdBase}>
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getDifficultyBadge(question.difficulty)}`}>
+              <td style={tdStyle}>
+                <span style={{ ...getDifficultyStyle(question.difficulty), padding: '2px 8px', borderRadius: '2px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', display: 'inline-block' }}>
                   {question.difficulty}
                 </span>
               </td>
-              <td className={tdBase}>
+              <td style={tdStyle}>
                 {question.qualityScore !== null ? (
-                  <span className="text-sm font-medium text-gray-900">{question.qualityScore}</span>
+                  <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', fontWeight: 600, color: C.ink }}>{question.qualityScore}</span>
                 ) : (
-                  <span className="text-sm text-gray-400">Not scored</span>
+                  <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.mutedFg, fontStyle: 'italic' }}>—</span>
                 )}
               </td>
-              <td className={tdBase}>
-                <span className="text-sm text-gray-900">{question.encounterCount}</span>
+              <td style={tdStyle}>
+                <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink }}>{question.encounterCount}</span>
               </td>
-              <td className={tdBase}>
+              <td style={tdStyle}>
                 <DifficultyRate correctCount={question.correctCount} encounterCount={question.encounterCount} />
               </td>
-              <td className={tdBase}>
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadge(question.status)}`}>
+              <td style={tdStyle}>
+                <span style={{ ...getStatusStyle(question.status), padding: '2px 8px', borderRadius: '2px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', display: 'inline-block' }}>
                   {question.status}
                 </span>
               </td>
-              <td className={tdBase}>
-                <span className="text-sm text-gray-900">{new Date(question.createdAt).toLocaleDateString()}</span>
+              <td style={tdStyle}>
+                <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink }}>{new Date(question.createdAt).toLocaleDateString()}</span>
               </td>
-              <td className={tdBase}>
+              <td style={tdStyle}>
                 {question.expiresAt ? (
-                  <span className="text-sm text-gray-900">{new Date(question.expiresAt).toLocaleDateString()}</span>
+                  <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink }}>{new Date(question.expiresAt).toLocaleDateString()}</span>
                 ) : (
-                  <span className="text-sm text-gray-400">—</span>
+                  <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.mutedFg }}>—</span>
                 )}
               </td>
-              <td className={`${tdBase} text-center`}>
+              <td style={{ ...tdStyle, textAlign: 'center' }}>
                 {question.violationCount !== null ? (
-                  <span className={`text-sm font-semibold ${question.violationCount === 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', fontWeight: 600, color: question.violationCount === 0 ? C.correct : C.incorrect }}>
                     {question.violationCount}
                   </span>
                 ) : (
-                  <span className="text-sm text-gray-400">-</span>
+                  <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.mutedFg }}>-</span>
                 )}
               </td>
-              <td className={`${tdBase} text-center`}>
+              <td style={{ ...tdStyle, textAlign: 'center' }}>
                 {question.flagCount > 0 ? (
-                  <span className={`px-2 py-1 text-xs rounded-full ${getFlagCountBadge(question.flagCount)}`}>
+                  <span style={{
+                    padding: '2px 8px',
+                    borderRadius: '2px',
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: '11px',
+                    letterSpacing: '0.08em',
+                    ...(question.flagCount > 5 ? { backgroundColor: 'rgba(192,21,42,0.12)', color: C.incorrect } :
+                        question.flagCount > 2 ? { backgroundColor: 'rgba(212,160,23,0.15)', color: C.amber } :
+                        { backgroundColor: C.ruleLight, color: C.muted }),
+                  }}>
                     {question.flagCount}
                   </span>
                 ) : (
-                  <span className="text-sm text-gray-400">-</span>
+                  <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.mutedFg }}>-</span>
                 )}
               </td>
             </tr>
