@@ -12,6 +12,7 @@ import { XpReveal } from './XpReveal';
 import { LevelUpOverlay } from './LevelUpOverlay';
 import { ACCOUNTS_WEB_URL } from '../../../services/accountsApi';
 import { useTheme } from '../../../hooks/useTheme';
+import { Header } from '../../../components/layout/Header';
 
 interface ResultsScreenProps {
   result: GameResult;
@@ -154,6 +155,7 @@ export function ResultsScreen({
       fontFamily: "'Lora', Georgia, serif",
       color: C.ink,
     }}>
+      <Header />
       <div style={{ maxWidth: '640px', margin: '0 auto', padding: '0 24px 80px' }}>
 
         {/* ── Masthead ── */}
@@ -161,12 +163,12 @@ export function ResultsScreen({
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          style={{ paddingTop: '36px', textAlign: 'center' }}
+          style={{ paddingTop: '28px', textAlign: 'center' }}
         >
           <p style={{
             fontFamily: "'Bebas Neue', sans-serif",
-            letterSpacing: '0.28em',
-            fontSize: '11px',
+            letterSpacing: '0.22em',
+            fontSize: '18px',
             color: C.muted,
             margin: 0,
           }}>
@@ -330,9 +332,10 @@ export function ResultsScreen({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.34, duration: 0.3 }}
             style={{
-              background: C.xpBg,
+              border: `1px solid ${C.rule}`,
               padding: '20px 28px',
               marginBottom: '28px',
+              textAlign: 'center',
             }}
           >
             {result.progression.xp?.confirmed && (
