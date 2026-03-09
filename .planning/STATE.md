@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 58 of 62 (Portland, OR Collection)
-Plan: 01 of 2 complete
-Status: In progress
-Last activity: 2026-03-09 — Completed 58-01-PLAN.md: scaffold, locale config, voice guidance, 61 curated questions, banner image
+Plan: 02 of 2 complete
+Status: Phase 58 complete
+Last activity: 2026-03-09 — Completed 58-02-PLAN.md: activated Portland, OR collection (61 questions, 23% expiring), appended Phase 58 retrospective to COLLECTION-PLAYBOOK.md
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | ~1,484 questions | v2.1 Phase 58 plan 01 shipped
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 13 collections live | ~1,545 questions | v2.1 Phase 58 complete
 
 **Milestone history:**
 - v1.0–v2.0 (Phases 1–56): All Complete — see .planning/MILESTONES.md
@@ -24,7 +24,7 @@ Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) 
 - Backend LIVE: https://civic-trivia-backend.onrender.com
 - Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
-- Active collections (11 + Federal = 12 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas
+- Active collections (12 + Federal = 13 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR
 
 ## Accumulated Context
 
@@ -45,6 +45,8 @@ Key decisions relevant to v2.1:
 - Portland 58-01: 61 questions accepted below 80 target — source docs returned website nav content causing parks-natural batch to generate website topics; 61 is above 50-minimum READY threshold with 23% expiring
 - Portland staggered terms (58-01): Districts 1&2 = 2029, Districts 3&4 = 2027, Mayor/Auditor = 2029; councilor not commissioner since Jan 2025
 - Source quality watchpoint (58-01): verify portland.gov-style source fetches return substantive content before generation; government sites often return navigation/sitemap pages with minimal prose
+- Portland OR activated with 61 questions (58-02): below 80 target but above 50 READY threshold; 23% expiring ratio within 15-30% window; collection live in production
+- Source URL carry-forward (58-02): prefer Wikipedia article URLs over government portal URLs for park/landmark topics; spot-check 2-3 sources before generation; target 1.4x question buffer for city collections
 
 ### Pending Todos
 
@@ -66,8 +68,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-09T20:27:06Z
-Stopped at: Completed 58-01-PLAN.md — scaffold, locale config, voice guidance, questions generated and curated
+Last session: 2026-03-09T20:33:45Z
+Stopped at: Completed 58-02-PLAN.md — Portland OR activated in production, Phase 58 retrospective appended to COLLECTION-PLAYBOOK.md
 Resume file: None
 
-Next action: Execute 58-02-PLAN.md (activate Portland OR collection)
+Next action: Phase 59+ — next collection or v2.1 feature work
