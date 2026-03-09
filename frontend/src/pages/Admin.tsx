@@ -2,8 +2,12 @@ import { useState } from 'react';
 import { Header } from '../components/layout/Header';
 import { useAdminQuestions } from '../features/admin/hooks/useAdminQuestions';
 import type { StatusFilter } from '../features/admin/types';
+import { useTheme } from '../hooks/useTheme';
+
+const ADMIN_ACCENT = '#FF5740';
 
 export function Admin() {
+  const { C } = useTheme();
   const {
     questions,
     loading,
@@ -18,7 +22,6 @@ export function Admin() {
   const [renewDate, setRenewDate] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
 
-  // Default renew date to 1 year from today
   const getDefaultRenewDate = () => {
     const date = new Date();
     date.setFullYear(date.getFullYear() + 1);
@@ -32,7 +35,6 @@ export function Admin() {
 
   const handleRenewSubmit = async (id: number) => {
     if (!renewDate) return;
-
     setActionLoading(true);
     try {
       await renewQuestion(id, renewDate);
@@ -49,9 +51,7 @@ export function Admin() {
     const confirmed = window.confirm(
       'Archive this question permanently? It will not appear in any future games.'
     );
-
     if (!confirmed) return;
-
     setActionLoading(true);
     try {
       await archiveQuestion(id);
@@ -65,111 +65,158 @@ export function Admin() {
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No expiry';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
   const getStatusBadge = (question: typeof questions[0]) => {
-    if (question.status === 'archived') {
-      return (
-        <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700">
-          Archived
-        </span>
-      );
-    }
-
-    if (question.status === 'expired') {
-      return (
-        <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-red-100 text-red-700">
-          Expired
-        </span>
-      );
-    }
-
-    // Active with expiresAt = expiring soon
-    if (question.expiresAt) {
-      return (
-        <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-amber-100 text-amber-700">
-          Expiring Soon
-        </span>
-      );
-    }
-
-    return (
-      <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-700">
-        Active
-      </span>
-    );
+    const base: React.CSSProperties = {
+      display: 'inline-flex',
+      alignItems: 'center',
+      padding: '2px 8px',
+      borderRadius: '2px',
+      fontFamily: "'Bebas Neue', sans-serif",
+      fontSize: '11px',
+      letterSpacing: '0.1em',
+    };
+    if (question.status === 'archived')
+      return <span style={{ ...base, backgroundColor: C.ruleLight, color: C.muted }}>ARCHIVED</span>;
+    if (question.status === 'expired')
+      return <span style={{ ...base, backgroundColor: 'rgba(192,21,42,0.12)', color: C.incorrect }}>EXPIRED</span>;
+    if (question.expiresAt)
+      return <span style={{ ...base, backgroundColor: 'rgba(184,134,11,0.12)', color: '#92400E' }}>EXPIRING SOON</span>;
+    return <span style={{ ...base, backgroundColor: 'rgba(37,92,63,0.12)', color: C.correct }}>ACTIVE</span>;
   };
 
   const getDifficultyBadge = (difficulty: string) => {
-    const colors = {
-      easy: 'bg-green-100 text-green-700',
-      medium: 'bg-yellow-100 text-yellow-700',
-      hard: 'bg-red-100 text-red-700',
+    const base: React.CSSProperties = {
+      display: 'inline-flex',
+      alignItems: 'center',
+      padding: '2px 8px',
+      borderRadius: '2px',
+      fontFamily: "'Bebas Neue', sans-serif",
+      fontSize: '11px',
+      letterSpacing: '0.1em',
     };
-
-    const colorClass = colors[difficulty as keyof typeof colors] || colors.medium;
-
-    return (
-      <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${colorClass}`}>
-        {difficulty}
-      </span>
-    );
+    const variants: Record<string, React.CSSProperties> = {
+      easy:   { backgroundColor: 'rgba(37,92,63,0.12)',  color: C.correct },
+      medium: { backgroundColor: 'rgba(184,134,11,0.12)', color: '#92400E' },
+      hard:   { backgroundColor: 'rgba(192,21,42,0.12)', color: C.incorrect },
+    };
+    return <span style={{ ...base, ...(variants[difficulty] || variants.medium) }}>{difficulty.toUpperCase()}</span>;
   };
 
   const filterTabs: { value: StatusFilter; label: string }[] = [
-    { value: 'all', label: 'All' },
-    { value: 'expired', label: 'Expired' },
+    { value: 'all',           label: 'All' },
+    { value: 'expired',       label: 'Expired' },
     { value: 'expiring-soon', label: 'Expiring Soon' },
-    { value: 'archived', label: 'Archived' },
+    { value: 'archived',      label: 'Archived' },
   ];
 
+  const inputStyle: React.CSSProperties = {
+    padding: '6px 10px',
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    backgroundColor: C.paper,
+    color: C.ink,
+    fontFamily: "'Lora', Georgia, serif",
+    fontSize: '13px',
+    outline: 'none',
+  };
+
+  const btnPrimary: React.CSSProperties = {
+    padding: '6px 14px',
+    backgroundColor: ADMIN_ACCENT,
+    color: '#fff',
+    border: 'none',
+    borderRadius: '2px',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '13px',
+    letterSpacing: '0.1em',
+    cursor: 'pointer',
+  };
+
+  const btnSecondary: React.CSSProperties = {
+    padding: '6px 14px',
+    backgroundColor: 'transparent',
+    color: C.muted,
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '13px',
+    letterSpacing: '0.1em',
+    cursor: 'pointer',
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ minHeight: '100vh', backgroundColor: C.paper }}>
       <Header />
 
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow rounded-lg p-6">
+      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px 16px' }} className="sm:px-6 lg:px-8">
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: '2px', padding: '24px' }}>
           {/* Page Header */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Content Review</h1>
-            <p className="text-sm text-gray-600 mt-1">
+          <div style={{ marginBottom: '24px' }}>
+            <h1 style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '28px',
+              letterSpacing: '0.08em',
+              color: C.ink,
+              margin: '0 0 4px 0',
+            }}>
+              Content Review
+            </h1>
+            <p style={{
+              fontFamily: "'Lora', Georgia, serif",
+              fontStyle: 'italic',
+              fontSize: '13px',
+              color: C.muted,
+              margin: 0,
+            }}>
               Manage expired and expiring-soon questions
             </p>
           </div>
 
           {/* Filter Tabs */}
-          <div className="flex space-x-2 mb-6 border-b border-gray-200">
+          <div style={{ display: 'flex', borderBottom: `1px solid ${C.rule}`, marginBottom: '24px' }}>
             {filterTabs.map((tab) => (
               <button
                 key={tab.value}
                 onClick={() => setFilter(tab.value)}
-                className={`px-4 py-2 min-h-[48px] font-medium text-sm transition-colors border-b-2 ${
-                  filter === tab.value
-                    ? 'border-teal-600 text-teal-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                style={{
+                  padding: '10px 20px',
+                  minHeight: '44px',
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '13px',
+                  letterSpacing: '0.12em',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: filter === tab.value ? `3px solid ${ADMIN_ACCENT}` : '3px solid transparent',
+                  color: filter === tab.value ? ADMIN_ACCENT : C.muted,
+                  cursor: 'pointer',
+                  marginBottom: '-1px',
+                }}
               >
-                {tab.label}
+                {tab.label.toUpperCase()}
               </button>
             ))}
           </div>
 
           {/* Loading State */}
           {loading && (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 0' }}>
+              <div style={{
+                width: '40px', height: '40px',
+                border: `3px solid ${C.ruleLight}`,
+                borderTopColor: ADMIN_ACCENT,
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite',
+              }} />
             </div>
           )}
 
           {/* Error State */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <p className="text-red-700">{error}</p>
+            <div style={{ border: `1px solid ${C.incorrect}`, borderRadius: '2px', padding: '16px', marginBottom: '24px' }}>
+              <p style={{ fontFamily: "'Lora', Georgia, serif", color: C.incorrect, margin: 0 }}>{error}</p>
             </div>
           )}
 
@@ -177,23 +224,18 @@ export function Admin() {
           {!loading && !error && (
             <>
               {questions.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg
-                      className="w-8 h-8 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '48px 0', gap: '16px' }}>
+                  <div style={{
+                    width: '56px', height: '56px',
+                    border: `1px solid ${C.correct}`,
+                    borderRadius: '2px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <svg width="28" height="28" style={{ color: C.correct }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <p className="text-lg text-gray-600">
+                  <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '16px', color: C.muted, margin: 0 }}>
                     {filter === 'expired' && 'No expired questions found'}
                     {filter === 'expiring-soon' && 'No expiring-soon questions found'}
                     {filter === 'archived' && 'No archived questions found'}
@@ -201,111 +243,77 @@ export function Admin() {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div>
                   {/* Desktop: Table View */}
-                  <div className="hidden lg:block overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
+                  <div className="hidden lg:block" style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead>
                         <tr>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Question
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Collections
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Difficulty
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Expires At
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                          </th>
+                          {['Status', 'Question', 'Collections', 'Difficulty', 'Expires At', 'Actions'].map(h => (
+                            <th key={h} style={{
+                              padding: '10px 16px',
+                              textAlign: 'left',
+                              fontFamily: "'Bebas Neue', sans-serif",
+                              fontSize: '11px',
+                              letterSpacing: '0.14em',
+                              color: C.muted,
+                              borderBottom: `1px solid ${C.rule}`,
+                              whiteSpace: 'nowrap',
+                            }}>
+                              {h.toUpperCase()}
+                            </th>
+                          ))}
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
+                      <tbody>
                         {questions.map((question) => (
-                          <tr key={question.id}>
-                            <td className="px-4 py-4 whitespace-nowrap">
+                          <tr key={question.id} style={{ borderBottom: `1px solid ${C.ruleLight}` }}>
+                            <td style={{ padding: '14px 16px', whiteSpace: 'nowrap' }}>
                               {getStatusBadge(question)}
                             </td>
-                            <td className="px-4 py-4">
-                              <div className="text-sm text-gray-900">
-                                {question.text.length > 80
-                                  ? `${question.text.substring(0, 80)}...`
-                                  : question.text}
+                            <td style={{ padding: '14px 16px' }}>
+                              <div style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink }}>
+                                {question.text.length > 80 ? `${question.text.substring(0, 80)}...` : question.text}
                               </div>
-                              <div className="text-xs text-gray-500 mt-1">
+                              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', color: C.mutedFg, marginTop: '4px' }}>
                                 {question.externalId}
                               </div>
                             </td>
-                            <td className="px-4 py-4">
-                              <div className="flex flex-wrap gap-1">
+                            <td style={{ padding: '14px 16px' }}>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                                 {question.collectionNames.map((name) => (
-                                  <span
-                                    key={name}
-                                    className="inline-flex items-center rounded-full px-2 py-1 text-xs bg-gray-100 text-gray-700"
-                                  >
-                                    {name}
-                                  </span>
+                                  <span key={name} style={{
+                                    fontFamily: "'Bebas Neue', sans-serif",
+                                    fontSize: '10px',
+                                    letterSpacing: '0.08em',
+                                    padding: '2px 6px',
+                                    border: `1px solid ${C.rule}`,
+                                    borderRadius: '2px',
+                                    color: C.muted,
+                                  }}>{name}</span>
                                 ))}
                               </div>
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap">
+                            <td style={{ padding: '14px 16px', whiteSpace: 'nowrap' }}>
                               {getDifficultyBadge(question.difficulty)}
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                            <td style={{ padding: '14px 16px', whiteSpace: 'nowrap', fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink }}>
                               {formatDate(question.expiresAt)}
                             </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-sm">
+                            <td style={{ padding: '14px 16px', whiteSpace: 'nowrap' }}>
                               {renewingId === question.id ? (
-                                <div className="flex items-center space-x-2">
-                                  <input
-                                    type="date"
-                                    value={renewDate}
-                                    onChange={(e) => setRenewDate(e.target.value)}
-                                    className="px-2 py-1 border border-gray-300 rounded text-sm"
-                                    disabled={actionLoading}
-                                  />
-                                  <button
-                                    onClick={() => handleRenewSubmit(question.id)}
-                                    disabled={actionLoading}
-                                    className="px-3 py-1 bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors disabled:opacity-50"
-                                  >
-                                    Save
-                                  </button>
-                                  <button
-                                    onClick={() => setRenewingId(null)}
-                                    disabled={actionLoading}
-                                    className="px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors disabled:opacity-50"
-                                  >
-                                    Cancel
-                                  </button>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <input type="date" value={renewDate} onChange={(e) => setRenewDate(e.target.value)} style={inputStyle} disabled={actionLoading} />
+                                  <button onClick={() => handleRenewSubmit(question.id)} disabled={actionLoading} style={{ ...btnPrimary, opacity: actionLoading ? 0.5 : 1 }}>SAVE</button>
+                                  <button onClick={() => setRenewingId(null)} disabled={actionLoading} style={{ ...btnSecondary, opacity: actionLoading ? 0.5 : 1 }}>CANCEL</button>
                                 </div>
                               ) : (
-                                <div className="flex space-x-2">
-                                  {(question.status === 'expired' ||
-                                    (question.status === 'active' && question.expiresAt)) && (
-                                    <button
-                                      onClick={() => handleRenewClick(question.id)}
-                                      disabled={actionLoading}
-                                      className="px-3 py-1 min-h-[40px] bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors disabled:opacity-50"
-                                    >
-                                      Renew
-                                    </button>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                  {(question.status === 'expired' || (question.status === 'active' && question.expiresAt)) && (
+                                    <button onClick={() => handleRenewClick(question.id)} disabled={actionLoading} style={{ ...btnPrimary, minHeight: '36px', opacity: actionLoading ? 0.5 : 1 }}>RENEW</button>
                                   )}
                                   {question.status === 'expired' && (
-                                    <button
-                                      onClick={() => handleArchiveClick(question.id)}
-                                      disabled={actionLoading}
-                                      className="px-3 py-1 min-h-[40px] bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors disabled:opacity-50"
-                                    >
-                                      Archive
-                                    </button>
+                                    <button onClick={() => handleArchiveClick(question.id)} disabled={actionLoading} style={{ ...btnSecondary, minHeight: '36px', opacity: actionLoading ? 0.5 : 1 }}>ARCHIVE</button>
                                   )}
                                 </div>
                               )}
@@ -317,88 +325,47 @@ export function Admin() {
                   </div>
 
                   {/* Mobile: Card View */}
-                  <div className="lg:hidden space-y-4">
+                  <div className="lg:hidden" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {questions.map((question) => (
-                      <div
-                        key={question.id}
-                        className="border border-gray-200 rounded-lg p-4 space-y-3"
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-2">
+                      <div key={question.id} style={{ border: `1px solid ${C.rule}`, borderRadius: '2px', padding: '16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
                               {getStatusBadge(question)}
                               {getDifficultyBadge(question.difficulty)}
                             </div>
-                            <p className="text-sm text-gray-900 mb-1">
-                              {question.text.length > 80
-                                ? `${question.text.substring(0, 80)}...`
-                                : question.text}
+                            <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink, margin: '0 0 4px 0' }}>
+                              {question.text.length > 80 ? `${question.text.substring(0, 80)}...` : question.text}
                             </p>
-                            <p className="text-xs text-gray-500">{question.externalId}</p>
+                            <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', color: C.mutedFg, margin: 0 }}>{question.externalId}</p>
                           </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-1">
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', margin: '12px 0' }}>
                           {question.collectionNames.map((name) => (
-                            <span
-                              key={name}
-                              className="inline-flex items-center rounded-full px-2 py-1 text-xs bg-gray-100 text-gray-700"
-                            >
-                              {name}
-                            </span>
+                            <span key={name} style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '10px', letterSpacing: '0.08em', padding: '2px 6px', border: `1px solid ${C.rule}`, borderRadius: '2px', color: C.muted }}>{name}</span>
                           ))}
                         </div>
 
-                        <div className="text-sm text-gray-600">
-                          <span className="font-medium">Expires:</span> {formatDate(question.expiresAt)}
+                        <div style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted, marginBottom: '12px' }}>
+                          <span style={{ fontWeight: 600 }}>Expires:</span> {formatDate(question.expiresAt)}
                         </div>
 
                         {renewingId === question.id ? (
-                          <div className="space-y-2">
-                            <input
-                              type="date"
-                              value={renewDate}
-                              onChange={(e) => setRenewDate(e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded"
-                              disabled={actionLoading}
-                            />
-                            <div className="flex space-x-2">
-                              <button
-                                onClick={() => handleRenewSubmit(question.id)}
-                                disabled={actionLoading}
-                                className="flex-1 px-4 py-2 min-h-[48px] bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors disabled:opacity-50"
-                              >
-                                Save
-                              </button>
-                              <button
-                                onClick={() => setRenewingId(null)}
-                                disabled={actionLoading}
-                                className="flex-1 px-4 py-2 min-h-[48px] bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors disabled:opacity-50"
-                              >
-                                Cancel
-                              </button>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <input type="date" value={renewDate} onChange={(e) => setRenewDate(e.target.value)} style={{ ...inputStyle, width: '100%' }} disabled={actionLoading} />
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <button onClick={() => handleRenewSubmit(question.id)} disabled={actionLoading} style={{ ...btnPrimary, flex: 1, minHeight: '44px', opacity: actionLoading ? 0.5 : 1 }}>SAVE</button>
+                              <button onClick={() => setRenewingId(null)} disabled={actionLoading} style={{ ...btnSecondary, flex: 1, minHeight: '44px', opacity: actionLoading ? 0.5 : 1 }}>CANCEL</button>
                             </div>
                           </div>
                         ) : (
-                          <div className="flex space-x-2">
-                            {(question.status === 'expired' ||
-                              (question.status === 'active' && question.expiresAt)) && (
-                              <button
-                                onClick={() => handleRenewClick(question.id)}
-                                disabled={actionLoading}
-                                className="flex-1 px-4 py-2 min-h-[48px] bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors disabled:opacity-50"
-                              >
-                                Renew
-                              </button>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            {(question.status === 'expired' || (question.status === 'active' && question.expiresAt)) && (
+                              <button onClick={() => handleRenewClick(question.id)} disabled={actionLoading} style={{ ...btnPrimary, flex: 1, minHeight: '44px', opacity: actionLoading ? 0.5 : 1 }}>RENEW</button>
                             )}
                             {question.status === 'expired' && (
-                              <button
-                                onClick={() => handleArchiveClick(question.id)}
-                                disabled={actionLoading}
-                                className="flex-1 px-4 py-2 min-h-[48px] bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors disabled:opacity-50"
-                              >
-                                Archive
-                              </button>
+                              <button onClick={() => handleArchiveClick(question.id)} disabled={actionLoading} style={{ ...btnSecondary, flex: 1, minHeight: '44px', opacity: actionLoading ? 0.5 : 1 }}>ARCHIVE</button>
                             )}
                           </div>
                         )}
