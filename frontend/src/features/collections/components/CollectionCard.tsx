@@ -48,7 +48,7 @@ export function CollectionCard({ collection, isSelected, onSelect }: CollectionC
         transform: isSelected ? 'scale(1.03)' : isHovered ? 'scale(1.01)' : 'scale(1)',
         transition: 'border-color 0.15s, box-shadow 0.15s, transform 0.15s',
       }}
-      className="sm:w-48"
+      className=""
     >
       {/* Banner image */}
       <div
@@ -61,7 +61,7 @@ export function CollectionCard({ collection, isSelected, onSelect }: CollectionC
         <img
           src={`/images/collections/${collection.slug}.jpg`}
           alt=""
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center', display: 'block' }}
           loading="lazy"
         />
       </div>

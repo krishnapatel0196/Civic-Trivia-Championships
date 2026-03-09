@@ -74,7 +74,7 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
                 <div style={{ flex: 1, borderTop: '1px solid #DDD5C3' }} />
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(148px, 1fr))', gap: '12px' }}>
                 {group.map((collection) => (
                   <CollectionCard
                     key={collection.id}
