@@ -55,7 +55,7 @@ export function Header() {
       top: 0,
       zIndex: 50,
       background: C.paper,
-      borderBottom: `2px solid ${tierBorderColor}`,
+      borderBottom: `1px solid ${tierBorderColor}`,
       transition: 'background 0.2s, border-color 0.2s',
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
