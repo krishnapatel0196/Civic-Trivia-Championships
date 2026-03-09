@@ -4,6 +4,7 @@ import { API_URL } from '../../services/api';
 import { DuplicateClusterCard } from './components/DuplicateClusterCard';
 import { EnrichedCluster, AdvancedFlag, DuplicateSummary } from '../../types/duplicates';
 import { useTheme } from '../../hooks/useTheme';
+import { useWindowSize } from '../../hooks/useWindowSize';
 
 const ADMIN_ACCENT = '#FF5740';
 
@@ -44,12 +45,16 @@ function useUndoToast() {
 function UndoToast({ message, countdown, visible, onClose, onUndo }: {
   message: string; countdown: number; visible: boolean; onClose: () => void; onUndo: () => void;
 }) {
+  const { width: toastWidth } = useWindowSize();
+  const toastIsMobile = toastWidth < 480;
   if (!visible) return null;
   return (
     <div style={{
       position: 'fixed',
       bottom: '24px',
-      right: '24px',
+      ...(toastIsMobile
+        ? { left: '16px', right: '16px' }
+        : { right: '24px', minWidth: '320px' }),
       backgroundColor: '#1C1510',
       color: '#ECE7D9',
       padding: '12px 16px',
@@ -59,7 +64,6 @@ function UndoToast({ message, countdown, visible, onClose, onUndo }: {
       alignItems: 'center',
       gap: '12px',
       zIndex: 50,
-      minWidth: '320px',
       boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
     }}>
       <span style={{ flex: 1, fontFamily: "'Lora', Georgia, serif", fontSize: '13px' }}>{message}</span>
@@ -74,6 +78,8 @@ function UndoToast({ message, countdown, visible, onClose, onUndo }: {
 export function DuplicateReviewPage() {
   const { accessToken } = useAuthStore();
   const { C } = useTheme();
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
 
   const [clusters, setClusters] = useState<EnrichedCluster[]>([]);
   const [advancedFlags, setAdvancedFlags] = useState<AdvancedFlag[]>([]);
@@ -265,7 +271,7 @@ export function DuplicateReviewPage() {
       )}
 
       {/* Filters */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="md:grid-cols-2">
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px' }}>
         <div>
           <label htmlFor="tier" style={labelStyle}>TIER</label>
           <select id="tier" value={tierFilter} onChange={(e) => setTierFilter(e.target.value)} style={selectStyle}>

@@ -218,7 +218,7 @@ export function FlagReviewPage() {
       </div>
 
       {pagination && pagination.total > 0 && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted }}>
             Showing <strong>{startItem}</strong> to <strong>{endItem}</strong> of <strong>{pagination.total}</strong> results
           </div>
@@ -246,7 +246,7 @@ export function FlagReviewPage() {
 
       {/* Tabs */}
       <TabGroup selectedIndex={selectedIndex} onChange={handleTabChange}>
-        <TabList style={{ display: 'flex', borderBottom: `1px solid ${C.rule}` }}>
+        <TabList style={{ display: 'flex', flexWrap: 'wrap', borderBottom: `1px solid ${C.rule}` }}>
           {['Active', 'Archived'].map((label, idx) => (
             <Tab
               key={label}
