@@ -164,6 +164,20 @@ async function main(): Promise<void> {
 
     const expiringCount = expiringCountResult?.count ?? 0;
 
+    // Step 4b: Count questions with ANY expiresAt set (no date filter) — for ratio enforcement
+    const [expiringRatioCountResult] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(questions)
+      .where(
+        sql`
+          ${questions.externalId} LIKE ${prefixPattern}
+          AND ${questions.status} IN ('draft', 'active')
+          AND ${questions.expiresAt} IS NOT NULL
+        `
+      );
+
+    const expiringRatioCount = expiringRatioCountResult?.count ?? 0;
+
     // Step 5: Calculate net count
     const totalCount = draftCount + activeCount;
     const netCount = totalCount - expiringCount;
@@ -182,6 +196,9 @@ async function main(): Promise<void> {
     console.log(`    Active:      ${activeCount}`);
     console.log(`    Total:       ${totalCount}`);
     console.log(`    Expiring:    ${expiringCount} (within 90 days)`);
+    console.log(`    With expiresAt:  ${expiringRatioCount} (any date, for ratio)`);
+    const expiringRatio = totalCount > 0 ? (expiringRatioCount / totalCount) * 100 : 0;
+    console.log(`    Expiring ratio:  ${expiringRatio.toFixed(1)}% (target: 15–30%)`);
     console.log(`    Net:         ${netCount}  (total - expiring)`);
     console.log('');
     console.log(`  Threshold:     50 questions minimum`);
@@ -193,6 +210,14 @@ async function main(): Promise<void> {
       console.error(`BLOCKED: Net question count (${netCount}) is below the 50-question minimum.`);
       console.error('Run generate-locale-questions to top up the question pool before activating.');
       process.exit(1);
+    }
+
+    // Expiring ratio warning (non-blocking)
+    if (totalCount > 0 && expiringRatio < 15) {
+      console.warn(`  WARNING: Expiring-question ratio is ${expiringRatio.toFixed(1)}% — below the 15% minimum target.`);
+      console.warn(`  Consider adding more current-officeholder questions (mayor, council members, etc.) with expiresAt set.`);
+      console.warn(`  Target range: 15–30% of questions should have expiresAt set.`);
+      console.warn('');
     }
 
     process.exit(0);
