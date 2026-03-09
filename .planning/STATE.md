@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Planning next milestone (v2.1)
+**Current focus:** v2.1 Collection Excellence — 5 new collections with iterative process improvement
 
 ## Current Position
 
-Phase: Not started
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-03-08 — v2.0 milestone complete (Phases 53–56 shipped)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements for v2.1
+Last activity: 2026-03-09 — Milestone v2.1 Collection Excellence started
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | ~1,484 questions | v2.0 SHIPPED
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | ~1,484 questions | v2.1 planning in progress
 
 **Milestone history:**
 - v1.0–v1.9 (Phases 1–52): All Complete — see .planning/MILESTONES.md

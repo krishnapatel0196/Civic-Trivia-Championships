@@ -87,9 +87,17 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ XP transaction history panel on profile page — paginated, Connected tier only, via `get_ctc_xp_history()` Supabase RPC — v2.0
 - ✓ Startup env validation warnings for missing `TRIVIA_SERVICE_KEY` / `EMPOWERED_ACCOUNTS_API_URL` / `EMPOWERED_ACCOUNTS_URL` — v2.0
 
-### Active
+### Active (v2.1 Collection Excellence)
 
-*(planning for v2.1 not yet started — run `/gsd:new-milestone` to begin)*
+- [ ] Portland, OR city collection — scaffold, generate, curate, activate, retrospective
+- [ ] Oregon State collection — scaffold, generate, curate, activate, retrospective
+- [ ] Washington, DC collection — scaffold, generate, curate, activate, retrospective (unique: district, not city or state)
+- [ ] Biloxi, MS city collection — scaffold, generate, curate, activate, retrospective
+- [ ] Mississippi State collection — scaffold, generate, curate, activate, retrospective
+- [ ] Pipeline improvement: semantic near-duplicate detection automated (not manual-only)
+- [ ] Pipeline improvement: expiring question ratio (15–30%) enforced at audit-collection-readiness time
+- [ ] Process documentation: living COLLECTION-PLAYBOOK.md capturing learnings from each iteration
+- [ ] Process documentation: retrospective template added to collection workflow
 
 ### Out of Scope
 
@@ -261,4 +269,4 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | `priorLevel` captured at game idle state for level-up detection | Comparison at results time requires pre-game snapshot; `levelUpShownRef` prevents double-trigger | Good — correct level-up detection |
 
 ---
-*Last updated: 2026-03-08 after v2.0 milestone*
+*Last updated: 2026-03-09 after v2.1 milestone start*
