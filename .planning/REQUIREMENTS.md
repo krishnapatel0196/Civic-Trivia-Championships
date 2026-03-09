@@ -45,11 +45,11 @@
 | PIPELINE-02 | Phase 57 | Pending |
 | PLAYBOOK-01 | Phase 57 | Pending |
 | CONTENT-01 | Phase 58 | Pending |
+| PLAYBOOK-02 | Phases 58–62 | Pending |
 | CONTENT-02 | Phase 59 | Pending |
 | CONTENT-03 | Phase 60 | Pending |
 | CONTENT-04 | Phase 61 | Pending |
 | CONTENT-05 | Phase 62 | Pending |
-| PLAYBOOK-02 | Phases 58–62 | Pending |
 
 **Coverage:**
 - v2.1 requirements: 9 total
@@ -58,4 +58,4 @@
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-09 after initial definition*
+*Last updated: 2026-03-09 — traceability updated after roadmap creation*
