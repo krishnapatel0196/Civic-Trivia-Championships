@@ -19,7 +19,7 @@ export function Header() {
   const tierBorderColor = (() => {
     if (tier === 'empowered') return '#FF5740';
     if (tier === 'connected') return darkMode ? '#03B9D2' : '#00657C';
-    if (!isAuthenticated)     return darkMode ? '#FED12E' : C.rule;
+    if (!isAuthenticated)     return darkMode ? '#59B0C4' : C.rule;
     return C.rule; // inform tier or unresolved
   })();
 

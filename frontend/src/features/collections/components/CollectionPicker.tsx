@@ -41,7 +41,7 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
         <span style={{
           fontFamily: "'Bebas Neue', sans-serif",
           letterSpacing: '0.22em',
-          fontSize: '12px',
+          fontSize: '14px',
           color: '#7A6A5A',
           whiteSpace: 'nowrap',
         }}>
@@ -65,7 +65,7 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
                 <span style={{
                   fontFamily: "'Bebas Neue', sans-serif",
                   letterSpacing: '0.18em',
-                  fontSize: '10px',
+                  fontSize: '13px',
                   color: '#9A8878',
                   whiteSpace: 'nowrap',
                 }}>
