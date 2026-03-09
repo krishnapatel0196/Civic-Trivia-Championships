@@ -174,8 +174,9 @@ Plans:
   4. A completed retrospective for Portland is appended to `COLLECTION-PLAYBOOK.md` covering what broke, what was fixed, and any carry-forward rules
 
 Plans:
-- [ ] 58-01: Scaffold, generate, and curate Portland, OR collection
-- [ ] 58-02: Activate Portland, OR and complete playbook retrospective
+- [ ] 58-01-PLAN.md — Scaffold, generate, and curate Portland, OR collection
+- [ ] 58-02-PLAN.md — Activate Portland, OR and complete playbook retrospective
+- [ ] 58-03-PLAN.md — Top-up generation pass using Wikipedia URLs to close question count gap (61 → 80+)
 
 #### Phase 59: Oregon State Collection
 **Goal**: Oregon State is a fully activated, playable collection with a completed retrospective feeding the living playbook
@@ -258,7 +259,7 @@ Plans:
 | 55. XP History Panel | v2.0 | 3/3 | Complete | 2026-03-08 |
 | 56. Post-v2.0 XP Tech Debt | v2.0 | 1/1 | Complete | 2026-03-08 |
 | 57. Pipeline & Playbook Foundation | v2.1 | 2/2 | Complete | 2026-03-09 |
-| 58. Portland, OR Collection | v2.1 | 0/2 | Not started | - |
+| 58. Portland, OR Collection | v2.1 | 2/3 | In progress (gap closure) | - |
 | 59. Oregon State Collection | v2.1 | 0/2 | Not started | - |
 | 60. Washington, DC Collection | v2.1 | 0/2 | Not started | - |
 | 61. Biloxi, MS Collection | v2.1 | 0/2 | Not started | - |
