@@ -27,7 +27,7 @@ export function Dashboard() {
           </div>
 
           {/* Play button */}
-          <div className="text-center py-2 -mt-6 sm:-mt-8 h-16 sm:h-20 flex items-center justify-center mb-16 sm:mb-0">
+          <div className="text-center py-2 -mt-6 sm:-mt-8 h-16 sm:h-20 flex items-center justify-center mb-16 sm:mb-10">
             <button
               onClick={() => navigate('/play', { state: { collectionId: selectedId } })}
               onPointerDown={() => setPlayPressed(true)}

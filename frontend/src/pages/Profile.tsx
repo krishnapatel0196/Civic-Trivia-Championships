@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { Avatar } from '../components/Avatar';
 import { XpIcon } from '../components/icons/XpIcon';
-import { fetchTriviaStats, updateTimerMultiplier, fetchXpHistory } from '../services/profileService';
+import { fetchTriviaStats, fetchXpHistory } from '../services/profileService';
 import type { ProfileStats, XpHistoryResponse } from '../services/profileService';
 import { fetchAccountProfile, ACCOUNTS_WEB_URL } from '../services/accountsApi';
 import type { AccountProfile } from '../types/auth';
@@ -12,7 +12,14 @@ import { Link } from 'react-router-dom';
 import { apiRequest } from '../services/api';
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
-const C = {
+
+interface ColorTokens {
+  paper: string; ink: string; inkLight: string; rule: string; ruleLight: string;
+  muted: string; mutedFg: string; accent: string; gold: string; amber: string;
+  correct: string; gems: string;
+}
+
+const LIGHT: ColorTokens = {
   paper:    '#ECE7D9',
   ink:      '#17120E',
   inkLight: '#3D2E22',
@@ -25,28 +32,43 @@ const C = {
   amber:    '#9B6F1A',
   correct:  '#255C3F',
   gems:     '#7A5A9A',
-} as const;
+};
+
+const DARK: ColorTokens = {
+  paper:    '#1C1510',
+  ink:      '#ECE7D9',
+  inkLight: '#C8BAA6',
+  rule:     '#3D2E22',
+  ruleLight:'#2A1E14',
+  muted:    '#9A8878',
+  mutedFg:  '#7A6A5A',
+  accent:   '#E04820',
+  gold:     '#D4A017',
+  amber:    '#D4952A',
+  correct:  '#3A8A5F',
+  gems:     '#9A7ABF',
+};
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
-function SectionHeader({ label }: { label: string }) {
+function SectionHeader({ label, colors }: { label: string; colors: ColorTokens }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
       <span style={{
         fontFamily: "'Bebas Neue', sans-serif",
         letterSpacing: '0.22em',
         fontSize: '12px',
-        color: C.muted,
+        color: colors.muted,
         whiteSpace: 'nowrap',
       }}>
         {label}
       </span>
-      <div style={{ flex: 1, borderTop: `1px solid ${C.rule}` }} />
+      <div style={{ flex: 1, borderTop: `1px solid ${colors.rule}` }} />
     </div>
   );
 }
 
-function TierBadge({ tier }: { tier: string }) {
+function TierBadge({ tier, colors }: { tier: string; colors: ColorTokens }) {
   if (tier === 'connected') {
     return (
       <span style={{
@@ -56,8 +78,8 @@ function TierBadge({ tier }: { tier: string }) {
         fontFamily: "'Bebas Neue', sans-serif",
         fontSize: '11px',
         letterSpacing: '0.18em',
-        color: C.correct,
-        border: `1px solid ${C.correct}`,
+        color: colors.correct,
+        border: `1px solid ${colors.correct}`,
         background: 'rgba(37,92,63,0.07)',
         borderRadius: '2px',
       }}>
@@ -74,8 +96,8 @@ function TierBadge({ tier }: { tier: string }) {
         fontFamily: "'Bebas Neue', sans-serif",
         fontSize: '11px',
         letterSpacing: '0.18em',
-        color: C.gold,
-        border: `1px solid ${C.gold}`,
+        color: colors.gold,
+        border: `1px solid ${colors.gold}`,
         background: 'rgba(184,134,11,0.07)',
         borderRadius: '2px',
       }}>
@@ -94,7 +116,7 @@ function formatDate(isoString: string): string {
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(isoString));
 }
 
-function XpBadge({ amount }: { amount: number }) {
+function XpBadge({ amount, colors }: { amount: number; colors: ColorTokens }) {
   return (
     <span style={{
       display: 'inline-flex',
@@ -107,7 +129,7 @@ function XpBadge({ amount }: { amount: number }) {
       fontFamily: "'Bebas Neue', sans-serif",
       fontSize: '13px',
       letterSpacing: '0.06em',
-      color: C.amber,
+      color: colors.amber,
     }}>
       <XpIcon className="w-3 h-3" />
       +{amount}
@@ -124,18 +146,26 @@ export function Profile() {
   const { isAdmin, tier, tierResolved } = useAuthStore();
   const isConnected = tier === 'connected' || tier === 'empowered';
 
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('ctc-theme') === 'dark');
+  const C = darkMode ? DARK : LIGHT;
+
   const [triviaStats,    setTriviaStats]    = useState<ProfileStats | null>(null);
   const [accountData,    setAccountData]    = useState<AccountProfile | null>(null);
   const [loading,        setLoading]        = useState(true);
   const [triviaError,    setTriviaError]    = useState<string | null>(null);
   const [accountError,   setAccountError]   = useState<string | null>(null);
-  const [updatingTimer,  setUpdatingTimer]  = useState(false);
 
   const [activeTab,      setActiveTab]      = useState<ActiveTab>('overview');
   const [historyData,    setHistoryData]    = useState<XpHistoryResponse | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError,   setHistoryError]   = useState<string | null>(null);
   const [historyPage,    setHistoryPage]    = useState(1);
+
+  const toggleDarkMode = () => {
+    const next = !darkMode;
+    setDarkMode(next);
+    localStorage.setItem('ctc-theme', next ? 'dark' : 'light');
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -200,19 +230,6 @@ export function Profile() {
   useEffect(() => {
     if (activeTab === 'history') setHistoryPage(1);
   }, [activeTab]);
-
-  const handleTimerMultiplierChange = async (multiplier: number) => {
-    setUpdatingTimer(true);
-    try {
-      await updateTimerMultiplier(multiplier);
-      if (triviaStats) setTriviaStats({ ...triviaStats, timerMultiplier: multiplier });
-      useAuthStore.getState().setTimerMultiplier(multiplier);
-    } catch {
-      // Silently ignore
-    } finally {
-      setUpdatingTimer(false);
-    }
-  };
 
   // ── Loading ──────────────────────────────────────────────────────────────────
 
@@ -311,7 +328,7 @@ export function Profile() {
                 }}>
                   {accountData.display_name || accountData.email}
                 </h1>
-                <TierBadge tier={accountData.tier} />
+                <TierBadge tier={accountData.tier} colors={C} />
               </div>
 
               <p style={{
@@ -415,7 +432,7 @@ export function Profile() {
 
   const statsSection = (
     <div style={{ paddingTop: '32px' }}>
-      <SectionHeader label="STATISTICS" />
+      <SectionHeader label="STATISTICS" colors={C} />
 
       {triviaError && <ErrorNotice message="Couldn't load game stats. Try refreshing the page." />}
 
@@ -468,7 +485,7 @@ export function Profile() {
 
   const settingsSection = (
     <div style={{ paddingTop: '32px' }}>
-      <SectionHeader label="SETTINGS" />
+      <SectionHeader label="SETTINGS" colors={C} />
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
@@ -479,7 +496,7 @@ export function Profile() {
             color: C.ink,
             margin: 0,
           }}>
-            Extended Time
+            Appearance
           </h3>
           <p style={{
             fontFamily: "'Lora', Georgia, serif",
@@ -488,46 +505,31 @@ export function Profile() {
             color: C.muted,
             margin: '4px 0 0',
           }}>
-            Adjusts the timer for all questions
+            Choose your preferred color scheme
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
-          {[1.0, 1.5, 2.0].map((multiplier) => {
-            const isActive = triviaStats?.timerMultiplier === multiplier;
+        <div style={{ display: 'flex', gap: '0', border: `1px solid ${C.rule}`, borderRadius: '2px', overflow: 'hidden' }}>
+          {(['light', 'dark'] as const).map((mode) => {
+            const isActive = mode === 'dark' ? darkMode : !darkMode;
             return (
               <button
-                key={multiplier}
-                onClick={() => handleTimerMultiplierChange(multiplier)}
-                disabled={updatingTimer}
+                key={mode}
+                onClick={toggleDarkMode}
                 style={{
-                  padding: '8px 16px',
+                  padding: '8px 20px',
                   minHeight: '40px',
                   fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: '16px',
-                  letterSpacing: '0.06em',
-                  border: isActive ? `2px solid ${C.accent}` : `1px solid ${C.rule}`,
+                  fontSize: '15px',
+                  letterSpacing: '0.1em',
+                  border: 'none',
                   background: isActive ? C.accent : 'transparent',
                   color: isActive ? '#FFFFFF' : C.muted,
-                  borderRadius: '2px',
-                  cursor: updatingTimer ? 'not-allowed' : 'pointer',
-                  opacity: updatingTimer ? 0.5 : 1,
-                  transition: 'background 0.15s, border-color 0.15s, color 0.15s',
-                }}
-                onMouseEnter={e => {
-                  if (!updatingTimer && triviaStats?.timerMultiplier !== multiplier) {
-                    e.currentTarget.style.borderColor = '#8B7A65';
-                    e.currentTarget.style.color = C.ink;
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (triviaStats?.timerMultiplier !== multiplier) {
-                    e.currentTarget.style.borderColor = C.rule;
-                    e.currentTarget.style.color = C.muted;
-                  }
+                  cursor: 'pointer',
+                  transition: 'background 0.15s, color 0.15s',
                 }}
               >
-                {multiplier}×
+                {mode === 'light' ? '☀ LIGHT' : '☾ DARK'}
               </button>
             );
           })}
@@ -540,7 +542,7 @@ export function Profile() {
 
   const historyTab = (
     <div style={{ paddingTop: '8px' }}>
-      <SectionHeader label="XP HISTORY" />
+      <SectionHeader label="XP HISTORY" colors={C} />
 
       {/* Loading */}
       {historyLoading && (
@@ -632,7 +634,7 @@ export function Profile() {
                   {entry.correctAnswers !== null ? `${entry.correctAnswers}/10` : '—'}
                 </span>
                 <div style={{ width: '72px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                  <XpBadge amount={entry.amount} />
+                  <XpBadge amount={entry.amount} colors={C} />
                   {entry.isDuplicate && (
                     <span style={{ fontSize: '11px', color: C.mutedFg, fontStyle: 'italic' }}>×</span>
                   )}
