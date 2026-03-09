@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 57 of 62 (Pipeline & Playbook Foundation)
-Plan: 01 complete, 02+ pending
-Status: In progress
-Last activity: 2026-03-09 — Completed 57-01-PLAN.md (semantic dedup auto-integrated into generation pipeline)
+Plan: 02 of 02 complete — Phase 57 complete
+Status: Phase complete, ready for Phase 58
+Last activity: 2026-03-09 — Completed 57-02-PLAN.md (expiring ratio warning + COLLECTION-PLAYBOOK.md bootstrapped)
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | ~1,484 questions | v2.1 Phase 57 Plan 01 shipped
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | ~1,484 questions | v2.1 Phase 57 all plans shipped
 
 **Milestone history:**
 - v1.0–v2.0 (Phases 1–56): All Complete — see .planning/MILESTONES.md
@@ -35,6 +35,9 @@ Full decision log in PROJECT.md Key Decisions table.
 Key decisions relevant to v2.1:
 - Near-duplicate detection gap: CLOSED (57-01) — runWithinCollectionSemanticDedup() now auto-runs after generation; manual scan-duplicates.ts pass no longer required per collection
 - Within-collection dedup uses empty tierMap for ClusterBuilder — quality score then externalId alphabetical order breaks ties (correct for single-collection context)
+- Expiring ratio warning non-blocking (57-02): exit 0 even when ratio < 15% — enforcing as a block would gate older collections; forward-looking quality nudge only
+- Two-query expiry model (57-02): expiringRatioCount (IS NOT NULL, no date filter) for ratio warning; expiringCount (90-day window) for netCount blocker
+- COLLECTION-PLAYBOOK.md (57-02): lives in .planning/ root as cross-phase living document; append retrospective after each collection phase
 - Mixed-durability pattern established (Texas State): expiring + durable questions in one collection; target 15–30% expiring
 - State-only curation rule: city/regional landmarks prohibited by name in state collections
 - Scaffold Bug 2 (known): step3 inserts into type annotation line — revert generate-locale-questions.ts to HEAD; state auto-discovery handles registration
@@ -42,7 +45,7 @@ Key decisions relevant to v2.1:
 
 ### Pending Todos
 
-- [ ] **Enforce 15–30% expiring question ratio** — Phase 57 PIPELINE-02 delivers this
+- [x] **Enforce 15–30% expiring question ratio** — DONE (57-02): audit script warns when ratio < 15%
 - [ ] **Auto-regenerate expired questions** — deferred to future milestone after ratio enforcement lands
 
 ### Blockers/Concerns
@@ -61,7 +64,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-09
-Stopped at: Completed 57-01-PLAN.md — semantic dedup integrated into generation pipeline
+Stopped at: Completed 57-02-PLAN.md — Phase 57 fully complete
 Resume file: None
 
-Next action: Execute 57-02 (expiring-question ratio enforcement)
+Next action: Plan Phase 58 (Portland, OR collection)
