@@ -126,3 +126,32 @@ Copy this template and fill it in at the end of each collection phase. Append to
 *Append retrospectives below this line as new `## Retrospective:` sections.*
 
 ---
+
+## Retrospective: Portland, OR (Phase 58, 2026-03-09)
+
+### What went well
+- Automated semantic dedup ran during generation — no manual scan-duplicates.ts pass needed
+- Staggered expiresAt model (Districts 1&2 = 2029, Districts 3&4 = 2027) worked cleanly with the voice guidance
+- Portland's civic identity (Rose City, Forest Park, Willamette bridges, founding story) generated strong durable question content
+- The 2025 government restructuring (commission → mayor-council) provided rich factual material for both durable and expiring questions
+- Scaffold Bug 2 workaround applied cleanly per documented procedure
+
+### What broke or was harder than expected
+- portland.gov source fetching returned website navigation/sitemap structure rather than encyclopedic civic content — the parks-natural batch (por-056 to por-075) generated 20 questions about website categories ("Which popular search term on portland.gov...") instead of Forest Park, Willamette River, and Mount Tabor. All 20 curated out.
+- Semantic dedup archived 46 of 122 generated questions (37%) — many neighborhood-to-district questions ("Which Portland City Council district includes the X neighborhood?") clustered as near-duplicates. Correct behavior, but significantly reduced the final count from parks-natural and rose-city-identity batches.
+- Final question count landed at 61, below the 80+ target. Root cause: government.gov-style pages do not return encyclopedic content; Wikipedia pages returned 0-byte content due to rate limiting.
+
+### Bugs encountered
+- Scaffold Bug 2: generate-locale-questions.ts corrupted after scaffold — reverted per COLLECTION-PLAYBOOK.md workaround (expected, not new)
+
+### Carry-forward rules (new conventions for future collections)
+- **Source URL selection:** Prefer Wikipedia article URLs over government portal URLs for park/landmark/institution topics. Government portal pages (portland.gov/parks, etc.) return website navigation/sitemap content rather than encyclopedic prose. Wikipedia URLs reliably return substantive factual content.
+- **Pre-generation source test:** Before running --fetch-sources, spot-check 2-3 source URLs in a browser to confirm they return substantive civic content rather than landing pages or site maps.
+- **Dedup count buffer:** City collections should target 120-130 generated questions (90 target × 1.4) rather than 90 × 1.3 to account for semantic dedup reducing by 30-40%.
+
+### Final stats
+- Questions generated: 122
+- Questions after curation: 61
+- Expiring question ratio: 23% (14/61 questions)
+- Generation cost: not logged
+- Time to activate: ~35 min total (31 min generation + 4 min activation)
