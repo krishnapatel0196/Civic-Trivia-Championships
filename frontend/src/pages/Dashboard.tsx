@@ -4,15 +4,17 @@ import { useAuthStore } from '../store/authStore';
 import { Header } from '../components/layout/Header';
 import { useCollections } from '../features/collections/hooks/useCollections';
 import { CollectionPicker } from '../features/collections/components/CollectionPicker';
+import { useTheme } from '../hooks/useTheme';
 
 export function Dashboard() {
   const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
   const { collections, selectedId, loading, select } = useCollections();
   const [playPressed, setPlayPressed] = useState(false);
+  const { C } = useTheme();
 
   return (
-    <div style={{ minHeight: '100vh', background: '#ECE7D9' }}>
+    <div style={{ minHeight: '100vh', background: C.paper }}>
       <Header />
 
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -57,14 +59,14 @@ export function Dashboard() {
             <p style={{
               fontFamily: "'Lora', Georgia, serif",
               fontStyle: 'italic',
-              color: '#7A6A5A',
+              color: C.muted,
               marginTop: '24px',
               fontSize: '14px',
               textAlign: 'center',
             }}>
-              <Link to="/login" style={{ color: '#C63B18', fontStyle: 'normal', textDecoration: 'none' }}>Sign in</Link>
+              <Link to="/login" style={{ color: C.accent, fontStyle: 'normal', textDecoration: 'none' }}>Sign in</Link>
               {' '}or{' '}
-              <Link to="/signup" style={{ color: '#C63B18', fontStyle: 'normal', textDecoration: 'none' }}>create an account</Link>
+              <Link to="/signup" style={{ color: C.accent, fontStyle: 'normal', textDecoration: 'none' }}>create an account</Link>
               {' '}to track your progress and earn rewards.
             </p>
           )}

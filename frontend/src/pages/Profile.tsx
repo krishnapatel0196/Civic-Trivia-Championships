@@ -10,44 +10,8 @@ import type { AccountProfile } from '../types/auth';
 import { useAuthStore } from '../store/authStore';
 import { Link } from 'react-router-dom';
 import { apiRequest } from '../services/api';
-
-// ── Design tokens ─────────────────────────────────────────────────────────────
-
-interface ColorTokens {
-  paper: string; ink: string; inkLight: string; rule: string; ruleLight: string;
-  muted: string; mutedFg: string; accent: string; gold: string; amber: string;
-  correct: string; gems: string;
-}
-
-const LIGHT: ColorTokens = {
-  paper:    '#ECE7D9',
-  ink:      '#17120E',
-  inkLight: '#3D2E22',
-  rule:     '#C8BAA6',
-  ruleLight:'#DDD5C3',
-  muted:    '#7A6A5A',
-  mutedFg:  '#9A8878',
-  accent:   '#C63B18',
-  gold:     '#B8860B',
-  amber:    '#9B6F1A',
-  correct:  '#255C3F',
-  gems:     '#7A5A9A',
-};
-
-const DARK: ColorTokens = {
-  paper:    '#1C1510',
-  ink:      '#ECE7D9',
-  inkLight: '#C8BAA6',
-  rule:     '#3D2E22',
-  ruleLight:'#2A1E14',
-  muted:    '#9A8878',
-  mutedFg:  '#7A6A5A',
-  accent:   '#E04820',
-  gold:     '#D4A017',
-  amber:    '#D4952A',
-  correct:  '#3A8A5F',
-  gems:     '#9A7ABF',
-};
+import { useTheme } from '../hooks/useTheme';
+import type { ColorTokens } from '../hooks/useTheme';
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
@@ -146,8 +110,7 @@ export function Profile() {
   const { isAdmin, tier, tierResolved } = useAuthStore();
   const isConnected = tier === 'connected' || tier === 'empowered';
 
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('ctc-theme') === 'dark');
-  const C = darkMode ? DARK : LIGHT;
+  const { darkMode, toggleDarkMode, C } = useTheme();
 
   const [triviaStats,    setTriviaStats]    = useState<ProfileStats | null>(null);
   const [accountData,    setAccountData]    = useState<AccountProfile | null>(null);
@@ -160,12 +123,6 @@ export function Profile() {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError,   setHistoryError]   = useState<string | null>(null);
   const [historyPage,    setHistoryPage]    = useState(1);
-
-  const toggleDarkMode = () => {
-    const next = !darkMode;
-    setDarkMode(next);
-    localStorage.setItem('ctc-theme', next ? 'dark' : 'light');
-  };
 
   useEffect(() => {
     const load = async () => {

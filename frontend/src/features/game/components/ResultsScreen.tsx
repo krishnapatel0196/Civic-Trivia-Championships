@@ -11,23 +11,7 @@ import { announce } from '../../../utils/announce';
 import { XpReveal } from './XpReveal';
 import { LevelUpOverlay } from './LevelUpOverlay';
 import { ACCOUNTS_WEB_URL } from '../../../services/accountsApi';
-
-// Design tokens — Civic Broadsheet
-const C = {
-  paper:       '#ECE7D9',
-  ink:         '#17120E',
-  inkLight:    '#3D2E22',
-  rule:        '#C8BAA6',
-  ruleLight:   '#DDD5C3',
-  accent:      '#C63B18',
-  accentHover: '#A82F12',
-  correct:     '#255C3F',
-  incorrect:   '#C0152A',
-  muted:       '#7A6A5A',
-  gold:        '#B8860B',
-  amber:       '#92400E',
-  xpBg:        '#1E1610',
-} as const;
+import { useTheme } from '../../../hooks/useTheme';
 
 interface ResultsScreenProps {
   result: GameResult;
@@ -68,6 +52,7 @@ export function ResultsScreen({
 
   const { fireConfettiRain } = useConfettiStore();
   const reducedMotion        = useReducedMotion();
+  const { C }                = useTheme();
 
   // Perfect game celebration
   useEffect(() => {

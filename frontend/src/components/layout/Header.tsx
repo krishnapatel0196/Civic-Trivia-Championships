@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { authService } from '../../services/authService';
 import { usePlayerXp } from '../../hooks/usePlayerXp';
+import { useTheme } from '../../hooks/useTheme';
 
 export function Header() {
   const { user, accessToken, clearAuth, isAuthenticated, displayName } = useAuthStore();
@@ -13,6 +14,7 @@ export function Header() {
   const { xpData, isConnected: isXpConnected } = usePlayerXp(userId);
   const xpNeeded         = xpData ? xpData.xpInLevel + xpData.xpToNextLevel : 0;
   const progressPercent  = xpNeeded > 0 ? Math.round((xpData!.xpInLevel / xpNeeded) * 100) : 0;
+  const { darkMode, C }  = useTheme();
 
   const handleLogout = async () => {
     try {
@@ -45,17 +47,20 @@ export function Header() {
       position: 'sticky',
       top: 0,
       zIndex: 50,
-      background: '#ECE7D9',
-      borderBottom: '1px solid #C8BAA6',
+      background: C.paper,
+      borderBottom: `1px solid ${C.rule}`,
+      transition: 'background 0.2s, border-color 0.2s',
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
 
-          {/* Logo */}
+          {/* Logo — swaps based on theme */}
           <div className="flex-shrink-0">
             <Link to="/">
               <img
-                src="/images/Empowered Vote Dark Logo.png"
+                src={darkMode
+                  ? '/images/Empowered_Vote_Logo_2026.png'
+                  : '/images/Empowered Vote Dark Logo.png'}
                 alt="Empowered Vote"
                 className="h-10"
               />
@@ -70,7 +75,7 @@ export function Header() {
                 <span style={{
                   fontFamily: "'Lora', Georgia, serif",
                   fontSize: '13px',
-                  color: '#3D2E22',
+                  color: C.inkLight,
                   fontStyle: 'italic',
                 }}>
                   {displayName || user.email}
@@ -81,14 +86,14 @@ export function Header() {
                       fontFamily: "'Bebas Neue', sans-serif",
                       fontSize: '11px',
                       letterSpacing: '0.12em',
-                      color: '#9A8878',
+                      color: C.mutedFg,
                     }}>
                       LV {xpData.level}
                     </span>
                     <div style={{
                       width: '56px',
                       height: '4px',
-                      background: '#C8BAA6',
+                      background: C.ruleLight,
                       borderRadius: '2px',
                       overflow: 'hidden',
                     }}>
@@ -104,7 +109,7 @@ export function Header() {
                       fontFamily: "'Bebas Neue', sans-serif",
                       fontSize: '10px',
                       letterSpacing: '0.1em',
-                      color: '#9A8878',
+                      color: C.mutedFg,
                     }}>
                       {xpData.xpInLevel.toLocaleString()} XP
                     </span>
@@ -118,7 +123,7 @@ export function Header() {
                   onClick={() => setMenuOpen(!menuOpen)}
                   className="min-w-[48px] min-h-[48px] p-2 flex items-center justify-center transition-opacity hover:opacity-60"
                   aria-label="Menu"
-                  style={{ color: '#17120E' }}
+                  style={{ color: C.ink }}
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M4 6h16M4 12h16M4 18h16" />
@@ -132,11 +137,11 @@ export function Header() {
                     right: 0,
                     marginTop: '4px',
                     width: '160px',
-                    background: '#ECE7D9',
-                    border: '1px solid #C8BAA6',
+                    background: C.paper,
+                    border: `1px solid ${C.rule}`,
                     borderRadius: '2px',
                     padding: '4px 0',
-                    boxShadow: '0 4px 16px rgba(23,18,14,0.12)',
+                    boxShadow: '0 4px 16px rgba(23,18,14,0.18)',
                   }}>
                     <button
                       onClick={() => handleMenuItemClick(() => navigate('/profile'))}
@@ -148,13 +153,12 @@ export function Header() {
                         fontFamily: "'Bebas Neue', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.12em',
-                        color: '#3D2E22',
+                        color: C.inkLight,
                         background: 'none',
                         border: 'none',
                         cursor: 'pointer',
-                        transition: 'background 0.1s',
                       }}
-                      onMouseEnter={e => (e.currentTarget.style.background = '#DDD5C3')}
+                      onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
                       onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                     >
                       PROFILE
@@ -169,13 +173,12 @@ export function Header() {
                         fontFamily: "'Bebas Neue', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.12em',
-                        color: '#C63B18',
+                        color: C.accent,
                         background: 'none',
                         border: 'none',
                         cursor: 'pointer',
-                        transition: 'background 0.1s',
                       }}
-                      onMouseEnter={e => (e.currentTarget.style.background = '#DDD5C3')}
+                      onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
                       onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                     >
                       LOG OUT
@@ -192,11 +195,11 @@ export function Header() {
                   fontFamily: "'Bebas Neue', sans-serif",
                   fontSize: '15px',
                   letterSpacing: '0.14em',
-                  color: '#7A6A5A',
+                  color: C.muted,
                   textDecoration: 'none',
                 }}
-                onMouseEnter={e => ((e.target as HTMLElement).style.color = '#17120E')}
-                onMouseLeave={e => ((e.target as HTMLElement).style.color = '#7A6A5A')}
+                onMouseEnter={e => ((e.target as HTMLElement).style.color = C.ink)}
+                onMouseLeave={e => ((e.target as HTMLElement).style.color = C.muted)}
               >
                 SIGN IN
               </Link>
@@ -206,11 +209,11 @@ export function Header() {
                   fontFamily: "'Bebas Neue', sans-serif",
                   fontSize: '15px',
                   letterSpacing: '0.14em',
-                  color: '#C63B18',
+                  color: C.accent,
                   textDecoration: 'none',
                 }}
-                onMouseEnter={e => ((e.target as HTMLElement).style.color = '#A82F12')}
-                onMouseLeave={e => ((e.target as HTMLElement).style.color = '#C63B18')}
+                onMouseEnter={e => ((e.target as HTMLElement).style.color = C.accentHover)}
+                onMouseLeave={e => ((e.target as HTMLElement).style.color = C.accent)}
               >
                 SIGN UP
               </Link>
