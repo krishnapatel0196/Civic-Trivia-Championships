@@ -330,6 +330,122 @@ function calculateCost(inputTokens: number, outputTokens: number, cachedTokens: 
   return inputCost + outputCost + cachedCost;
 }
 
+// ─── Within-collection semantic dedup ─────────────────────────────────────────
+
+/**
+ * Runs semantic near-duplicate detection scoped to the current collection only.
+ * Called automatically after all batches are seeded (non-dry-run mode).
+ *
+ * Guards:
+ * - Skips if OPENAI_API_KEY is not set (prints warning, does not crash)
+ * - Skips if fewer than 2 questions exist in the collection
+ * - Archives only questions in clusters where recommendation.archive has entries
+ */
+async function runWithinCollectionSemanticDedup(prefix: string, collectionSlug: string): Promise<void> {
+  if (!process.env.OPENAI_API_KEY) {
+    console.log('\n[Semantic Dedup] Skipping — OPENAI_API_KEY not set.');
+    return;
+  }
+
+  console.log('\n[Step 5] Running within-collection semantic near-duplicate detection...');
+
+  // Query draft and active questions for this collection (prefix-filtered)
+  const { db } = await import('../../db/index.js');
+  const { questions } = await import('../../db/schema.js');
+  const { sql } = await import('drizzle-orm');
+  const prefixPattern = prefix + '-%';
+  const rows = await db
+    .select({
+      id: questions.id,
+      externalId: questions.externalId,
+      text: questions.text,
+      options: questions.options,
+      correctAnswer: questions.correctAnswer,
+      qualityScore: questions.qualityScore,
+    })
+    .from(questions)
+    .where(sql`${questions.externalId} LIKE ${prefixPattern} AND ${questions.status} IN ('draft', 'active')`);
+
+  if (rows.length < 2) {
+    console.log(`  [Semantic Dedup] Only ${rows.length} questions found — skipping (need at least 2).`);
+    return;
+  }
+
+  console.log(`  Embedding ${rows.length} questions...`);
+
+  // Load embedding infrastructure via dynamic import (ESM-safe pattern)
+  const { OpenAIEmbeddingService } = await import('../../services/embeddings/OpenAIEmbeddingService.js');
+  const { SemanticDupDetector } = await import('../../services/embeddings/SemanticDupDetector.js');
+  const { ClusterBuilder } = await import('../../services/embeddings/ClusterBuilder.js');
+  const { resolve } = await import('path');
+  const cacheDir = resolve(process.cwd(), '..', '.embedding-cache');
+  const embeddingService = new OpenAIEmbeddingService({ apiKey: process.env.OPENAI_API_KEY!, cacheDir });
+
+  // Map DB rows to QuestionForDedup shape
+  const questionsForDedup = rows.map((r) => ({
+    externalId: r.externalId,
+    text: r.text,
+    options: r.options as string[],
+    correctAnswer: r.correctAnswer,
+    qualityScore: r.qualityScore,
+    collections: [collectionSlug],
+  }));
+
+  const textsToEmbed = questionsForDedup.map((q) => ({
+    id: q.externalId,
+    text: SemanticDupDetector.prepareTextForEmbedding(q),
+  }));
+
+  const embeddings = await embeddingService.embedBatch(textsToEmbed);
+  embeddingService.saveCache();
+
+  // Find near-duplicate pairs within this collection only
+  const pairs = SemanticDupDetector.findAllPairs(questionsForDedup, embeddings, 'near-duplicate');
+
+  if (pairs.length === 0) {
+    console.log('  [Semantic Dedup] No near-duplicate pairs found. Collection looks clean.');
+    return;
+  }
+
+  // Build clusters — within-collection, so tierMap is empty (quality score + externalId breaks ties)
+  const tierMap = new Map<string, string>();
+  const clusterBuilder = new ClusterBuilder(tierMap as any);
+  const questionMap = new Map(questionsForDedup.map((q) => [q.externalId, q]));
+  const clusters = clusterBuilder.buildClusters(pairs, questionMap as any);
+
+  let totalArchived = 0;
+
+  for (const cluster of clusters) {
+    if (cluster.recommendation.archive.length === 0) {
+      continue;
+    }
+
+    // Compute the max similarity score for this cluster (for logging)
+    const maxScore = cluster.similarities.reduce((max, s) => Math.max(max, s.score), 0);
+
+    for (const archiveId of cluster.recommendation.archive) {
+      try {
+        await db
+          .update(questions)
+          .set({ status: 'archived' })
+          .where(sql`${questions.externalId} = ${archiveId}`);
+
+        console.log(
+          `  [Semantic Dedup] Archived ${archiveId} (cluster ${cluster.clusterId}, score ${maxScore.toFixed(3)}, kept ${cluster.recommendation.keep})`
+        );
+        totalArchived++;
+      } catch (err) {
+        console.error(`  [Semantic Dedup] Failed to archive ${archiveId}:`, err instanceof Error ? err.message : err);
+        // Continue with remaining questions — don't abort the step
+      }
+    }
+  }
+
+  console.log(
+    `  [Semantic Dedup] Complete: ${clusters.length} duplicate cluster(s) found, ${totalArchived} question(s) archived.`
+  );
+}
+
 // ─── Main orchestrator ────────────────────────────────────────────────────────
 
 async function main(): Promise<void> {
