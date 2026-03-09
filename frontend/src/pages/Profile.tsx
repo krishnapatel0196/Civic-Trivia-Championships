@@ -12,18 +12,75 @@ import { useAuthStore } from '../store/authStore';
 import { Link } from 'react-router-dom';
 import { apiRequest } from '../services/api';
 
+// ── Design tokens ─────────────────────────────────────────────────────────────
+const C = {
+  paper:    '#ECE7D9',
+  ink:      '#17120E',
+  inkLight: '#3D2E22',
+  rule:     '#C8BAA6',
+  ruleLight:'#DDD5C3',
+  muted:    '#7A6A5A',
+  mutedFg:  '#9A8878',
+  accent:   '#C63B18',
+  gold:     '#B8860B',
+  amber:    '#9B6F1A',
+  correct:  '#255C3F',
+  gems:     '#7A5A9A',
+} as const;
+
+// ── Sub-components ─────────────────────────────────────────────────────────────
+
+function SectionHeader({ label }: { label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
+      <span style={{
+        fontFamily: "'Bebas Neue', sans-serif",
+        letterSpacing: '0.22em',
+        fontSize: '12px',
+        color: C.muted,
+        whiteSpace: 'nowrap',
+      }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, borderTop: `1px solid ${C.rule}` }} />
+    </div>
+  );
+}
+
 function TierBadge({ tier }: { tier: string }) {
   if (tier === 'connected') {
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-teal-600/20 text-teal-400 border border-teal-500/30">
-        Connected
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: '2px 10px',
+        fontFamily: "'Bebas Neue', sans-serif",
+        fontSize: '11px',
+        letterSpacing: '0.18em',
+        color: C.correct,
+        border: `1px solid ${C.correct}`,
+        background: 'rgba(37,92,63,0.07)',
+        borderRadius: '2px',
+      }}>
+        CONNECTED
       </span>
     );
   }
   if (tier === 'empowered') {
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-purple-600/20 text-purple-400 border border-purple-500/30">
-        Empowered
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: '2px 10px',
+        fontFamily: "'Bebas Neue', sans-serif",
+        fontSize: '11px',
+        letterSpacing: '0.18em',
+        color: C.gold,
+        border: `1px solid ${C.gold}`,
+        background: 'rgba(184,134,11,0.07)',
+        borderRadius: '2px',
+      }}>
+        EMPOWERED
       </span>
     );
   }
@@ -40,37 +97,50 @@ function formatDate(isoString: string): string {
 
 function XpBadge({ amount }: { amount: number }) {
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/30">
-      <XpIcon className="w-3 h-3 text-cyan-400" />
-      <span className="text-xs font-bold text-cyan-400">+{amount}</span>
+    <span style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '4px',
+      padding: '2px 8px',
+      background: 'rgba(232,160,32,0.1)',
+      border: '1px solid rgba(232,160,32,0.35)',
+      borderRadius: '2px',
+      fontFamily: "'Bebas Neue', sans-serif",
+      fontSize: '13px',
+      letterSpacing: '0.06em',
+      color: C.amber,
+    }}>
+      <XpIcon className="w-3 h-3" />
+      +{amount}
     </span>
   );
 }
 
 type ActiveTab = 'overview' | 'history';
 
+// ── Main component ─────────────────────────────────────────────────────────────
+
 export function Profile() {
   const navigate = useNavigate();
   const { isAdmin, tier, tierResolved } = useAuthStore();
   const isConnected = tier === 'connected' || tier === 'empowered';
 
-  const [triviaStats, setTriviaStats] = useState<ProfileStats | null>(null);
-  const [accountData, setAccountData] = useState<AccountProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [triviaError, setTriviaError] = useState<string | null>(null);
-  const [accountError, setAccountError] = useState<string | null>(null);
-  const [updatingTimer, setUpdatingTimer] = useState(false);
+  const [triviaStats,    setTriviaStats]    = useState<ProfileStats | null>(null);
+  const [accountData,    setAccountData]    = useState<AccountProfile | null>(null);
+  const [loading,        setLoading]        = useState(true);
+  const [triviaError,    setTriviaError]    = useState<string | null>(null);
+  const [accountError,   setAccountError]   = useState<string | null>(null);
+  const [updatingTimer,  setUpdatingTimer]  = useState(false);
 
-  const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
-  const [historyData, setHistoryData] = useState<XpHistoryResponse | null>(null);
+  const [activeTab,      setActiveTab]      = useState<ActiveTab>('overview');
+  const [historyData,    setHistoryData]    = useState<XpHistoryResponse | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
-  const [historyError, setHistoryError] = useState<string | null>(null);
-  const [historyPage, setHistoryPage] = useState(1);
+  const [historyError,   setHistoryError]   = useState<string | null>(null);
+  const [historyPage,    setHistoryPage]    = useState(1);
 
   useEffect(() => {
     const load = async () => {
       const { accessToken } = useAuthStore.getState();
-
       if (!accessToken) {
         navigate('/login?from=/profile', { replace: true });
         return;
@@ -93,33 +163,24 @@ export function Profile() {
         setAccountData(profile);
         useAuthStore.getState().setDisplayName(profile.display_name);
         useAuthStore.getState().setTier(profile.tier);
-        // TODO(43): re-enable inform-tier redirect once Connected accounts are available for testing
-        // if (profile.tier === 'inform') {
-        //   navigate('/signup', { replace: true });
-        //   return;
-        // }
       } else {
         setAccountError("Couldn't load account info");
       }
 
-      // Refresh admin status on every profile visit — ensures it's accurate
-      // even if the AuthInitializer fetch failed or the store was stale.
       try {
         const adminStatus = await apiRequest<{ isAdmin: boolean; isSuperAdmin: boolean }>(
           '/api/users/profile/admin-status'
         );
         useAuthStore.getState().setAdminStatus(adminStatus.isAdmin, adminStatus.isSuperAdmin);
       } catch {
-        // Non-critical — admin link simply won't show if this fails
+        // Non-critical
       }
 
       setLoading(false);
     };
-
     load();
   }, [navigate]);
 
-  // Fetch history when tab becomes active or page changes
   useEffect(() => {
     if (activeTab !== 'history' || !isConnected) return;
     const load = async () => {
@@ -137,7 +198,6 @@ export function Profile() {
     load();
   }, [activeTab, historyPage, isConnected]);
 
-  // Reset to page 1 when switching to history tab
   useEffect(() => {
     if (activeTab === 'history') setHistoryPage(1);
   }, [activeTab]);
@@ -146,353 +206,586 @@ export function Profile() {
     setUpdatingTimer(true);
     try {
       await updateTimerMultiplier(multiplier);
-      if (triviaStats) {
-        setTriviaStats({ ...triviaStats, timerMultiplier: multiplier });
-      }
+      if (triviaStats) setTriviaStats({ ...triviaStats, timerMultiplier: multiplier });
       useAuthStore.getState().setTimerMultiplier(multiplier);
     } catch {
-      // Timer update failures are non-critical — silently ignore
+      // Silently ignore
     } finally {
       setUpdatingTimer(false);
     }
   };
 
+  // ── Loading ──────────────────────────────────────────────────────────────────
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div style={{ minHeight: '100vh', background: C.paper }}>
         <Header />
-        <div className="max-w-4xl mx-auto p-6">
-          <div className="flex items-center justify-center min-h-[50vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500"></div>
+        <div style={{ maxWidth: '768px', margin: '0 auto', padding: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '40vh' }}>
+            <div
+              className="animate-spin"
+              style={{
+                width: '36px',
+                height: '36px',
+                border: `3px solid ${C.ruleLight}`,
+                borderTopColor: '#E8A020',
+                borderRadius: '50%',
+              }}
+            />
           </div>
         </div>
       </div>
     );
   }
 
-  // Three content sections shared between overview and non-Connected layout
+  // ── Shared error notice ──────────────────────────────────────────────────────
+
+  const ErrorNotice = ({ message }: { message: string }) => (
+    <div style={{
+      marginBottom: '16px',
+      padding: '10px 14px',
+      border: `1px solid rgba(184,134,11,0.35)`,
+      background: 'rgba(184,134,11,0.06)',
+      borderRadius: '2px',
+      fontFamily: "'Lora', Georgia, serif",
+      fontStyle: 'italic',
+      fontSize: '13px',
+      color: C.gold,
+    }}>
+      {message}
+    </div>
+  );
+
+  // ── Play CTA button ──────────────────────────────────────────────────────────
+
+  const PlayButton = ({ label }: { label: string }) => (
+    <button
+      onClick={() => navigate('/play')}
+      style={{
+        marginTop: '20px',
+        padding: '14px 36px',
+        background: C.accent,
+        color: '#FFFFFF',
+        fontFamily: "'Bebas Neue', sans-serif",
+        fontSize: '18px',
+        letterSpacing: '0.12em',
+        border: 'none',
+        borderRadius: '2px',
+        cursor: 'pointer',
+        minHeight: '48px',
+        transition: 'background 0.15s',
+      }}
+      onMouseEnter={e => (e.currentTarget.style.background = '#A82F12')}
+      onMouseLeave={e => (e.currentTarget.style.background = C.accent)}
+    >
+      {label}
+    </button>
+  );
+
+  // ── Hero section ─────────────────────────────────────────────────────────────
+
   const heroSection = (
-    <div className="bg-slate-800 rounded-lg p-8">
-      {accountError && (
-        <div className="mb-4 px-4 py-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm">
-          Couldn't load account information. Some details may be unavailable.
-        </div>
-      )}
+    <div style={{ paddingBottom: '32px', borderBottom: `1px solid ${C.rule}` }}>
+      {accountError && <ErrorNotice message="Couldn't load account information. Some details may be unavailable." />}
 
       {accountData && (
-        <div className="flex items-start space-x-6">
-          {/* Avatar — display only, no upload */}
-          <div className="flex-shrink-0">
-            <Avatar
-              name={accountData.display_name || accountData.email}
-              imageUrl={accountData.avatar_url}
-              size={80}
-            />
-          </div>
-
-          {/* Identity */}
-          <div className="flex-1">
-            {/* Display name + tier badge inline */}
-            <div className="flex items-center space-x-3">
-              <h1 className="text-3xl font-bold text-white">{accountData.display_name || accountData.email}</h1>
-              <TierBadge tier={accountData.tier} />
+        <>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px' }}>
+            <div style={{ flexShrink: 0 }}>
+              <Avatar
+                name={accountData.display_name || accountData.email}
+                imageUrl={accountData.avatar_url}
+                size={80}
+              />
             </div>
 
-            {/* Email */}
-            <p className="text-slate-400 mt-1">{accountData.email}</p>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                <h1 style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: 'clamp(26px, 6vw, 40px)',
+                  letterSpacing: '0.04em',
+                  color: C.ink,
+                  margin: 0,
+                  lineHeight: 1,
+                }}>
+                  {accountData.display_name || accountData.email}
+                </h1>
+                <TierBadge tier={accountData.tier} />
+              </div>
 
-            {/* Manage account external link */}
-            <a
-              href={ACCOUNTS_WEB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center space-x-1 text-teal-400 hover:text-teal-300 text-sm mt-2 transition-colors"
-            >
-              <span>Manage your Empowered account</span>
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-            </a>
+              <p style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontStyle: 'italic',
+                color: C.muted,
+                fontSize: '14px',
+                margin: '6px 0 0',
+              }}>
+                {accountData.email}
+              </p>
 
-            {/* Admin panel link — only shown to admin users */}
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className="inline-flex items-center space-x-1 text-red-400 hover:text-red-300 text-sm mt-2 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>Admin Panel</span>
-              </Link>
-            )}
+              <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'flex-start' }}>
+                <a
+                  href={ACCOUNTS_WEB_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontStyle: 'italic',
+                    fontSize: '13px',
+                    color: C.accent,
+                    textDecoration: 'none',
+                    transition: 'color 0.15s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#A82F12')}
+                  onMouseLeave={e => (e.currentTarget.style.color = C.accent)}
+                >
+                  <span>Manage your Empowered account</span>
+                  <svg style={{ width: '12px', height: '12px', flexShrink: 0 }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                </a>
 
-            {/* XP and Gems */}
-            <div className="flex items-center space-x-6 mt-4">
-              <div className="flex items-center space-x-2">
-                <XpIcon className="w-6 h-6 text-cyan-400" />
-                <span className="text-2xl font-bold text-cyan-400">
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      fontFamily: "'Lora', Georgia, serif",
+                      fontStyle: 'italic',
+                      fontSize: '13px',
+                      color: C.accent,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <svg style={{ width: '12px', height: '12px', flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Admin Panel</span>
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* XP + Gems strip */}
+          {accountData.connected_profile && (
+            <div style={{
+              display: 'flex',
+              marginTop: '24px',
+              borderTop: `1px solid ${C.rule}`,
+              borderBottom: `1px solid ${C.rule}`,
+            }}>
+              <div style={{ flex: 1, textAlign: 'center', padding: '14px 8px', borderRight: `1px solid ${C.rule}` }}>
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '34px', lineHeight: 1, color: C.amber }}>
                   {(() => {
                     const raw = accountData.connected_profile?.xp;
                     const n = typeof raw === 'object' && raw !== null ? (raw.total_xp ?? raw.total) : raw;
                     return (n ?? 0).toLocaleString();
                   })()}
-                </span>
-                <span className="text-slate-400">XP</span>
+                </div>
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.18em', fontSize: '10px', color: C.mutedFg, marginTop: '3px' }}>
+                  XP
+                </div>
               </div>
-
-              <div className="flex items-center space-x-2">
-                <GemIcon className="w-6 h-6 text-purple-400" />
-                <span className="text-2xl font-bold text-purple-400">
+              <div style={{ flex: 1, textAlign: 'center', padding: '14px 8px' }}>
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '34px', lineHeight: 1, color: C.gems }}>
                   {(accountData.connected_profile?.gem_balance ?? 0).toLocaleString()}
-                </span>
-                <span className="text-slate-400">Gems</span>
+                </div>
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.18em', fontSize: '10px', color: C.mutedFg, marginTop: '3px' }}>
+                  GEMS
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
     </div>
   );
 
-  const statsSection = (
-    <div className="bg-slate-800 rounded-lg p-8">
-      <h2 className="text-2xl font-bold text-white mb-6">Statistics</h2>
+  // ── Stats section ─────────────────────────────────────────────────────────────
 
-      {triviaError && (
-        <div className="mb-4 px-4 py-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm">
-          Couldn't load game stats. Try refreshing the page.
-        </div>
-      )}
+  const statsSection = (
+    <div style={{ paddingTop: '32px' }}>
+      <SectionHeader label="STATISTICS" />
+
+      {triviaError && <ErrorNotice message="Couldn't load game stats. Try refreshing the page." />}
 
       {triviaStats && triviaStats.gamesPlayed === 0 && (
-        <div className="flex flex-col items-center justify-center py-12 space-y-4">
-          <p className="text-lg text-slate-400">No games played yet!</p>
-          <p className="text-slate-400">Play your first game to start tracking your stats.</p>
-          <button
-            onClick={() => navigate('/play')}
-            className="mt-4 px-6 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition-colors"
-          >
-            Play Your First Game
-          </button>
+        <div style={{ textAlign: 'center', padding: '48px 0' }}>
+          <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.muted, fontSize: '15px', margin: 0 }}>
+            No games played yet.
+          </p>
+          <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.mutedFg, fontSize: '14px', marginTop: '6px' }}>
+            Play your first game to start tracking your stats.
+          </p>
+          <PlayButton label="PLAY YOUR FIRST GAME" />
         </div>
       )}
 
       {triviaStats && triviaStats.gamesPlayed > 0 && (
-        <div className="space-y-0">
-          <div className="flex justify-between items-center py-3 border-b border-slate-700">
-            <span className="text-slate-300">Games Played</span>
-            <span className="text-white font-semibold">{triviaStats.gamesPlayed}</span>
-          </div>
-          <div className="flex justify-between items-center py-3 border-b border-slate-700">
-            <span className="text-slate-300">Best Score</span>
-            <span className="text-white font-semibold">{triviaStats.bestScore.toLocaleString()}</span>
-          </div>
-          <div className="flex justify-between items-center py-3">
-            <span className="text-slate-300">Overall Accuracy</span>
-            <span className="text-white font-semibold">{triviaStats.overallAccuracy}%</span>
-          </div>
+        <div style={{
+          display: 'flex',
+          borderTop: `1px solid ${C.rule}`,
+          borderBottom: `1px solid ${C.rule}`,
+        }}>
+          {[
+            { label: 'GAMES PLAYED', value: triviaStats.gamesPlayed.toLocaleString() },
+            { label: 'BEST SCORE',   value: triviaStats.bestScore.toLocaleString() },
+            { label: 'ACCURACY',     value: `${triviaStats.overallAccuracy}%` },
+          ].map((stat, i, arr) => (
+            <div
+              key={stat.label}
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '16px 8px',
+                borderRight: i < arr.length - 1 ? `1px solid ${C.rule}` : 'none',
+              }}
+            >
+              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '36px', lineHeight: 1, color: C.ink }}>
+                {stat.value}
+              </div>
+              <div style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.15em', fontSize: '10px', color: C.mutedFg, marginTop: '4px' }}>
+                {stat.label}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
 
+  // ── Settings section ──────────────────────────────────────────────────────────
+
   const settingsSection = (
-    <div className="bg-slate-800 rounded-lg p-8">
-      <h2 className="text-2xl font-bold text-white mb-6">Settings</h2>
+    <div style={{ paddingTop: '32px' }}>
+      <SectionHeader label="SETTINGS" />
 
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-white">Extended Time</h3>
-            <p className="text-sm text-slate-400 mt-1">Adjusts the timer for all questions</p>
-          </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+        <div>
+          <h3 style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontWeight: 600,
+            fontSize: '16px',
+            color: C.ink,
+            margin: 0,
+          }}>
+            Extended Time
+          </h3>
+          <p style={{
+            fontFamily: "'Lora', Georgia, serif",
+            fontStyle: 'italic',
+            fontSize: '13px',
+            color: C.muted,
+            margin: '4px 0 0',
+          }}>
+            Adjusts the timer for all questions
+          </p>
+        </div>
 
-          <div className="flex space-x-2">
-            {[1.0, 1.5, 2.0].map((multiplier) => (
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {[1.0, 1.5, 2.0].map((multiplier) => {
+            const isActive = triviaStats?.timerMultiplier === multiplier;
+            return (
               <button
                 key={multiplier}
                 onClick={() => handleTimerMultiplierChange(multiplier)}
                 disabled={updatingTimer}
-                className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  triviaStats?.timerMultiplier === multiplier
-                    ? 'bg-teal-600 text-white'
-                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                } ${updatingTimer ? 'opacity-50 cursor-not-allowed' : ''}`}
+                style={{
+                  padding: '8px 16px',
+                  minHeight: '40px',
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '16px',
+                  letterSpacing: '0.06em',
+                  border: isActive ? `2px solid ${C.accent}` : `1px solid ${C.rule}`,
+                  background: isActive ? C.accent : 'transparent',
+                  color: isActive ? '#FFFFFF' : C.muted,
+                  borderRadius: '2px',
+                  cursor: updatingTimer ? 'not-allowed' : 'pointer',
+                  opacity: updatingTimer ? 0.5 : 1,
+                  transition: 'background 0.15s, border-color 0.15s, color 0.15s',
+                }}
+                onMouseEnter={e => {
+                  if (!updatingTimer && triviaStats?.timerMultiplier !== multiplier) {
+                    e.currentTarget.style.borderColor = '#8B7A65';
+                    e.currentTarget.style.color = C.ink;
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (triviaStats?.timerMultiplier !== multiplier) {
+                    e.currentTarget.style.borderColor = C.rule;
+                    e.currentTarget.style.color = C.muted;
+                  }
+                }}
               >
-                {multiplier}x
+                {multiplier}×
               </button>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
     </div>
   );
 
-  // Non-Connected players: render exactly as before — no tab chrome
-  if (!tierResolved || !isConnected) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        <Header />
-        <div className="max-w-4xl mx-auto p-6 space-y-6">
-          {heroSection}
-          {statsSection}
-          {settingsSection}
+  // ── XP History tab ────────────────────────────────────────────────────────────
+
+  const historyTab = (
+    <div style={{ paddingTop: '8px' }}>
+      <SectionHeader label="XP HISTORY" />
+
+      {/* Loading */}
+      {historyLoading && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="animate-pulse"
+              style={{ height: '44px', background: C.ruleLight, borderRadius: '2px' }}
+            />
+          ))}
         </div>
+      )}
+
+      {/* Error */}
+      {historyError && <ErrorNotice message={historyError} />}
+
+      {/* Empty */}
+      {!historyLoading && !historyError && historyData?.total === 0 && (
+        <div style={{ textAlign: 'center', padding: '48px 0' }}>
+          <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.muted, fontSize: '14px', margin: 0 }}>
+            No games yet — play your first game to start earning XP!
+          </p>
+          <PlayButton label="PLAY A GAME" />
+        </div>
+      )}
+
+      {/* Data */}
+      {!historyLoading && !historyError && historyData && historyData.total > 0 && (
+        <>
+          <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.14em', color: C.mutedFg, marginBottom: '12px' }}>
+            {historyData.total} GAMES PLAYED
+          </p>
+
+          <div>
+            {historyData.entries.map(entry => (
+              <div
+                key={entry.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '11px 0',
+                  borderBottom: `1px solid ${C.ruleLight}`,
+                  gap: '12px',
+                }}
+              >
+                <span style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '11px',
+                  letterSpacing: '0.08em',
+                  color: C.mutedFg,
+                  width: '72px',
+                  flexShrink: 0,
+                }}>
+                  {formatDate(entry.createdAt)}
+                </span>
+                <span style={{
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontStyle: 'italic',
+                  fontSize: '13px',
+                  color: C.inkLight,
+                  flex: 1,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}>
+                  {entry.collectionSlug
+                    ? entry.collectionSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+                    : '—'}
+                </span>
+                <span style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '15px',
+                  color: C.ink,
+                  width: '64px',
+                  textAlign: 'right',
+                  flexShrink: 0,
+                }}>
+                  {entry.score !== null ? entry.score.toLocaleString() : '—'}
+                </span>
+                <span style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '13px',
+                  color: C.muted,
+                  width: '40px',
+                  textAlign: 'right',
+                  flexShrink: 0,
+                }}>
+                  {entry.correctAnswers !== null ? `${entry.correctAnswers}/10` : '—'}
+                </span>
+                <div style={{ width: '72px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                  <XpBadge amount={entry.amount} />
+                  {entry.isDuplicate && (
+                    <span style={{ fontSize: '11px', color: C.mutedFg, fontStyle: 'italic' }}>×</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {historyData.totalPages > 1 && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '24px' }}>
+              {(['prev', ...Array.from({ length: historyData.totalPages }, (_, i) => i + 1), 'next'] as const).map((item) => {
+                if (item === 'prev') {
+                  return (
+                    <button
+                      key="prev"
+                      onClick={() => setHistoryPage(p => p - 1)}
+                      disabled={historyPage === 1}
+                      style={{
+                        padding: '6px 12px',
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: '13px',
+                        letterSpacing: '0.1em',
+                        background: 'transparent',
+                        border: `1px solid ${C.rule}`,
+                        color: C.muted,
+                        borderRadius: '2px',
+                        cursor: historyPage === 1 ? 'not-allowed' : 'pointer',
+                        opacity: historyPage === 1 ? 0.4 : 1,
+                      }}
+                    >
+                      PREV
+                    </button>
+                  );
+                }
+                if (item === 'next') {
+                  return (
+                    <button
+                      key="next"
+                      onClick={() => setHistoryPage(p => p + 1)}
+                      disabled={historyPage === historyData.totalPages}
+                      style={{
+                        padding: '6px 12px',
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: '13px',
+                        letterSpacing: '0.1em',
+                        background: 'transparent',
+                        border: `1px solid ${C.rule}`,
+                        color: C.muted,
+                        borderRadius: '2px',
+                        cursor: historyPage === historyData.totalPages ? 'not-allowed' : 'pointer',
+                        opacity: historyPage === historyData.totalPages ? 0.4 : 1,
+                      }}
+                    >
+                      NEXT
+                    </button>
+                  );
+                }
+                const p = item as number;
+                const isActive = p === historyPage;
+                return (
+                  <button
+                    key={p}
+                    onClick={() => setHistoryPage(p)}
+                    style={{
+                      padding: '6px 10px',
+                      minWidth: '32px',
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: '13px',
+                      letterSpacing: '0.06em',
+                      background: isActive ? C.accent : 'transparent',
+                      border: isActive ? `1px solid ${C.accent}` : `1px solid ${C.rule}`,
+                      color: isActive ? '#FFFFFF' : C.muted,
+                      borderRadius: '2px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {p}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+
+  // ── Page wrapper ──────────────────────────────────────────────────────────────
+
+  const pageShell = (children: React.ReactNode) => (
+    <div style={{ minHeight: '100vh', background: C.paper, fontFamily: "'Lora', Georgia, serif" }}>
+      <Header />
+      <div style={{ maxWidth: '768px', margin: '0 auto', padding: '32px 24px 80px' }}>
+        {children}
+      </div>
+    </div>
+  );
+
+  // Non-Connected: no tabs
+  if (!tierResolved || !isConnected) {
+    return pageShell(
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+        {heroSection}
+        {statsSection}
+        {settingsSection}
       </div>
     );
   }
 
-  // Connected / Empowered players: two-tab layout
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <Header />
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
+  // Connected / Empowered: two-tab layout
+  return pageShell(
+    <>
+      {heroSection}
 
-        {/* Hero section always visible — shows identity/XP/gems regardless of tab */}
-        {heroSection}
-
-        {/* Tab bar */}
-        <div className="flex border-b border-slate-700 mb-6">
-          <button
-            onClick={() => setActiveTab('overview')}
-            className={`px-6 py-3 text-sm font-semibold transition-colors ${
-              activeTab === 'overview'
-                ? 'text-white border-b-2 border-teal-400'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Overview
-          </button>
-          <button
-            onClick={() => setActiveTab('history')}
-            className={`px-6 py-3 text-sm font-semibold transition-colors ${
-              activeTab === 'history'
-                ? 'text-white border-b-2 border-teal-400'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            XP History
-          </button>
-        </div>
-
-        {/* Overview tab */}
-        {activeTab === 'overview' && (
-          <div className="space-y-6">
-            {statsSection}
-            {settingsSection}
-          </div>
-        )}
-
-        {/* XP History tab */}
-        {activeTab === 'history' && (
-          <div className="bg-slate-800 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-white mb-6">XP History</h2>
-
-            {/* Loading state — 5 skeleton rows */}
-            {historyLoading && (
-              <div className="space-y-2">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="animate-pulse bg-slate-700/50 h-12 rounded" />
-                ))}
-              </div>
-            )}
-
-            {/* Error state */}
-            {historyError && (
-              <div className="px-4 py-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm">
-                {historyError}
-              </div>
-            )}
-
-            {/* Empty state */}
-            {!historyLoading && !historyError && historyData?.total === 0 && (
-              <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                <p className="text-slate-400">No games yet — play your first game to start earning XP!</p>
-                <button
-                  onClick={() => navigate('/play')}
-                  className="px-6 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition-colors"
-                >
-                  Play a Game
-                </button>
-              </div>
-            )}
-
-            {/* Data loaded */}
-            {!historyLoading && !historyError && historyData && historyData.total > 0 && (
-              <div>
-                <p className="text-sm text-slate-400 mb-4">{historyData.total} games played</p>
-
-                {/* Row list */}
-                <div className="space-y-0">
-                  {historyData.entries.map(entry => (
-                    <div
-                      key={entry.id}
-                      className="flex items-center justify-between py-3 border-b border-slate-700 last:border-0"
-                    >
-                      <span className="text-slate-400 text-sm w-24 flex-shrink-0">{formatDate(entry.createdAt)}</span>
-                      <span className="text-slate-300 text-sm flex-1 px-3 truncate">
-                        {entry.collectionSlug
-                          ? entry.collectionSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-                          : '—'}
-                      </span>
-                      <span className="text-slate-300 text-sm w-16 text-right flex-shrink-0">
-                        {entry.score !== null ? entry.score.toLocaleString() : '—'}
-                      </span>
-                      <span className="text-slate-300 text-sm w-14 text-right flex-shrink-0">
-                        {entry.correctAnswers !== null ? `${entry.correctAnswers}/10` : '—'}
-                      </span>
-                      <div className="w-28 flex justify-end flex-shrink-0 items-center gap-2">
-                        <XpBadge amount={entry.amount} />
-                        {entry.isDuplicate && (
-                          <span className="text-xs text-slate-500">Already counted</span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Pagination controls */}
-                {historyData.totalPages > 1 && (
-                  <div className="flex items-center justify-center space-x-2 mt-6">
-                    <button
-                      onClick={() => setHistoryPage(p => p - 1)}
-                      disabled={historyPage === 1}
-                      className="px-3 py-1.5 rounded bg-slate-700 text-slate-300 text-sm disabled:opacity-40 hover:bg-slate-600 transition-colors"
-                    >
-                      Previous
-                    </button>
-                    {Array.from({ length: historyData.totalPages }, (_, i) => i + 1).map(p => (
-                      <button
-                        key={p}
-                        onClick={() => setHistoryPage(p)}
-                        className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                          p === historyPage
-                            ? 'bg-teal-600 text-white'
-                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                        }`}
-                      >
-                        {p}
-                      </button>
-                    ))}
-                    <button
-                      onClick={() => setHistoryPage(p => p + 1)}
-                      disabled={historyPage === historyData.totalPages}
-                      className="px-3 py-1.5 rounded bg-slate-700 text-slate-300 text-sm disabled:opacity-40 hover:bg-slate-600 transition-colors"
-                    >
-                      Next
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-
+      {/* Tab bar */}
+      <div style={{ display: 'flex', borderBottom: `1px solid ${C.rule}`, marginTop: '32px' }}>
+        {(['overview', 'history'] as const).map((tab) => {
+          const isActive = activeTab === tab;
+          return (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '12px 24px',
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '14px',
+                letterSpacing: '0.18em',
+                background: 'none',
+                border: 'none',
+                borderBottom: isActive ? `2px solid ${C.accent}` : '2px solid transparent',
+                color: isActive ? C.ink : C.muted,
+                cursor: 'pointer',
+                marginBottom: '-1px',
+                transition: 'color 0.15s',
+              }}
+            >
+              {tab === 'overview' ? 'OVERVIEW' : 'XP HISTORY'}
+            </button>
+          );
+        })}
       </div>
-    </div>
+
+      {/* Tab content */}
+      {activeTab === 'overview' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+          {statsSection}
+          {settingsSection}
+        </div>
+      )}
+
+      {activeTab === 'history' && historyTab}
+    </>
   );
 }
