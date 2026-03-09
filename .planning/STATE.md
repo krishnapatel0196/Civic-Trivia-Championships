@@ -190,11 +190,12 @@ None.
 | 022 | What would it take to make a new collection of questions? | 2026-03-01 | [022-what-would-it-take-to-make-a-new-collect](./quick/022-what-would-it-take-to-make-a-new-collect/) |
 | 023 | Scaffold and activate collection CLIs | 2026-03-01 | [023-scaffold-and-activate-collection-cli](./quick/023-scaffold-and-activate-collection-cli/) |
 | 024 | Responsive game UI layout — no scrolling to see answers or timer | 2026-03-03 | [024-game-ui-responsive-layout-fixes](./quick/024-game-ui-responsive-layout-fixes/) |
+| 025 | Mobile-friendly admin panel — card lists, full-screen panels, responsive layouts | 2026-03-09 | [025-mobile-friendly-admin-panel](./quick/025-mobile-friendly-admin-panel/) |
 
 ## Session Continuity
 
-Last session: 2026-03-08
-Stopped at: v2.0 milestone archived — Phases 53–56 complete, git tag v2.0 created
+Last session: 2026-03-09
+Stopped at: Quick task 025 complete — mobile-friendly admin panel
 Resume file: None
 
 Next action: `/gsd:new-milestone` — start v2.1 planning cycle (questioning → research → requirements → roadmap)
