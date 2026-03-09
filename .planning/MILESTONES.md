@@ -1,5 +1,32 @@
 # Project Milestones: Civic Trivia Championship
 
+## v2.0 XP Integration (Shipped: 2026-03-08)
+
+**Delivered:** End-to-end XP integration with the Empowered Accounts platform — XP awarded server-side after each game for Connected players, displayed on start/end screens with level-up animation, and reviewable via paginated transaction history on the profile page.
+
+**Phases completed:** 53–56 (10 plans total)
+
+**Key accomplishments:**
+
+- Server-side XP awards: `awardPlatformXp()` mirrors gems pattern — score-proportional formula (50–200 XP), idempotency key `ctc-game-{sessionId}-{userId}`, non-Connected players silently skipped, never-throw with retry
+- XP start screen: Connected players see current level + progress bar via `usePlayerXp` hook + `XpStrip` component; non-Connected see "Link account to earn XP" prompt
+- XP end screen: `XpReveal` shows +XP earned with animated progress bar; `LevelUpOverlay` fires when `xp.level > priorLevel`; `is_duplicate` shows neutral "Already recorded" message — no animation
+- XP history panel: two-tab Profile layout (Overview / XP History) with paginated transaction list via `get_ctc_xp_history()` Supabase SECURITY DEFINER RPC — live-verified at ctc.empowered.vote
+- Three audit tech debt items closed (Phase 56): startup env validation warnings, `isDuplicate` removed from metadata input type, 24h session TTL after XP award for repeated `/results` calls
+
+**Stats:**
+
+- 49 files changed (6,040 insertions, 218 deletions)
+- ~45,500 lines of TypeScript total (frontend ~14,000 + backend ~31,500)
+- 4 phases, 10 plans, 13 requirements delivered
+- 3 days from first phase to ship (2026-03-05 → 2026-03-08)
+
+**Git range:** `feat(53-01)` (`ef1416e`) → `feat(56-01)` (`b0d8fb2`)
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v1.9 Geographic Expansion (Shipped: 2026-03-03)
 
 **Delivered:** Expanded the playable collection set from 7 to 11 by activating two banked collections (Fremont CA, Norwich UK), launching four net-new collections (Cambridge MA, Massachusetts, Plano TX, Texas), and replacing all hardcoded collection infrastructure with a DB-driven, auto-discovery architecture.

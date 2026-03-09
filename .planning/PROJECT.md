@@ -81,16 +81,15 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Plano, TX — scaffold, generate (85 questions), curate, activate — v1.9
 - ✓ Texas State — scaffold, generate (60 questions, mixed-durability), curate, activate — v1.9
 
+- ✓ XP awards via Empowered Accounts API (server-side, score-proportional 50–200 XP, idempotent by sessionId, non-Connected silently skipped) — v2.0
+- ✓ XP start screen: Connected players see level + progress bar (`XpStrip`); non-Connected see "Link account to earn XP" prompt — v2.0
+- ✓ XP end screen: `+XP earned` animation (`XpReveal`), level-up overlay (`LevelUpOverlay`), `is_duplicate` neutral "Already recorded" handling — v2.0
+- ✓ XP transaction history panel on profile page — paginated, Connected tier only, via `get_ctc_xp_history()` Supabase RPC — v2.0
+- ✓ Startup env validation warnings for missing `TRIVIA_SERVICE_KEY` / `EMPOWERED_ACCOUNTS_API_URL` / `EMPOWERED_ACCOUNTS_URL` — v2.0
+
 ### Active
 
-*(v2.0 requirements defined — see REQUIREMENTS.md)*
-
-**v2.0 XP Integration goals:**
-- Award XP via Empowered Accounts API after each game (server-to-server, service key, score-proportional formula, idempotent)
-- Show current level + progress bar on game start screen for Connected players
-- Show XP earned + level-up animation on end screen; handle `is_duplicate` gracefully
-- Non-Connected players: hide XP panel, show "link account to earn XP" prompt
-- XP transaction history panel on profile page (`GET /api/xp/me/history`)
+*(planning for v2.1 not yet started — run `/gsd:new-milestone` to begin)*
 
 ### Out of Scope
 
@@ -113,12 +112,14 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v1.9 shipped 2026-03-03):**
-- 12 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60) — all on shared Supabase project (kxsdzaojfaibhuzmclfq)
+**Current state (v2.0 shipped 2026-03-08):**
+- 12 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60) — all on shared Supabase project (kxsdzaojfaibhuzmclfq); ~1,484 active questions
+- XP integration: `awardPlatformXp()` awards 50–200 XP server-side after each game for Connected players; idempotent by sessionId; displayed on start screen (`XpStrip`), end screen (`XpReveal`, `LevelUpOverlay`), and profile XP history tab
+- XP history: `get_ctc_xp_history()` Supabase SECURITY DEFINER RPC — established pattern for cross-schema `connect` data access from CTC backend
 - Collection infrastructure: DB-driven tier lookups, state configs auto-discovered — zero hardcoded maps; `audit-collection-readiness.ts` + `verify-post-activation.ts` standardize activation workflow
 - Identity: Supabase JWT auth (jose jwtVerify), Connected tier guards, `public.admin_users` admin check — all legacy bcrypt/JWT removed
 - Gems: `award_gems` RPC (yellow, civic_trivia source); `trivia.player_stats` tracks games/score/accuracy for Connected users
-- Frontend: accounts API for auth flows, profile page shows trivia stats + tier badge + gem balance
+- Frontend: accounts API for auth flows, profile page shows trivia stats + tier badge + gem balance + XP history (two-tab layout)
 - Election pipeline: `election_races` table → question generation → daily 6 AM cron → current-term follow-up → admin lifecycle UI
 - Quality rules engine with 9 rules; zero active duplicates, zero quality violations across all collections
 - Mixed-durability pattern established: Texas State has both durable (null expiresAt) and expiring (2027-01-19) questions in one collection
@@ -129,8 +130,8 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - Live: civic-trivia-frontend.onrender.com / civic-trivia-backend.onrender.com / ctc.empowered.vote
 
 **Tech stack:** React 18, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, Supabase (PostgreSQL), Redis (Upstash), jose, Drizzle ORM
-- Frontend: ~11,500 LOC TypeScript/React
-- Backend: ~28,000 LOC TypeScript/Express
+- Frontend: ~14,000 LOC TypeScript/React
+- Backend: ~31,500 LOC TypeScript/Express
 
 **Question quality philosophy:**
 - "Dinner party test" — would knowing this answer be worth sharing at dinner?
@@ -172,7 +173,7 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - **Tech stack**: React 18+, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, Supabase (PostgreSQL), Redis (Upstash), jose, Drizzle ORM
 - **Performance**: FCP <1.5s, TTI <3s, bundle <300KB gzipped
 - **Accessibility**: WCAG AA compliance required
-- **Content**: 953 active questions across 7 collections (zero duplicates, zero quality violations), all source URLs validated
+- **Content**: ~1,484 active questions across 12 collections (zero duplicates, zero quality violations), all source URLs validated
 
 ## Key Decisions
 
@@ -249,6 +250,15 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Governor's Council dedicated topic (Massachusetts) | 8 questions for one of MA's most surprising civic facts; own topic slug separates from general-court | Good — distinctive content that "feels seen" |
 | State-only curation rule for state collections | City/regional landmarks explicitly prohibited by name; statewide historical events kept | Good — consistent quality signal across state collections |
 | ERCOT cluster reduction (Texas) | 12-question ERCOT cluster reduced to 3 best angles (uniqueness, %, transmission miles) | Good — eliminates near-duplicate saturation |
+| `EMPOWERED_ACCOUNTS_API_URL` distinct from `EMPOWERED_ACCOUNTS_URL` | EMPOWERED_ACCOUNTS_URL used by checkAccountContext(); XP API URL kept separate for independent configuration | Good — avoids renaming risk |
+| Idempotency key = `ctc-game-{sessionId}-{userId}` | sessionId is already server-generated UUID; no separate gameId field needed | Good — minimal footprint |
+| `is_duplicate: true` treated as success | XP API contract: duplicate = already recorded, not an error; no retry | Good — correct semantics |
+| Never-throw for external API calls (`awardPlatformXp`) | Mirrors awardPlatformGems pattern; game result must succeed even if XP API is down | Good — resilient UX |
+| `console.warn` not `process.exit` for missing XP env vars | Local dev starts cleanly without these vars; warns in production logs | Good — DX friendly |
+| `get_ctc_xp_history()` SECURITY DEFINER RPC for history | connect schema not exposed via PostgREST; SECURITY DEFINER function is correct cross-schema access pattern | Good — establishes pattern for future connect schema queries |
+| 24h session TTL after XP award | 1h default caused xp: null on repeated /results; 24h only on post-award save | Good — targeted fix, submitAnswer path unaffected |
+| Two-tab Profile layout tier-gated on `tierResolved && isConnected` | Prevents flash of tab chrome before account fetch resolves | Good — clean tier gating |
+| `priorLevel` captured at game idle state for level-up detection | Comparison at results time requires pre-game snapshot; `levelUpShownRef` prevents double-trigger | Good — correct level-up detection |
 
 ---
-*Last updated: 2026-03-05 after v2.0 milestone start*
+*Last updated: 2026-03-08 after v2.0 milestone*

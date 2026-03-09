@@ -131,73 +131,15 @@ Full archive: [milestones/v1.9-ROADMAP.md](milestones/v1.9-ROADMAP.md)
 
 </details>
 
-<details open>
+<details>
 <summary>✅ v2.0 XP Integration (Phases 53–56) — SHIPPED 2026-03-08</summary>
-
-### Phase 53: XP Backend Integration
-**Goal:** Award XP server-side after each game for Connected players
-**Requirements:** XP-01, XP-02, XP-03, XP-04, XP-05
-**Plans:** 1 plan
-**Success criteria:**
-1. Connected player completes a game → XP award call made to Empowered Accounts API
-2. Awarded amount reflects score-proportional formula with participation floor
-3. Repeating the same gameId returns `is_duplicate: true` — no double-award
-4. Inform/anonymous player completes a game → no award call made, no error
-5. `TRIVIA_SERVICE_KEY` and `EMPOWERED_ACCOUNTS_API_URL` env vars documented and validated at startup
-
-Plans:
-- [ ] 53-01-PLAN.md — XpAwardResult interface, calculateXpAmount, awardPlatformXp, game.ts wiring, env docs
-
-### Phase 54: XP Game UI (Start + End Screen)
-**Goal:** Connected players see their level/XP before and after every game
-**Requirements:** XPS-01, XPS-02, XPE-01, XPE-02, XPE-03, XPE-04
-**Plans:** 5 plans
-**Success criteria:**
-1. Connected player on start screen sees current level and XP progress bar
-2. Non-Connected player on start screen sees "Link account to earn XP" prompt (not XP panel)
-3. End screen shows `+{amount} XP` after game results
-4. Level-up triggers a visible animation; no animation when level unchanged
-5. Progress bar shows post-award position in current level
-6. `is_duplicate` response shows neutral message — no reward animation
-
-Plans:
-- [x] 54-01-PLAN.md — Fix Progression type (XpResult), update useGameState mapping
-- [x] 54-02-PLAN.md — usePlayerXp hook, XpStrip component
-- [x] 54-03-PLAN.md — XpReveal component, LevelUpOverlay component
-- [x] 54-04-PLAN.md — Wire GameScreen idle (XpStrip/prompt), Game.tsx priorLevel state
-- [x] 54-05-PLAN.md — Update ResultsScreen: integrate XpReveal, LevelUpOverlay, non-Connected prompt
-
-### Phase 55: XP History Panel
-**Goal:** Players can review their CTC XP transaction history on the profile page
-**Requirements:** XPH-01, XPH-02
-**Plans:** 3 plans
-**Success criteria:**
-1. Profile page has an XP history section listing past game sessions
-2. Each entry shows date, XP earned, and game context (score, correct answers)
-3. History loads paginated and handles empty state gracefully
-4. Panel is only visible to Connected players; hidden for Inform/anonymous
-
-Plans:
-- [x] 55-01-PLAN.md — Enrich awardPlatformXp() metadata (score, correctAnswers, collectionSlug)
-- [x] 55-02-PLAN.md — Add GET /api/users/profile/xp/history proxy route
-- [x] 55-03-PLAN.md — Profile.tsx two-tab layout and XP History panel (frontend)
-
-### Phase 56: Post-v2.0 XP Tech Debt
-**Goal:** Close three low-impact tech debt items identified in v2.0 audit
-**Plans:** 1 plan
-**Gap Closure:** TD-1, TD-2, TD-3 from v2.0-MILESTONE-AUDIT.md
-**Success criteria:**
-1. `env.ts` logs a startup warning when `TRIVIA_SERVICE_KEY` or `EMPOWERED_ACCOUNTS_API_URL` are absent
-2. `isDuplicate` in XP award metadata is set from API response (not placeholder `false`) — or confirmed RPC sources from platform flag
-3. XP result persisted beyond Redis TTL so repeated `/results` calls return correct state for Connected players
-
-Plans:
-- [x] 56-01-PLAN.md — env startup validation, isDuplicate two-pass fix, xpResult persistence
 
 - [x] Phase 53: XP Backend Integration (1/1 plans) — completed 2026-03-05
 - [x] Phase 54: XP Game UI (5/5 plans) — completed 2026-03-08
 - [x] Phase 55: XP History Panel (3/3 plans) — completed 2026-03-08
 - [x] Phase 56: Post-v2.0 XP Tech Debt (1/1 plans) — completed 2026-03-08
+
+Full archive: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 
 </details>
 

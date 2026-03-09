@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-03)
+See: .planning/PROJECT.md (updated 2026-03-08)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.0 XP Integration
+**Current focus:** Planning next milestone (v2.1)
 
 ## Current Position
 
-Phase: 56 of v2.0 (56-post-v2-xp-tech-debt)
-Plan: 1 of 1 in phase
-Status: Phase complete
-Last activity: 2026-03-08 — Completed 56-01 (Post-v2.0 XP tech debt); Phase 56 fully shipped
+Phase: Not started
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-03-08 — v2.0 milestone complete (Phases 53–56 shipped)
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | v2.0 SHIPPED
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | ~1,484 questions | v2.0 SHIPPED
 
 **Milestone history:**
 - v1.0–v1.9 (Phases 1–52): All Complete — see .planning/MILESTONES.md
@@ -194,7 +194,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-08
-Stopped at: Completed 56-01 — Post-v2.0 XP tech debt; Phase 56 fully complete
+Stopped at: v2.0 milestone archived — Phases 53–56 complete, git tag v2.0 created
 Resume file: None
 
-Next action: v2.0 milestone complete — all phases 53–56 shipped; ready for next planning cycle
+Next action: `/gsd:new-milestone` — start v2.1 planning cycle (questioning → research → requirements → roadmap)
