@@ -7,18 +7,16 @@ import { usePlayerXp } from '../../hooks/usePlayerXp';
 export function Header() {
   const { user, accessToken, clearAuth, isAuthenticated, displayName } = useAuthStore();
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const userId = useAuthStore((s) => s.user?.id ?? null);
+  const [menuOpen, setMenuOpen]   = useState(false);
+  const menuRef                    = useRef<HTMLDivElement>(null);
+  const userId                     = useAuthStore((s) => s.user?.id ?? null);
   const { xpData, isConnected: isXpConnected } = usePlayerXp(userId);
-  const xpNeeded = xpData ? xpData.xpInLevel + xpData.xpToNextLevel : 0;
-  const progressPercent = xpNeeded > 0 ? Math.round((xpData!.xpInLevel / xpNeeded) * 100) : 0;
+  const xpNeeded         = xpData ? xpData.xpInLevel + xpData.xpToNextLevel : 0;
+  const progressPercent  = xpNeeded > 0 ? Math.round((xpData!.xpInLevel / xpNeeded) * 100) : 0;
 
   const handleLogout = async () => {
     try {
-      if (accessToken) {
-        await authService.logout(accessToken);
-      }
+      if (accessToken) await authService.logout(accessToken);
     } catch {
       // Ignore logout errors - clear local state anyway
     } finally {
@@ -27,21 +25,14 @@ export function Header() {
     }
   };
 
-  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
       }
     };
-
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    if (menuOpen) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpen]);
 
   const handleMenuItemClick = (action: () => void) => {
@@ -50,9 +41,16 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700">
+    <header style={{
+      position: 'sticky',
+      top: 0,
+      zIndex: 50,
+      background: '#ECE7D9',
+      borderBottom: '1px solid #C8BAA6',
+    }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/">
@@ -64,69 +62,157 @@ export function Header() {
             </Link>
           </div>
 
-          {/* User info and hamburger menu / Sign in links */}
+          {/* Right side */}
           {isAuthenticated && user ? (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-4">
+              {/* User info + XP */}
               <div className="hidden sm:flex flex-col items-end">
-                <span className="text-sm text-slate-300">{displayName || user.email}</span>
+                <span style={{
+                  fontFamily: "'Lora', Georgia, serif",
+                  fontSize: '13px',
+                  color: '#3D2E22',
+                  fontStyle: 'italic',
+                }}>
+                  {displayName || user.email}
+                </span>
                 {isXpConnected && xpData && (
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-xs text-slate-400">Lv {xpData.level}</span>
-                    <div className="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-cyan-500 rounded-full"
-                        style={{ width: `${progressPercent}%` }}
-                      />
+                    <span style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: '11px',
+                      letterSpacing: '0.12em',
+                      color: '#9A8878',
+                    }}>
+                      LV {xpData.level}
+                    </span>
+                    <div style={{
+                      width: '56px',
+                      height: '4px',
+                      background: '#C8BAA6',
+                      borderRadius: '2px',
+                      overflow: 'hidden',
+                    }}>
+                      <div style={{
+                        height: '100%',
+                        width: `${progressPercent}%`,
+                        background: '#E8A020',
+                        borderRadius: '2px',
+                        transition: 'width 0.4s ease',
+                      }} />
                     </div>
-                    <span className="text-xs text-slate-500">{xpData.xpInLevel.toLocaleString()} XP</span>
+                    <span style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: '10px',
+                      letterSpacing: '0.1em',
+                      color: '#9A8878',
+                    }}>
+                      {xpData.xpInLevel.toLocaleString()} XP
+                    </span>
                   </div>
                 )}
               </div>
 
-              {/* Hamburger menu */}
+              {/* Hamburger */}
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="min-w-[48px] min-h-[48px] p-2 text-slate-400 hover:text-white transition-colors flex items-center justify-center"
+                  className="min-w-[48px] min-h-[48px] p-2 flex items-center justify-center transition-opacity hover:opacity-60"
                   aria-label="Menu"
+                  style={{ color: '#17120E' }}
                 >
-                  <svg
-                    className="w-6 h-6"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </button>
 
-                {/* Dropdown menu */}
+                {/* Dropdown */}
                 {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg border border-slate-700 py-2">
+                  <div style={{
+                    position: 'absolute',
+                    right: 0,
+                    marginTop: '4px',
+                    width: '160px',
+                    background: '#ECE7D9',
+                    border: '1px solid #C8BAA6',
+                    borderRadius: '2px',
+                    padding: '4px 0',
+                    boxShadow: '0 4px 16px rgba(23,18,14,0.12)',
+                  }}>
                     <button
                       onClick={() => handleMenuItemClick(() => navigate('/profile'))}
-                      className="w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '8px 16px',
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: '14px',
+                        letterSpacing: '0.12em',
+                        color: '#3D2E22',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'background 0.1s',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.background = '#DDD5C3')}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                     >
-                      Profile
+                      PROFILE
                     </button>
                     <button
                       onClick={() => handleMenuItemClick(handleLogout)}
-                      className="w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 transition-colors"
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '8px 16px',
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: '14px',
+                        letterSpacing: '0.12em',
+                        color: '#C63B18',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'background 0.1s',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.background = '#DDD5C3')}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                     >
-                      Log out
+                      LOG OUT
                     </button>
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            <div className="flex items-center space-x-4">
-              <Link to="/login" className="text-sm font-medium text-teal-400 hover:text-teal-300">
-                Sign in
+            <div className="flex items-center gap-5">
+              <Link
+                to="/login"
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '15px',
+                  letterSpacing: '0.14em',
+                  color: '#7A6A5A',
+                  textDecoration: 'none',
+                }}
+                onMouseEnter={e => ((e.target as HTMLElement).style.color = '#17120E')}
+                onMouseLeave={e => ((e.target as HTMLElement).style.color = '#7A6A5A')}
+              >
+                SIGN IN
               </Link>
-              <Link to="/signup" className="text-sm font-medium text-teal-400 hover:text-teal-300">
-                Sign up
+              <Link
+                to="/signup"
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '15px',
+                  letterSpacing: '0.14em',
+                  color: '#C63B18',
+                  textDecoration: 'none',
+                }}
+                onMouseEnter={e => ((e.target as HTMLElement).style.color = '#A82F12')}
+                onMouseLeave={e => ((e.target as HTMLElement).style.color = '#C63B18')}
+              >
+                SIGN UP
               </Link>
             </div>
           )}

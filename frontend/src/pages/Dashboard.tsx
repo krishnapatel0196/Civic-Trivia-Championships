@@ -12,11 +12,12 @@ export function Dashboard() {
   const [playPressed, setPlayPressed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div style={{ minHeight: '100vh', background: '#ECE7D9' }}>
       <Header />
 
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div className="p-6">
+          {/* Logo */}
           <div className="flex justify-center pt-4 pb-1">
             <img
               src="/images/civic-trivia-championships-logo.png"
@@ -25,7 +26,7 @@ export function Dashboard() {
             />
           </div>
 
-          {/* Start Game Button */}
+          {/* Play button */}
           <div className="text-center py-2 -mt-6 sm:-mt-8 h-16 sm:h-20 flex items-center justify-center mb-16 sm:mb-0">
             <button
               onClick={() => navigate('/play', { state: { collectionId: selectedId } })}
@@ -51,12 +52,19 @@ export function Dashboard() {
             onSelect={select}
           />
 
-          {/* Sign-in nudge for anonymous users */}
+          {/* Sign-in nudge */}
           {!isAuthenticated && (
-            <p className="text-slate-400 mt-6 text-sm text-center">
-              <Link to="/login" className="text-teal-400 hover:text-teal-300 font-medium">Sign in</Link>
+            <p style={{
+              fontFamily: "'Lora', Georgia, serif",
+              fontStyle: 'italic',
+              color: '#7A6A5A',
+              marginTop: '24px',
+              fontSize: '14px',
+              textAlign: 'center',
+            }}>
+              <Link to="/login" style={{ color: '#C63B18', fontStyle: 'normal', textDecoration: 'none' }}>Sign in</Link>
               {' '}or{' '}
-              <Link to="/signup" className="text-teal-400 hover:text-teal-300 font-medium">create an account</Link>
+              <Link to="/signup" style={{ color: '#C63B18', fontStyle: 'normal', textDecoration: 'none' }}>create an account</Link>
               {' '}to track your progress and earn rewards.
             </p>
           )}

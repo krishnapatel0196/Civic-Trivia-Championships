@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { CollectionSummary } from '../types';
 import { useAuthStore } from '../../../store/authStore';
 
@@ -8,53 +9,122 @@ interface CollectionCardProps {
 }
 
 export function CollectionCard({ collection, isSelected, onSelect }: CollectionCardProps) {
-  const user = useAuthStore((state) => state.user);
+  const user    = useAuthStore((state) => state.user);
   const isAdmin = user?.tier === 'empowered';
+  const [isHovered, setIsHovered] = useState(false);
+
+  const borderColor = isSelected
+    ? '#C63B18'
+    : isHovered
+    ? '#8B7A65'
+    : '#C8BAA6';
+
+  const shadow = isSelected
+    ? '0 4px 20px rgba(198,59,24,0.18)'
+    : isHovered
+    ? '0 2px 10px rgba(23,18,14,0.08)'
+    : '0 1px 4px rgba(23,18,14,0.06)';
 
   return (
     <button
       onClick={() => onSelect(collection.id)}
-      className={[
-        'relative rounded-xl overflow-hidden transition-all duration-200 text-left w-full sm:w-48 flex-shrink-0',
-        isSelected
-          ? 'ring-2 ring-teal-400 shadow-xl scale-105'
-          : 'opacity-80 hover:opacity-100 hover:scale-[1.02]',
-      ].join(' ')}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       aria-pressed={isSelected}
       aria-label={`${collection.name}${isAdmin ? `, ${collection.questionCount} questions` : ''}${isSelected ? ', selected' : ''}`}
+      style={{
+        position: 'relative',
+        width: '100%',
+        flexShrink: 0,
+        textAlign: 'left',
+        background: 'none',
+        padding: 0,
+        cursor: 'pointer',
+        outline: 'none',
+        borderRadius: '3px',
+        overflow: 'hidden',
+        border: `2px solid ${borderColor}`,
+        boxShadow: shadow,
+        transform: isSelected ? 'scale(1.03)' : isHovered ? 'scale(1.01)' : 'scale(1)',
+        transition: 'border-color 0.15s, box-shadow 0.15s, transform 0.15s',
+      }}
+      className="sm:w-48"
     >
-      {/* Banner image with themeColor fallback */}
+      {/* Banner image */}
       <div
-        className="h-28 rounded-t-xl overflow-hidden"
-        style={{ backgroundColor: collection.themeColor }}
+        style={{
+          height: '112px',
+          overflow: 'hidden',
+          backgroundColor: collection.themeColor,
+        }}
       >
         <img
           src={`/images/collections/${collection.slug}.jpg`}
           alt=""
-          className="w-full h-full object-cover"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           loading="lazy"
         />
       </div>
 
       {/* Card body */}
-      <div className="bg-slate-800 p-3">
-        <div className="text-white font-semibold text-sm leading-tight">
+      <div style={{
+        background: '#F5EDD8',
+        padding: '10px 12px 12px',
+        borderTop: `1px solid ${borderColor}`,
+        transition: 'border-color 0.15s',
+      }}>
+        <div style={{
+          fontFamily: "'Bebas Neue', sans-serif",
+          fontSize: '15px',
+          letterSpacing: '0.08em',
+          color: '#17120E',
+          lineHeight: 1.1,
+        }}>
           {collection.name}
         </div>
-        <div className="text-slate-400 text-xs mt-1 line-clamp-3 min-h-[3rem]">
+        <div style={{
+          fontFamily: "'Lora', Georgia, serif",
+          fontStyle: 'italic',
+          fontSize: '11px',
+          color: '#7A6A5A',
+          marginTop: '5px',
+          lineHeight: 1.45,
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          minHeight: '48px',
+        }}>
           {collection.description}
         </div>
         {isAdmin && (
-          <div className="text-slate-500 text-xs mt-2">
-            {collection.questionCount} questions
+          <div style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: '10px',
+            letterSpacing: '0.1em',
+            color: '#9A8878',
+            marginTop: '6px',
+          }}>
+            {collection.questionCount} QUESTIONS
           </div>
         )}
       </div>
 
-      {/* Selected checkmark indicator */}
+      {/* Selected indicator — civic red square badge */}
       {isSelected && (
-        <div className="absolute top-2 right-2 w-5 h-5 bg-teal-400 rounded-full flex items-center justify-center">
-          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+        <div style={{
+          position: 'absolute',
+          top: '8px',
+          right: '8px',
+          width: '20px',
+          height: '20px',
+          background: '#C63B18',
+          borderRadius: '2px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <svg style={{ width: '11px', height: '11px', color: '#FFFFFF' }} fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
           </svg>
         </div>

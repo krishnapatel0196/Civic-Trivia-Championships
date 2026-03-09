@@ -16,18 +16,14 @@ function getCategory(slug: string): 'local' | 'state' | 'federal' {
 }
 
 const GROUP_LABELS: Record<string, string> = {
-  local: 'Local',
-  state: 'State',
+  local:   'Local',
+  state:   'State',
   federal: 'Federal',
 };
 
 export function CollectionPicker({ collections, selectedId, loading, onSelect }: CollectionPickerProps) {
-  // Don't render if empty and not loading
-  if (!loading && collections.length === 0) {
-    return null;
-  }
+  if (!loading && collections.length === 0) return null;
 
-  // Group and sort collections by category
   const grouped = (['local', 'state', 'federal'] as const)
     .map((category) => ({
       category,
@@ -41,25 +37,43 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
   return (
     <div>
       {/* Section heading */}
-      <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">
-        Choose Your Collection
-      </h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
+        <span style={{
+          fontFamily: "'Bebas Neue', sans-serif",
+          letterSpacing: '0.22em',
+          fontSize: '12px',
+          color: '#7A6A5A',
+          whiteSpace: 'nowrap',
+        }}>
+          CHOOSE YOUR COLLECTION
+        </span>
+        <div style={{ flex: 1, borderTop: '1px solid #C8BAA6' }} />
+      </div>
 
       {loading ? (
-        /* Skeleton placeholders during loading */
         <div className="flex flex-col sm:flex-row gap-3 pb-2">
           <CollectionCardSkeleton />
           <CollectionCardSkeleton />
           <CollectionCardSkeleton />
         </div>
       ) : (
-        /* Grouped rows: Local → State → Federal */
-        <div className="flex flex-col gap-6 pb-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', paddingBottom: '8px' }}>
           {grouped.map(({ category, label, collections: group }) => (
             <div key={category}>
-              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                {label}
-              </h3>
+              {/* Category label with rule */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <span style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  letterSpacing: '0.18em',
+                  fontSize: '10px',
+                  color: '#9A8878',
+                  whiteSpace: 'nowrap',
+                }}>
+                  {label}
+                </span>
+                <div style={{ flex: 1, borderTop: '1px solid #DDD5C3' }} />
+              </div>
+
               <div className="flex flex-wrap gap-3">
                 {group.map((collection) => (
                   <CollectionCard
