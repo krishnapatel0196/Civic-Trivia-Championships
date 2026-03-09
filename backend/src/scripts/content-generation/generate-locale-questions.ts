@@ -774,6 +774,11 @@ Return ONLY a JSON object with a "questions" array containing exactly 1 question
     await saveReport(report);
   }
 
+  // Step 5: Run within-collection semantic dedup (skips gracefully if no OPENAI_API_KEY)
+  if (!args.dryRun) {
+    await runWithinCollectionSemanticDedup(config.externalIdPrefix, config.collectionSlug);
+  }
+
   // Final summary
   console.log(`\n${'='.repeat(60)}`);
   console.log(`Generation Complete`);
