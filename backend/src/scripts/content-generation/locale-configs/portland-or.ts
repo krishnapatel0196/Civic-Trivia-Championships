@@ -30,9 +30,9 @@ export const portlandOrConfig: LocaleConfig = {
   name: 'Portland, OR',
   externalIdPrefix: 'por',
   collectionSlug: 'portland-or',
-  targetQuestions: 90,
+  targetQuestions: 100,
   batchSize: 25,
-  overshootFactor: 1.3,
+  overshootFactor: 1.5,
 
   topicCategories: [
     {
@@ -71,25 +71,28 @@ export const portlandOrConfig: LocaleConfig = {
   },
 
   sourceUrls: [
-    'https://www.portland.gov/',
-    'https://www.portland.gov/council',
-    'https://www.portland.gov/auditor',
-    'https://www.portland.gov/about-portland-government',
-    'https://www.oregonlive.com/politics/2025/01/portland-welcomes-new-city-council-under-charter-reform.html',
+    // City government (keep — these worked)
     'https://en.wikipedia.org/wiki/Portland,_Oregon',
     'https://en.wikipedia.org/wiki/Portland_city_government',
+    'https://www.oregonlive.com/politics/2025/01/portland-welcomes-new-city-council-under-charter-reform.html',
+    // Civic history (keep — these worked)
+    'https://en.wikipedia.org/wiki/History_of_Portland,_Oregon',
+    // Parks & natural landmarks — Wikipedia article URLs (replacing portlandoregon.gov/portlandonline.com)
     'https://en.wikipedia.org/wiki/Forest_Park_(Portland,_Oregon)',
-    'https://www.portlandoregon.gov/parks/article/57998',
-    'https://www.portlandonline.com/parks/finder/index.cfm?PropertyID=1113',
+    'https://en.wikipedia.org/wiki/Willamette_River',
+    'https://en.wikipedia.org/wiki/Mount_Tabor_Park',
+    'https://en.wikipedia.org/wiki/Washington_Park_(Portland,_Oregon)',
     'https://en.wikipedia.org/wiki/International_Rose_Test_Garden',
+    // Rose City identity — Wikipedia article URLs (replacing portland.gov)
     'https://en.wikipedia.org/wiki/Portland_Rose_Festival',
+    'https://en.wikipedia.org/wiki/Portland_Japanese_Garden',
+    // Cultural institutions (keep — these worked)
     'https://en.wikipedia.org/wiki/Oregon_Zoo',
-    'https://www.oregonzoo.org/about',
     'https://en.wikipedia.org/wiki/Portland_Art_Museum',
     'https://en.wikipedia.org/wiki/Oregon_Museum_of_Science_and_Industry',
+    'https://en.wikipedia.org/wiki/Powell%27s_Books',
+    // Bridge identity (keep)
     'https://en.wikipedia.org/wiki/Hawthorne_Bridge',
     'https://en.wikipedia.org/wiki/Steel_Bridge_(Portland,_Oregon)',
-    'https://www.tshaonline.org/handbook/entries/portland-or',
-    'https://en.wikipedia.org/wiki/History_of_Portland,_Oregon',
   ],
 };
