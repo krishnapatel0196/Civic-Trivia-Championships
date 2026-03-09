@@ -59,8 +59,8 @@ export function Header() {
             <Link to="/">
               <img
                 src={darkMode
-                  ? '/images/Empowered Vote Dark Logo.png'
-                  : '/images/Empowered_Vote_Logo_2026.png'}
+                  ? '/images/Empowered_Vote_Logo_2026.png'
+                  : '/images/Empowered Vote Dark Logo.png'}
                 alt="Empowered Vote"
                 className="h-10"
               />
