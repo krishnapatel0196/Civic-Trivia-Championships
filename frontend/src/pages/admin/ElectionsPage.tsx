@@ -12,6 +12,9 @@ import {
 } from '@headlessui/react';
 import { API_URL } from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
+import { useTheme } from '../../hooks/useTheme';
+
+const ADMIN_ACCENT = '#FF5740';
 
 interface Candidate {
   name: string;
@@ -86,8 +89,8 @@ function formatRelativeTime(timestamp: string): string {
 
 export function ElectionsPage() {
   const { accessToken } = useAuthStore();
+  const { C } = useTheme();
 
-  // Classified data
   const [activeElections, setActiveElections] = useState<RaceWithCount[]>([]);
   const [pendingGeneration, setPendingGeneration] = useState<RaceWithCount[]>([]);
   const [awaitingFollowup, setAwaitingFollowup] = useState<RaceWithCount[]>([]);
@@ -95,70 +98,52 @@ export function ElectionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Create form
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(emptyForm());
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Collections (for dropdown)
   const [collections, setCollections] = useState<{ id: number; name: string; slug: string }[]>([]);
   useEffect(() => {
     if (!accessToken) return;
-    fetch(`${API_URL}/api/admin/collections`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
+    fetch(`${API_URL}/api/admin/collections`, { headers: { Authorization: `Bearer ${accessToken}` } })
       .then(r => r.json())
       .then(data => setCollections(data.collections ?? []))
       .catch(() => {});
   }, [accessToken]);
 
-  // Toast
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 4000);
   };
 
-  // Generation state (pending tab)
   const [generatingRaceId, setGeneratingRaceId] = useState<number | null>(null);
   const [genCollectionSlug, setGenCollectionSlug] = useState('');
   const [showCollectionPrompt, setShowCollectionPrompt] = useState(false);
   const [genLoading, setGenLoading] = useState(false);
-  const [genResult, setGenResult] = useState<{
-    questionsCreated: number;
-    archived: number;
-    collectionSlug: string;
-    jurisdiction: string;
-  } | null>(null);
-  const [genError, setGenError] = useState<{
-    type: 'blocked' | 'error';
-    message: string;
-    existingCount?: number;
-    generatedAt?: string | null;
-  } | null>(null);
+  const [genResult, setGenResult] = useState<{ questionsCreated: number; archived: number; collectionSlug: string; jurisdiction: string; } | null>(null);
+  const [genError, setGenError] = useState<{ type: 'blocked' | 'error'; message: string; existingCount?: number; generatedAt?: string | null; } | null>(null);
 
-  // Edit race state
   const [editingRace, setEditingRace] = useState<RaceWithCount | null>(null);
   const [editForm, setEditForm] = useState(emptyForm());
   const [editSubmitting, setEditSubmitting] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
 
-  // Delete race state
   const [deletingRace, setDeletingRace] = useState<RaceWithCount | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // Re-generate state (active tab)
   const [regenRace, setRegenRace] = useState<RaceWithCount | null>(null);
   const [regenCounts, setRegenCounts] = useState<{ activeCount: number; draftCount: number } | null>(null);
   const [regenLoading, setRegenLoading] = useState(false);
   const [regenConfirmOpen, setRegenConfirmOpen] = useState(false);
 
-  // Enter result state (awaiting followup tab)
   const [resultRace, setResultRace] = useState<RaceWithCount | null>(null);
   const [resultForm, setResultForm] = useState({ winnerName: '', termEndDate: '', collectionSlug: '' });
   const [resultLoading, setResultLoading] = useState(false);
   const [resultError, setResultError] = useState<string | null>(null);
+
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   const fetchClassified = async () => {
     if (!accessToken) return;
@@ -182,11 +167,8 @@ export function ElectionsPage() {
     }
   };
 
-  useEffect(() => {
-    fetchClassified();
-  }, [accessToken]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchClassified(); }, [accessToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ---- Create form helpers ----
   const updateCandidate = (index: number, field: keyof Candidate, value: string | boolean) => {
     setForm((prev) => {
       const updated = [...prev.candidates];
@@ -195,16 +177,12 @@ export function ElectionsPage() {
     });
   };
 
-  const addCandidate = () => {
-    setForm((prev) => ({ ...prev, candidates: [...prev.candidates, emptyCandidate()] }));
-  };
+  const addCandidate = () => setForm((prev) => ({ ...prev, candidates: [...prev.candidates, emptyCandidate()] }));
 
-  const removeCandidate = (index: number) => {
-    setForm((prev) => ({
-      ...prev,
-      candidates: prev.candidates.filter((_, i) => i !== index),
-    }));
-  };
+  const removeCandidate = (index: number) => setForm((prev) => ({
+    ...prev,
+    candidates: prev.candidates.filter((_, i) => i !== index),
+  }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,10 +193,7 @@ export function ElectionsPage() {
     try {
       const res = await fetch(`${API_URL}/api/admin/election-races`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({
           seat: form.seat,
           electionType: form.electionType,
@@ -245,7 +220,6 @@ export function ElectionsPage() {
     }
   };
 
-  // ---- Generate questions (pending tab) ----
   const handleGenerate = (race: RaceWithCount) => {
     setGeneratingRaceId(race.id);
     const matched = collections.find(c => c.name === race.jurisdiction);
@@ -261,10 +235,7 @@ export function ElectionsPage() {
     try {
       const response = await fetch(`${API_URL}/api/admin/election-races/${raceId}/generate`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({ collectionSlug, force }),
       });
       const data = await response.json();
@@ -283,7 +254,6 @@ export function ElectionsPage() {
     }
   };
 
-  // ---- Edit race (pending tab) ----
   const openEditModal = (race: RaceWithCount) => {
     setEditingRace(race);
     setEditForm({
@@ -314,10 +284,7 @@ export function ElectionsPage() {
     try {
       const res = await fetch(`${API_URL}/api/admin/election-races/${editingRace.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({
           seat: editForm.seat,
           electionType: editForm.electionType,
@@ -342,7 +309,6 @@ export function ElectionsPage() {
     }
   };
 
-  // ---- Delete race (pending tab) ----
   const handleDeleteConfirm = async () => {
     if (!deletingRace || !accessToken) return;
     setDeleteLoading(true);
@@ -368,12 +334,10 @@ export function ElectionsPage() {
     }
   };
 
-  // ---- Re-generate (active tab) ----
   const handleRegenClick = async (race: RaceWithCount) => {
     setRegenRace(race);
     setRegenCounts(null);
     setRegenConfirmOpen(true);
-    // Fetch question counts
     try {
       const res = await fetch(`${API_URL}/api/admin/election-races/${race.id}/question-count`, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -382,9 +346,7 @@ export function ElectionsPage() {
         const data = await res.json();
         setRegenCounts({ activeCount: data.activeCount ?? 0, draftCount: data.draftCount ?? 0 });
       }
-    } catch {
-      // Counts failed — modal still opens, just won't show counts
-    }
+    } catch { /* Counts failed — modal still opens */ }
   };
 
   const handleRegenConfirm = async () => {
@@ -393,10 +355,7 @@ export function ElectionsPage() {
     try {
       const res = await fetch(`${API_URL}/api/admin/election-races/${regenRace.id}/regenerate`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
       });
       const data = await res.json();
       if (res.ok) {
@@ -418,7 +377,6 @@ export function ElectionsPage() {
     }
   };
 
-  // ---- Enter result (awaiting followup tab) ----
   const openResultModal = (race: RaceWithCount) => {
     setResultRace(race);
     const matched = collections.find(c => c.name === race.jurisdiction);
@@ -434,15 +392,8 @@ export function ElectionsPage() {
     try {
       const res = await fetch(`${API_URL}/api/admin/election-races/${resultRace.id}/enter-result`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          winnerName: resultForm.winnerName,
-          termEndDate: resultForm.termEndDate,
-          collectionSlug: resultForm.collectionSlug,
-        }),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+        body: JSON.stringify({ winnerName: resultForm.winnerName, termEndDate: resultForm.termEndDate, collectionSlug: resultForm.collectionSlug }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -461,73 +412,211 @@ export function ElectionsPage() {
     }
   };
 
-  // Derived
   const selectedRaceForGen = [...activeElections, ...pendingGeneration, ...awaitingFollowup].find(r => r.id === generatingRaceId);
 
+  // ---- Shared styles ----
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '8px 12px',
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    backgroundColor: C.paper,
+    color: C.ink,
+    fontFamily: "'Lora', Georgia, serif",
+    fontSize: '13px',
+    outline: 'none',
+  };
+
+  const selectStyle: React.CSSProperties = {
+    ...inputStyle,
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: 'block',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '11px',
+    letterSpacing: '0.14em',
+    color: C.muted,
+    marginBottom: '6px',
+  };
+
+  const btnPrimary: React.CSSProperties = {
+    padding: '8px 20px',
+    backgroundColor: ADMIN_ACCENT,
+    color: '#fff',
+    border: 'none',
+    borderRadius: '2px',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '13px',
+    letterSpacing: '0.1em',
+    cursor: 'pointer',
+  };
+
+  const btnSecondary: React.CSSProperties = {
+    padding: '8px 20px',
+    backgroundColor: 'transparent',
+    color: C.muted,
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '13px',
+    letterSpacing: '0.1em',
+    cursor: 'pointer',
+  };
+
+  const btnDanger: React.CSSProperties = {
+    ...btnPrimary,
+    backgroundColor: C.incorrect,
+  };
+
+  const btnAmber: React.CSSProperties = {
+    ...btnPrimary,
+    backgroundColor: '#92400E',
+  };
+
+  const thStyle: React.CSSProperties = {
+    padding: '10px 16px',
+    textAlign: 'left',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '11px',
+    letterSpacing: '0.14em',
+    color: C.muted,
+    borderBottom: `1px solid ${C.rule}`,
+    whiteSpace: 'nowrap',
+    backgroundColor: 'transparent',
+  };
+
+  const tdStyle: React.CSSProperties = {
+    padding: '12px 16px',
+    fontFamily: "'Lora', Georgia, serif",
+    fontSize: '13px',
+    color: C.ink,
+    borderBottom: `1px solid ${C.ruleLight}`,
+    verticalAlign: 'top',
+  };
+
+  const modalOverlay: React.CSSProperties = {
+    position: 'fixed',
+    inset: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  };
+
+  const modalPanel: React.CSSProperties = {
+    backgroundColor: C.paper,
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    padding: '24px',
+    width: '100%',
+    maxWidth: '480px',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+  };
+
+  const modalTitle: React.CSSProperties = {
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '20px',
+    letterSpacing: '0.08em',
+    color: C.ink,
+    margin: '0 0 16px 0',
+  };
+
+  const CandidateRow = ({ candidate, idx, onChange, onRemove, canRemove }: {
+    candidate: Candidate;
+    idx: number;
+    onChange: (idx: number, field: keyof Candidate, val: string | boolean) => void;
+    onRemove: (idx: number) => void;
+    canRemove: boolean;
+  }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', border: `1px solid ${C.rule}`, borderRadius: '2px' }}>
+      <input
+        type="text"
+        placeholder="Full name"
+        value={candidate.name}
+        onChange={(e) => onChange(idx, 'name', e.target.value)}
+        style={{ ...inputStyle, flex: 1, padding: '6px 8px' }}
+      />
+      <input
+        type="text"
+        placeholder="Party"
+        value={candidate.party}
+        onChange={(e) => onChange(idx, 'party', e.target.value)}
+        style={{ ...inputStyle, flex: 1, padding: '6px 8px' }}
+      />
+      <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Lora', Georgia, serif", fontSize: '12px', color: C.muted, whiteSpace: 'nowrap', cursor: 'pointer' }}>
+        <input type="checkbox" checked={candidate.incumbent} onChange={(e) => onChange(idx, 'incumbent', e.target.checked)} style={{ accentColor: ADMIN_ACCENT }} />
+        Incumbent
+      </label>
+      {canRemove && (
+        <button type="button" onClick={() => onRemove(idx)} style={{ color: C.mutedFg, background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', lineHeight: 1, padding: '0 4px' }}
+          onMouseEnter={e => (e.currentTarget.style.color = C.incorrect)}
+          onMouseLeave={e => (e.currentTarget.style.color = C.mutedFg)}>
+          &times;
+        </button>
+      )}
+    </div>
+  );
+
+  const TableWrapper = ({ children }: { children: React.ReactNode }) => (
+    <div style={{ border: `1px solid ${C.rule}`, borderRadius: '2px', overflow: 'hidden' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        {children}
+      </table>
+    </div>
+  );
+
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Page header */}
-      <div className="flex items-center justify-between">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Election Management</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(24px, 4vw, 36px)', letterSpacing: '0.06em', color: C.ink, margin: '0 0 8px 0' }}>
+            Election Management
+          </h1>
+          <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', fontSize: '13px', color: C.muted, margin: 0 }}>
             Manage election races and lifecycle actions. Races are entered manually.
           </p>
         </div>
         <button
           onClick={() => { setShowForm((v) => !v); setSubmitError(null); }}
-          className="inline-flex items-center px-4 py-2 bg-red-700 text-white text-sm font-medium rounded-lg hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition-colors"
+          style={btnPrimary}
         >
-          {showForm ? 'Cancel' : '+ New Election Race'}
+          {showForm ? 'CANCEL' : '+ NEW ELECTION RACE'}
         </button>
       </div>
 
       {/* Cron last-run banner */}
       {cronLastRun ? (
-        <div className="flex items-center gap-3 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-          <span className="inline-block w-2 h-2 rounded-full bg-blue-400 flex-shrink-0" />
-          <span className="text-blue-800 font-medium">Cron last ran {formatRelativeTime(cronLastRun.timestamp)}</span>
-          <span className="text-blue-600">— {cronLastRun.racesDetected} race{cronLastRun.racesDetected !== 1 ? 's' : ''} detected, {cronLastRun.processed} processed
-            {cronLastRun.failures > 0 && <span className="text-amber-600 font-medium">, {cronLastRun.failures} failure{cronLastRun.failures !== 1 ? 's' : ''}</span>}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', border: `1px solid ${C.rule}`, borderRadius: '2px' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: C.correct, flexShrink: 0 }} />
+          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.1em', color: C.ink }}>
+            CRON LAST RAN {formatRelativeTime(cronLastRun.timestamp).toUpperCase()}
+          </span>
+          <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '12px', color: C.muted }}>
+            — {cronLastRun.racesDetected} race{cronLastRun.racesDetected !== 1 ? 's' : ''} detected, {cronLastRun.processed} processed
+            {cronLastRun.failures > 0 && <span style={{ color: '#92400E', fontWeight: 600 }}>, {cronLastRun.failures} failure{cronLastRun.failures !== 1 ? 's' : ''}</span>}
           </span>
         </div>
       ) : (
-        <div className="flex items-center gap-3 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500">
-          <span className="inline-block w-2 h-2 rounded-full bg-gray-300 flex-shrink-0" />
-          Cron: No runs recorded since last server restart
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', border: `1px solid ${C.rule}`, borderRadius: '2px' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: C.mutedFg, flexShrink: 0 }} />
+          <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '12px', color: C.muted }}>Cron: No runs recorded since last server restart</span>
         </div>
       )}
 
       {/* Create form */}
       {showForm && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">New Election Race</h2>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Row 1: Seat + Election Type */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: '2px', padding: '24px' }}>
+          <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '16px', letterSpacing: '0.12em', color: C.ink, margin: '0 0 20px 0', borderBottom: `1px solid ${C.rule}`, paddingBottom: '12px' }}>
+            NEW ELECTION RACE
+          </h2>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="md:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Seat Name <span className="text-red-600">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g., Mayor of Bloomington"
-                  value={form.seat}
-                  onChange={(e) => setForm((p) => ({ ...p, seat: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                />
+                <label style={labelStyle}>SEAT NAME <span style={{ color: C.incorrect }}>*</span></label>
+                <input type="text" required placeholder="e.g., Mayor of Bloomington" value={form.seat} onChange={(e) => setForm((p) => ({ ...p, seat: e.target.value }))} style={inputStyle} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Election Type <span className="text-red-600">*</span>
-                </label>
-                <select
-                  required
-                  value={form.electionType}
-                  onChange={(e) => setForm((p) => ({ ...p, electionType: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
-                >
+                <label style={labelStyle}>ELECTION TYPE <span style={{ color: C.incorrect }}>*</span></label>
+                <select required value={form.electionType} onChange={(e) => setForm((p) => ({ ...p, electionType: e.target.value }))} style={selectStyle}>
                   <option value="general">General</option>
                   <option value="primary">Primary</option>
                   <option value="runoff">Runoff</option>
@@ -536,140 +625,55 @@ export function ElectionsPage() {
               </div>
             </div>
 
-            {/* Row 2: Date + Jurisdiction */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="md:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Election Date <span className="text-red-600">*</span>
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={form.electionDate}
-                  onChange={(e) => setForm((p) => ({ ...p, electionDate: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                />
+                <label style={labelStyle}>ELECTION DATE <span style={{ color: C.incorrect }}>*</span></label>
+                <input type="date" required value={form.electionDate} onChange={(e) => setForm((p) => ({ ...p, electionDate: e.target.value }))} style={inputStyle} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Jurisdiction <span className="text-red-600">*</span>
-                </label>
+                <label style={labelStyle}>JURISDICTION <span style={{ color: C.incorrect }}>*</span></label>
                 {collections.length > 0 ? (
-                  <select
-                    required
-                    value={form.jurisdiction}
-                    onChange={(e) => setForm((p) => ({ ...p, jurisdiction: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  >
+                  <select required value={form.jurisdiction} onChange={(e) => setForm((p) => ({ ...p, jurisdiction: e.target.value }))} style={selectStyle}>
                     <option value="">— select a collection —</option>
-                    {collections.map(c => (
-                      <option key={c.slug} value={c.name}>{c.name}</option>
-                    ))}
+                    {collections.map(c => <option key={c.slug} value={c.name}>{c.name}</option>)}
                   </select>
                 ) : (
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g., Bloomington, IN"
-                    value={form.jurisdiction}
-                    onChange={(e) => setForm((p) => ({ ...p, jurisdiction: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  />
+                  <input type="text" required placeholder="e.g., Bloomington, IN" value={form.jurisdiction} onChange={(e) => setForm((p) => ({ ...p, jurisdiction: e.target.value }))} style={inputStyle} />
                 )}
               </div>
             </div>
 
-            {/* Row 3: Timezone */}
-            <div className="max-w-sm">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Timezone <span className="text-red-600">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="e.g., America/Indiana/Indianapolis"
-                value={form.timezone}
-                onChange={(e) => setForm((p) => ({ ...p, timezone: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              />
+            <div style={{ maxWidth: '320px' }}>
+              <label style={labelStyle}>TIMEZONE <span style={{ color: C.incorrect }}>*</span></label>
+              <input type="text" required placeholder="e.g., America/Indiana/Indianapolis" value={form.timezone} onChange={(e) => setForm((p) => ({ ...p, timezone: e.target.value }))} style={inputStyle} />
             </div>
 
-            {/* Candidates section */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-gray-700">Candidates</label>
-                <button
-                  type="button"
-                  onClick={addCandidate}
-                  className="text-xs text-red-700 hover:text-red-900 font-medium underline"
-                >
-                  + Add Candidate
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <label style={{ ...labelStyle, marginBottom: 0 }}>CANDIDATES</label>
+                <button type="button" onClick={addCandidate} style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.1em', color: ADMIN_ACCENT, background: 'none', border: 'none', cursor: 'pointer' }}>
+                  + ADD CANDIDATE
                 </button>
               </div>
-              <div className="space-y-2">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {form.candidates.map((candidate, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200"
-                  >
-                    <input
-                      type="text"
-                      placeholder="Full name"
-                      value={candidate.name}
-                      onChange={(e) => updateCandidate(idx, 'name', e.target.value)}
-                      className="flex-1 px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Party"
-                      value={candidate.party}
-                      onChange={(e) => updateCandidate(idx, 'party', e.target.value)}
-                      className="flex-1 px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                    />
-                    <label className="flex items-center gap-1 text-xs text-gray-600 whitespace-nowrap">
-                      <input
-                        type="checkbox"
-                        checked={candidate.incumbent}
-                        onChange={(e) => updateCandidate(idx, 'incumbent', e.target.checked)}
-                        className="rounded border-gray-300 text-red-600 focus:ring-red-500"
-                      />
-                      Incumbent
-                    </label>
-                    {form.candidates.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeCandidate(idx)}
-                        className="text-gray-400 hover:text-red-600 transition-colors text-lg leading-none"
-                        aria-label="Remove candidate"
-                      >
-                        &times;
-                      </button>
-                    )}
-                  </div>
+                  <CandidateRow key={idx} candidate={candidate} idx={idx} onChange={updateCandidate} onRemove={removeCandidate} canRemove={form.candidates.length > 1} />
                 ))}
               </div>
             </div>
 
             {submitError && (
-              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.incorrect, margin: 0, padding: '10px 12px', border: `1px solid ${C.incorrect}`, borderRadius: '2px' }}>
                 {submitError}
               </p>
             )}
 
-            <div className="flex gap-3">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="px-5 py-2 bg-red-700 text-white text-sm font-medium rounded-lg hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {submitting ? 'Creating...' : 'Create Race'}
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button type="submit" disabled={submitting} style={{ ...btnPrimary, opacity: submitting ? 0.5 : 1, cursor: submitting ? 'not-allowed' : 'pointer' }}>
+                {submitting ? 'CREATING...' : 'CREATE RACE'}
               </button>
-              <button
-                type="button"
-                onClick={() => { setShowForm(false); setForm(emptyForm()); setSubmitError(null); }}
-                className="px-5 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors"
-              >
-                Cancel
+              <button type="button" onClick={() => { setShowForm(false); setForm(emptyForm()); setSubmitError(null); }} style={btnSecondary}>
+                CANCEL
               </button>
             </div>
           </form>
@@ -678,224 +682,189 @@ export function ElectionsPage() {
 
       {/* Tab layout */}
       {loading ? (
-        <div className="text-center py-12 text-gray-500 text-sm">Loading election races...</div>
+        <div style={{ textAlign: 'center', padding: '48px 0', fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.muted, fontSize: '13px' }}>
+          Loading election races...
+        </div>
       ) : error ? (
-        <div className="text-center py-12 text-red-600 text-sm">{error}</div>
+        <div style={{ textAlign: 'center', padding: '48px 0', fontFamily: "'Lora', Georgia, serif", color: C.incorrect, fontSize: '13px' }}>
+          {error}
+        </div>
       ) : (
-        <TabGroup>
-          <TabList className="flex gap-1 rounded-xl bg-gray-100 p-1">
-            <Tab className="flex-1 rounded-lg py-2 px-3 text-sm font-medium text-gray-600 transition-colors data-[selected]:bg-white data-[selected]:text-gray-900 data-[selected]:shadow data-[hover]:text-gray-900 focus:outline-none">
-              Active Elections ({activeElections.length})
-            </Tab>
-            <Tab className="flex-1 rounded-lg py-2 px-3 text-sm font-medium text-gray-600 transition-colors data-[selected]:bg-white data-[selected]:text-gray-900 data-[selected]:shadow data-[hover]:text-gray-900 focus:outline-none">
-              Pending Generation ({pendingGeneration.length})
-            </Tab>
-            <Tab className="flex-1 rounded-lg py-2 px-3 text-sm font-medium text-gray-600 transition-colors data-[selected]:bg-white data-[selected]:text-gray-900 data-[selected]:shadow data-[hover]:text-gray-900 focus:outline-none">
-              Awaiting Follow-up ({awaitingFollowup.length})
-            </Tab>
+        <TabGroup selectedIndex={selectedTabIndex} onChange={setSelectedTabIndex}>
+          <TabList style={{ display: 'flex', borderBottom: `1px solid ${C.rule}` }}>
+            {[
+              `Active Elections (${activeElections.length})`,
+              `Pending Generation (${pendingGeneration.length})`,
+              `Awaiting Follow-up (${awaitingFollowup.length})`,
+            ].map((label, idx) => (
+              <Tab
+                key={label}
+                style={{
+                  flex: 1,
+                  padding: '10px 16px',
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '12px',
+                  letterSpacing: '0.1em',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: selectedTabIndex === idx ? `3px solid ${ADMIN_ACCENT}` : '3px solid transparent',
+                  color: selectedTabIndex === idx ? ADMIN_ACCENT : C.muted,
+                  cursor: 'pointer',
+                  marginBottom: '-1px',
+                  outline: 'none',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {label.toUpperCase()}
+              </Tab>
+            ))}
           </TabList>
 
-          <TabPanels className="mt-4">
+          <TabPanels style={{ marginTop: '16px' }}>
             {/* Tab 1: Active Elections */}
             <TabPanel>
               {activeElections.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
-                  <p className="text-sm">No active elections with generated questions.</p>
+                <div style={{ textAlign: 'center', padding: '48px 0' }}>
+                  <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.muted, fontSize: '13px' }}>No active elections with generated questions.</p>
                 </div>
               ) : (
-                <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-                  <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Seat</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Expires</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Jurisdiction</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Questions</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Candidates</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-100">
-                      {activeElections.map((race) => (
-                        <tr key={race.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-4 py-3 font-medium text-gray-900">
-                            <div>{race.seat}</div>
-                            <div className="text-xs text-gray-400">{ELECTION_TYPE_LABELS[race.electionType] || race.electionType}</div>
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">
-                            {new Date(race.electionDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">{race.jurisdiction}</td>
-                          <td className="px-4 py-3">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                              {race.questionCount} questions
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">
-                            {race.candidates.length} candidate{race.candidates.length !== 1 ? 's' : ''}
-                            {race.candidates.length > 0 && (
-                              <span className="ml-1 text-gray-400 text-xs">
-                                ({race.candidates.map((c) => c.name).join(', ')})
-                              </span>
-                            )}
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                              Active
-                            </span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <button
-                              onClick={() => handleRegenClick(race)}
-                              className="text-xs px-3 py-1 rounded border border-amber-300 text-amber-700 hover:bg-amber-50 transition-colors"
-                            >
-                              Re-generate
-                            </button>
-                          </td>
-                        </tr>
+                <TableWrapper>
+                  <thead>
+                    <tr>
+                      {['Seat', 'Expires', 'Jurisdiction', 'Questions', 'Candidates', 'Status', 'Actions'].map(h => (
+                        <th key={h} style={thStyle}>{h.toUpperCase()}</th>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activeElections.map((race) => (
+                      <tr key={race.id}>
+                        <td style={tdStyle}>
+                          <div style={{ fontFamily: "'Lora', Georgia, serif", fontWeight: 600, color: C.ink }}>{race.seat}</div>
+                          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '10px', letterSpacing: '0.08em', color: C.mutedFg, marginTop: '2px' }}>{ELECTION_TYPE_LABELS[race.electionType] || race.electionType}</div>
+                        </td>
+                        <td style={tdStyle}>{new Date(race.electionDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                        <td style={tdStyle}>{race.jurisdiction}</td>
+                        <td style={tdStyle}>
+                          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', padding: '2px 8px', backgroundColor: 'rgba(30,90,138,0.12)', color: '#1E5A8A', borderRadius: '2px' }}>
+                            {race.questionCount} questions
+                          </span>
+                        </td>
+                        <td style={tdStyle}>
+                          {race.candidates.length} candidate{race.candidates.length !== 1 ? 's' : ''}
+                          {race.candidates.length > 0 && (
+                            <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '12px', color: C.mutedFg, marginLeft: '4px' }}>
+                              ({race.candidates.map((c) => c.name).join(', ')})
+                            </span>
+                          )}
+                        </td>
+                        <td style={tdStyle}>
+                          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', padding: '2px 8px', backgroundColor: 'rgba(37,92,63,0.12)', color: C.correct, borderRadius: '2px' }}>ACTIVE</span>
+                        </td>
+                        <td style={tdStyle}>
+                          <button onClick={() => handleRegenClick(race)} style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', padding: '4px 10px', border: `1px solid ${C.rule}`, borderRadius: '2px', color: C.muted, backgroundColor: 'transparent', cursor: 'pointer' }}>
+                            RE-GENERATE
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </TableWrapper>
               )}
             </TabPanel>
 
             {/* Tab 2: Pending Generation */}
             <TabPanel>
               {pendingGeneration.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
-                  <p className="text-sm">No elections pending generation.</p>
+                <div style={{ textAlign: 'center', padding: '48px 0' }}>
+                  <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.muted, fontSize: '13px' }}>No elections pending generation.</p>
                 </div>
               ) : (
-                <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-                  <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Seat</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Expires</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Jurisdiction</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Candidates</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-100">
-                      {pendingGeneration.map((race) => (
-                        <tr key={race.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-4 py-3 font-medium text-gray-900">
-                            <div>{race.seat}</div>
-                            <div className="text-xs text-gray-400">{ELECTION_TYPE_LABELS[race.electionType] || race.electionType}</div>
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">
-                            {new Date(race.electionDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">{race.jurisdiction}</td>
-                          <td className="px-4 py-3 text-gray-600">
-                            {race.candidates.length} candidate{race.candidates.length !== 1 ? 's' : ''}
-                            {race.candidates.length > 0 && (
-                              <span className="ml-1 text-gray-400 text-xs">
-                                ({race.candidates.map((c) => c.name).join(', ')})
-                              </span>
-                            )}
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
-                              Pending
-                            </span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => handleGenerate(race)}
-                                className="text-xs px-3 py-1 rounded bg-red-700 text-white hover:bg-red-800 transition-colors"
-                              >
-                                Generate Questions
-                              </button>
-                              <button
-                                onClick={() => openEditModal(race)}
-                                className="text-xs px-3 py-1 rounded border border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-900 transition-colors"
-                              >
-                                Edit Race
-                              </button>
-                              <button
-                                onClick={() => setDeletingRace(race)}
-                                className="text-xs px-3 py-1 text-red-600 hover:text-red-800 transition-colors"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
+                <TableWrapper>
+                  <thead>
+                    <tr>
+                      {['Seat', 'Expires', 'Jurisdiction', 'Candidates', 'Status', 'Actions'].map(h => (
+                        <th key={h} style={thStyle}>{h.toUpperCase()}</th>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingGeneration.map((race) => (
+                      <tr key={race.id}>
+                        <td style={tdStyle}>
+                          <div style={{ fontFamily: "'Lora', Georgia, serif", fontWeight: 600, color: C.ink }}>{race.seat}</div>
+                          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '10px', letterSpacing: '0.08em', color: C.mutedFg, marginTop: '2px' }}>{ELECTION_TYPE_LABELS[race.electionType] || race.electionType}</div>
+                        </td>
+                        <td style={tdStyle}>{new Date(race.electionDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                        <td style={tdStyle}>{race.jurisdiction}</td>
+                        <td style={tdStyle}>
+                          {race.candidates.length} candidate{race.candidates.length !== 1 ? 's' : ''}
+                          {race.candidates.length > 0 && (
+                            <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '12px', color: C.mutedFg, marginLeft: '4px' }}>({race.candidates.map((c) => c.name).join(', ')})</span>
+                          )}
+                        </td>
+                        <td style={tdStyle}>
+                          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', padding: '2px 8px', backgroundColor: 'rgba(184,134,11,0.12)', color: '#92400E', borderRadius: '2px' }}>PENDING</span>
+                        </td>
+                        <td style={tdStyle}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                            <button onClick={() => handleGenerate(race)} style={{ ...btnPrimary, padding: '4px 12px', fontSize: '11px' }}>GENERATE QUESTIONS</button>
+                            <button onClick={() => openEditModal(race)} style={{ ...btnSecondary, padding: '4px 12px', fontSize: '11px' }}>EDIT RACE</button>
+                            <button onClick={() => setDeletingRace(race)} style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', color: C.incorrect, background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>DELETE</button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </TableWrapper>
               )}
             </TabPanel>
 
             {/* Tab 3: Awaiting Follow-up */}
             <TabPanel>
               {awaitingFollowup.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
-                  <p className="text-sm">No expired elections awaiting follow-up.</p>
+                <div style={{ textAlign: 'center', padding: '48px 0' }}>
+                  <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.muted, fontSize: '13px' }}>No expired elections awaiting follow-up.</p>
                 </div>
               ) : (
-                <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-                  <table className="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Seat</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Expires</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Jurisdiction</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Questions</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Candidates</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-100">
-                      {awaitingFollowup.map((race) => (
-                        <tr key={race.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-4 py-3 font-medium text-gray-900">
-                            <div>{race.seat}</div>
-                            <div className="text-xs text-gray-400">{ELECTION_TYPE_LABELS[race.electionType] || race.electionType}</div>
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">
-                            {new Date(race.electionDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">{race.jurisdiction}</td>
-                          <td className="px-4 py-3">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                              {race.questionCount} questions
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-gray-600">
-                            {race.candidates.length} candidate{race.candidates.length !== 1 ? 's' : ''}
-                            {race.candidates.length > 0 && (
-                              <span className="ml-1 text-gray-400 text-xs">
-                                ({race.candidates.map((c) => c.name).join(', ')})
-                              </span>
-                            )}
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">
-                              Expired
-                            </span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <button
-                              onClick={() => openResultModal(race)}
-                              className="text-xs px-3 py-1 rounded bg-red-700 text-white hover:bg-red-800 transition-colors"
-                            >
-                              Enter Result
-                            </button>
-                          </td>
-                        </tr>
+                <TableWrapper>
+                  <thead>
+                    <tr>
+                      {['Seat', 'Expires', 'Jurisdiction', 'Questions', 'Candidates', 'Status', 'Actions'].map(h => (
+                        <th key={h} style={thStyle}>{h.toUpperCase()}</th>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {awaitingFollowup.map((race) => (
+                      <tr key={race.id}>
+                        <td style={tdStyle}>
+                          <div style={{ fontFamily: "'Lora', Georgia, serif", fontWeight: 600, color: C.ink }}>{race.seat}</div>
+                          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '10px', letterSpacing: '0.08em', color: C.mutedFg, marginTop: '2px' }}>{ELECTION_TYPE_LABELS[race.electionType] || race.electionType}</div>
+                        </td>
+                        <td style={tdStyle}>{new Date(race.electionDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                        <td style={tdStyle}>{race.jurisdiction}</td>
+                        <td style={tdStyle}>
+                          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', padding: '2px 8px', backgroundColor: C.ruleLight, color: C.muted, borderRadius: '2px' }}>
+                            {race.questionCount} questions
+                          </span>
+                        </td>
+                        <td style={tdStyle}>
+                          {race.candidates.length} candidate{race.candidates.length !== 1 ? 's' : ''}
+                          {race.candidates.length > 0 && (
+                            <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '12px', color: C.mutedFg, marginLeft: '4px' }}>({race.candidates.map((c) => c.name).join(', ')})</span>
+                          )}
+                        </td>
+                        <td style={tdStyle}>
+                          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.08em', padding: '2px 8px', backgroundColor: C.ruleLight, color: C.muted, borderRadius: '2px' }}>EXPIRED</span>
+                        </td>
+                        <td style={tdStyle}>
+                          <button onClick={() => openResultModal(race)} style={{ ...btnPrimary, padding: '4px 12px', fontSize: '11px' }}>ENTER RESULT</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </TableWrapper>
               )}
             </TabPanel>
           </TabPanels>
@@ -904,54 +873,27 @@ export function ElectionsPage() {
 
       {/* ---- Modals ---- */}
 
-      {/* Modal: Collection Slug Prompt (Generate Questions) */}
+      {/* Modal: Collection Slug Prompt */}
       <Dialog open={showCollectionPrompt} onClose={() => setShowCollectionPrompt(false)} className="relative z-50">
-        <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
-            <DialogTitle className="text-lg font-semibold text-gray-900 mb-2">
-              Generate Election Questions
-            </DialogTitle>
-            <p className="text-sm text-gray-600 mb-4">
+        <div style={modalOverlay} aria-hidden="true" />
+        <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <DialogPanel style={modalPanel}>
+            <DialogTitle style={modalTitle}>GENERATE ELECTION QUESTIONS</DialogTitle>
+            <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted, marginBottom: '16px' }}>
               {selectedRaceForGen ? `Race: ${selectedRaceForGen.seat} — ${selectedRaceForGen.jurisdiction}` : ''}
             </p>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Collection
-            </label>
+            <label style={labelStyle}>COLLECTION</label>
             {collections.length > 0 ? (
-              <select
-                value={genCollectionSlug}
-                onChange={e => setGenCollectionSlug(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-700 mb-4"
-              >
+              <select value={genCollectionSlug} onChange={e => setGenCollectionSlug(e.target.value)} style={{ ...selectStyle, marginBottom: '20px' }}>
                 <option value="">— select a collection —</option>
-                {collections.map(c => (
-                  <option key={c.slug} value={c.slug}>{c.name} ({c.slug})</option>
-                ))}
+                {collections.map(c => <option key={c.slug} value={c.slug}>{c.name} ({c.slug})</option>)}
               </select>
             ) : (
-              <input
-                type="text"
-                value={genCollectionSlug}
-                onChange={e => setGenCollectionSlug(e.target.value)}
-                placeholder="e.g., bloomington-in"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-700 mb-4"
-              />
+              <input type="text" value={genCollectionSlug} onChange={e => setGenCollectionSlug(e.target.value)} placeholder="e.g., bloomington-in" style={{ ...inputStyle, marginBottom: '20px' }} />
             )}
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setShowCollectionPrompt(false)}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => startGeneration(generatingRaceId!, genCollectionSlug)}
-                disabled={!genCollectionSlug.trim()}
-                className="px-4 py-2 text-sm bg-red-700 text-white rounded-lg hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Generate
-              </button>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button onClick={() => setShowCollectionPrompt(false)} style={btnSecondary}>CANCEL</button>
+              <button onClick={() => startGeneration(generatingRaceId!, genCollectionSlug)} disabled={!genCollectionSlug.trim()} style={{ ...btnPrimary, opacity: !genCollectionSlug.trim() ? 0.5 : 1, cursor: !genCollectionSlug.trim() ? 'not-allowed' : 'pointer' }}>GENERATE</button>
             </div>
           </DialogPanel>
         </div>
@@ -959,46 +901,44 @@ export function ElectionsPage() {
 
       {/* Modal: Generation Loading */}
       <Dialog open={genLoading} onClose={() => {}} className="relative z-50">
-        <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="bg-white rounded-xl shadow-xl p-8 w-full max-w-sm text-center">
-            <div className="flex justify-center mb-4">
-              <div className="w-10 h-10 rounded-full border-4 border-gray-200 border-t-red-700 animate-spin" />
+        <div style={modalOverlay} aria-hidden="true" />
+        <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <DialogPanel style={{ ...modalPanel, maxWidth: '360px', textAlign: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+              <div style={{ width: '40px', height: '40px', border: `3px solid ${C.ruleLight}`, borderTopColor: ADMIN_ACCENT, borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
             </div>
-            <DialogTitle className="text-lg font-semibold text-gray-900 mb-2">Generating Questions</DialogTitle>
-            <p className="text-sm text-gray-600">Creating questions for {selectedRaceForGen?.seat}...</p>
-            <p className="text-xs text-gray-400 mt-2">This may take 1–2 minutes.</p>
+            <DialogTitle style={modalTitle}>GENERATING QUESTIONS</DialogTitle>
+            <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted, margin: '0 0 4px' }}>Creating questions for {selectedRaceForGen?.seat}...</p>
+            <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '12px', color: C.mutedFg, margin: 0 }}>This may take 1–2 minutes.</p>
           </DialogPanel>
         </div>
       </Dialog>
 
       {/* Modal: Generation Success */}
       <Dialog open={genResult !== null} onClose={() => setGenResult(null)} className="relative z-50">
-        <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
-            <DialogTitle className="text-lg font-semibold text-green-700 mb-2">Questions Generated</DialogTitle>
+        <div style={modalOverlay} aria-hidden="true" />
+        <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <DialogPanel style={modalPanel}>
+            <DialogTitle style={{ ...modalTitle, color: C.correct }}>QUESTIONS GENERATED</DialogTitle>
             {genResult && (
               <>
-                <p className="text-sm text-gray-700 mb-1">
+                <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink, marginBottom: '4px' }}>
                   <strong>{genResult.questionsCreated}</strong> draft questions created for {genResult.jurisdiction}.
                   {genResult.archived > 0 && ` (${genResult.archived} previous questions archived)`}
                 </p>
-                <div className="mt-4 mb-4">
+                <div style={{ margin: '16px 0' }}>
                   <Link
                     to={`/admin/questions?collection=${genResult.collectionSlug}&status=draft`}
-                    className="text-sm text-red-700 hover:text-red-800 font-medium"
+                    style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '13px', letterSpacing: '0.1em', color: ADMIN_ACCENT, textDecoration: 'none' }}
                     onClick={() => setGenResult(null)}
                   >
-                    View in Explorer &rarr;
+                    VIEW IN EXPLORER &rarr;
                   </Link>
                 </div>
               </>
             )}
-            <div className="flex justify-end">
-              <button onClick={() => setGenResult(null)} className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
-                Close
-              </button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button onClick={() => setGenResult(null)} style={btnSecondary}>CLOSE</button>
             </div>
           </DialogPanel>
         </div>
@@ -1006,43 +946,34 @@ export function ElectionsPage() {
 
       {/* Modal: Generation Error / Blocked */}
       <Dialog open={genError !== null} onClose={() => setGenError(null)} className="relative z-50">
-        <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
+        <div style={modalOverlay} aria-hidden="true" />
+        <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <DialogPanel style={modalPanel}>
             {genError?.type === 'blocked' ? (
               <>
-                <DialogTitle className="text-lg font-semibold text-amber-700 mb-2">Questions Already Generated</DialogTitle>
-                <p className="text-sm text-gray-700 mb-1">
+                <DialogTitle style={{ ...modalTitle, color: '#92400E' }}>QUESTIONS ALREADY GENERATED</DialogTitle>
+                <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink, marginBottom: '4px' }}>
                   {genError.existingCount} questions already exist for this race.
                 </p>
                 {genError.generatedAt && (
-                  <p className="text-xs text-gray-500 mb-3">
+                  <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '12px', color: C.mutedFg, marginBottom: '12px' }}>
                     Generated: {new Date(genError.generatedAt).toLocaleDateString()}
                   </p>
                 )}
-                <p className="text-sm text-gray-600 mb-4">
+                <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted, marginBottom: '20px' }}>
                   Force Regenerate will archive the existing questions and create new ones.
                 </p>
-                <div className="flex gap-3 justify-end">
-                  <button onClick={() => setGenError(null)} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900">
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => { setGenError(null); startGeneration(generatingRaceId!, genCollectionSlug, true); }}
-                    className="px-4 py-2 text-sm bg-amber-600 text-white rounded-lg hover:bg-amber-700"
-                  >
-                    Force Regenerate
-                  </button>
+                <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                  <button onClick={() => setGenError(null)} style={btnSecondary}>CANCEL</button>
+                  <button onClick={() => { setGenError(null); startGeneration(generatingRaceId!, genCollectionSlug, true); }} style={btnAmber}>FORCE REGENERATE</button>
                 </div>
               </>
             ) : (
               <>
-                <DialogTitle className="text-lg font-semibold text-red-700 mb-2">Generation Failed</DialogTitle>
-                <p className="text-sm text-gray-700 mb-4">{genError?.message}</p>
-                <div className="flex justify-end">
-                  <button onClick={() => setGenError(null)} className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
-                    Close
-                  </button>
+                <DialogTitle style={{ ...modalTitle, color: C.incorrect }}>GENERATION FAILED</DialogTitle>
+                <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink, marginBottom: '20px' }}>{genError?.message}</p>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <button onClick={() => setGenError(null)} style={btnSecondary}>CLOSE</button>
                 </div>
               </>
             )}
@@ -1052,32 +983,19 @@ export function ElectionsPage() {
 
       {/* Modal: Edit Race */}
       <Dialog open={editingRace !== null} onClose={() => setEditingRace(null)} className="relative z-50">
-        <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto">
-          <DialogPanel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-lg my-8">
-            <DialogTitle className="text-lg font-semibold text-gray-900 mb-4">
-              Edit Race — {editingRace?.seat}
-            </DialogTitle>
-            <form onSubmit={handleEditSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div style={modalOverlay} aria-hidden="true" />
+        <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', overflowY: 'auto' }}>
+          <DialogPanel style={{ ...modalPanel, maxWidth: '560px', margin: '32px 0' }}>
+            <DialogTitle style={modalTitle}>EDIT RACE — {editingRace?.seat}</DialogTitle>
+            <form onSubmit={handleEditSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Seat Name <span className="text-red-600">*</span></label>
-                  <input
-                    type="text"
-                    required
-                    value={editForm.seat}
-                    onChange={(e) => setEditForm((p) => ({ ...p, seat: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
+                  <label style={labelStyle}>SEAT NAME <span style={{ color: C.incorrect }}>*</span></label>
+                  <input type="text" required value={editForm.seat} onChange={(e) => setEditForm((p) => ({ ...p, seat: e.target.value }))} style={inputStyle} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Election Type <span className="text-red-600">*</span></label>
-                  <select
-                    required
-                    value={editForm.electionType}
-                    onChange={(e) => setEditForm((p) => ({ ...p, electionType: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
-                  >
+                  <label style={labelStyle}>ELECTION TYPE <span style={{ color: C.incorrect }}>*</span></label>
+                  <select required value={editForm.electionType} onChange={(e) => setEditForm((p) => ({ ...p, electionType: e.target.value }))} style={selectStyle}>
                     <option value="general">General</option>
                     <option value="primary">Primary</option>
                     <option value="runoff">Runoff</option>
@@ -1085,120 +1003,47 @@ export function ElectionsPage() {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Election Date <span className="text-red-600">*</span></label>
-                  <input
-                    type="date"
-                    required
-                    value={editForm.electionDate}
-                    onChange={(e) => setEditForm((p) => ({ ...p, electionDate: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
+                  <label style={labelStyle}>ELECTION DATE <span style={{ color: C.incorrect }}>*</span></label>
+                  <input type="date" required value={editForm.electionDate} onChange={(e) => setEditForm((p) => ({ ...p, electionDate: e.target.value }))} style={inputStyle} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Jurisdiction <span className="text-red-600">*</span></label>
+                  <label style={labelStyle}>JURISDICTION <span style={{ color: C.incorrect }}>*</span></label>
                   {collections.length > 0 ? (
-                    <select
-                      required
-                      value={editForm.jurisdiction}
-                      onChange={(e) => setEditForm((p) => ({ ...p, jurisdiction: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                    >
+                    <select required value={editForm.jurisdiction} onChange={(e) => setEditForm((p) => ({ ...p, jurisdiction: e.target.value }))} style={selectStyle}>
                       <option value="">— select a collection —</option>
-                      {collections.map(c => (
-                        <option key={c.slug} value={c.name}>{c.name}</option>
-                      ))}
+                      {collections.map(c => <option key={c.slug} value={c.name}>{c.name}</option>)}
                     </select>
                   ) : (
-                    <input
-                      type="text"
-                      required
-                      value={editForm.jurisdiction}
-                      onChange={(e) => setEditForm((p) => ({ ...p, jurisdiction: e.target.value }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                    />
+                    <input type="text" required value={editForm.jurisdiction} onChange={(e) => setEditForm((p) => ({ ...p, jurisdiction: e.target.value }))} style={inputStyle} />
                   )}
                 </div>
               </div>
-              <div className="max-w-sm">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Timezone <span className="text-red-600">*</span></label>
-                <input
-                  type="text"
-                  required
-                  value={editForm.timezone}
-                  onChange={(e) => setEditForm((p) => ({ ...p, timezone: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
+              <div style={{ maxWidth: '260px' }}>
+                <label style={labelStyle}>TIMEZONE <span style={{ color: C.incorrect }}>*</span></label>
+                <input type="text" required value={editForm.timezone} onChange={(e) => setEditForm((p) => ({ ...p, timezone: e.target.value }))} style={inputStyle} />
               </div>
-              {/* Candidates */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">Candidates</label>
-                  <button
-                    type="button"
-                    onClick={() => setEditForm((p) => ({ ...p, candidates: [...p.candidates, emptyCandidate()] }))}
-                    className="text-xs text-red-700 hover:text-red-900 font-medium underline"
-                  >
-                    + Add Candidate
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <label style={{ ...labelStyle, marginBottom: 0 }}>CANDIDATES</label>
+                  <button type="button" onClick={() => setEditForm((p) => ({ ...p, candidates: [...p.candidates, emptyCandidate()] }))} style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.1em', color: ADMIN_ACCENT, background: 'none', border: 'none', cursor: 'pointer' }}>
+                    + ADD CANDIDATE
                   </button>
                 </div>
-                <div className="space-y-2">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {editForm.candidates.map((candidate, idx) => (
-                    <div key={idx} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                      <input
-                        type="text"
-                        placeholder="Full name"
-                        value={candidate.name}
-                        onChange={(e) => updateEditCandidate(idx, 'name', e.target.value)}
-                        className="flex-1 px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Party"
-                        value={candidate.party}
-                        onChange={(e) => updateEditCandidate(idx, 'party', e.target.value)}
-                        className="flex-1 px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                      />
-                      <label className="flex items-center gap-1 text-xs text-gray-600 whitespace-nowrap">
-                        <input
-                          type="checkbox"
-                          checked={candidate.incumbent}
-                          onChange={(e) => updateEditCandidate(idx, 'incumbent', e.target.checked)}
-                          className="rounded border-gray-300 text-red-600 focus:ring-red-500"
-                        />
-                        Incumbent
-                      </label>
-                      {editForm.candidates.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => setEditForm((p) => ({ ...p, candidates: p.candidates.filter((_, i) => i !== idx) }))}
-                          className="text-gray-400 hover:text-red-600 transition-colors text-lg leading-none"
-                        >
-                          &times;
-                        </button>
-                      )}
-                    </div>
+                    <CandidateRow key={idx} candidate={candidate} idx={idx} onChange={updateEditCandidate} onRemove={(i) => setEditForm((p) => ({ ...p, candidates: p.candidates.filter((_, ci) => ci !== i) }))} canRemove={editForm.candidates.length > 1} />
                   ))}
                 </div>
               </div>
               {editError && (
-                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{editError}</p>
+                <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.incorrect, margin: 0, padding: '10px 12px', border: `1px solid ${C.incorrect}`, borderRadius: '2px' }}>{editError}</p>
               )}
-              <div className="flex gap-3 justify-end pt-2">
-                <button
-                  type="button"
-                  onClick={() => setEditingRace(null)}
-                  className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={editSubmitting}
-                  className="px-4 py-2 text-sm bg-red-700 text-white rounded-lg hover:bg-red-800 disabled:opacity-50"
-                >
-                  {editSubmitting ? 'Saving...' : 'Save Changes'}
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', paddingTop: '8px' }}>
+                <button type="button" onClick={() => setEditingRace(null)} style={btnSecondary}>CANCEL</button>
+                <button type="submit" disabled={editSubmitting} style={{ ...btnPrimary, opacity: editSubmitting ? 0.5 : 1, cursor: editSubmitting ? 'not-allowed' : 'pointer' }}>
+                  {editSubmitting ? 'SAVING...' : 'SAVE CHANGES'}
                 </button>
               </div>
             </form>
@@ -1208,28 +1053,17 @@ export function ElectionsPage() {
 
       {/* Modal: Delete Race Confirm */}
       <Dialog open={deletingRace !== null} onClose={() => setDeletingRace(null)} className="relative z-50">
-        <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
-            <DialogTitle className="text-lg font-semibold text-gray-900 mb-2">
-              Delete Race?
-            </DialogTitle>
-            <p className="text-sm text-gray-600 mb-4">
-              Delete <strong>{deletingRace?.seat}</strong>? Questions linked to this race will be unlinked (not deleted).
+        <div style={modalOverlay} aria-hidden="true" />
+        <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <DialogPanel style={modalPanel}>
+            <DialogTitle style={modalTitle}>DELETE RACE?</DialogTitle>
+            <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted, marginBottom: '20px' }}>
+              Delete <strong style={{ color: C.ink }}>{deletingRace?.seat}</strong>? Questions linked to this race will be unlinked (not deleted).
             </p>
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setDeletingRace(null)}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                disabled={deleteLoading}
-                className="px-4 py-2 text-sm bg-red-700 text-white rounded-lg hover:bg-red-800 disabled:opacity-50"
-              >
-                {deleteLoading ? 'Deleting...' : 'Delete Race'}
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button onClick={() => setDeletingRace(null)} style={btnSecondary}>CANCEL</button>
+              <button onClick={handleDeleteConfirm} disabled={deleteLoading} style={{ ...btnDanger, opacity: deleteLoading ? 0.5 : 1, cursor: deleteLoading ? 'not-allowed' : 'pointer' }}>
+                {deleteLoading ? 'DELETING...' : 'DELETE RACE'}
               </button>
             </div>
           </DialogPanel>
@@ -1238,36 +1072,25 @@ export function ElectionsPage() {
 
       {/* Modal: Re-generate Confirm */}
       <Dialog open={regenConfirmOpen} onClose={() => { setRegenConfirmOpen(false); setRegenRace(null); }} className="relative z-50">
-        <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
-            <DialogTitle className="text-lg font-semibold text-amber-800 mb-2">
-              Re-generate Questions?
-            </DialogTitle>
-            <p className="text-sm text-gray-700 mb-2">
-              Race: <strong>{regenRace?.seat}</strong>
+        <div style={modalOverlay} aria-hidden="true" />
+        <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <DialogPanel style={modalPanel}>
+            <DialogTitle style={{ ...modalTitle, color: '#92400E' }}>RE-GENERATE QUESTIONS?</DialogTitle>
+            <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted, marginBottom: '8px' }}>
+              Race: <strong style={{ color: C.ink }}>{regenRace?.seat}</strong>
             </p>
             {regenCounts ? (
-              <p className="text-sm text-gray-600 mb-4">
-                Re-generating will archive <strong>{regenCounts.activeCount}</strong> active question{regenCounts.activeCount !== 1 ? 's' : ''} and
-                delete <strong>{regenCounts.draftCount}</strong> draft question{regenCounts.draftCount !== 1 ? 's' : ''}. Continue?
+              <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted, marginBottom: '20px' }}>
+                Re-generating will archive <strong style={{ color: C.ink }}>{regenCounts.activeCount}</strong> active question{regenCounts.activeCount !== 1 ? 's' : ''} and
+                delete <strong style={{ color: C.ink }}>{regenCounts.draftCount}</strong> draft question{regenCounts.draftCount !== 1 ? 's' : ''}. Continue?
               </p>
             ) : (
-              <p className="text-sm text-gray-500 mb-4">Loading question counts...</p>
+              <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', fontSize: '13px', color: C.mutedFg, marginBottom: '20px' }}>Loading question counts...</p>
             )}
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => { setRegenConfirmOpen(false); setRegenRace(null); }}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleRegenConfirm}
-                disabled={regenLoading}
-                className="px-4 py-2 text-sm bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50"
-              >
-                {regenLoading ? 'Re-generating...' : 'Re-generate'}
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button onClick={() => { setRegenConfirmOpen(false); setRegenRace(null); }} style={btnSecondary}>CANCEL</button>
+              <button onClick={handleRegenConfirm} disabled={regenLoading} style={{ ...btnAmber, opacity: regenLoading ? 0.5 : 1, cursor: regenLoading ? 'not-allowed' : 'pointer' }}>
+                {regenLoading ? 'RE-GENERATING...' : 'RE-GENERATE'}
               </button>
             </div>
           </DialogPanel>
@@ -1276,82 +1099,37 @@ export function ElectionsPage() {
 
       {/* Modal: Enter Result */}
       <Dialog open={resultRace !== null} onClose={() => setResultRace(null)} className="relative z-50">
-        <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
-            <DialogTitle className="text-lg font-semibold text-gray-900 mb-4">
-              Enter Election Result — {resultRace?.seat}
-            </DialogTitle>
-            <form onSubmit={handleResultSubmit} className="space-y-4">
+        <div style={modalOverlay} aria-hidden="true" />
+        <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <DialogPanel style={modalPanel}>
+            <DialogTitle style={modalTitle}>ENTER ELECTION RESULT — {resultRace?.seat}</DialogTitle>
+            <form onSubmit={handleResultSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Winner Name <span className="text-red-600">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g., Jane Smith"
-                  value={resultForm.winnerName}
-                  onChange={(e) => setResultForm((p) => ({ ...p, winnerName: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
+                <label style={labelStyle}>WINNER NAME <span style={{ color: C.incorrect }}>*</span></label>
+                <input type="text" required placeholder="e.g., Jane Smith" value={resultForm.winnerName} onChange={(e) => setResultForm((p) => ({ ...p, winnerName: e.target.value }))} style={inputStyle} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Term End Date <span className="text-red-600">*</span>
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={resultForm.termEndDate}
-                  onChange={(e) => setResultForm((p) => ({ ...p, termEndDate: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
+                <label style={labelStyle}>TERM END DATE <span style={{ color: C.incorrect }}>*</span></label>
+                <input type="date" required value={resultForm.termEndDate} onChange={(e) => setResultForm((p) => ({ ...p, termEndDate: e.target.value }))} style={inputStyle} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Collection <span className="text-red-600">*</span>
-                </label>
+                <label style={labelStyle}>COLLECTION <span style={{ color: C.incorrect }}>*</span></label>
                 {collections.length > 0 ? (
-                  <select
-                    required
-                    value={resultForm.collectionSlug}
-                    onChange={(e) => setResultForm((p) => ({ ...p, collectionSlug: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
-                  >
+                  <select required value={resultForm.collectionSlug} onChange={(e) => setResultForm((p) => ({ ...p, collectionSlug: e.target.value }))} style={selectStyle}>
                     <option value="">— select a collection —</option>
-                    {collections.map(c => (
-                      <option key={c.slug} value={c.slug}>{c.name} ({c.slug})</option>
-                    ))}
+                    {collections.map(c => <option key={c.slug} value={c.slug}>{c.name} ({c.slug})</option>)}
                   </select>
                 ) : (
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g., bloomington-in"
-                    value={resultForm.collectionSlug}
-                    onChange={(e) => setResultForm((p) => ({ ...p, collectionSlug: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
+                  <input type="text" required placeholder="e.g., bloomington-in" value={resultForm.collectionSlug} onChange={(e) => setResultForm((p) => ({ ...p, collectionSlug: e.target.value }))} style={inputStyle} />
                 )}
               </div>
               {resultError && (
-                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{resultError}</p>
+                <p style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.incorrect, margin: 0, padding: '10px 12px', border: `1px solid ${C.incorrect}`, borderRadius: '2px' }}>{resultError}</p>
               )}
-              <div className="flex gap-3 justify-end pt-2">
-                <button
-                  type="button"
-                  onClick={() => setResultRace(null)}
-                  className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={resultLoading}
-                  className="px-4 py-2 text-sm bg-red-700 text-white rounded-lg hover:bg-red-800 disabled:opacity-50"
-                >
-                  {resultLoading ? 'Generating...' : 'Generate Current-Term Questions'}
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', paddingTop: '8px' }}>
+                <button type="button" onClick={() => setResultRace(null)} style={btnSecondary}>CANCEL</button>
+                <button type="submit" disabled={resultLoading} style={{ ...btnPrimary, opacity: resultLoading ? 0.5 : 1, cursor: resultLoading ? 'not-allowed' : 'pointer' }}>
+                  {resultLoading ? 'GENERATING...' : 'GENERATE CURRENT-TERM QUESTIONS'}
                 </button>
               </div>
             </form>
@@ -1361,11 +1139,20 @@ export function ElectionsPage() {
 
       {/* Toast notification */}
       {toast && (
-        <div
-          className={`fixed bottom-6 right-6 z-[100] px-4 py-3 rounded-lg shadow-lg text-sm font-medium text-white transition-all ${
-            toast.type === 'success' ? 'bg-green-600' : 'bg-red-600'
-          }`}
-        >
+        <div style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          zIndex: 100,
+          padding: '12px 20px',
+          borderRadius: '2px',
+          fontFamily: "'Bebas Neue', sans-serif",
+          fontSize: '13px',
+          letterSpacing: '0.1em',
+          color: '#fff',
+          backgroundColor: toast.type === 'success' ? C.correct : C.incorrect,
+          boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+        }}>
           {toast.message}
         </div>
       )}
