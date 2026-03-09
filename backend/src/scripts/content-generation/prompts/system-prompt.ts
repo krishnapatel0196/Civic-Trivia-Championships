@@ -102,7 +102,7 @@ Distribute difficulty across the full batch:
 - Phone numbers, street addresses, or contact information in answer options — these test memorization of contact details, not civic knowledge
 - Anything that could embarrass or politically compromise the civic education mission
 
-${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}${localeSlug === 'plano-tx' ? buildPlanoVoiceGuidance() : ''}`;
+${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}${localeSlug === 'plano-tx' ? buildPlanoVoiceGuidance() : ''}${localeSlug === 'portland-or' ? buildPortlandVoiceGuidance() : ''}`;
 }
 
 /**
@@ -333,6 +333,89 @@ NEVER ask for:
 
 Apply the dinner party test rigorously.
 `;
+}
+
+/**
+ * Builds Portland, OR voice and accuracy guidance for content generation.
+ * Ensures the 2025 government restructuring, staggered term schedule,
+ * and civic-first framing are represented correctly.
+ */
+function buildPortlandVoiceGuidance(): string {
+  return `
+
+## Portland, OR — Specific Content Guidelines
+
+### Government Structure (CRITICAL accuracy requirement)
+
+Portland restructured its government on January 1, 2025 — abolishing the commission form (adopted 1913, abolished by Measure 26-228 in November 2022) and replacing it with a mayor-council structure:
+
+- **Mayor Keith Wilson** (took office January 2025, term expires January 2029): Executive branch only. Does NOT sit on City Council. Appoints the City Administrator. expiresAt: "2029-01-01T00:00:00Z"
+- **City Administrator**: Appointed by Mayor. New role from the 2022 charter reform. Oversees day-to-day city operations. NOT directly elected.
+- **City Council**: 12 members across 4 geographic districts (3 councilors per district). Members are called COUNCILORS, not commissioners.
+- **City Auditor Simone Rede** (term expires January 2029): Independently elected. expiresAt: "2029-01-01T00:00:00Z"
+- **Voting method**: Multi-winner ranked-choice voting. This is a significant civic achievement — Portland was the last major US city with a commission form when it voted to change.
+
+NEVER use "commissioner" to describe current Portland City Council members. The correct term since January 1, 2025 is "councilor."
+
+### Staggered Term Schedule (CRITICAL for expiresAt accuracy)
+
+Portland City Council uses staggered 4-year and 2-year initial terms:
+
+**Districts 1 & 2 — 4-year initial terms (expire January 2029):**
+- District 1: Candace Avalos, Jamie Dunphy, Loretta Smith
+- District 2: Sameer Kanal, Elana Pirtle-Guiney, Dan Ryan
+- expiresAt for these councilors: "2029-01-01T00:00:00Z"
+
+**Districts 3 & 4 — 2-year initial terms (expire January 2027, up for re-election November 2026):**
+- District 3: Tiffany Koyama Lane, Angelita Morillo, Steve Novick
+- District 4: Olivia Clark, Mitch Green, Eric Zimmerman
+- expiresAt for these councilors: "2027-01-01T00:00:00Z"
+
+When writing questions about specific councilors, use the correct expiresAt based on their district.
+
+### Required Question Mix for City Government Topic
+
+Generate BOTH types:
+1. **Durable (expiresAt: null)**: How the new system works — number of districts, councilors per district, how ranked-choice voting works for council, what the City Administrator role is, how Portland's old commission form worked, when the change happened.
+2. **Expiring**: Who is the current Mayor, who represents a specific district, who is the City Auditor.
+
+Target: 25–30% of ALL questions should have expiresAt set.
+
+### Portland City Proper vs. Metro Area (CRITICAL scope boundary)
+
+Questions MUST be scoped to Portland city proper.
+
+Portland city proper is NOT:
+- Beaverton (separate city, Washington County)
+- Gresham (separate city, Multnomah County)
+- Lake Oswego, Tigard, Hillsboro, Tualatin — all separate cities
+
+Do NOT write questions about the Portland metro area and attribute facts to "Portland." If in doubt, scope to the city government and institutions within Portland city limits.
+
+### Forbidden Topics and Framing
+
+- NO "Keep Portland Weird" angle, no references to Portland's quirky reputation
+- NO sports teams (Portland Trail Blazers, Timbers, Thorns) — strict civic focus
+- NO food culture (food carts, craft beer, coffee scene)
+- NO neighborhood-specific questions (Pearl District, Alberta Arts District, etc.) unless there is citywide civic significance
+- NO politically charged editorial framing — state facts neutrally
+
+### Rose City Identity
+
+"Rose City" is the appropriate civic hook for Portland identity questions.
+- First "City of Roses" reference: 1888 (Episcopal Church convention)
+- Portland Rose Festival: first held 1907
+- International Rose Test Garden: established 1917, oldest continuously operating public rose test garden in the US, in Washington Park
+
+### Expiration Summary for All Roles
+
+| Role | expiresAt |
+|------|-----------|
+| Mayor Keith Wilson | "2029-01-01T00:00:00Z" |
+| City Auditor Simone Rede | "2029-01-01T00:00:00Z" |
+| District 1 & 2 councilors | "2029-01-01T00:00:00Z" |
+| District 3 & 4 councilors | "2027-01-01T00:00:00Z" |
+| Structural/historical facts | null |`;
 }
 
 /**

@@ -105,6 +105,7 @@ async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
     'norwich-uk': () => import('./locale-configs/norwich-uk.js') as Promise<{ norwichConfig: LocaleConfig }>,
     'cambridge-ma': () => import('./locale-configs/cambridge-ma.js') as Promise<{ cambridgeMaConfig: LocaleConfig }>,
     'plano-tx': () => import('./locale-configs/plano-tx.js') as Promise<{ planoTxConfig: LocaleConfig }>,
+    'portland-or': () => import('./locale-configs/portland-or.js') as Promise<{ portlandOrConfig: LocaleConfig }>,
   };
 
   const loader = supportedLocales[locale];
@@ -114,7 +115,7 @@ async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
     const module = await loader();
 
     // Extract the config from the module (different export names per file)
-    const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig', 'cambridgeMaConfig', 'planoTxConfig'];
+    const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig', 'cambridgeMaConfig', 'planoTxConfig', 'portlandOrConfig'];
     for (const key of configKeys) {
       if (module[key]) return { config: module[key] as LocaleConfig };
     }

@@ -133,4 +133,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 11
   },
+  {
+    name: 'Portland, OR',
+    slug: 'portland-or',
+    description: 'How well do you know the Rose City?',
+    localeCode: 'en-US',
+    localeName: 'Portland, Oregon',
+    iconIdentifier: 'flag-or',
+    themeColor: '#1B6B3A',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 12
+  },
 ];
