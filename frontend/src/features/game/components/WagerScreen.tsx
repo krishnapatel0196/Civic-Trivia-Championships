@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { TOPIC_LABELS } from './TopicIcon';
 import type { TopicCategory } from '../../../types/game';
+import { useTheme } from '../../../hooks/useTheme';
 
 interface WagerScreenProps {
   currentScore: number;
@@ -19,89 +20,129 @@ export function WagerScreen({
   onLockWager,
   isLocked,
 }: WagerScreenProps) {
+  const { C } = useTheme();
   const maxWager = Math.floor(currentScore / 2);
   const hasPoints = currentScore > 0;
-
-  // Get human-readable category label
   const categoryLabel = TOPIC_LABELS[category as TopicCategory] || category;
-
-  // Calculate potential outcomes
   const ifCorrect = currentScore + wagerAmount;
-  const ifWrong = currentScore - wagerAmount;
+  const ifWrong   = currentScore - wagerAmount;
 
-  // Handle slider change
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    onSetWager(value);
+    onSetWager(parseInt(e.target.value, 10));
   };
 
-  // Handle keyboard navigation for slider
   const handleSliderKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (isLocked) return;
-
     switch (e.key) {
-      case 'PageDown':
-        e.preventDefault();
-        onSetWager(Math.max(0, wagerAmount - 50));
-        break;
-      case 'PageUp':
-        e.preventDefault();
-        onSetWager(Math.min(maxWager, wagerAmount + 50));
-        break;
-      case 'Home':
-        e.preventDefault();
-        onSetWager(0);
-        break;
-      case 'End':
-        e.preventDefault();
-        onSetWager(maxWager);
-        break;
+      case 'PageDown': e.preventDefault(); onSetWager(Math.max(0, wagerAmount - 50)); break;
+      case 'PageUp':   e.preventDefault(); onSetWager(Math.min(maxWager, wagerAmount + 50)); break;
+      case 'Home':     e.preventDefault(); onSetWager(0); break;
+      case 'End':      e.preventDefault(); onSetWager(maxWager); break;
     }
   };
 
-  // Determine button text and style
-  const buttonText = wagerAmount === 0 ? 'Play for Fun' : 'Lock In Wager';
-  const buttonStyle = wagerAmount === 0
-    ? 'border-2 border-teal-500 text-teal-400 hover:bg-teal-500/10'
-    : 'bg-teal-600 hover:bg-teal-700 text-white';
+  const sliderFillPct = maxWager > 0 ? (wagerAmount / maxWager) * 100 : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+    <div style={{
+      minHeight: '100vh',
+      background: C.paper,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '24px 16px',
+      fontFamily: "'Lora', Georgia, serif",
+    }}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-2xl w-full"
+        style={{ maxWidth: '560px', width: '100%' }}
       >
-        {/* Header */}
-        <div className="text-center mb-12">
+        {/* Final Question image + category */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <img
             src="/images/FinalQuestion_A.png"
             alt="Final Question"
-            className="h-[23vh] mx-auto mb-4 object-contain"
+            style={{ height: '23vh', maxHeight: '180px', objectFit: 'contain', display: 'inline-block', marginBottom: '16px' }}
           />
-          <p className="text-teal-400 text-lg">
-            Category: <span className="font-semibold">{categoryLabel}</span>
+          <p style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            letterSpacing: '0.22em',
+            fontSize: '13px',
+            color: C.muted,
+            margin: 0,
+          }}>
+            CATEGORY: <span style={{ color: C.ink }}>{categoryLabel.toUpperCase()}</span>
           </p>
         </div>
 
-        {/* Current Score Display */}
-        <div className="text-center mb-8">
-          <p className="text-slate-400 text-sm mb-1">Your Score</p>
-          <p className="text-white text-4xl font-bold">{currentScore}</p>
+        {/* Current score */}
+        <div style={{
+          textAlign: 'center',
+          borderTop: `1px solid ${C.rule}`,
+          borderBottom: `1px solid ${C.rule}`,
+          padding: '16px 0',
+          marginBottom: '28px',
+        }}>
+          <div style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            letterSpacing: '0.16em',
+            fontSize: '11px',
+            color: C.mutedFg,
+            marginBottom: '4px',
+          }}>
+            YOUR SCORE
+          </div>
+          <div style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: '52px',
+            lineHeight: 1,
+            color: C.ink,
+          }}>
+            {currentScore.toLocaleString()}
+          </div>
         </div>
 
-        {/* Wager Slider Section */}
-        <div className="bg-slate-800/50 rounded-xl p-8 mb-6 border border-slate-700">
-          {/* Wager Amount Label */}
-          <div className="text-center mb-6">
-            <p className="text-slate-400 text-sm mb-2">Wager</p>
-            <p className="text-2xl font-bold text-white">{wagerAmount} points</p>
+        {/* Wager card */}
+        <div style={{
+          border: `1px solid ${C.rule}`,
+          padding: '24px',
+          marginBottom: '24px',
+        }}>
+          {/* Wager amount */}
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <div style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              letterSpacing: '0.16em',
+              fontSize: '11px',
+              color: C.mutedFg,
+              marginBottom: '4px',
+            }}>
+              WAGER
+            </div>
+            <div style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '44px',
+              lineHeight: 1,
+              color: C.amber,
+            }}>
+              {wagerAmount.toLocaleString()}
+            </div>
+            <div style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              letterSpacing: '0.12em',
+              fontSize: '10px',
+              color: C.mutedFg,
+              marginTop: '2px',
+            }}>
+              POINTS
+            </div>
           </div>
 
           {/* Slider */}
           {hasPoints ? (
-            <div className="mb-6">
+            <div style={{ marginBottom: '20px' }}>
               <input
                 type="range"
                 min={0}
@@ -116,106 +157,122 @@ export function WagerScreen({
                 aria-valuemax={maxWager}
                 aria-valuenow={wagerAmount}
                 aria-valuetext={`${wagerAmount} points`}
-                className={`w-full h-3 rounded-full appearance-none cursor-pointer slider-track ${
-                  isLocked ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+                className="ctc-wager-slider"
                 style={{
-                  background: `linear-gradient(to right, rgb(20 184 166) 0%, rgb(20 184 166) ${(wagerAmount / maxWager) * 100}%, rgb(51 65 85) ${(wagerAmount / maxWager) * 100}%, rgb(51 65 85) 100%)`,
+                  width: '100%',
+                  height: '4px',
+                  appearance: 'none',
+                  borderRadius: '2px',
+                  cursor: isLocked ? 'not-allowed' : 'pointer',
+                  opacity: isLocked ? 0.5 : 1,
+                  background: `linear-gradient(to right, ${C.accent} 0%, ${C.accent} ${sliderFillPct}%, ${C.ruleLight} ${sliderFillPct}%, ${C.ruleLight} 100%)`,
+                  outline: 'none',
                 }}
               />
-              {/* Min/Max Labels */}
-              <div className="flex justify-between mt-2 text-sm text-slate-400">
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginTop: '6px',
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '11px',
+                letterSpacing: '0.08em',
+                color: C.mutedFg,
+              }}>
                 <span>0</span>
-                <span>{maxWager}</span>
+                <span>{maxWager.toLocaleString()} MAX</span>
               </div>
             </div>
           ) : (
-            <div className="text-center py-6">
-              <p className="text-slate-400 text-sm">No points to wager</p>
+            <div style={{ textAlign: 'center', padding: '16px 0', color: C.muted, fontStyle: 'italic', fontSize: '14px' }}>
+              No points to wager
             </div>
           )}
 
-          {/* Outcome Preview */}
-          <div className="space-y-2" role="group" aria-label="Wager outcome preview" aria-live="polite">
-            <div className="flex justify-between items-center p-3 bg-slate-900/50 rounded-lg">
-              <span className="text-slate-300">If correct:</span>
-              <span className="text-green-400 font-bold text-xl transition-all duration-200">
-                {ifCorrect}
+          {/* Outcome preview */}
+          <div role="group" aria-label="Wager outcome preview" aria-live="polite">
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '10px 0',
+              borderTop: `1px solid ${C.ruleLight}`,
+            }}>
+              <span style={{ fontStyle: 'italic', fontSize: '14px', color: C.muted }}>If correct:</span>
+              <span style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '22px',
+                color: C.correct,
+                transition: 'color 0.2s',
+              }}>
+                +{ifCorrect.toLocaleString()}
               </span>
             </div>
-            <div className="flex justify-between items-center p-3 bg-slate-900/50 rounded-lg">
-              <span className="text-slate-300">If wrong:</span>
-              <span className="text-red-400 font-bold text-xl transition-all duration-200">
-                {ifWrong}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '10px 0',
+              borderTop: `1px solid ${C.ruleLight}`,
+            }}>
+              <span style={{ fontStyle: 'italic', fontSize: '14px', color: C.muted }}>If wrong:</span>
+              <span style={{
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '22px',
+                color: C.incorrect,
+                transition: 'color 0.2s',
+              }}>
+                {ifWrong.toLocaleString()}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Action Button */}
-        <div className="text-center">
-          <button
-            onClick={onLockWager}
-            disabled={isLocked}
-            className={`px-12 py-4 rounded-lg font-bold text-lg transition-all min-h-[48px] ${buttonStyle} ${
-              isLocked ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 shadow-lg'
-            }`}
-          >
-            {isLocked ? 'Locked!' : buttonText}
-          </button>
-        </div>
-
-        {/* Locked Indicator */}
-        {isLocked && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center text-teal-400 mt-4 text-sm"
-          >
-            Wager locked! Get ready...
-          </motion.p>
-        )}
+        {/* Action button */}
+        <button
+          onClick={onLockWager}
+          disabled={isLocked}
+          style={{
+            display: 'block',
+            width: '100%',
+            padding: '16px',
+            minHeight: '52px',
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: '20px',
+            letterSpacing: '0.14em',
+            border: wagerAmount === 0 ? `1px solid ${C.rule}` : 'none',
+            background: isLocked ? C.rule : wagerAmount === 0 ? 'transparent' : C.accent,
+            color: isLocked ? C.mutedFg : wagerAmount === 0 ? C.muted : '#FFFFFF',
+            cursor: isLocked ? 'not-allowed' : 'pointer',
+            transition: 'background 0.15s, color 0.15s',
+          }}
+          onMouseEnter={e => {
+            if (!isLocked && wagerAmount > 0) e.currentTarget.style.background = C.accentHover;
+          }}
+          onMouseLeave={e => {
+            if (!isLocked && wagerAmount > 0) e.currentTarget.style.background = C.accent;
+          }}
+        >
+          {isLocked ? 'LOCKED — GET READY…' : wagerAmount === 0 ? 'PLAY FOR FUN' : 'LOCK IN WAGER'}
+        </button>
       </motion.div>
 
       <style>{`
-        .slider-track::-webkit-slider-thumb {
+        .ctc-wager-slider::-webkit-slider-thumb {
           appearance: none;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: rgb(20 184 166);
-          cursor: pointer;
-          box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.5);
-          transition: box-shadow 0.2s;
-        }
-
-        .slider-track::-webkit-slider-thumb:hover:not(:disabled) {
-          box-shadow: 0 0 0 8px rgba(20, 184, 166, 0.2);
-        }
-
-        .slider-track:focus::-webkit-slider-thumb {
-          box-shadow: 0 0 0 8px rgba(20, 184, 166, 0.3);
-          outline: none;
-        }
-
-        .slider-track::-moz-range-thumb {
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: rgb(20 184 166);
+          width: 20px;
+          height: 20px;
+          border-radius: 2px;
+          background: ${C.accent};
           cursor: pointer;
           border: none;
-          box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.5);
-          transition: box-shadow 0.2s;
         }
-
-        .slider-track::-moz-range-thumb:hover:not(:disabled) {
-          box-shadow: 0 0 0 8px rgba(20, 184, 166, 0.2);
-        }
-
-        .slider-track:focus::-moz-range-thumb {
-          box-shadow: 0 0 0 8px rgba(20, 184, 166, 0.3);
-          outline: none;
+        .ctc-wager-slider::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 2px;
+          background: ${C.accent};
+          cursor: pointer;
+          border: none;
         }
       `}</style>
     </div>

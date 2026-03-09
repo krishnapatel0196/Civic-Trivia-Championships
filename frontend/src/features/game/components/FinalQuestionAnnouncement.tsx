@@ -1,10 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../../../hooks/useTheme';
 
 interface FinalQuestionAnnouncementProps {
   show: boolean;
 }
 
 export function FinalQuestionAnnouncement({ show }: FinalQuestionAnnouncementProps) {
+  const { C } = useTheme();
+
   return (
     <AnimatePresence>
       {show && (
@@ -13,22 +16,21 @@ export function FinalQuestionAnnouncement({ show }: FinalQuestionAnnouncementPro
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.1 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center"
+          style={{
+            minHeight: '100vh',
+            background: C.paper,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          {/* Content */}
-          <div className="text-center relative">
+          <div style={{ textAlign: 'center' }}>
             <motion.img
               src="/images/FinalQuestion_A.png"
               alt="Final Question"
-              animate={{
-                scale: [1, 1.05, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-              className="w-[60%] max-w-4xl mx-auto px-4"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ width: '60%', maxWidth: '480px', margin: '0 auto', display: 'block', padding: '0 16px' }}
             />
           </div>
         </motion.div>
