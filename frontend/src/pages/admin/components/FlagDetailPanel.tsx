@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
 import { API_URL } from '../../../services/api';
 import { useTheme } from '../../../hooks/useTheme';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 
 const ADMIN_ACCENT = '#FF5740';
 
@@ -247,6 +248,8 @@ export function FlagDetailPanel({
   };
 
   const isOpen = questionId !== null;
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
 
   const btnPrimary: React.CSSProperties = {
     padding: '8px 16px',
@@ -292,7 +295,7 @@ export function FlagDetailPanel({
           {/* Panel */}
           <div style={{ position: 'fixed', inset: 0, overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-              <div style={{ pointerEvents: 'none', position: 'fixed', top: 0, bottom: 0, right: 0, display: 'flex', maxWidth: '100%', paddingLeft: '40px' }}>
+              <div style={{ pointerEvents: 'none', position: 'fixed', top: 0, bottom: 0, right: 0, display: 'flex', maxWidth: '100%', paddingLeft: isMobile ? '0' : '40px' }}>
                 <Transition.Child
                   as={Fragment}
                   enter="transform transition ease-in-out duration-300"
@@ -302,7 +305,7 @@ export function FlagDetailPanel({
                   leaveFrom="translate-x-0"
                   leaveTo="translate-x-full"
                 >
-                  <Dialog.Panel style={{ pointerEvents: 'auto', width: '100vw', maxWidth: '672px' }}>
+                  <Dialog.Panel style={{ pointerEvents: 'auto', width: '100vw', maxWidth: isMobile ? '100%' : '672px' }}>
                     <div style={{ display: 'flex', height: '100%', flexDirection: 'column', backgroundColor: C.paper, borderLeft: `1px solid ${C.rule}` }}>
                       {/* Header */}
                       <div style={{ backgroundColor: '#3D2E22', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
@@ -317,7 +320,7 @@ export function FlagDetailPanel({
                         </Dialog.Title>
                         <button
                           onClick={onClose}
-                          style={{ padding: '6px', color: '#C8BAA6', background: 'none', border: 'none', cursor: 'pointer', borderRadius: '2px' }}
+                          style={{ padding: '6px', color: '#C8BAA6', background: 'none', border: 'none', cursor: 'pointer', borderRadius: '2px', minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                           aria-label="Close panel"
                         >
                           <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">

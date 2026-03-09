@@ -1,3 +1,5 @@
+import { useWindowSize } from '../../../hooks/useWindowSize';
+
 export interface FlaggedQuestionRow {
   id: number;
   externalId: string;
@@ -25,6 +27,9 @@ export function FlaggedQuestionsTable({
   onSortChange,
   onQuestionClick,
 }: FlaggedQuestionsTableProps) {
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+
   const renderSortIcon = (columnKey: string) => {
     if (sort !== columnKey) return null;
     return (
@@ -38,6 +43,12 @@ export function FlaggedQuestionsTable({
     if (count > 5) return 'text-red-600 font-bold';
     if (count > 2) return 'text-orange-600 font-bold';
     return 'text-gray-600 font-semibold';
+  };
+
+  const getFlagBadgeClass = (count: number) => {
+    if (count > 5) return 'bg-red-100 text-red-800';
+    if (count > 2) return 'bg-orange-100 text-orange-800';
+    return 'bg-gray-100 text-gray-700';
   };
 
   const getReasonLabel = (reason: string) => {
@@ -72,6 +83,71 @@ export function FlaggedQuestionsTable({
     );
   };
 
+  // ── Mobile card list ──────────────────────────────────────────────────────
+  if (isMobile) {
+    if (!questions) {
+      // Mobile loading skeleton
+      return (
+        <div className="divide-y divide-gray-200">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="p-4 animate-pulse bg-white">
+              <div className="h-4 bg-gray-200 rounded w-5/6 mb-2"></div>
+              <div className="h-3 bg-gray-200 rounded w-1/2 mb-3"></div>
+              <div className="flex gap-2">
+                <div className="h-5 bg-gray-200 rounded w-16"></div>
+                <div className="h-5 bg-gray-200 rounded w-14"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className="divide-y divide-gray-200">
+        {questions.map((question) => (
+          <div
+            key={question.id}
+            onClick={() => onQuestionClick(question.id)}
+            className="p-4 bg-white active:bg-gray-50 cursor-pointer"
+          >
+            {/* Question text — 2-line clamp */}
+            <p
+              className="text-sm text-gray-900 mb-1 leading-snug"
+              style={{
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
+              {question.text}
+            </p>
+
+            {/* Collection(s) */}
+            {question.collectionNames.length > 0 && (
+              <p className="text-xs text-gray-500 mb-2 truncate">
+                {question.collectionNames.join(', ')}
+              </p>
+            )}
+
+            {/* Badges row */}
+            <div className="flex flex-wrap gap-1.5 items-center">
+              {/* Flag count */}
+              <span className={`px-2 py-0.5 text-xs font-semibold rounded ${getFlagBadgeClass(question.flagCount)}`}>
+                {question.flagCount} {question.flagCount === 1 ? 'flag' : 'flags'}
+              </span>
+
+              {/* Reason chips */}
+              {renderReasonChips(question.reasonBreakdown)}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // ── Desktop table (unchanged) ─────────────────────────────────────────────
   // Loading skeleton
   if (!questions) {
     return (
