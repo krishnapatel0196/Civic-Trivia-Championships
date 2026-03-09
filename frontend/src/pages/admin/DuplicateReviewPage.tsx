@@ -3,8 +3,10 @@ import { useAuthStore } from '../../store/authStore';
 import { API_URL } from '../../services/api';
 import { DuplicateClusterCard } from './components/DuplicateClusterCard';
 import { EnrichedCluster, AdvancedFlag, DuplicateSummary } from '../../types/duplicates';
+import { useTheme } from '../../hooks/useTheme';
 
-// Undo toast hook (following project pattern)
+const ADMIN_ACCENT = '#FF5740';
+
 interface ToastState {
   message: string;
   clusterId: string | null;
@@ -13,42 +15,21 @@ interface ToastState {
 }
 
 function useUndoToast() {
-  const [toast, setToast] = useState<ToastState>({
-    message: '',
-    clusterId: null,
-    visible: false,
-    countdown: 30,
-  });
+  const [toast, setToast] = useState<ToastState>({ message: '', clusterId: null, visible: false, countdown: 30 });
   const timeoutRef = useRef<number>();
   const countdownRef = useRef<number>();
 
   const showToast = (message: string, clusterId: string) => {
-    // Clear existing timeouts
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (countdownRef.current) clearInterval(countdownRef.current);
-
-    setToast({
-      message,
-      clusterId,
-      visible: true,
-      countdown: 30,
-    });
-
-    // Countdown every second
+    setToast({ message, clusterId, visible: true, countdown: 30 });
     let remaining = 30;
     countdownRef.current = setInterval(() => {
       remaining -= 1;
       setToast((prev) => ({ ...prev, countdown: remaining }));
-      if (remaining <= 0) {
-        clearInterval(countdownRef.current);
-        setToast((prev) => ({ ...prev, visible: false }));
-      }
+      if (remaining <= 0) { clearInterval(countdownRef.current); setToast((prev) => ({ ...prev, visible: false })); }
     }, 1000);
-
-    // Auto-hide after 30 seconds
-    timeoutRef.current = setTimeout(() => {
-      setToast((prev) => ({ ...prev, visible: false }));
-    }, 30000);
+    timeoutRef.current = setTimeout(() => { setToast((prev) => ({ ...prev, visible: false })); }, 30000);
   };
 
   const hideToast = () => {
@@ -60,77 +41,62 @@ function useUndoToast() {
   return { toast, showToast, hideToast };
 }
 
-// Toast component
-function UndoToast({
-  message,
-  countdown,
-  visible,
-  onClose,
-  onUndo,
-}: {
-  message: string;
-  countdown: number;
-  visible: boolean;
-  onClose: () => void;
-  onUndo: () => void;
+function UndoToast({ message, countdown, visible, onClose, onUndo }: {
+  message: string; countdown: number; visible: boolean; onClose: () => void; onUndo: () => void;
 }) {
   if (!visible) return null;
-
   return (
-    <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 z-50 min-w-[320px]">
-      <span className="flex-1">{message}</span>
-      <button
-        onClick={onUndo}
-        className="text-amber-400 hover:text-amber-300 font-medium px-2"
-      >
-        Undo ({countdown}s)
+    <div style={{
+      position: 'fixed',
+      bottom: '24px',
+      right: '24px',
+      backgroundColor: '#1C1510',
+      color: '#ECE7D9',
+      padding: '12px 16px',
+      borderRadius: '2px',
+      border: '1px solid #3D2E22',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      zIndex: 50,
+      minWidth: '320px',
+      boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+    }}>
+      <span style={{ flex: 1, fontFamily: "'Lora', Georgia, serif", fontSize: '13px' }}>{message}</span>
+      <button onClick={onUndo} style={{ color: '#D4A017', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Bebas Neue', sans-serif", fontSize: '13px', letterSpacing: '0.1em', padding: '0 8px' }}>
+        UNDO ({countdown}s)
       </button>
-      <button onClick={onClose} className="text-gray-400 hover:text-gray-300 text-xl leading-none">
-        ×
-      </button>
+      <button onClick={onClose} style={{ color: '#7A6A5A', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', lineHeight: 1, padding: '0' }}>×</button>
     </div>
   );
 }
 
 export function DuplicateReviewPage() {
   const { accessToken } = useAuthStore();
+  const { C } = useTheme();
 
-  // Data state
   const [clusters, setClusters] = useState<EnrichedCluster[]>([]);
   const [advancedFlags, setAdvancedFlags] = useState<AdvancedFlag[]>([]);
   const [summary, setSummary] = useState<DuplicateSummary | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Filter state
   const [tierFilter, setTierFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  // Toast state
   const { toast, showToast, hideToast } = useUndoToast();
 
-  // Fetch clusters on mount
-  useEffect(() => {
-    fetchClusters();
-  }, [accessToken]);
+  useEffect(() => { fetchClusters(); }, [accessToken]);
 
   const fetchClusters = async () => {
     if (!accessToken) return;
-
     setLoading(true);
     setError(null);
-
     try {
       const response = await fetch(`${API_URL}/api/admin/duplicates`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch duplicate clusters');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch duplicate clusters');
       const data = await response.json();
       if (data.noReports) {
         setError('No duplicate scan reports found on this server. Run the scan locally to generate reports.');
@@ -148,151 +114,75 @@ export function DuplicateReviewPage() {
     }
   };
 
-  // Handle resolve
   const handleResolve = async (clusterId: string, keepExternalIds: string[]) => {
     if (!accessToken) return;
-
     try {
       const response = await fetch(`${API_URL}/api/admin/duplicates/resolve`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({ clusterId, keepExternalIds }),
       });
-
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
         throw new Error(errData.detail || errData.error || 'Failed to resolve cluster');
       }
-
       const result = await response.json();
       const keepSet = new Set(keepExternalIds);
-
-      // Update local state
       setClusters((prev) =>
         prev.map((c) =>
           c.clusterId === clusterId
-            ? {
-                ...c,
-                resolved: true,
-                resolution: {
-                  keepIds: keepExternalIds,
-                  archivedIds: result.archivedIds || c.questions.filter(q => !keepSet.has(q.externalId)).map(q => q.externalId),
-                  resolvedAt: new Date().toISOString(),
-                },
-              }
+            ? { ...c, resolved: true, resolution: { keepIds: keepExternalIds, archivedIds: result.archivedIds || c.questions.filter(q => !keepSet.has(q.externalId)).map(q => q.externalId), resolvedAt: new Date().toISOString() } }
             : c
         )
       );
-
-      // Show undo toast
       const archivedCount = result.archivedIds?.length || (clusters.find(c => c.clusterId === clusterId)?.questions.length || 0) - keepExternalIds.length;
       showToast(`Cluster resolved. ${archivedCount} ${archivedCount === 1 ? 'question' : 'questions'} archived.`, clusterId);
-
-      // Update summary
-      if (summary) {
-        setSummary({
-          ...summary,
-          resolved: summary.resolved + 1,
-          pendingReview: summary.pendingReview - 1,
-        });
-      }
+      if (summary) setSummary({ ...summary, resolved: summary.resolved + 1, pendingReview: summary.pendingReview - 1 });
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Failed to resolve cluster');
     }
   };
 
-  // Handle undo
   const handleUndo = async (clusterId: string) => {
     if (!accessToken) return;
-
     try {
       const response = await fetch(`${API_URL}/api/admin/duplicates/undo`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({ clusterId }),
       });
-
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.error || 'Failed to undo resolution');
       }
-
-      // Update local state
-      setClusters((prev) =>
-        prev.map((c) =>
-          c.clusterId === clusterId
-            ? {
-                ...c,
-                resolved: false,
-                resolution: undefined,
-              }
-            : c
-        )
-      );
-
-      // Hide toast
+      setClusters((prev) => prev.map((c) => c.clusterId === clusterId ? { ...c, resolved: false, resolution: undefined } : c));
       hideToast();
-
-      // Update summary
-      if (summary) {
-        setSummary({
-          ...summary,
-          resolved: summary.resolved - 1,
-          pendingReview: summary.pendingReview + 1,
-        });
-      }
+      if (summary) setSummary({ ...summary, resolved: summary.resolved - 1, pendingReview: summary.pendingReview + 1 });
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Failed to undo resolution');
     }
   };
 
-  // Handle auto-resolve all
   const handleAutoResolveAll = async () => {
     if (!accessToken) return;
-
     const autoResolvableCount = clusters.filter(c => c.autoResolvable && !c.resolved).length;
-
-    if (autoResolvableCount === 0) {
-      alert('No auto-resolvable clusters found');
-      return;
-    }
-
-    const confirmed = confirm(
-      `Auto-resolve ${autoResolvableCount} high-confidence duplicate ${autoResolvableCount === 1 ? 'cluster' : 'clusters'}?\n\nThis will keep the recommended question and archive the rest.`
-    );
-
+    if (autoResolvableCount === 0) { alert('No auto-resolvable clusters found'); return; }
+    const confirmed = confirm(`Auto-resolve ${autoResolvableCount} high-confidence duplicate ${autoResolvableCount === 1 ? 'cluster' : 'clusters'}?\n\nThis will keep the recommended question and archive the rest.`);
     if (!confirmed) return;
-
     try {
       const response = await fetch(`${API_URL}/api/admin/duplicates/auto-resolve`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to auto-resolve clusters');
-      }
-
+      if (!response.ok) throw new Error('Failed to auto-resolve clusters');
       const result = await response.json();
-
-      // Refresh cluster list
       await fetchClusters();
-
       alert(`Successfully resolved ${result.resolvedCount} ${result.resolvedCount === 1 ? 'cluster' : 'clusters'}`);
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Failed to auto-resolve');
     }
   };
 
-  // Filter clusters
   const filteredClusters = clusters.filter((cluster) => {
     if (tierFilter !== 'all' && cluster.tier !== tierFilter) return false;
     if (statusFilter === 'pending' && cluster.resolved) return false;
@@ -300,50 +190,74 @@ export function DuplicateReviewPage() {
     return true;
   });
 
+  const selectStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '8px 12px',
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    backgroundColor: C.paper,
+    color: C.ink,
+    fontFamily: "'Lora', Georgia, serif",
+    fontSize: '13px',
+    outline: 'none',
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: 'block',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '11px',
+    letterSpacing: '0.14em',
+    color: C.muted,
+    marginBottom: '6px',
+  };
+
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Duplicate Review</h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(24px, 4vw, 36px)', letterSpacing: '0.06em', color: C.ink, margin: '0 0 8px 0' }}>
+          Duplicate Review
+        </h1>
+        <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', fontSize: '13px', color: C.muted, margin: 0 }}>
           Review and resolve duplicate question clusters
         </p>
       </div>
 
-      {/* Summary bar */}
+      {/* Summary stats strip */}
       {summary && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-6">
-              <div>
-                <div className="text-2xl font-bold text-gray-900">{summary.totalClusters}</div>
-                <div className="text-xs text-gray-600">Total Clusters</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-orange-600">{summary.pendingReview}</div>
-                <div className="text-xs text-gray-600">Pending Review</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-green-600">{summary.resolved}</div>
-                <div className="text-xs text-gray-600">Resolved</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-blue-600">{summary.autoResolvable}</div>
-                <div className="text-xs text-gray-600">Auto-resolvable</div>
-              </div>
-              {advancedFlags.length > 0 && (
-                <div>
-                  <div className="text-2xl font-bold text-red-600">{advancedFlags.length}</div>
-                  <div className="text-xs text-gray-600">Advanced Flags</div>
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: '2px', padding: '16px 20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flexWrap: 'wrap' }}>
+              {[
+                { label: 'TOTAL CLUSTERS', value: summary.totalClusters, color: C.ink },
+                { label: 'PENDING REVIEW', value: summary.pendingReview, color: '#92400E' },
+                { label: 'RESOLVED', value: summary.resolved, color: C.correct },
+                { label: 'AUTO-RESOLVABLE', value: summary.autoResolvable, color: '#1E5A8A' },
+                ...(advancedFlags.length > 0 ? [{ label: 'ADVANCED FLAGS', value: advancedFlags.length, color: C.incorrect }] : []),
+              ].map(({ label, value, color }) => (
+                <div key={label}>
+                  <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '28px', color, lineHeight: 1 }}>{value}</div>
+                  <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '10px', letterSpacing: '0.12em', color: C.mutedFg, marginTop: '2px' }}>{label}</div>
                 </div>
-              )}
+              ))}
             </div>
             {summary.autoResolvable > 0 && (
               <button
                 onClick={handleAutoResolveAll}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: ADMIN_ACCENT,
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '2px',
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '13px',
+                  letterSpacing: '0.1em',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
               >
-                Auto-resolve All ({summary.autoResolvable})
+                AUTO-RESOLVE ALL ({summary.autoResolvable})
               </button>
             )}
           </div>
@@ -351,17 +265,10 @@ export function DuplicateReviewPage() {
       )}
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="md:grid-cols-2">
         <div>
-          <label htmlFor="tier" className="block text-sm font-medium text-gray-700 mb-1">
-            Tier
-          </label>
-          <select
-            id="tier"
-            value={tierFilter}
-            onChange={(e) => setTierFilter(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-          >
+          <label htmlFor="tier" style={labelStyle}>TIER</label>
+          <select id="tier" value={tierFilter} onChange={(e) => setTierFilter(e.target.value)} style={selectStyle}>
             <option value="all">All tiers</option>
             <option value="exact">Exact</option>
             <option value="near-duplicate">Near-duplicate</option>
@@ -369,15 +276,8 @@ export function DuplicateReviewPage() {
           </select>
         </div>
         <div>
-          <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-            Status
-          </label>
-          <select
-            id="status"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-          >
+          <label htmlFor="status" style={labelStyle}>STATUS</label>
+          <select id="status" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} style={selectStyle}>
             <option value="all">All statuses</option>
             <option value="pending">Pending</option>
             <option value="resolved">Resolved</option>
@@ -385,47 +285,35 @@ export function DuplicateReviewPage() {
         </div>
       </div>
 
-      {/* Error message */}
+      {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md">
-          {error}
+        <div style={{ border: `1px solid ${C.incorrect}`, borderRadius: '2px', padding: '12px 16px' }}>
+          <p style={{ fontFamily: "'Lora', Georgia, serif", color: C.incorrect, margin: 0, fontSize: '13px' }}>{error}</p>
         </div>
       )}
 
-      {/* Loading state */}
+      {/* Loading */}
       {loading && (
-        <div className="text-center py-12">
-          <p className="text-gray-600">Loading clusters...</p>
+        <div style={{ textAlign: 'center', padding: '48px 0' }}>
+          <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.muted }}>Loading clusters...</p>
         </div>
       )}
 
       {/* Empty state */}
       {!loading && filteredClusters.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-12 px-4 bg-white rounded-lg border border-gray-200">
-          <svg
-            className="w-12 h-12 text-gray-400 mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '48px 16px', border: `1px solid ${C.rule}`, borderRadius: '2px' }}>
+          <svg width="40" height="40" style={{ color: C.mutedFg, marginBottom: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <p className="text-gray-600 text-center">
-            {tierFilter === 'all' && statusFilter === 'all'
-              ? 'No duplicate clusters found'
-              : 'No clusters match the selected filters'}
+          <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.muted, textAlign: 'center', margin: 0 }}>
+            {tierFilter === 'all' && statusFilter === 'all' ? 'No duplicate clusters found' : 'No clusters match the selected filters'}
           </p>
         </div>
       )}
 
       {/* Cluster list */}
       {!loading && filteredClusters.length > 0 && (
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {filteredClusters.map((cluster) => (
             <DuplicateClusterCard
               key={cluster.clusterId}
@@ -438,7 +326,6 @@ export function DuplicateReviewPage() {
         </div>
       )}
 
-      {/* Undo toast */}
       <UndoToast
         message={toast.message}
         countdown={toast.countdown}

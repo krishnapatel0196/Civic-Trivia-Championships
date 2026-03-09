@@ -5,6 +5,9 @@ import { API_URL } from '../../services/api';
 import { FlaggedQuestionsTable, FlaggedQuestionRow } from './components/FlaggedQuestionsTable';
 import { FlagDetailPanel } from './components/FlagDetailPanel';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
+import { useTheme } from '../../hooks/useTheme';
+
+const ADMIN_ACCENT = '#FF5740';
 
 interface PaginationMeta {
   total: number;
@@ -21,19 +24,13 @@ interface FlagResponse {
 export function FlagReviewPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { accessToken } = useAuthStore();
+  const { C } = useTheme();
 
-  // Data state
   const [questions, setQuestions] = useState<FlaggedQuestionRow[] | null>(null);
   const [pagination, setPagination] = useState<PaginationMeta | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // Detail panel state
   const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
-
-  // Refresh trigger for re-fetching after errors
   const [refreshKey, setRefreshKey] = useState(0);
-
-  // Collections list (fetched from API)
   const [collections, setCollections] = useState<{ name: string; slug: string }[]>([]);
 
   useEffect(() => {
@@ -53,7 +50,6 @@ export function FlagReviewPage() {
     fetchCollections();
   }, [accessToken]);
 
-  // Get current filter values from URL
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || '25', 10);
   const sort = searchParams.get('sort') || 'flag_count';
@@ -62,13 +58,10 @@ export function FlagReviewPage() {
   const tab = searchParams.get('tab') || 'active';
   const questionId = searchParams.get('questionId') || '';
 
-  // Fetch data when URL params change
   useEffect(() => {
     const fetchFlags = async () => {
       if (!accessToken) return;
-
       setError(null);
-
       try {
         const params = new URLSearchParams();
         params.set('page', page.toString());
@@ -79,19 +72,10 @@ export function FlagReviewPage() {
         if (collection) params.set('collection', collection);
         if (questionId) params.set('questionId', questionId);
 
-        const response = await fetch(
-          `${API_URL}/api/admin/flags?${params.toString()}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch flagged questions');
-        }
-
+        const response = await fetch(`${API_URL}/api/admin/flags?${params.toString()}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (!response.ok) throw new Error('Failed to fetch flagged questions');
         const data: FlagResponse = await response.json();
         setQuestions(data.data);
         setPagination(data.pagination);
@@ -100,34 +84,22 @@ export function FlagReviewPage() {
         setQuestions([]);
       }
     };
-
     fetchFlags();
   }, [searchParams.toString(), accessToken, refreshKey]);
 
-  // Helper to update a single URL param
   const updateParam = (key: string, value: string) => {
     const newParams = new URLSearchParams(searchParams);
-    if (value) {
-      newParams.set(key, value);
-    } else {
-      newParams.delete(key);
-    }
+    if (value) newParams.set(key, value); else newParams.delete(key);
     setSearchParams(newParams);
   };
 
-  // Handle filter changes (set filter + reset to page 1 in one update)
   const handleFilterChange = (key: string, value: string) => {
     const newParams = new URLSearchParams(searchParams);
-    if (value) {
-      newParams.set(key, value);
-    } else {
-      newParams.delete(key);
-    }
+    if (value) newParams.set(key, value); else newParams.delete(key);
     newParams.set('page', '1');
     setSearchParams(newParams);
   };
 
-  // Handle sort change (set sort + order in one update)
   const handleSortChange = (column: string) => {
     const newParams = new URLSearchParams(searchParams);
     if (sort === column) {
@@ -139,17 +111,9 @@ export function FlagReviewPage() {
     setSearchParams(newParams);
   };
 
-  // Handle pagination
-  const handlePageChange = (newPage: number) => {
-    updateParam('page', newPage.toString());
-  };
+  const handlePageChange = (newPage: number) => updateParam('page', newPage.toString());
+  const handleQuestionClick = (id: number) => setSelectedQuestionId(id);
 
-  // Handle question click (detail panel wired in Plan 03)
-  const handleQuestionClick = (id: number) => {
-    setSelectedQuestionId(id);
-  };
-
-  // Handle tab change
   const handleTabChange = (index: number) => {
     const newTab = index === 1 ? 'archived' : 'active';
     const newParams = new URLSearchParams(searchParams);
@@ -158,294 +122,159 @@ export function FlagReviewPage() {
     setSearchParams(newParams);
   };
 
-  // Calculate pagination display
   const startItem = pagination ? (pagination.page - 1) * pagination.limit + 1 : 0;
-  const endItem = pagination
-    ? Math.min(pagination.page * pagination.limit, pagination.total)
-    : 0;
-
-  // Sync tab with URL
+  const endItem = pagination ? Math.min(pagination.page * pagination.limit, pagination.total) : 0;
   const selectedIndex = tab === 'archived' ? 1 : 0;
 
-  // Detail panel callbacks
-  const handleQuestionArchived = (id: number) => {
-    setQuestions((prev) => prev?.filter((q) => q.id !== id) || null);
-    setSelectedQuestionId(null);
+  const handleQuestionArchived = (id: number) => { setQuestions((prev) => prev?.filter((q) => q.id !== id) || null); setSelectedQuestionId(null); };
+  const handleFlagsDismissed = (id: number) => { setQuestions((prev) => prev?.filter((q) => q.id !== id) || null); setSelectedQuestionId(null); };
+  const handleQuestionRestored = (id: number) => { setQuestions((prev) => prev?.filter((q) => q.id !== id) || null); setSelectedQuestionId(null); };
+  const handleRefreshNeeded = () => setRefreshKey((prev) => prev + 1);
+
+  const selectStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '8px 12px',
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    backgroundColor: C.paper,
+    color: C.ink,
+    fontFamily: "'Lora', Georgia, serif",
+    fontSize: '13px',
+    outline: 'none',
   };
 
-  const handleFlagsDismissed = (id: number) => {
-    setQuestions((prev) => prev?.filter((q) => q.id !== id) || null);
-    setSelectedQuestionId(null);
+  const btnPage: React.CSSProperties = {
+    padding: '6px 14px',
+    backgroundColor: 'transparent',
+    color: C.muted,
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '12px',
+    letterSpacing: '0.1em',
+    cursor: 'pointer',
   };
 
-  const handleQuestionRestored = (id: number) => {
-    setQuestions((prev) => prev?.filter((q) => q.id !== id) || null);
-    setSelectedQuestionId(null);
-  };
+  const TabPanelContent = ({ tabKey }: { tabKey: string }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {questionId && (
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: '2px', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.ink }}>
+            Showing flags for Question #{questionId}
+          </span>
+          <button
+            onClick={() => {
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete('questionId');
+              newParams.set('page', '1');
+              setSearchParams(newParams);
+            }}
+            style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.1em', color: ADMIN_ACCENT, background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            CLEAR FILTER
+          </button>
+        </div>
+      )}
 
-  const handleRefreshNeeded = () => {
-    setRefreshKey((prev) => prev + 1);
-  };
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }} className="md:grid-cols-3">
+        <div>
+          <label htmlFor={`collection-${tabKey}`} style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '0.14em', color: C.muted, marginBottom: '6px' }}>
+            COLLECTION
+          </label>
+          <select id={`collection-${tabKey}`} value={collection} onChange={(e) => handleFilterChange('collection', e.target.value)} style={selectStyle}>
+            <option value="">All collections</option>
+            {collections.map((coll) => (
+              <option key={coll.slug} value={coll.slug}>{coll.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {error && (
+        <div style={{ border: `1px solid ${C.incorrect}`, borderRadius: '2px', padding: '12px 16px' }}>
+          <p style={{ fontFamily: "'Lora', Georgia, serif", color: C.incorrect, margin: 0, fontSize: '13px' }}>{error}</p>
+        </div>
+      )}
+
+      <div style={{ border: `1px solid ${C.rule}`, borderRadius: '2px', overflow: 'hidden' }}>
+        {questions && questions.length === 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '48px 16px' }}>
+            <svg width="40" height="40" style={{ color: C.mutedFg, marginBottom: '16px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+            </svg>
+            <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', color: C.muted, textAlign: 'center', margin: 0 }}>
+              {tabKey === 'active' ? "No flagged questions -- players haven't flagged anything yet" : 'No archived flagged questions'}
+            </p>
+          </div>
+        ) : (
+          <FlaggedQuestionsTable
+            questions={questions}
+            sort={sort}
+            order={order}
+            onSortChange={handleSortChange}
+            onQuestionClick={handleQuestionClick}
+          />
+        )}
+      </div>
+
+      {pagination && pagination.total > 0 && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted }}>
+            Showing <strong>{startItem}</strong> to <strong>{endItem}</strong> of <strong>{pagination.total}</strong> results
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button onClick={() => handlePageChange(page - 1)} disabled={page === 1} style={{ ...btnPage, opacity: page === 1 ? 0.4 : 1, cursor: page === 1 ? 'not-allowed' : 'pointer' }}>PREV</button>
+            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.1em', color: C.muted }}>{pagination.page} / {pagination.totalPages}</span>
+            <button onClick={() => handlePageChange(page + 1)} disabled={page === pagination.totalPages} style={{ ...btnPage, opacity: page === pagination.totalPages ? 0.4 : 1, cursor: page === pagination.totalPages ? 'not-allowed' : 'pointer' }}>NEXT</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Flag Review</h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(24px, 4vw, 36px)', letterSpacing: '0.06em', color: C.ink, margin: '0 0 8px 0' }}>
+          Flag Review
+        </h1>
+        <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', fontSize: '13px', color: C.muted, margin: 0 }}>
           Review and triage player-flagged questions
         </p>
       </div>
 
       {/* Tabs */}
       <TabGroup selectedIndex={selectedIndex} onChange={handleTabChange}>
-        <TabList className="flex space-x-1 rounded-lg bg-gray-100 p-1">
-          <Tab className="w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 data-[selected]:bg-white data-[selected]:text-red-900 data-[selected]:shadow-sm data-[hover]:text-gray-900">
-            Active
-          </Tab>
-          <Tab className="w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 data-[selected]:bg-white data-[selected]:text-red-900 data-[selected]:shadow-sm data-[hover]:text-gray-900">
-            Archived
-          </Tab>
+        <TabList style={{ display: 'flex', borderBottom: `1px solid ${C.rule}` }}>
+          {['Active', 'Archived'].map((label, idx) => (
+            <Tab
+              key={label}
+              style={{
+                padding: '10px 24px',
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '13px',
+                letterSpacing: '0.12em',
+                background: 'none',
+                border: 'none',
+                borderBottom: selectedIndex === idx ? `3px solid ${ADMIN_ACCENT}` : '3px solid transparent',
+                color: selectedIndex === idx ? ADMIN_ACCENT : C.muted,
+                cursor: 'pointer',
+                marginBottom: '-1px',
+                outline: 'none',
+              }}
+            >
+              {label.toUpperCase()}
+            </Tab>
+          ))}
         </TabList>
 
-        <TabPanels className="mt-6">
-          {/* Active Tab */}
-          <TabPanel className="space-y-6">
-            {/* Question ID Filter Banner */}
-            {questionId && (
-              <div className="bg-blue-50 border border-blue-200 px-4 py-3 rounded-md flex items-center justify-between">
-                <span className="text-sm text-blue-800">
-                  Showing flags for Question #{questionId}
-                </span>
-                <button
-                  onClick={() => {
-                    const newParams = new URLSearchParams(searchParams);
-                    newParams.delete('questionId');
-                    newParams.set('page', '1');
-                    setSearchParams(newParams);
-                  }}
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  Clear filter
-                </button>
-              </div>
-            )}
-
-            {/* Collection Filter */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label
-                  htmlFor="collection"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Collection
-                </label>
-                <select
-                  id="collection"
-                  value={collection}
-                  onChange={(e) => handleFilterChange('collection', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-                >
-                  <option value="">All collections</option>
-                  {collections.map((coll) => (
-                    <option key={coll.slug} value={coll.slug}>
-                      {coll.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Error message */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md">
-                {error}
-              </div>
-            )}
-
-            {/* Table */}
-            <div className="bg-white shadow rounded-lg overflow-hidden">
-              {questions && questions.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 px-4">
-                  <svg
-                    className="w-12 h-12 text-gray-400 mb-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
-                    />
-                  </svg>
-                  <p className="text-gray-600 text-center">
-                    No flagged questions -- players haven't flagged anything yet
-                  </p>
-                </div>
-              ) : (
-                <FlaggedQuestionsTable
-                  questions={questions}
-                  sort={sort}
-                  order={order}
-                  onSortChange={handleSortChange}
-                  onQuestionClick={handleQuestionClick}
-                />
-              )}
-            </div>
-
-            {/* Pagination */}
-            {pagination && pagination.total > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-700">
-                  Showing <span className="font-medium">{startItem}</span> to{' '}
-                  <span className="font-medium">{endItem}</span> of{' '}
-                  <span className="font-medium">{pagination.total}</span> results
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handlePageChange(page - 1)}
-                    disabled={page === 1}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-sm text-gray-700">
-                    Page {pagination.page} of {pagination.totalPages}
-                  </span>
-                  <button
-                    onClick={() => handlePageChange(page + 1)}
-                    disabled={page === pagination.totalPages}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            )}
-          </TabPanel>
-
-          {/* Archived Tab */}
-          <TabPanel className="space-y-6">
-            {/* Question ID Filter Banner */}
-            {questionId && (
-              <div className="bg-blue-50 border border-blue-200 px-4 py-3 rounded-md flex items-center justify-between">
-                <span className="text-sm text-blue-800">
-                  Showing flags for Question #{questionId}
-                </span>
-                <button
-                  onClick={() => {
-                    const newParams = new URLSearchParams(searchParams);
-                    newParams.delete('questionId');
-                    newParams.set('page', '1');
-                    setSearchParams(newParams);
-                  }}
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  Clear filter
-                </button>
-              </div>
-            )}
-
-            {/* Collection Filter */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label
-                  htmlFor="collection-archived"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Collection
-                </label>
-                <select
-                  id="collection-archived"
-                  value={collection}
-                  onChange={(e) => handleFilterChange('collection', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-                >
-                  <option value="">All collections</option>
-                  {collections.map((coll) => (
-                    <option key={coll.slug} value={coll.slug}>
-                      {coll.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Error message */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md">
-                {error}
-              </div>
-            )}
-
-            {/* Table */}
-            <div className="bg-white shadow rounded-lg overflow-hidden">
-              {questions && questions.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 px-4">
-                  <svg
-                    className="w-12 h-12 text-gray-400 mb-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
-                    />
-                  </svg>
-                  <p className="text-gray-600 text-center">
-                    No archived flagged questions
-                  </p>
-                </div>
-              ) : (
-                <FlaggedQuestionsTable
-                  questions={questions}
-                  sort={sort}
-                  order={order}
-                  onSortChange={handleSortChange}
-                  onQuestionClick={handleQuestionClick}
-                />
-              )}
-            </div>
-
-            {/* Pagination */}
-            {pagination && pagination.total > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-700">
-                  Showing <span className="font-medium">{startItem}</span> to{' '}
-                  <span className="font-medium">{endItem}</span> of{' '}
-                  <span className="font-medium">{pagination.total}</span> results
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handlePageChange(page - 1)}
-                    disabled={page === 1}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-sm text-gray-700">
-                    Page {pagination.page} of {pagination.totalPages}
-                  </span>
-                  <button
-                    onClick={() => handlePageChange(page + 1)}
-                    disabled={page === pagination.totalPages}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            )}
-          </TabPanel>
+        <TabPanels style={{ marginTop: '24px' }}>
+          <TabPanel><TabPanelContent tabKey="active" /></TabPanel>
+          <TabPanel><TabPanelContent tabKey="archived" /></TabPanel>
         </TabPanels>
       </TabGroup>
 
-      {/* Flag Detail Panel */}
       <FlagDetailPanel
         questionId={selectedQuestionId}
         onClose={() => setSelectedQuestionId(null)}

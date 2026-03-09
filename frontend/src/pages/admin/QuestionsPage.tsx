@@ -5,6 +5,9 @@ import { API_URL } from '../../services/api';
 import { useDebounce } from '../../hooks/useDebounce';
 import { QuestionTable, QuestionRow } from './components/QuestionTable';
 import { QuestionDetailPanel } from './components/QuestionDetailPanel';
+import { useTheme } from '../../hooks/useTheme';
+
+const ADMIN_ACCENT = '#FF5740';
 
 interface PaginationMeta {
   total: number;
@@ -21,38 +24,28 @@ interface ExploreResponse {
 export function QuestionsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { accessToken } = useAuthStore();
+  const { C } = useTheme();
 
-  // Local state for search input (debounced before syncing to URL)
-  const [searchInput, setSearchInput] = useState(
-    searchParams.get('search') || ''
-  );
+  const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
   const debouncedSearch = useDebounce(searchInput, 300);
 
-  // Data state
   const [questions, setQuestions] = useState<QuestionRow[] | null>(null);
   const [pagination, setPagination] = useState<PaginationMeta | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Detail panel state
-  const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(
-    null
-  );
+  const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [pendingSelectFirst, setPendingSelectFirst] = useState(false);
   const [pendingSelectLast, setPendingSelectLast] = useState(false);
 
-  // Deep-link: auto-open detail panel if ?id=X is in URL
   useEffect(() => {
     const idParam = searchParams.get('id');
     if (idParam) {
       const id = parseInt(idParam, 10);
-      if (!isNaN(id)) {
-        setSelectedQuestionId(id);
-      }
+      if (!isNaN(id)) setSelectedQuestionId(id);
     }
-  }, []); // Only on mount
+  }, []);
 
-  // Collections list (fetched from API)
   const [collections, setCollections] = useState<{ name: string; slug: string }[]>([]);
 
   useEffect(() => {
@@ -72,7 +65,6 @@ export function QuestionsPage() {
     fetchCollections();
   }, [accessToken]);
 
-  // Get current filter values from URL
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || '25', 10);
   const sort = searchParams.get('sort') || 'quality_score';
@@ -82,24 +74,17 @@ export function QuestionsPage() {
   const status = searchParams.get('status') ?? '';
   const search = searchParams.get('search') || '';
 
-  // Sync debounced search to URL
   useEffect(() => {
     if (debouncedSearch !== search) {
       updateParam('search', debouncedSearch);
-      // Reset to page 1 when search changes
-      if (debouncedSearch !== searchInput) {
-        updateParam('page', '1');
-      }
+      if (debouncedSearch !== searchInput) updateParam('page', '1');
     }
   }, [debouncedSearch]);
 
-  // Fetch data when URL params change
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!accessToken) return;
-
       setError(null);
-
       try {
         const params = new URLSearchParams();
         params.set('page', page.toString());
@@ -113,19 +98,10 @@ export function QuestionsPage() {
         const flagged = searchParams.get('flagged') || '';
         if (flagged) params.set('flagged', flagged);
 
-        const response = await fetch(
-          `${API_URL}/api/admin/questions/explore?${params.toString()}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch questions');
-        }
-
+        const response = await fetch(`${API_URL}/api/admin/questions/explore?${params.toString()}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (!response.ok) throw new Error('Failed to fetch questions');
         const data: ExploreResponse = await response.json();
         setQuestions(data.data);
         setPagination(data.pagination);
@@ -134,34 +110,22 @@ export function QuestionsPage() {
         setQuestions([]);
       }
     };
-
     fetchQuestions();
   }, [searchParams.toString(), accessToken]);
 
-  // Helper to update a single URL param
   const updateParam = (key: string, value: string) => {
     const newParams = new URLSearchParams(searchParams);
-    if (value) {
-      newParams.set(key, value);
-    } else {
-      newParams.delete(key);
-    }
+    if (value) newParams.set(key, value); else newParams.delete(key);
     setSearchParams(newParams);
   };
 
-  // Handle filter changes (set filter + reset to page 1 in one update)
   const handleFilterChange = (key: string, value: string) => {
     const newParams = new URLSearchParams(searchParams);
-    if (value) {
-      newParams.set(key, value);
-    } else {
-      newParams.delete(key);
-    }
+    if (value) newParams.set(key, value); else newParams.delete(key);
     newParams.set('page', '1');
     setSearchParams(newParams);
   };
 
-  // Handle sort change (set sort + order in one update)
   const handleSortChange = (column: string) => {
     const newParams = new URLSearchParams(searchParams);
     if (sort === column) {
@@ -173,18 +137,9 @@ export function QuestionsPage() {
     setSearchParams(newParams);
   };
 
-  // Handle pagination
-  const handlePageChange = (newPage: number) => {
-    updateParam('page', newPage.toString());
-  };
+  const handlePageChange = (newPage: number) => updateParam('page', newPage.toString());
+  const handleQuestionClick = (id: number, index: number) => { setSelectedQuestionId(id); setSelectedQuestionIndex(index); };
 
-  // Handle question click
-  const handleQuestionClick = (id: number, index: number) => {
-    setSelectedQuestionId(id);
-    setSelectedQuestionIndex(index);
-  };
-
-  // Auto-select first/last question after page loads (cross-page navigation)
   useEffect(() => {
     if (!questions || questions.length === 0) return;
     if (pendingSelectFirst) {
@@ -199,10 +154,8 @@ export function QuestionsPage() {
     }
   }, [questions]);
 
-  // Handle detail panel navigation
   const handlePanelNavigate = (direction: 'prev' | 'next') => {
     if (!questions) return;
-
     if (direction === 'prev') {
       if (selectedQuestionIndex > 0) {
         const newIndex = selectedQuestionIndex - 1;
@@ -212,7 +165,7 @@ export function QuestionsPage() {
         setPendingSelectLast(true);
         handlePageChange(page - 1);
       }
-    } else if (direction === 'next') {
+    } else {
       if (selectedQuestionIndex < questions.length - 1) {
         const newIndex = selectedQuestionIndex + 1;
         setSelectedQuestionIndex(newIndex);
@@ -224,12 +177,8 @@ export function QuestionsPage() {
     }
   };
 
-  // Handle detail panel close
-  const handlePanelClose = () => {
-    setSelectedQuestionId(null);
-  };
+  const handlePanelClose = () => setSelectedQuestionId(null);
 
-  // Handle question updated (optimistic table row update)
   const handleQuestionUpdated = (updated: {
     id: number;
     text: string;
@@ -244,10 +193,7 @@ export function QuestionsPage() {
         if (q.id !== updated.id) return q;
         return {
           ...q,
-          text:
-            updated.text.length > 120
-              ? updated.text.substring(0, 120) + '...'
-              : updated.text,
+          text: updated.text.length > 120 ? updated.text.substring(0, 120) + '...' : updated.text,
           difficulty: updated.difficulty,
           qualityScore: updated.qualityScore,
           violationCount: updated.violationCount,
@@ -257,74 +203,94 @@ export function QuestionsPage() {
     });
   };
 
-  // Calculate pagination display
   const startItem = pagination ? (pagination.page - 1) * pagination.limit + 1 : 0;
-  const endItem = pagination
-    ? Math.min(pagination.page * pagination.limit, pagination.total)
-    : 0;
+  const endItem = pagination ? Math.min(pagination.page * pagination.limit, pagination.total) : 0;
+
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '10px 14px',
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    backgroundColor: C.paper,
+    color: C.ink,
+    fontFamily: "'Lora', Georgia, serif",
+    fontSize: '14px',
+    outline: 'none',
+  };
+
+  const selectStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '8px 12px',
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    backgroundColor: C.paper,
+    color: C.ink,
+    fontFamily: "'Lora', Georgia, serif",
+    fontSize: '13px',
+    outline: 'none',
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: 'block',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '11px',
+    letterSpacing: '0.14em',
+    color: C.muted,
+    marginBottom: '6px',
+  };
+
+  const btnPage: React.CSSProperties = {
+    padding: '6px 14px',
+    backgroundColor: 'transparent',
+    color: C.muted,
+    border: `1px solid ${C.rule}`,
+    borderRadius: '2px',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '12px',
+    letterSpacing: '0.1em',
+    cursor: 'pointer',
+  };
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Question Explorer</h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 'clamp(24px, 4vw, 36px)', letterSpacing: '0.06em', color: C.ink, margin: '0 0 8px 0' }}>
+          Question Explorer
+        </h1>
+        <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', fontSize: '13px', color: C.muted, margin: 0 }}>
           Browse, search, and inspect questions across all collections
         </p>
       </div>
 
       {/* Search */}
       <div>
-        <label htmlFor="search" className="sr-only">
-          Search questions
-        </label>
+        <label htmlFor="search" className="sr-only">Search questions</label>
         <input
           type="text"
           id="search"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search questions, answers, or explanations..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+          style={inputStyle}
         />
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }} className="md:grid-cols-4">
         <div>
-          <label
-            htmlFor="collection"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Collection
-          </label>
-          <select
-            id="collection"
-            value={collection}
-            onChange={(e) => handleFilterChange('collection', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-          >
+          <label htmlFor="collection" style={labelStyle}>COLLECTION</label>
+          <select id="collection" value={collection} onChange={(e) => handleFilterChange('collection', e.target.value)} style={selectStyle}>
             <option value="">All collections</option>
             {collections.map((coll) => (
-              <option key={coll.slug} value={coll.slug}>
-                {coll.name}
-              </option>
+              <option key={coll.slug} value={coll.slug}>{coll.name}</option>
             ))}
           </select>
         </div>
 
         <div>
-          <label
-            htmlFor="difficulty"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Difficulty
-          </label>
-          <select
-            id="difficulty"
-            value={difficulty}
-            onChange={(e) => handleFilterChange('difficulty', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-          >
+          <label htmlFor="difficulty" style={labelStyle}>DIFFICULTY</label>
+          <select id="difficulty" value={difficulty} onChange={(e) => handleFilterChange('difficulty', e.target.value)} style={selectStyle}>
             <option value="">All difficulties</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
@@ -333,18 +299,8 @@ export function QuestionsPage() {
         </div>
 
         <div>
-          <label
-            htmlFor="status"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Status
-          </label>
-          <select
-            id="status"
-            value={status}
-            onChange={(e) => handleFilterChange('status', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
-          >
+          <label htmlFor="status" style={labelStyle}>STATUS</label>
+          <select id="status" value={status} onChange={(e) => handleFilterChange('status', e.target.value)} style={selectStyle}>
             <option value="">All statuses</option>
             <option value="draft">Draft</option>
             <option value="active">Active</option>
@@ -353,28 +309,28 @@ export function QuestionsPage() {
           </select>
         </div>
 
-        <div className="flex items-center">
-          <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+        <div style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '2px' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted, cursor: 'pointer' }}>
             <input
               type="checkbox"
               checked={searchParams.get('flagged') === 'true'}
               onChange={(e) => handleFilterChange('flagged', e.target.checked ? 'true' : '')}
-              className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+              style={{ accentColor: ADMIN_ACCENT }}
             />
             Flagged only
           </label>
         </div>
       </div>
 
-      {/* Error message */}
+      {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md">
-          {error}
+        <div style={{ border: `1px solid ${C.incorrect}`, borderRadius: '2px', padding: '12px 16px' }}>
+          <p style={{ fontFamily: "'Lora', Georgia, serif", color: C.incorrect, margin: 0, fontSize: '13px' }}>{error}</p>
         </div>
       )}
 
       {/* Table */}
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div style={{ border: `1px solid ${C.rule}`, borderRadius: '2px', overflow: 'hidden' }}>
         <QuestionTable
           questions={questions}
           sort={sort}
@@ -386,30 +342,14 @@ export function QuestionsPage() {
 
       {/* Pagination */}
       {pagination && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-700">
-            Showing <span className="font-medium">{startItem}</span> to{' '}
-            <span className="font-medium">{endItem}</span> of{' '}
-            <span className="font-medium">{pagination.total}</span> results
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ fontFamily: "'Lora', Georgia, serif", fontSize: '13px', color: C.muted }}>
+            Showing <strong>{startItem}</strong> to <strong>{endItem}</strong> of <strong>{pagination.total}</strong> results
           </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page === 1}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
-            <span className="text-sm text-gray-700">
-              Page {pagination.page} of {pagination.totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page === pagination.totalPages}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button onClick={() => handlePageChange(page - 1)} disabled={page === 1} style={{ ...btnPage, opacity: page === 1 ? 0.4 : 1, cursor: page === 1 ? 'not-allowed' : 'pointer' }}>PREV</button>
+            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '12px', letterSpacing: '0.1em', color: C.muted }}>{pagination.page} / {pagination.totalPages}</span>
+            <button onClick={() => handlePageChange(page + 1)} disabled={page === pagination.totalPages} style={{ ...btnPage, opacity: page === pagination.totalPages ? 0.4 : 1, cursor: page === pagination.totalPages ? 'not-allowed' : 'pointer' }}>NEXT</button>
           </div>
         </div>
       )}
