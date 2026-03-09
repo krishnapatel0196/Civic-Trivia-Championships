@@ -41,9 +41,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PIPELINE-01 | Phase 57 | Pending |
-| PIPELINE-02 | Phase 57 | Pending |
-| PLAYBOOK-01 | Phase 57 | Pending |
+| PIPELINE-01 | Phase 57 | Complete |
+| PIPELINE-02 | Phase 57 | Complete |
+| PLAYBOOK-01 | Phase 57 | Complete |
 | CONTENT-01 | Phase 58 | Pending |
 | PLAYBOOK-02 | Phases 58–62 | Pending |
 | CONTENT-02 | Phase 59 | Pending |

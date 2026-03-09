@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.1 Collection Excellence — Phase 57: Pipeline & Playbook Foundation
+**Current focus:** v2.1 Collection Excellence — Phase 58: Portland, OR Collection
 
 ## Current Position
 
-Phase: 57 of 62 (Pipeline & Playbook Foundation)
-Plan: 02 of 02 complete — Phase 57 complete
-Status: Phase complete, ready for Phase 58
-Last activity: 2026-03-09 — Completed 57-02-PLAN.md (expiring ratio warning + COLLECTION-PLAYBOOK.md bootstrapped)
+Phase: 58 of 62 (Portland, OR Collection)
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-03-09 — Phase 57 complete (verified 8/8): semantic dedup integrated in pipeline, expiring ratio warning added, COLLECTION-PLAYBOOK.md bootstrapped
 
 Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | ~1,484 questions | v2.1 Phase 57 all plans shipped
 
