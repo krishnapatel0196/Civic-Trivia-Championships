@@ -210,7 +210,7 @@ export function AnswerGrid({
             transition={{
               scale:     { type: 'spring', stiffness: 400, damping: 17 },
               opacity:   { duration: 0.3 },
-              boxShadow: reducedMotion ? { duration: 0 } : { duration: 0.7, repeat: Infinity, ease: 'easeInOut' },
+              boxShadow: reducedMotion ? { duration: 0 } : { duration: 0.7, repeat: 1, ease: 'easeInOut' },
             }}
             style={{
               position: 'relative',
