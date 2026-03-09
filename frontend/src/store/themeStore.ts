@@ -6,7 +6,7 @@ interface ThemeStore {
 }
 
 export const useThemeStore = create<ThemeStore>((set) => ({
-  darkMode: localStorage.getItem('ctc-theme') === 'dark',
+  darkMode: localStorage.getItem('ctc-theme') !== 'light',
   toggleDarkMode: () =>
     set((state) => {
       const next = !state.darkMode;
