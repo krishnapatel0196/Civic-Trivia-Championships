@@ -6,7 +6,7 @@ import { usePlayerXp } from '../../hooks/usePlayerXp';
 import { useTheme } from '../../hooks/useTheme';
 
 export function Header() {
-  const { user, accessToken, clearAuth, isAuthenticated, displayName } = useAuthStore();
+  const { user, accessToken, clearAuth, isAuthenticated, displayName, tier } = useAuthStore();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen]   = useState(false);
   const menuRef                    = useRef<HTMLDivElement>(null);
@@ -15,6 +15,13 @@ export function Header() {
   const xpNeeded         = xpData ? xpData.xpInLevel + xpData.xpToNextLevel : 0;
   const progressPercent  = xpNeeded > 0 ? Math.round((xpData!.xpInLevel / xpNeeded) * 100) : 0;
   const { darkMode, C }  = useTheme();
+
+  const tierBorderColor = (() => {
+    if (tier === 'empowered') return '#FF5740';
+    if (tier === 'connected') return darkMode ? '#03B9D2' : '#00657C';
+    if (!isAuthenticated)     return darkMode ? '#FED12E' : C.rule;
+    return C.rule; // inform tier or unresolved
+  })();
 
   const handleLogout = async () => {
     try {
@@ -48,7 +55,7 @@ export function Header() {
       top: 0,
       zIndex: 50,
       background: C.paper,
-      borderBottom: `1px solid ${C.rule}`,
+      borderBottom: `2px solid ${tierBorderColor}`,
       transition: 'background 0.2s, border-color 0.2s',
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
