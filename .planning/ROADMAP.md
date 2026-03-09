@@ -152,6 +152,7 @@ Full archive: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 **Goal**: The generation pipeline catches near-duplicates automatically, the activation check enforces expiring-question ratio, and the collection playbook is bootstrapped with accumulated learnings
 **Depends on**: Phase 56 (v2.0 complete)
 **Requirements**: PIPELINE-01, PIPELINE-02, PLAYBOOK-01
+**Plans:** 2 plans
 **Success Criteria** (what must be TRUE):
   1. Running `generate-locale-questions.ts` on any collection automatically surfaces and archives semantic near-duplicates — no separate manual pass required
   2. Running `audit-collection-readiness.ts` on a collection with fewer than 15% expiring questions prints a warning before activation proceeds
@@ -159,8 +160,8 @@ Full archive: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
   4. A retrospective template is documented in the playbook and ready to be completed at the end of each collection phase
 
 Plans:
-- [ ] 57-01: Automate semantic dedup inside generate-locale-questions.ts pipeline
-- [ ] 57-02: Add expiring-question ratio warning to audit-collection-readiness.ts and bootstrap COLLECTION-PLAYBOOK.md
+- [ ] 57-01-PLAN.md — Automate semantic dedup inside generate-locale-questions.ts pipeline
+- [ ] 57-02-PLAN.md — Add expiring-question ratio warning to audit-collection-readiness.ts and bootstrap COLLECTION-PLAYBOOK.md
 
 #### Phase 58: Portland, OR Collection
 **Goal**: Portland, OR is a fully activated, playable collection with a completed retrospective feeding the living playbook
