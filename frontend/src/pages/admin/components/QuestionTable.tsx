@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { DifficultyRate } from './DifficultyRate';
 import { useTheme } from '../../../hooks/useTheme';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 
 export interface QuestionRow {
   id: number;
@@ -61,6 +62,8 @@ export function QuestionTable({
   onQuestionClick,
 }: QuestionTableProps) {
   const { C } = useTheme();
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
   const [colWidths, setColWidths] = useState<ColWidths>(buildDefaultWidths);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const dragRef = useRef<DragState | null>(null);
@@ -116,6 +119,12 @@ export function QuestionTable({
     return map[status] ?? { backgroundColor: C.ruleLight, color: C.muted };
   };
 
+  const getFlagBadgeStyle = (flagCount: number): React.CSSProperties => {
+    if (flagCount > 5) return { backgroundColor: 'rgba(192,21,42,0.12)', color: C.incorrect };
+    if (flagCount > 2) return { backgroundColor: 'rgba(212,160,23,0.15)', color: C.amber };
+    return { backgroundColor: C.ruleLight, color: C.muted };
+  };
+
   const thStyle: React.CSSProperties = {
     padding: '10px 12px 10px 12px',
     textAlign: 'left',
@@ -136,6 +145,134 @@ export function QuestionTable({
     borderBottom: `1px solid ${C.rule}`,
   };
 
+  // ── Mobile card list ──────────────────────────────────────────────────────
+  if (isMobile) {
+    if (!questions) {
+      // Mobile loading skeleton
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {[...Array(6)].map((_, i) => (
+            <div key={i} style={{ padding: '14px 16px', borderBottom: `1px solid ${C.rule}`, backgroundColor: C.paper }}>
+              <div style={{ height: '14px', backgroundColor: C.rule, borderRadius: '2px', width: '85%', opacity: 0.5, marginBottom: '8px' }} />
+              <div style={{ height: '14px', backgroundColor: C.rule, borderRadius: '2px', width: '60%', opacity: 0.4, marginBottom: '8px' }} />
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ height: '20px', width: '60px', backgroundColor: C.rule, borderRadius: '2px', opacity: 0.4 }} />
+                <div style={{ height: '20px', width: '50px', backgroundColor: C.rule, borderRadius: '2px', opacity: 0.4 }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {questions.map((question, index) => (
+          <div
+            key={question.id}
+            onClick={() => onQuestionClick(question.id, index)}
+            style={{
+              padding: '14px 16px',
+              borderBottom: `1px solid ${C.rule}`,
+              backgroundColor: hoveredId === question.id ? C.ruleLight : C.paper,
+              cursor: 'pointer',
+              transition: 'background-color 0.1s',
+            }}
+            onTouchStart={() => setHoveredId(question.id)}
+            onTouchEnd={() => setHoveredId(null)}
+          >
+            {/* Question text — 2-line clamp */}
+            <p style={{
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: '14px',
+              color: C.ink,
+              margin: '0 0 8px 0',
+              lineHeight: 1.5,
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+            }}>
+              {question.text}
+            </p>
+
+            {/* Collection(s) */}
+            {question.collectionNames.length > 0 && (
+              <p style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontSize: '12px',
+                color: C.muted,
+                margin: '0 0 10px 0',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}>
+                {question.collectionNames.join(', ')}
+              </p>
+            )}
+
+            {/* Badges row */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' }}>
+              {/* Difficulty */}
+              <span style={{
+                ...getDifficultyStyle(question.difficulty),
+                padding: '2px 8px',
+                borderRadius: '2px',
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '11px',
+                letterSpacing: '0.08em',
+              }}>
+                {question.difficulty}
+              </span>
+
+              {/* Quality score */}
+              {question.qualityScore !== null && (
+                <span style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '11px',
+                  letterSpacing: '0.08em',
+                  color: C.muted,
+                  backgroundColor: C.ruleLight,
+                  padding: '2px 8px',
+                  borderRadius: '2px',
+                }}>
+                  Q: {question.qualityScore}
+                </span>
+              )}
+
+              {/* Status */}
+              <span style={{
+                ...getStatusStyle(question.status),
+                padding: '2px 8px',
+                borderRadius: '2px',
+                fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: '11px',
+                letterSpacing: '0.08em',
+              }}>
+                {question.status}
+              </span>
+
+              {/* Flag count — only if > 0 */}
+              {question.flagCount > 0 && (
+                <span style={{
+                  ...getFlagBadgeStyle(question.flagCount),
+                  padding: '2px 8px',
+                  borderRadius: '2px',
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '11px',
+                  letterSpacing: '0.08em',
+                }}>
+                  {question.flagCount} {question.flagCount === 1 ? 'flag' : 'flags'}
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // ── Desktop table (unchanged) ─────────────────────────────────────────────
   // Loading skeleton
   if (!questions) {
     return (
