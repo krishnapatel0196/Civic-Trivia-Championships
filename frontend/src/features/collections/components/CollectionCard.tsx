@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { CollectionSummary } from '../types';
 import { useAuthStore } from '../../../store/authStore';
+import { useTierColor } from '../../../hooks/useTierColor';
 
 interface CollectionCardProps {
   collection: CollectionSummary;
@@ -9,18 +10,19 @@ interface CollectionCardProps {
 }
 
 export function CollectionCard({ collection, isSelected, onSelect }: CollectionCardProps) {
-  const user    = useAuthStore((state) => state.user);
-  const isAdmin = user?.tier === 'empowered';
+  const user       = useAuthStore((state) => state.user);
+  const isAdmin    = user?.tier === 'empowered';
   const [isHovered, setIsHovered] = useState(false);
+  const tierColor  = useTierColor();
 
   const borderColor = isSelected
-    ? '#C63B18'
+    ? tierColor
     : isHovered
     ? '#8B7A65'
     : '#C8BAA6';
 
   const shadow = isSelected
-    ? '0 4px 20px rgba(198,59,24,0.18)'
+    ? `0 4px 20px ${tierColor}30`
     : isHovered
     ? '0 2px 10px rgba(23,18,14,0.08)'
     : '0 1px 4px rgba(23,18,14,0.06)';
@@ -118,7 +120,7 @@ export function CollectionCard({ collection, isSelected, onSelect }: CollectionC
           right: '8px',
           width: '20px',
           height: '20px',
-          background: '#C63B18',
+          background: tierColor,
           borderRadius: '2px',
           display: 'flex',
           alignItems: 'center',
