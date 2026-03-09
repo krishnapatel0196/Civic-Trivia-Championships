@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 57 of 62 (Pipeline & Playbook Foundation)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-03-09 — v2.1 roadmap created (Phases 57–62)
+Plan: 01 complete, 02+ pending
+Status: In progress
+Last activity: 2026-03-09 — Completed 57-01-PLAN.md (semantic dedup auto-integrated into generation pipeline)
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | ~1,484 questions | v2.1 Phase 57 ready to plan
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 12 collections live | ~1,484 questions | v2.1 Phase 57 Plan 01 shipped
 
 **Milestone history:**
 - v1.0–v2.0 (Phases 1–56): All Complete — see .planning/MILESTONES.md
@@ -33,7 +33,8 @@ Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) 
 Full decision log in PROJECT.md Key Decisions table.
 
 Key decisions relevant to v2.1:
-- Near-duplicate detection gap: pipeline catches exact text matches only; semantic dedup required a manual pass after generation in v1.9 — Phase 57 closes this gap
+- Near-duplicate detection gap: CLOSED (57-01) — runWithinCollectionSemanticDedup() now auto-runs after generation; manual scan-duplicates.ts pass no longer required per collection
+- Within-collection dedup uses empty tierMap for ClusterBuilder — quality score then externalId alphabetical order breaks ties (correct for single-collection context)
 - Mixed-durability pattern established (Texas State): expiring + durable questions in one collection; target 15–30% expiring
 - State-only curation rule: city/regional landmarks prohibited by name in state collections
 - Scaffold Bug 2 (known): step3 inserts into type annotation line — revert generate-locale-questions.ts to HEAD; state auto-discovery handles registration
@@ -60,7 +61,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-09
-Stopped at: v2.1 roadmap created — Phases 57–62 defined
+Stopped at: Completed 57-01-PLAN.md — semantic dedup integrated into generation pipeline
 Resume file: None
 
-Next action: `/gsd:plan-phase 57`
+Next action: Execute 57-02 (expiring-question ratio enforcement)
