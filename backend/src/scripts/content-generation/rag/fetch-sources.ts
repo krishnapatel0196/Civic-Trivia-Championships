@@ -18,10 +18,61 @@ function urlToFilename(url: string): string {
 }
 
 /**
+ * Fetches a Wikipedia article using the Wikipedia REST API (extracts endpoint).
+ * Returns clean plain text without HTML — avoids bot-blocking on the HTML pages.
+ */
+async function fetchWikipediaPage(url: string): Promise<string | null> {
+  try {
+    const match = url.match(/en\.wikipedia\.org\/wiki\/(.+)$/);
+    if (!match) return null;
+
+    const title = decodeURIComponent(match[1]);
+    const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&titles=${encodeURIComponent(title)}&format=json&explaintext=1&exsectionformat=plain`;
+
+    const response = await fetch(apiUrl, {
+      headers: {
+        'User-Agent': 'CivicTriviaBot/1.0 (civic education content generation; +https://github.com/EmpoweredVote/Civic-Trivia-Championships)',
+        'Accept': 'application/json',
+      },
+      signal: AbortSignal.timeout(15000),
+    });
+
+    if (!response.ok) {
+      console.warn(`  Wikipedia API HTTP ${response.status} for ${url}`);
+      return null;
+    }
+
+    const data = await response.json() as { query?: { pages?: Record<string, { missing?: boolean; extract?: string }> } };
+    const pages = data.query?.pages;
+    if (!pages) return null;
+
+    const page = Object.values(pages)[0];
+    if (!page || page.missing || !page.extract) return null;
+
+    const text = page.extract.replace(/\n{3,}/g, '\n\n').trim();
+    if (text.length < 100) {
+      console.warn(`  Minimal content from Wikipedia API for ${url} (${text.length} chars)`);
+      return null;
+    }
+
+    return text;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`  Wikipedia API failed for ${url}: ${message}`);
+    return null;
+  }
+}
+
+/**
  * Fetches a single URL and extracts clean readable text from the HTML.
+ * For Wikipedia URLs, uses the Wikipedia REST API instead of HTML scraping.
  * Strips navigation, footers, scripts, styles, and other non-content elements.
  */
 async function fetchPage(url: string): Promise<string | null> {
+  if (url.includes('en.wikipedia.org/wiki/')) {
+    return fetchWikipediaPage(url);
+  }
+
   try {
     const response = await fetch(url, {
       headers: {
