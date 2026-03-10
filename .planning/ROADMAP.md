@@ -188,9 +188,11 @@ Plans:
   3. Mixed-durability pattern applied — current-officeholder questions carry `expiresAt`, durable civic facts carry null
   4. A completed retrospective for Oregon State is appended to `COLLECTION-PLAYBOOK.md` covering what broke, what was fixed, and any carry-forward rules
 
+**Plans:** 2 plans
+
 Plans:
-- [ ] 59-01: Scaffold, generate, and curate Oregon State collection
-- [ ] 59-02: Activate Oregon State and complete playbook retrospective
+- [ ] 59-01-PLAN.md — Scaffold, locale config, generate, and curate Oregon State (Wave 1)
+- [ ] 59-02-PLAN.md — Add banner image, activate, post-activation verify, and playbook retrospective (Wave 2)
 
 #### Phase 60: Washington, DC Collection
 **Goal**: Washington, DC is a fully activated, playable collection — framed as a district (not a state or typical city) — with civic questions that make DC's unique constitutional status legible and interesting, plus a completed retrospective
