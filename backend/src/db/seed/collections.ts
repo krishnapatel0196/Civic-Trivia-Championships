@@ -145,4 +145,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 12
   },
+  {
+    name: 'Oregon',
+    slug: 'oregon-state',
+    description: "Can you pass the Beaver State's civic test?",
+    localeCode: 'en-US',
+    localeName: 'Oregon',
+    iconIdentifier: 'state',
+    themeColor: '#1B4A1E',
+    tier: 'state',
+    isActive: false,
+    sortOrder: 13
+  },
 ];
