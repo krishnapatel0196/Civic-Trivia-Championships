@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.1 Collection Excellence — Phase 58: Portland, OR Collection
+**Current focus:** v2.1 Collection Excellence — Phase 59: Oregon State Collection — COMPLETE
 
 ## Current Position
 
-Phase: 58 of 62 (Portland, OR Collection) — COMPLETE
-Plan: 03 of 3 complete
-Status: Phase 58 verified and closed
-Last activity: 2026-03-09 — Completed 58-03-PLAN.md: gap closure — Portland OR reached 83 active questions (80+ target); fixed fetch-sources.ts to use Wikipedia REST API for all wikipedia.org URLs
+Phase: 59 of 62 (Oregon State Collection) — COMPLETE
+Plan: 02 of 2 complete
+Status: Phase 59 verified and closed
+Last activity: 2026-03-12 — Completed 59-02-PLAN.md: Oregon State activated with 81 active questions; banner image added; retrospective appended to COLLECTION-PLAYBOOK.md
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 13 collections live | ~1,550 questions | v2.1 Phase 58 complete ✓ → Phase 59 next
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 14 collections live | ~1,630 questions | v2.1 Phase 59 complete ✓ → Phase 60 next
 
 **Milestone history:**
 - v1.0–v2.0 (Phases 1–56): All Complete — see .planning/MILESTONES.md
@@ -24,7 +24,7 @@ Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) 
 - Backend LIVE: https://civic-trivia-backend.onrender.com
 - Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
-- Active collections (12 + Federal = 13 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR
+- Active collections (13 + Federal = 14 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR, Oregon
 
 ## Accumulated Context
 
@@ -49,6 +49,9 @@ Key decisions relevant to v2.1:
 - Source URL carry-forward (58-02): prefer Wikipedia article URLs over government portal URLs for park/landmark topics; spot-check 2-3 sources before generation; target 1.4x question buffer for city collections
 - Wikipedia API fix (58-03): fetch-sources.ts now routes en.wikipedia.org/wiki/ URLs through w/api.php extracts API — HTML scraping was blocked by Wikipedia bot protection (0 bytes). Fix is universal for all future collections.
 - Portland OR gap closure (58-03): reached 83 active questions; 18.1% expiring ratio; CONTENT-01 satisfied
+- Oregon State expiring ratio ceiling (59-02): 7.4% (6/81) is structural ceiling for state collections — Governor, SoS, AG, Treasurer, Senate President, House Speaker exhausts all viable expiring targets; accepted per plan context (do not force artificial expiring questions)
+- State collection content saturation (59-02): automated pipeline yields 50-70 unique questions for most US states; manual supplementation to reach 80 is a normal pattern — plan for it upfront
+- Oregon supplementation pattern (59-02): inserted 25 hand-crafted questions on uncovered topics (judiciary, Oregon Trail, Tom McCall, Kate Brown succession, Measure 91, counties) after 3 generation runs hit dedup wall
 
 ### Pending Todos
 
@@ -72,7 +75,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed quick-026 — pushed 32 commits to origin/master (4dfc1d3..6c23e72); portland-or.jpg 404 resolved on next Render deploy
+Stopped at: Completed 59-02-PLAN.md — Oregon State activated (81 questions, banner image, retrospective)
 Resume file: None
 
-Next action: Phase 59 — Oregon State Collection
+Next action: Phase 60 (next phase per roadmap)
