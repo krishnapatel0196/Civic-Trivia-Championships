@@ -198,6 +198,7 @@ Plans:
 **Goal**: Washington, DC is a fully activated, playable collection — framed as a district (not a state or typical city) — with civic questions that make DC's unique constitutional status legible and interesting, plus a completed retrospective
 **Depends on**: Phase 59
 **Requirements**: CONTENT-03, PLAYBOOK-02 (retrospective)
+**Plans:** 2 plans
 **Success Criteria** (what must be TRUE):
   1. Washington, DC collection is active and playable in production with at least 80 questions meeting quality standards
   2. DC's unique civic structure is accurately represented: DC Council + Mayor (not Congress), Home Rule Charter (1973), no voting representation in the House or Senate — questions reflect district framing, not city or state framing
@@ -205,8 +206,8 @@ Plans:
   4. A completed retrospective for Washington, DC is appended to `COLLECTION-PLAYBOOK.md` covering what broke, what was fixed, and any carry-forward rules (including DC-specific voice guidance decisions)
 
 Plans:
-- [ ] 60-01: Scaffold, generate, and curate Washington, DC collection
-- [ ] 60-02: Activate Washington, DC and complete playbook retrospective
+- [ ] 60-01-PLAN.md — Scaffold, generate, and curate Washington, DC collection
+- [ ] 60-02-PLAN.md — Activate Washington, DC and complete playbook retrospective
 
 #### Phase 61: Biloxi, MS Collection
 **Goal**: Biloxi, MS is a fully activated, playable collection with a completed retrospective feeding the living playbook
