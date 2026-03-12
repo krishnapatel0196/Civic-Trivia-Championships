@@ -155,3 +155,40 @@ Copy this template and fill it in at the end of each collection phase. Append to
 - Expiring question ratio: 23% (14/61 questions)
 - Generation cost: not logged
 - Time to activate: ~35 min total (31 min generation + 4 min activation)
+
+---
+
+## Retrospective: Oregon (Phase 59, 2026-03-12)
+
+### What went well
+- Wikipedia source URLs (Oregon, Oregon Legislative Assembly, Governor, Capitol, Constitution, Bottle Bill, SB100) returned substantive encyclopedic content — consistent with the carry-forward rule from Portland Phase 58
+- Voice guidance successfully prevented Lt. Governor confusion: the "Oregon has NO elected Lt. Governor — Secretary of State is ex officio Lt. Gov" instruction worked exactly as intended; zero bad Lt. Gov questions were generated
+- Oregon's civic innovations (vote-by-mail, Bottle Bill, SB100, Death with Dignity, ballot initiative process) generated high-quality, genuinely interesting trivia questions — the material is excellent civic trivia fodder
+- Semantic dedup ran automatically post-generation, correctly clustering similar questions (Pioneer statue, state motto, state flag) and reducing the set to unique-fact coverage
+- Scaffold Bug 2 workaround applied cleanly per documented procedure — no unexpected issues
+
+### What broke or was harder than expected
+- **Content saturation hit faster than expected for state collections.** Three full generation runs (158 + 87 + 75 questions generated across runs) yielded only 56 unique non-duplicate questions due to aggressive semantic dedup. Oregon state civic content at the state level is more bounded than city collections — fewer unique facts, more topic overlap per batch.
+- **Expiring ratio target (15–30%) unachievable for Oregon.** Oregon has only 4 statewide elected executives (Governor, SoS, AG, Treasurer) plus 2 legislative leadership roles (Senate President, House Speaker) = 6 possible expiring questions. With 81 total questions, the ceiling is 7.4% even when all 6 are included. The plan context correctly anticipated this and allowed accepting the lower ratio.
+- **Manual question insertion required to reach 80-question target.** After three generation rounds + semantic dedup, the automated pipeline only produced 56 unique questions. An additional 25 hand-crafted questions were inserted directly into the database to reach 81 total, covering judiciary structure, Oregon Trail, Tom McCall legacy, Kate Brown succession, counties, Measure 91, and other uncovered topics.
+- **History of Initiative and Referendum Wikipedia page returned no content** — the URL triggers a Wikipedia redirect that the scraper could not follow. Workaround: use the main Oregon Wikipedia article which includes initiative process coverage.
+
+### Bugs encountered
+- **Scaffold Bug 2:** generate-locale-questions.ts corrupted after scaffold — reverted per COLLECTION-PLAYBOOK.md workaround (expected, not new)
+- **Oregon Death with Dignity Wikipedia page extraction failures** (runs 2 and 3): the URL returned no content — likely a redirect or bot protection issue specific to this page. The main Oregon article covers the Death with Dignity Act sufficiently.
+
+### Carry-forward rules (new conventions for future collections)
+
+- **State collection content saturation:** State collections exhaust unique civic facts faster than city collections. Plan for 2–3 generation runs and expect the automated pipeline to max out around 50–70 unique questions for most US states. Manual supplementation to reach 80 is a normal pattern for state collections — build a list of "topics not yet covered" before the supplementation pass.
+- **Expiring ratio ceiling for state collections:** State collections typically have 4–6 expiring question targets (Governor + statewide executives + 2 legislative leaders). With 80+ total questions, the ceiling is roughly 5–8% even when all are included. Do not attempt to inflate the expiring ratio with artificial expiring questions — the plan context explicitly permits accepting the lower ratio for states.
+- **Pre-supplementation gap analysis:** Before doing a manual insert pass, query the database for draft questions and map against planned topic areas. This reveals gaps systematically (e.g., Supreme Court structure, Trail, counties, specific governors) rather than guessing from memory.
+- **Wikipedia page failures to watch for Oregon:** `History_of_Initiative_%26_Referendum_in_Oregon` and `Oregon_Death_with_Dignity_Act` pages may fail to extract. Use the main `Oregon` Wikipedia article as a fallback — it covers both topics adequately.
+- **Add judiciary source URLs upfront:** Oregon Supreme Court and Court of Appeals Wikipedia pages generated clean, unique content that filled a gap. Include these in the initial source list for future state collections rather than adding them in a third-run retry.
+
+### Final stats
+- Questions generated (3 automated runs): 320 total attempts, ~243 passed validation
+- Questions after automated dedup: 56 unique draft questions
+- Questions after manual supplementation: 81 active questions
+- Expiring question ratio: 7.4% (6/81 — Governor, SoS, AG, Treasurer, Senate President, House Speaker; below 15% target but ceiling reached)
+- Generation cost: ~$4.02 total across 3 runs ($1.43 + $1.37 + $1.22)
+- Time to activate: ~3 hours total (generation + curation + manual supplementation + activation)
