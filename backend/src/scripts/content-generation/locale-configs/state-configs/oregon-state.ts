@@ -79,6 +79,13 @@ export const oregonStateConfig: LocaleConfig = {
     'https://en.wikipedia.org/wiki/Oregon_Secretary_of_State',
     'https://sos.oregon.gov/blue-book/Pages/state/executive/governor.aspx',
     'https://www.oregonencyclopedia.org/articles/senate_bill_100/',
+    'https://en.wikipedia.org/wiki/Oregon_Supreme_Court',
+    'https://en.wikipedia.org/wiki/Oregon_Attorney_General',
+    'https://en.wikipedia.org/wiki/Oregon_State_Treasurer',
+    'https://en.wikipedia.org/wiki/Oregon_Trail',
+    'https://en.wikipedia.org/wiki/Tom_McCall',
+    'https://en.wikipedia.org/wiki/Oregon_cannabis_law',
+    'https://en.wikipedia.org/wiki/Federally_recognized_tribes_in_Oregon',
   ],
 };
 
