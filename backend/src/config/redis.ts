@@ -55,6 +55,15 @@ export class SessionStorageFactory {
         console.error('❌ Redis client error:', err);
       });
 
+      // Handle permanent disconnection (after reconnect strategy exhausts retries)
+      client.on('end', () => {
+        if (!this.degraded) {
+          console.warn('⚠️  Redis permanently disconnected — switching to in-memory fallback');
+          this.degraded = true;
+          this.storage = new MemoryStorage();
+        }
+      });
+
       // Connect to Redis
       await client.connect();
 
