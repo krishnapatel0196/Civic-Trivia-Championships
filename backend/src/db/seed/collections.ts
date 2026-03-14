@@ -181,4 +181,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 15
   },
+  {
+    name: 'Mississippi',
+    slug: 'mississippi-state',
+    description: 'Where the river meets the law.',
+    localeCode: 'en-US',
+    localeName: 'Mississippi',
+    iconIdentifier: 'state',
+    themeColor: '#1A3A5C',
+    tier: 'state',
+    isActive: false,
+    sortOrder: 16
+  },
 ];
