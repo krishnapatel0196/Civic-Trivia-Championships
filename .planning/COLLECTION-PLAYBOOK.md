@@ -192,3 +192,41 @@ Copy this template and fill it in at the end of each collection phase. Append to
 - Expiring question ratio: 7.4% (6/81 — Governor, SoS, AG, Treasurer, Senate President, House Speaker; below 15% target but ceiling reached)
 - Generation cost: ~$4.02 total across 3 runs ($1.43 + $1.37 + $1.22)
 - Time to activate: ~3 hours total (generation + curation + manual supplementation + activation)
+
+---
+
+## Retrospective: Washington, DC (Phase 60, 2026-03-14)
+
+### What went well
+- **District framing in voice guidance worked effectively.** The locale config's repeated "never call DC a city or state — always 'the District' or 'Washington, DC'" instructions were well-respected by the generator. Very few questions slipped through with incorrect framing — the curation pass was light on framing corrections compared to what was anticipated.
+- **Content density was strong — DC is excellent trivia material.** One generation run produced 150 raw questions, 143 passed validation, 40 were archived by semantic dedup, leaving 103 unique draft questions. This is the best single-run yield in the v2.1 milestone. DC's unusual civic structure (Home Rule, congressional oversight, no voting representation, presidential judicial appointments) generates genuinely interesting and distinct trivia questions that don't overlap with the Federal collection.
+- **Federal/local separation held up well.** The "FORBIDDEN CONTENT" section in the locale config (Congress, national monuments, White House, US Capitol as civic landmark) did its job. Federal institution questions that slipped through were caught easily in curation — recognizable and clearly off-topic.
+- **Banner image workflow:** Used the Washington Monument Reflecting Pool panorama (user's selection) — clear blue sky, clean composition, iconic DC without overlapping with Federal collection imagery.
+
+### What broke or was harder than expected
+- **Expiring ratio was 0% after generation.** The generator did not apply `expiresAt` to any officeholder questions despite the locale config listing all four major officeholders with expiry dates. A post-generation targeted pass was required (generate-wdc-officeholder-questions.ts) to seed 15 officeholder-specific questions. This is a systemic pipeline gap — see carry-forward rules.
+- **Collection was partially activated before the curation checkpoint.** 51 questions were already in `active` status when the activation script ran (origin unclear — likely an earlier checkpoint in the 60-01 session). This brought the total active count to 154, diluting the expiring ratio from 14.6% (15/103) to 9.7% (15/154). The final ratio was accepted as-is since the audit returned READY.
+- **iconIdentifier and localeName scaffold errors.** Scaffold Bug 2 triggered again: generate-locale-questions.ts corrupted. Additionally, the scaffold derived `localeName: 'Washington, Washington D.C.'` (treating DC as a state abbreviation) and `iconIdentifier: 'flag-dc'` (not a valid frontend icon). All three required manual correction post-scaffold.
+- **3 Wikipedia source URLs failed to extract** (voting_rights, statehood_movement, DC_Delegate pages returned no content). Non-blocking — 11 of 14 sources loaded successfully and provided strong coverage.
+
+### Bugs encountered
+- **Scaffold Bug 2 (recurring):** generate-locale-questions.ts corrupted after scaffold — applied documented workaround (revert + manual patch). Expected, not new.
+- **localeName expansion bug:** Scaffold expanded "DC" as a state abbreviation, producing "Washington, Washington D.C." — corrected to "Washington, DC" in collections.ts.
+- **iconIdentifier invalid slug:** Scaffold derived `flag-dc` from the slug suffix, which is not a valid frontend icon. Corrected to `flag-us`.
+
+### Carry-forward rules (new conventions for future collections)
+
+- **Non-standard jurisdictions: use city tier + voice guidance.** DC has no "district" tier in the schema. The correct pattern is `tier: city` with all special framing expressed entirely in voice guidance in the locale config. This approach worked well and generalizes to any other non-standard jurisdiction (territories, independent cities, etc.).
+- **Officeholder questions require a separate targeted pass.** The main generator does not reliably apply `expiresAt` to officeholder questions even when the locale config declares them with expiry dates. Every collection should plan for a targeted officeholder generation pass using a script like generate-wdc-officeholder-questions.ts, or the pipeline needs to be updated to handle this natively. **Backlog item logged: add officeholders as a structured section of LocaleConfig with automatic expiry seeding.**
+- **Federal/local content separation for DC.** The FORBIDDEN CONTENT list in the locale config is the right approach. For DC specifically, the test is: "Is this about the federal government acting as a national institution, or about DC's local government?" Federal = belongs in Federal collection. Local = belongs in DC collection.
+- **DC expiring ratio ceiling:** DC has 4 major officeholders changing in 2026–2027 (Mayor, Council Chair, AG, Delegate). With 154 active questions, even a targeted 15-question officeholder pass only reaches 9.7%. The ceiling is roughly 10–15% for DC unless ward-level council member questions are also included (8 wards × 1 rep each). Accepting below 15% with documentation is appropriate.
+- **Pre-generation source quality check:** The 3 failed Wikipedia URLs (voting rights, statehood, delegate pages) were non-critical because they were covered by other loaded articles. For future DC updates or similar jurisdictions, verify that advocacy/political-movement Wikipedia pages actually have extractable content — they sometimes redirect or block extraction.
+
+### Final stats
+- Questions generated (1 automated run): 150 raw, 143 passed validation, 40 archived by semantic dedup = 103 unique draft questions
+- Questions after curation: 88 draft (user archived ~15 questions)
+- Officeholder pass: 15 questions added (wdc-401 to wdc-415), all with expiresAt
+- Total active at launch: 154 (includes 51 pre-existing active from earlier session)
+- Expiring question ratio: 9.7% (15/154 — below 15% target, accepted; pre-existing active questions diluted ratio)
+- Generation cost: not logged
+- Time to activate: ~2 hours (scaffold + generate + curation + officeholder pass + activation)
