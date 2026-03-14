@@ -213,6 +213,7 @@ Plans:
 **Goal**: Biloxi, MS is a fully activated, playable collection with a completed retrospective feeding the living playbook
 **Depends on**: Phase 60
 **Requirements**: CONTENT-04, PLAYBOOK-02 (retrospective)
+**Plans:** 2 plans
 **Success Criteria** (what must be TRUE):
   1. Biloxi, MS collection is active and playable in production with at least 70 questions meeting quality standards
   2. The automated dedup pipeline runs during generation — no manual near-duplicate pass required after activation
@@ -220,8 +221,8 @@ Plans:
   4. A completed retrospective for Biloxi is appended to `COLLECTION-PLAYBOOK.md` covering what broke, what was fixed, and any carry-forward rules
 
 Plans:
-- [ ] 61-01: Scaffold, generate, and curate Biloxi, MS collection
-- [ ] 61-02: Activate Biloxi, MS and complete playbook retrospective
+- [ ] 61-01-PLAN.md — Scaffold, generate, and curate Biloxi, MS collection
+- [ ] 61-02-PLAN.md — Activate Biloxi, MS and complete playbook retrospective
 
 #### Phase 62: Mississippi State Collection
 **Goal**: Mississippi State is a fully activated, playable collection with a completed retrospective that closes out the v2.1 milestone playbook
