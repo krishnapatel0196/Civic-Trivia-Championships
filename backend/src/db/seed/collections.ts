@@ -169,4 +169,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 14
   },
+  {
+    name: 'Biloxi, MS',
+    slug: 'biloxi-ms',
+    description: "The Seafood Capital of the World is betting you don't know it.",
+    localeCode: 'en-US',
+    localeName: 'Biloxi, MS',
+    iconIdentifier: 'flag-ms',
+    themeColor: '#0077A8',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 15
+  },
 ];
