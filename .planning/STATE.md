@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 Phase: 61 of 62 (Biloxi, MS Collection) — In progress
-Plan: 01 of 2 — paused at checkpoint:human-verify (Task 3)
-Status: Awaiting curation approval
-Last activity: 2026-03-14 — Completed 61-01 Tasks 1-2: Biloxi, MS scaffolded, 155 draft questions generated and deduped; checkpoint reached
+Plan: 02 of 2 — not started
+Status: In progress
+Last activity: 2026-03-14 — Completed 61-01: Biloxi, MS scaffolded, 155 questions generated/deduped, 144 remaining after curation (casino questions removed); 61-02 is next
 
 Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 15 collections scaffolded | ~2,400 questions | v2.1 Phases 57–60 complete ✓ → Phase 61 in progress
 
@@ -57,6 +57,7 @@ Key decisions relevant to v2.1:
 - Washington DC expiring ratio gap (60-01): generator did not set expiresAt on any questions; curator must manually set during curation checkpoint: Mayor Bowser 2027-01-02, Chair Mendelson 2027-01-02, AG Schwalb 2027-01-02, Delegate 2027-01-03
 - Biloxi, MS scaffold (61-01): Scaffold Bug 2 triggered again — revert + manual registration is the standard pattern for city collections; also fixed apostrophe syntax error in collections.ts description (use double-quote strings for taglines with apostrophes)
 - Biloxi, MS generation (61-01): 155 draft questions after semantic dedup from 190 seeded; 3 Wikipedia sources returned 0 chars but main Biloxi article provided sufficient coverage; expiring ratio 0% — targeted officeholder pass in 61-02
+- Biloxi, MS curation (61-01): curator removed casino questions (over 9-question cap), muted others; 144 draft questions post-curation; Ward 4 name "Jamie Creel" not flagged — confirmed carry-forward for officeholder pass
 
 ### Pending Todos
 
@@ -80,7 +81,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: 61-01-PLAN.md checkpoint:human-verify — Biloxi, MS scaffolded, 155 draft questions generated and deduped; awaiting curation approval
+Stopped at: 61-01 complete — curation approved; 144 draft questions banked; ready to execute 61-02
 Resume file: None
 
-Next action: Curator reviews/curates Biloxi questions in admin panel (casino cap to 9, archive geographic errors, verify Ward 4 name), then types "approved" to resume 61-01 continuation
+Next action: Execute 61-02-PLAN.md — targeted officeholder pass, Biloxi Lighthouse banner image, activate collection, append COLLECTION-PLAYBOOK.md retrospective
