@@ -44,11 +44,11 @@
 | PIPELINE-01 | Phase 57 | Complete |
 | PIPELINE-02 | Phase 57 | Complete |
 | PLAYBOOK-01 | Phase 57 | Complete |
-| CONTENT-01 | Phase 58 | Pending |
+| CONTENT-01 | Phase 58 | Complete |
 | PLAYBOOK-02 | Phases 58–62 | Pending |
-| CONTENT-02 | Phase 59 | Pending |
-| CONTENT-03 | Phase 60 | Pending |
-| CONTENT-04 | Phase 61 | Pending |
+| CONTENT-02 | Phase 59 | Complete |
+| CONTENT-03 | Phase 60 | Complete |
+| CONTENT-04 | Phase 61 | Complete |
 | CONTENT-05 | Phase 62 | Pending |
 
 **Coverage:**
