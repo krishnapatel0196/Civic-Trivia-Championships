@@ -157,4 +157,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 13
   },
+  {
+    name: 'Washington, DC',
+    slug: 'washington-dc',
+    description: 'The District has no senators. Does that stump you?',
+    localeCode: 'en-US',
+    localeName: 'Washington, DC',
+    iconIdentifier: 'flag-us',
+    themeColor: '#C41E3A',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 14
+  },
 ];
