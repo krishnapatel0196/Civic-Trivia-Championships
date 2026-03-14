@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.1 Collection Excellence — Phase 60: Washington DC Collection — IN PROGRESS
+**Current focus:** v2.1 Collection Excellence — Phase 61: Biloxi, MS Collection — IN PROGRESS
 
 ## Current Position
 
-Phase: 60 of 62 (Washington DC Collection) — In progress
+Phase: 61 of 62 (Biloxi, MS Collection) — In progress
 Plan: 01 of 2 — paused at checkpoint:human-verify (Task 3)
 Status: Awaiting curation approval
-Last activity: 2026-03-14 — Completed 60-01 Tasks 1-2: Washington DC scaffolded, 103 draft questions generated and deduped; checkpoint reached
+Last activity: 2026-03-14 — Completed 61-01 Tasks 1-2: Biloxi, MS scaffolded, 155 draft questions generated and deduped; checkpoint reached
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 14 collections scaffolded | ~2,008 questions | v2.1 Phase 59 complete ✓ → Phase 60 in progress
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 15 collections scaffolded | ~2,400 questions | v2.1 Phases 57–60 complete ✓ → Phase 61 in progress
 
 **Milestone history:**
 - v1.0–v2.0 (Phases 1–56): All Complete — see .planning/MILESTONES.md
@@ -24,7 +24,7 @@ Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) 
 - Backend LIVE: https://civic-trivia-backend.onrender.com
 - Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
-- Active collections (13 + Federal = 14 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR, Oregon
+- Active collections (14 total — including Washington DC pending activation): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR, Oregon, Washington DC (inactive)
 
 ## Accumulated Context
 
@@ -55,6 +55,8 @@ Key decisions relevant to v2.1:
 - Washington DC city tier (60-01): DC uses city tier (no district tier in schema); district framing expressed via voice guidance; city-level content density yielded 103 draft questions from one generation run — strong result
 - Washington DC scaffold corrections (60-01): Scaffold Bug 2 triggered — reverted generate-locale-questions.ts and manually registered; also corrected localeName and iconIdentifier post-scaffold
 - Washington DC expiring ratio gap (60-01): generator did not set expiresAt on any questions; curator must manually set during curation checkpoint: Mayor Bowser 2027-01-02, Chair Mendelson 2027-01-02, AG Schwalb 2027-01-02, Delegate 2027-01-03
+- Biloxi, MS scaffold (61-01): Scaffold Bug 2 triggered again — revert + manual registration is the standard pattern for city collections; also fixed apostrophe syntax error in collections.ts description (use double-quote strings for taglines with apostrophes)
+- Biloxi, MS generation (61-01): 155 draft questions after semantic dedup from 190 seeded; 3 Wikipedia sources returned 0 chars but main Biloxi article provided sufficient coverage; expiring ratio 0% — targeted officeholder pass in 61-02
 
 ### Pending Todos
 
@@ -78,7 +80,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: 60-01-PLAN.md checkpoint:human-verify — Washington DC scaffolded, 103 draft questions generated; awaiting curation approval
+Stopped at: 61-01-PLAN.md checkpoint:human-verify — Biloxi, MS scaffolded, 155 draft questions generated and deduped; awaiting curation approval
 Resume file: None
 
-Next action: Curator reviews/curates DC questions in admin panel, then types "approved" to resume 60-01 continuation
+Next action: Curator reviews/curates Biloxi questions in admin panel (casino cap to 9, archive geographic errors, verify Ward 4 name), then types "approved" to resume 61-01 continuation
