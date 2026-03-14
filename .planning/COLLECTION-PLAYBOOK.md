@@ -230,3 +230,43 @@ Copy this template and fill it in at the end of each collection phase. Append to
 - Expiring question ratio: 9.7% (15/154 — below 15% target, accepted; pre-existing active questions diluted ratio)
 - Generation cost: not logged
 - Time to activate: ~2 hours (scaffold + generate + curation + officeholder pass + activation)
+
+---
+
+## Retrospective: Biloxi, MS (Phase 61, 2026-03-14)
+
+### What went well
+- **Wikipedia sources delivered strong content for most topics.** The main Biloxi, Mississippi article (20,464 chars) covered civil rights, seafood heritage, founding history, and the Beauvoir landmark even when dedicated article pages failed. One generation run produced 200 questions, 190 passed validation, 155 after semantic dedup — the best single-run result in the v2.1 milestone by question count.
+- **Casino question cap enforced correctly.** The locale config capped casino-resilience at 9 questions (10% of 90 target). The generator produced 26 casino-topic questions; the curator removed the excess without controversy. The pattern works: cap in locale config + curator enforcement.
+- **Ward 4 name "Jamie Creel" confirmed during curation.** The curation checkpoint was the right place to resolve the Creel vs. Fuller ambiguity — the curator reviewed and did not flag any question using "Jamie Creel," which was treated as implicit confirmation.
+- **Targeted officeholder pass worked cleanly.** With 0% expiring ratio after generation, the generate-biloxi-officeholder-questions.ts script (modeled on generate-wdc-officeholder-questions.ts) seeded all 8 officeholders with expiresAt on first run. No duplicates within the ward member questions. Pattern is proven and repeatable.
+- **Banner image sourced efficiently.** The Biloxi Lighthouse (BiloxiLightHouseandVisitorsCenter.jpg, CC BY-SA 3.0, 4000×3000) was available on Wikimedia Commons. Resized to 1200×900 (152KB) matching the collection banner dimension pattern.
+
+### What broke or was harder than expected
+- **3 Wikipedia source URLs returned 0 characters.** Gilbert R. Mason Sr., George Ohr, and Beau Rivage Biloxi articles all failed to extract via w/api.php. Non-blocking: the main Biloxi article and Biloxi wade-ins article together covered these topics. Civil rights still yielded 28 questions despite the Mason article failure.
+- **Scaffold Bug 2 triggered again (4th consecutive city collection).** generate-locale-questions.ts was corrupted post-scaffold, requiring revert and manual registration. Additionally, the scaffold produced `localeName: 'Biloxi, Mississippi'` (should be `'Biloxi, MS'`) and a description with an unescaped apostrophe that broke TypeScript single-quote string parsing. Three separate manual fixes were required post-scaffold before generation could proceed.
+- **Expiring ratio required 3 separate targeted passes to reach 15%.** The initial officeholder script (generate-biloxi-officeholder-questions.ts) seeded 13 questions (one ward-composition question was flagged as a duplicate of bxl-002), reaching only 8.3%. A second pass added reverse-lookup ward questions (bxl-421–427) to reach 12.2%. A third pass added 5 gov-structure questions (bxl-431–436) to reach 15.3%. Total: 26 expiring questions from 170 total. This took more effort than the single-pass DC officeholder approach because Biloxi has 8 officeholders (vs. 4 for DC) but a larger question pool requires more expiring questions to hit 15%.
+
+### Bugs encountered
+- **Scaffold Bug 2 (4th consecutive occurrence):** generate-locale-questions.ts injection into type annotation line. Workaround: revert + manual registration. Status: not fixed in pipeline.
+- **Apostrophe in description broke TypeScript single-quote string:** `description: 'The Seafood Capital of the World is betting you don't know it.'` — apostrophe in "don't" terminated the string early. Fix: double-quote wrapping. Scaffold should use JSON.stringify or escape apostrophes. Not fixed.
+- **bxl-412 duplicate of bxl-002:** The officeholder script generated "How many members serve on the Biloxi City Council?" which was detected as a semantic duplicate of an existing question. The DuplicateDetector correctly skipped it — no data integrity issue, just one fewer question seeded on the first pass.
+
+### Carry-forward rules (new conventions for future collections)
+
+- **Plan for 3 targeted passes when using an 8-official council.** With a 7-ward council (8 officials total including mayor), one targeted pass at 2q/official only reaches ~8–9% expiring ratio against a 130-170 question pool. Budget 2 questions per ward member (forward + reverse) and 4+ questions for the mayor from the start. Write this 2q/official pattern directly into the officeholder script for Mississippi State and future collections with large councils.
+- **Casino/gambling question cap generalizes to Mississippi State.** Mississippi State has significant gambling and casino history (Mississippi Gaming Control Act, Gulf Coast casino corridor). Apply a similar cap (8–10 questions max on gaming topic) in the locale config for Phase 62 to prevent topic overflow.
+- **Scaffold Bug 2 is confirmed persistent.** Every city collection from Phase 57 onward (Portland, Oregon, DC, Biloxi) has triggered this bug. Budget 10–15 minutes post-scaffold for the revert + manual-registration + localeName + description-apostrophe-check workflow. The checklist: (1) revert generate-locale-questions.ts, (2) manually add import + configKey, (3) verify localeName is short-form (not expanded), (4) verify description uses double-quote string if tagline contains an apostrophe.
+- **3-source Wikipedia failure is normal for city collections.** Multiple Wikipedia pages failing to extract via w/api.php (typically 2–4 of 12 sources) is expected. As long as the primary city article and 2–3 major topic articles load successfully, generation quality is unaffected. Do not delay generation to investigate failed sources — the main article is a reliable fallback.
+- **Source URL carry-forward:** government portal pages (biloxi.ms.us) return navigation content. Wikipedia-first sources are confirmed correct for Biloxi. The same pattern holds for Mississippi State — use en.wikipedia.org/wiki/Mississippi as the primary source.
+
+### Final stats
+- Questions generated: 200
+- Passed validation: 190
+- After semantic dedup: 155
+- After curator curation: 144 (casino questions removed, others muted)
+- Officeholder questions added (3 passes): 26 (bxl-401 to bxl-436, all expiresAt 2029-06-01)
+- Total active at launch: 170
+- Expiring question ratio: 15.3% (26/170 — meets 15% target)
+- Generation cost: not logged
+- Time to activate: ~1 day (scaffold + generate + curation checkpoint + officeholder passes + activation)
