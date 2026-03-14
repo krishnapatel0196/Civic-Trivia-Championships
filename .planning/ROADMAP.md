@@ -235,9 +235,11 @@ Plans:
   4. A completed retrospective for Mississippi State is appended to `COLLECTION-PLAYBOOK.md` and the playbook reflects all carry-forward rules accumulated across Phases 58–62
   5. Total active questions across all collections reaches approximately 1,900+
 
+**Plans:** 2 plans
+
 Plans:
-- [ ] 62-01: Scaffold, generate, and curate Mississippi State collection
-- [ ] 62-02: Activate Mississippi State and complete playbook retrospective
+- [ ] 62-01-PLAN.md — Scaffold, generate, and curate Mississippi State collection
+- [ ] 62-02-PLAN.md — Activate Mississippi State and complete playbook retrospective
 
 ## Progress
 
