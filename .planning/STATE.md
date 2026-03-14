@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.1 Collection Excellence — Phase 61: Biloxi, MS Collection — IN PROGRESS
+**Current focus:** v2.1 Collection Excellence — Phase 62: Mississippi State Collection (next)
 
 ## Current Position
 
-Phase: 61 of 62 (Biloxi, MS Collection) — In progress
-Plan: 02 of 2 — not started
-Status: In progress
-Last activity: 2026-03-14 — Completed 61-01: Biloxi, MS scaffolded, 155 questions generated/deduped, 144 remaining after curation (casino questions removed); 61-02 is next
+Phase: 61 of 62 (Biloxi, MS Collection) — COMPLETE
+Plan: 02 of 2 — complete
+Status: Phase 61 complete
+Last activity: 2026-03-14 — Completed 61-02: Biloxi, MS activated (170q, 15.3% expiring, Biloxi Lighthouse banner, COLLECTION-PLAYBOOK.md retrospective appended)
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 15 collections scaffolded | ~2,400 questions | v2.1 Phases 57–60 complete ✓ → Phase 61 in progress
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 15 collections active | ~2,600 questions | v2.1 Phases 57–61 complete ✓ → Phase 62 next
 
 **Milestone history:**
 - v1.0–v2.0 (Phases 1–56): All Complete — see .planning/MILESTONES.md
@@ -58,6 +58,8 @@ Key decisions relevant to v2.1:
 - Biloxi, MS scaffold (61-01): Scaffold Bug 2 triggered again — revert + manual registration is the standard pattern for city collections; also fixed apostrophe syntax error in collections.ts description (use double-quote strings for taglines with apostrophes)
 - Biloxi, MS generation (61-01): 155 draft questions after semantic dedup from 190 seeded; 3 Wikipedia sources returned 0 chars but main Biloxi article provided sufficient coverage; expiring ratio 0% — targeted officeholder pass in 61-02
 - Biloxi, MS curation (61-01): curator removed casino questions (over 9-question cap), muted others; 144 draft questions post-curation; Ward 4 name "Jamie Creel" not flagged — confirmed carry-forward for officeholder pass
+- Biloxi, MS activation (61-02): 26 officeholder questions added via 3-pass strategy (bxl-401 to bxl-436, all expiresAt 2029-06-01); 15.3% expiring ratio achieved; 170 total active questions; Biloxi Lighthouse banner (CC BY-SA 3.0, 1200x900); Phase 61 complete
+- Large council budget rule (61-02): 7-ward council requires 2q/ward-member (forward + reverse lookup) + 4q/mayor to reach 15% expiring target in 130-170 question pool; single-pass at 1q/ward only reaches ~8-9%
 
 ### Pending Todos
 
@@ -81,7 +83,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-14
-Stopped at: 61-01 complete — curation approved; 144 draft questions banked; ready to execute 61-02
+Stopped at: 61-02 complete — Biloxi, MS activated (170q, 15.3% expiring); Phase 61 complete
 Resume file: None
 
-Next action: Execute 61-02-PLAN.md — targeted officeholder pass, Biloxi Lighthouse banner image, activate collection, append COLLECTION-PLAYBOOK.md retrospective
+Next action: Begin Phase 62 — Mississippi State Collection (scaffold, generate, curate, activate)
