@@ -40,6 +40,8 @@ key-decisions:
   - "Description apostrophe required double-quote string in collections.ts (single-quote syntax error)"
   - "Gilbert R. Mason Sr., George Ohr, Beau Rivage Wikipedia sources returned no content (0 chars) — main Biloxi article covered these topics adequately"
   - "155 draft questions after semantic dedup (35 archived from 190 seeded) — well above 80+ target"
+  - "Curation complete: curator removed casino questions, muted some others — 144 draft questions remain post-curation"
+  - "Ward 4 council member Jamie Creel not flagged during curation — carry forward as confirmed"
 
 patterns-established:
   - "Biloxi voice guidance pattern: county seat attribution warning (Gulfport, not Biloxi), casino cap at 9, beach attribution (Harrison County Shore Protection Project)"
@@ -51,14 +53,14 @@ completed: 2026-03-14
 
 # Phase 61 Plan 01: Biloxi, MS Scaffold and Content Generation Summary
 
-**Biloxi, MS scaffolded with 7-topic locale config (seafood heritage, civil rights, Keesler AFB, casino resilience) and 155 draft questions generated from 9 Wikipedia sources after semantic dedup — well above the 80+ target**
+**Biloxi, MS scaffolded with 7-topic locale config (seafood heritage, civil rights, Keesler AFB, casino resilience), 155 questions generated and semantically deduped, 144 remaining after curator removed casino questions and muted others**
 
 ## Performance
 
-- **Duration:** ~20 min (generation 955s; seed and compile ~4 min)
+- **Duration:** ~20 min automated + human curation
 - **Started:** 2026-03-14T07:32:32Z
-- **Completed:** 2026-03-14 (at checkpoint)
-- **Tasks:** 2 of 3 (checkpoint:human-verify paused)
+- **Completed:** 2026-03-14
+- **Tasks:** 3 of 3 (Task 3: curation checkpoint — approved)
 - **Files modified:** 5 (+ 10 generated source/report files)
 
 ## Accomplishments
@@ -75,6 +77,7 @@ Each task was committed atomically:
 
 1. **Task 1: Scaffold Biloxi, MS and author locale config** - `b87a5b2` (feat)
 2. **Task 2: Generate Biloxi, MS questions** - `5b0d589` (feat)
+3. **Task 3: Human curation checkpoint** - approved by curator (no code commit; curation performed in admin panel)
 
 ## Files Created/Modified
 
@@ -129,19 +132,28 @@ Each task was committed atomically:
 | Passed validation | 190 |
 | Failed validation | 10 |
 | Semantic dedup archived | 35 |
-| Draft questions remaining | 155 |
+| Draft questions after dedup | 155 |
+| Draft questions after curation | 144 |
+| Questions removed/muted by curator | 11 (casino questions removed; some others muted) |
 | Duration | 955s (~16 min) |
 | Topics seeded | city-government=28, seafood-heritage=29, landmarks-culture=29, civil-rights=28, military-geography=29, casino-resilience=26, founding-history=21 |
 | Expiring ratio | 0.0% (officeholder pass in 61-02) |
 
+## Curation Notes
+
+- Curator removed casino-era questions (over the 9-question cap)
+- Some additional questions muted
+- Ward 4 council member "Jamie Creel" not flagged — confirmed carry-forward
+- 144 draft questions remain — well above the 70-question activation threshold
+
 ## Next Phase Readiness
 
-- 155 draft questions ready for admin panel curation at https://civic-trivia-backend.onrender.com/admin
-- Curator should archive questions that: claim Biloxi is county seat, claim beach is within city limits, include addresses/phones in answers, frame Biloxi as "gambling capital", reference Jefferson Davis biography rather than Beauvoir as a site
-- Casino-resilience questions: 26 generated — curator should trim to 9 maximum
-- After curation, type "approved" to trigger 61-02 (officeholder pass + activation)
-- Expiring ratio will be addressed in 61-02 via targeted officeholder question generator
+- 144 curated draft questions banked; collection READY status confirmed (audit: READY, 144 draft)
+- Ward 4 name "Jamie Creel" confirmed via curation silence — use in officeholder pass
+- Expiring ratio is 0% — 61-02 Task 1 must run targeted officeholder pass (Approach A: generate-biloxi-officeholder-questions.ts) targeting 15%+ ratio
+- Banner image (Biloxi Lighthouse) not yet added — 61-02 Task 1 Step 4
+- Collection remains inactive; activation is 61-02 Task 2
 
 ---
 *Phase: 61-biloxi-ms-collection*
-*Completed: 2026-03-14 (at checkpoint — awaiting curation approval)*
+*Completed: 2026-03-14*
