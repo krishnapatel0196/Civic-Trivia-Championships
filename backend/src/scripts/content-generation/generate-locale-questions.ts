@@ -171,6 +171,7 @@ async function generateBatch(
   totalBatches: number,
   sourceDocuments: string[],
   existingExternalIds: Set<string>,
+  idOffset: number,
   stateFeatures?: string
 ): Promise<{ questions: ValidatedQuestion[]; usage: { input: number; output: number; cached: number } }> {
   const batchNumber = batchIndex + 1;
@@ -204,9 +205,9 @@ async function generateBatch(
     systemPromptText = buildSystemPrompt(config.name, batchTopicDistribution, config.locale);
   }
 
-  // Determine next ID range for this batch
-  const startId = batchIndex * config.batchSize + 1;
-  const endId = Math.min(startId + config.batchSize - 1, config.targetQuestions);
+  // Determine next ID range for this batch, offset above any pre-existing IDs in the DB
+  const startId = idOffset + batchIndex * config.batchSize + 1;
+  const endId = startId + config.batchSize - 1;
 
   const userMessage = `Generate ${config.batchSize} civic trivia questions for ${config.name}.
 
@@ -535,6 +536,28 @@ async function main(): Promise<void> {
   const allGenerated: ValidatedQuestion[] = [];
   const allPassed: ValidatedQuestion[] = [];
   const existingIds = new Set<string>();
+
+  // Determine ID offset: start above the highest externalId already in the DB for this prefix
+  // so re-generation runs never collide with prior run IDs (including archived questions).
+  let idOffset = 0;
+  if (!args.dryRun && collectionId !== null) {
+    const { db: dbForOffset } = await import('../../db/index.js');
+    const { questions: questionsForOffset } = await import('../../db/schema.js');
+    const { sql: sqlForOffset } = await import('drizzle-orm');
+    const prefixPattern = config.externalIdPrefix + '-%';
+    const maxIdRows = await dbForOffset
+      .select({ externalId: questionsForOffset.externalId })
+      .from(questionsForOffset)
+      .where(sqlForOffset`${questionsForOffset.externalId} LIKE ${prefixPattern}`);
+    if (maxIdRows.length > 0) {
+      const maxNum = maxIdRows.reduce((max, row) => {
+        const num = parseInt(row.externalId.split('-').pop() ?? '0', 10);
+        return Math.max(max, isNaN(num) ? 0 : num);
+      }, 0);
+      idOffset = maxNum;
+      console.log(`  ID offset: ${idOffset} (starting from ${config.externalIdPrefix}-${String(idOffset + 1).padStart(3, '0')})`);
+    }
+  }
   let totalSeeded = 0;
   let totalSkipped = 0;
   let totalErrors = 0;
@@ -671,6 +694,7 @@ Return ONLY a JSON object with a "questions" array containing exactly 1 question
         totalBatches,
         sourceDocuments,
         existingIds,
+        idOffset,
         stateFeatures
       );
 

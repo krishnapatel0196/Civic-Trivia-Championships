@@ -31,13 +31,19 @@ import type { LocaleConfig } from './bloomington-in.js';
  * - Questions stating DC judges are elected or appointed by the Mayor
  *   (ALL DC judges are presidentially appointed and Senate-confirmed)
  * - Questions referencing website navigation structure ("Which section of dc.gov...")
+ * - Questions about DC's license plate design, motto, or history — not a civic knowledge topic
+ * - Questions specifically about Advisory Neighborhood Commissions (ANCs), ANC numbers,
+ *   or individual ANC commissioners — too granular for a general audience
+ * - Questions naming specific DC judges or their individual appointments — structure only
+ * - Questions that include the current year in the question text (e.g., "As of 2026, who...")
+ *   — use expiresAt instead; write "Who is the current X?" not "As of YEAR, who is X?"
  */
 export const washingtonDcConfig: LocaleConfig = {
   locale: 'washington-dc',
   name: 'Washington, DC',
   externalIdPrefix: 'wdc',
   collectionSlug: 'washington-dc',
-  targetQuestions: 100,
+  targetQuestions: 120,
   batchSize: 25,
   overshootFactor: 1.4,
 
@@ -55,12 +61,12 @@ export const washingtonDcConfig: LocaleConfig = {
     {
       slug: 'dc-courts-judiciary',
       name: 'DC Courts & Judiciary',
-      description: 'DC Superior Court (trial court, Chief Judge + 50 associate judges). DC Court of Appeals (DC\'s highest court, equivalent to a state supreme court, Chief Judge + 8 associate judges). CRITICAL: ALL DC judges are appointed by the President of the United States and confirmed by the US Senate — NOT elected, NOT appointed by the Mayor. This is a direct consequence of DC\'s federal status and is a distinguishing civic fact. Federal courts in DC (US District Court for DC, DC Circuit Court of Appeals) are NOT DC local courts — they are federal courts that happen to sit in DC.',
+      description: 'STRUCTURE ONLY — do NOT name specific judges or individual appointments. DC Superior Court (trial court). DC Court of Appeals (DC\'s highest court, equivalent to a state supreme court). CRITICAL DISTINGUISHING FACT: ALL DC local judges are appointed by the President of the United States and confirmed by the US Senate — NOT elected, NOT appointed by the Mayor. This presidential-appointment fact is unique to DC and is the primary civic insight this topic should test. Federal courts in DC (US District Court for DC, DC Circuit Court of Appeals) are NOT DC local courts — they are federal courts that happen to sit in DC and belong in the Federal collection.',
     },
     {
       slug: 'ward-neighborhood-structure',
       name: 'Ward & Neighborhood Structure',
-      description: 'DC is divided into 8 wards, each represented by one Council member. Advisory Neighborhood Commissions (ANCs): 37 ANCs created by Home Rule Act, first elections 1975; each represents approximately 2,000 residents. ANCs are advisory — they vote on local issues but cannot pass binding laws. Ward boundaries redrawn after each decennial census. DC is also divided into quadrants (NW, NE, SE, SW) radiating from the Capitol building.',
+      description: 'DC is divided into 8 wards, each represented by one elected Council member. Ward boundaries are redrawn after each decennial census. DC is also divided into quadrants (NW, NE, SE, SW) radiating from the Capitol building. SCOPE LIMIT: Do NOT generate questions specifically about Advisory Neighborhood Commissions (ANCs), individual ANC numbers (e.g., ANC 1A), or ANC commissioners — this is too granular. ANCs may appear as context only (e.g., "DC created neighborhood advisory bodies under Home Rule to give residents a voice") but must never be the primary subject of a question.',
     },
     {
       slug: 'dc-history',
@@ -75,11 +81,11 @@ export const washingtonDcConfig: LocaleConfig = {
   ],
 
   topicDistribution: {
-    'dc-government-structure': 30,
-    'constitutional-status': 25,
-    'dc-courts-judiciary': 15,
-    'ward-neighborhood-structure': 10,
-    'dc-history': 12,
+    'dc-government-structure': 35,
+    'constitutional-status': 28,
+    'dc-courts-judiciary': 8,
+    'ward-neighborhood-structure': 8,
+    'dc-history': 13,
     'dc-civic-identity': 8,
   },
 

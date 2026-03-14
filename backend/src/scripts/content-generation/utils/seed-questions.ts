@@ -104,7 +104,8 @@ export async function seedQuestionBatch(
   let skipped = 0;
   let duplicateTexts = 0;
 
-  // Load existing questions for this collection to detect duplicate text
+  // Load existing ACTIVE and DRAFT questions for this collection to detect duplicate text.
+  // Archived questions are excluded — they were curated out and must not block regeneration.
   const existingQuestionLinks = await db
     .select({ questionId: collectionQuestions.questionId })
     .from(collectionQuestions)
@@ -117,10 +118,15 @@ export async function seedQuestionBatch(
     const existingQuestions = await db
       .select({ externalId: questions.externalId, text: questions.text })
       .from(questions)
-      .where(inArray(questions.id, existingQIds));
+      .where(
+        and(
+          inArray(questions.id, existingQIds),
+          inArray(questions.status, ['active', 'draft'])
+        )
+      );
 
     detector.loadExisting(existingQuestions);
-    console.log(`  Loaded ${existingQuestions.length} existing questions for duplicate text detection`);
+    console.log(`  Loaded ${existingQuestions.length} active/draft questions for duplicate text detection`);
   }
 
   for (const question of batch) {

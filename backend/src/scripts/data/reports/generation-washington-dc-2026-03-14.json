@@ -1,54 +1,54 @@
 {
-  "timestamp": "2026-03-14T00:22:47.624Z",
+  "timestamp": "2026-03-14T02:29:26.593Z",
   "target": "washington-dc",
   "config": {
-    "targetQuestions": 140,
+    "targetQuestions": 168,
     "batchSize": 25,
     "maxRetries": 3
   },
   "results": {
-    "totalGenerated": 199,
-    "passedValidation": 143,
+    "totalGenerated": 238,
+    "passedValidation": 166,
     "failedValidation": 0,
     "retryExhausted": 0,
-    "finalInserted": 143
+    "finalInserted": 166
   },
   "breakdown": {
     "byRule": {
-      "pure-lookup": 20,
-      "duplicate-text": 30,
-      "vague-qualifiers": 2,
-      "ambiguous-answers": 4
+      "pure-lookup": 23,
+      "duplicate-text": 42,
+      "ambiguous-answers": 5,
+      "vague-qualifiers": 2
     },
     "byRetryAttempt": {
-      "0": 120,
-      "1": 16,
-      "2": 6,
-      "3": 1
+      "0": 139,
+      "1": 20,
+      "2": 3,
+      "3": 4
     },
     "byDifficulty": {
       "easy": 42,
-      "medium": 67,
-      "hard": 34
+      "medium": 77,
+      "hard": 47
     },
     "byTopic": {
-      "dc-government-structure": 25,
-      "constitutional-status": 24,
-      "dc-courts-judiciary": 25,
-      "ward-neighborhood-structure": 25,
-      "dc-history": 19,
-      "dc-civic-identity": 25
+      "dc-government-structure": 30,
+      "constitutional-status": 28,
+      "dc-courts-judiciary": 28,
+      "ward-neighborhood-structure": 29,
+      "dc-history": 22,
+      "dc-civic-identity": 29
     }
   },
   "failures": [],
   "performance": {
-    "totalDurationMs": 759005,
-    "apiCalls": 55,
+    "totalDurationMs": 895251,
+    "apiCalls": 71,
     "tokensUsed": {
-      "input": 9389,
-      "output": 45682,
-      "cached": 2587536
+      "input": 12527,
+      "output": 56386,
+      "cached": 3537728
     },
-    "estimatedCostUsd": 1.4896578
+    "estimatedCostUsd": 1.9446894
   }
 }

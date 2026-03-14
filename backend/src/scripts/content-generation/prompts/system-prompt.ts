@@ -92,7 +92,7 @@ Distribute difficulty across the full batch:
 - Use only facts from the source documents provided
 - If you are not certain of a fact, do not include it
 - Numbers must be precise (budget figures, district counts, population stats)
-- For time-sensitive facts, note the year: "As of 2024, ..."
+- For time-sensitive facts (current officeholders, recent stats), set expiresAt — do NOT include the year in the question text. Write "Who is the current Mayor?" not "As of 2026, who is the Mayor?" Year-stamping the question text causes it to age badly.
 
 ## What to Avoid
 - Vague or subjective questions ("Which is most important?")
@@ -102,7 +102,7 @@ Distribute difficulty across the full batch:
 - Phone numbers, street addresses, or contact information in answer options — these test memorization of contact details, not civic knowledge
 - Anything that could embarrass or politically compromise the civic education mission
 
-${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}${localeSlug === 'plano-tx' ? buildPlanoVoiceGuidance() : ''}${localeSlug === 'portland-or' ? buildPortlandVoiceGuidance() : ''}`;
+${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}${localeSlug === 'plano-tx' ? buildPlanoVoiceGuidance() : ''}${localeSlug === 'portland-or' ? buildPortlandVoiceGuidance() : ''}${localeSlug === 'washington-dc' ? buildWashingtonDcVoiceGuidance() : ''}`;
 }
 
 /**
@@ -474,4 +474,88 @@ function buildFremontSensitivityInstructions(): string {
 - Medium: Requires civic knowledge but learnable (e.g., "What role does the city manager play?")
 - Hard: Nuanced details even locals might not know (e.g., "Which five towns consolidated to form Fremont in 1956?")
 - Distractors should scale with difficulty — easy has obviously wrong answers, hard has genuinely tricky ones`;
+}
+
+/**
+ * Builds Washington, DC voice and accuracy guidance for content generation.
+ * Ensures district framing, federal/local separation, and content scope restrictions
+ * learned from Phase 60 curation are applied to all future generation runs.
+ */
+function buildWashingtonDcVoiceGuidance(): string {
+  return `
+
+## Washington, DC — Specific Content Guidelines
+
+### District Framing (NON-NEGOTIABLE)
+
+DC is NOT a city or a state. Always use district framing:
+- CORRECT: "the District," "Washington, DC," "DC government," "DC Council"
+- WRONG: "the city," "city council," "city government," "the state"
+
+Every question must pass this check: does it use correct DC framing? If it calls DC a "city" in any sense that implies municipal = city, reject it.
+
+### Federal vs. Local — Hard Boundary
+
+DC content ONLY. Federal government content belongs in the Federal collection.
+
+**FORBIDDEN topics (federal — do not generate):**
+- US Congress, US Senate, US House of Representatives
+- US Supreme Court (federal court — not a DC local institution)
+- The White House, the President acting in federal capacity
+- National monuments: Lincoln Memorial, Washington Monument, Jefferson Memorial, WWII Memorial
+- Smithsonian museums, National Mall, National Park Service sites
+- The US Capitol building as a DC civic landmark
+
+**The Wilson Building vs. the Capitol:** The John A. Wilson Building (1350 Pennsylvania Ave NW) is DC's seat of local government. The US Capitol is a federal building. Never confuse the two. DC civic questions use the Wilson Building; federal questions use the Capitol.
+
+### License Plates — FORBIDDEN
+
+Do NOT generate questions about DC's license plate design, motto, or history. "Taxation Without Representation" is common knowledge that doesn't test civic understanding. License plate questions are not civic questions.
+
+### Advisory Neighborhood Commissions (ANCs) — FORBIDDEN
+
+Do NOT generate questions that focus on ANCs, specific ANC numbers (ANC 1A, 2B, etc.), or individual ANC commissioners. ANCs are too granular for a general civic audience. ANCs may appear incidentally as context (e.g., "DC created ANCs under the Home Rule Charter to give residents a voice in local decisions") but must never be the primary subject of a question.
+
+### Courts & Judiciary — Structure Only, No Judge Names
+
+DC court questions MUST focus on structure, not individuals:
+- GOOD: "How many judges serve on the DC Court of Appeals?" or "Who appoints DC's local judges?"
+- BAD: Questions naming specific judges, specific cases, specific appointments by name
+
+The one critical fact worth testing: ALL DC local judges are appointed by the President and confirmed by the Senate (NOT elected, NOT appointed by the Mayor). This presidential-appointment fact is what distinguishes DC courts from every other jurisdiction and is the only reason this topic warrants questions.
+
+### No Year-Stamped Questions
+
+Do NOT write questions like "As of 2026, who is the Mayor of DC?" — the year makes the question feel dated immediately.
+Instead: "Who is the current Mayor of Washington, DC?" with expiresAt set to 2027-01-02T00:00:00Z.
+Use "currently" or "Who is the current X?" phrasing, never the year in the question text.
+
+### Expiration Dates for DC Officeholders
+
+- Mayor Muriel Bowser (not running for 4th term): expiresAt "2027-01-02T00:00:00Z"
+- Council Chair Phil Mendelson: expiresAt "2027-01-02T00:00:00Z"
+- Attorney General Brian Schwalb: expiresAt "2027-01-02T00:00:00Z"
+- Non-voting Delegate Eleanor Holmes Norton (retiring 2026): expiresAt "2027-01-03T00:00:00Z"
+- For structural questions (council composition, Home Rule Charter facts, court structure): expiresAt null
+
+Target: 15–30% of questions should have expiresAt set.
+
+### Rich Topic Areas to Draw From
+
+Given the forbidden topics above, focus on these for content density:
+- **Home Rule Charter**: Congress enacted December 24, 1973; DC voters approved May 1974 (4-to-1); 103 years without elected local government (1871–1974); Congressional 30-day review authority over DC laws
+- **DC Council composition**: 13 members — 1 Chair elected at-large + 4 at-large members + 8 ward members, 4-year terms, no term limits
+- **Ward system**: 8 wards, each with one Council member; quadrant system (NW/NE/SE/SW) radiates from the Capitol
+- **23rd Amendment (1961)**: DC gets electoral votes equal to the least-populous state (3); first presidential vote 1964
+- **DC history**: L'Enfant plan (1791), capital moved from Philadelphia in 1800, Virginia retrocession (1846), Marion Barry (4-term Mayor), Sharon Pratt (first Black woman elected Mayor of a major US city, 1991)
+- **Constitutional status**: Article I Section 8 Clause 17 (District Clause); no voting representation in Congress; DC Voting Rights Amendment (1978, expired 1985 unratified); DC statehood movement (proposed name: Washington, Douglass Commonwealth)
+- **DC Attorney General**: ELECTED since 2015 (previously appointed by Mayor) — this is a distinguishing fact worth testing
+- **DC population**: ~700,000 — larger than Wyoming and Vermont, but no Senate representation
+
+### Difficulty Calibration
+
+Apply the dinner party test: "Is this a tidbit a civically-minded person would be proud to know?"
+- PASS: "Who appoints DC's local judges — the Mayor, the President, or the DC Council?"
+- PASS: "What constitutional amendment gave DC residents the right to vote for president?"
+- FAIL: Specific ANC meeting procedures, individual judge names, license plate design history`;
 }
