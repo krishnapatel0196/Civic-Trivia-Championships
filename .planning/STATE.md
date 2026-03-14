@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.1 Collection Excellence — Phase 59: Oregon State Collection — COMPLETE
+**Current focus:** v2.1 Collection Excellence — Phase 60: Washington DC Collection — IN PROGRESS
 
 ## Current Position
 
-Phase: 59 of 62 (Oregon State Collection) — COMPLETE
-Plan: 02 of 2 complete
-Status: Phase 59 verified and closed
-Last activity: 2026-03-12 — Completed 59-02-PLAN.md: Oregon State activated with 81 active questions; banner image added; retrospective appended to COLLECTION-PLAYBOOK.md
+Phase: 60 of 62 (Washington DC Collection) — In progress
+Plan: 01 of 2 — paused at checkpoint:human-verify (Task 3)
+Status: Awaiting curation approval
+Last activity: 2026-03-14 — Completed 60-01 Tasks 1-2: Washington DC scaffolded, 103 draft questions generated and deduped; checkpoint reached
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 14 collections live | ~1,630 questions | v2.1 Phase 59 complete ✓ → Phase 60 next
+Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 14 collections scaffolded | ~2,008 questions | v2.1 Phase 59 complete ✓ → Phase 60 in progress
 
 **Milestone history:**
 - v1.0–v2.0 (Phases 1–56): All Complete — see .planning/MILESTONES.md
@@ -52,6 +52,9 @@ Key decisions relevant to v2.1:
 - Oregon State expiring ratio ceiling (59-02): 7.4% (6/81) is structural ceiling for state collections — Governor, SoS, AG, Treasurer, Senate President, House Speaker exhausts all viable expiring targets; accepted per plan context (do not force artificial expiring questions)
 - State collection content saturation (59-02): automated pipeline yields 50-70 unique questions for most US states; manual supplementation to reach 80 is a normal pattern — plan for it upfront
 - Oregon supplementation pattern (59-02): inserted 25 hand-crafted questions on uncovered topics (judiciary, Oregon Trail, Tom McCall, Kate Brown succession, Measure 91, counties) after 3 generation runs hit dedup wall
+- Washington DC city tier (60-01): DC uses city tier (no district tier in schema); district framing expressed via voice guidance; city-level content density yielded 103 draft questions from one generation run — strong result
+- Washington DC scaffold corrections (60-01): Scaffold Bug 2 triggered — reverted generate-locale-questions.ts and manually registered; also corrected localeName and iconIdentifier post-scaffold
+- Washington DC expiring ratio gap (60-01): generator did not set expiresAt on any questions; curator must manually set during curation checkpoint: Mayor Bowser 2027-01-02, Chair Mendelson 2027-01-02, AG Schwalb 2027-01-02, Delegate 2027-01-03
 
 ### Pending Todos
 
@@ -74,8 +77,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-12
-Stopped at: Completed 59-02-PLAN.md — Oregon State activated (81 questions, banner image, retrospective)
+Last session: 2026-03-14
+Stopped at: 60-01-PLAN.md checkpoint:human-verify — Washington DC scaffolded, 103 draft questions generated; awaiting curation approval
 Resume file: None
 
-Next action: Phase 60 (next phase per roadmap)
+Next action: Curator reviews/curates DC questions in admin panel, then types "approved" to resume 60-01 continuation
