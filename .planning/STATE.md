@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 ## Current Position
 
 Phase: 65 of 66 (Auto-Regenerate Expired Questions)
-Plan: 01 of 02 — COMPLETE
-Status: In progress
-Last activity: 2026-03-15 — Completed 65-01-PLAN.md (replacementGenerator.ts core helper)
+Plan: 02 of 02 — COMPLETE
+Status: Phase 65 complete
+Last activity: 2026-03-15 — Completed 65-02-PLAN.md (expirationSweep.ts wired to generateReplacement)
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 complete, Phase 65 Plan 01 complete (4/6 phases progress)
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 complete, Phase 65 complete (5/6 phases progress)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -65,6 +65,12 @@ Key decisions from Phase 65 Plan 01 (2026-03-15):
 - getNextExternalId queries ALL question statuses — archived IDs remain in DB with UNIQUE constraint
 - Quality fail is non-retrying — cleanliness over gap-filling; single retry on parse-error and near-duplicate only
 
+Key decisions from Phase 65 Plan 02 (2026-03-15):
+- Set-based dedup on expiredRows required because innerJoin inflates rows for multi-collection questions — first collection wins
+- generateReplacement call is AFTER db.update (archive-first) — archival stands even if replacement fails
+- No second try/catch wrapper around generateReplacement — its own outer try/catch is sufficient; wrapping would mask bugs
+- expiring-soon query left untouched — monitoring-only, replacement inappropriate for non-expired questions
+
 ### Pending Todos
 
 All three v2.1 deferred items now addressed in v2.2 roadmap:
@@ -88,8 +94,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-15T21:02:40Z
-Stopped at: Completed 65-01-PLAN.md — replacementGenerator.ts core helper
+Last session: 2026-03-15T21:08:25Z
+Stopped at: Completed 65-02-PLAN.md — expirationSweep.ts wired to generateReplacement()
 Resume file: None
 
-Next action: Execute Phase 65 Plan 02 (wire generateReplacement into expiration sweep cron)
+Next action: Plan and execute Phase 66 (Gems migration — connect.credit_gems → POST /api/gems/award)
