@@ -9,6 +9,13 @@ export interface TopicCategory {
   description: string;
 }
 
+export interface OfficeholderEntry {
+  name: string;       // Full name as it should appear in questions
+  role: string;       // Role label, e.g. "Mayor", "City Council, Ward 3"
+  termEnd: string;    // ISO 8601 date string, e.g. "2029-06-01T00:00:00Z"
+  district?: string;  // Optional plain text — prompt context only
+}
+
 export interface LocaleConfig {
   locale: string;
   name: string;
@@ -20,6 +27,7 @@ export interface LocaleConfig {
   topicCategories: TopicCategory[];
   topicDistribution: Record<string, number>;
   sourceUrls: string[];
+  officeholders?: OfficeholderEntry[];
 }
 
 export const bloomingtonConfig: LocaleConfig = {
