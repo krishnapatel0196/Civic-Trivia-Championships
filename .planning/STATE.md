@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 
 ## Current Position
 
-Phase: 63 of 66 (Scaffold Fix)
-Plan: 01 of 01 — COMPLETE
-Status: Phase complete
-Last activity: 2026-03-15 — Completed 63-01-PLAN.md (Scaffold Bug 2 fix)
+Phase: 64 of 66 (Structured Officeholders)
+Plan: 01 of 02 — COMPLETE
+Status: In progress (Plan 02 remaining)
+Last activity: 2026-03-15 — Completed 64-01-PLAN.md (Type foundation + prompt injection)
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete (1/6 phases) | Phase 64 ready to plan
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 Plan 01 complete (2/6 phases progress)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -45,6 +45,12 @@ Key decisions relevant to v2.2 (from prior milestones):
 - Auto-regenerate expired questions deferred from v2.1 — Phase 65 scope; mirrors awardPlatformXp never-throw pattern
 - Mixed-durability pattern established (Texas State): expiring + durable questions in one collection; target 15–30% expiring
 
+Key decisions from Phase 64 Plan 01 (2026-03-15):
+- OfficeholderEntry lives in bloomington-in.ts (sole LocaleConfig source of truth) — one canonical import path for all consumers
+- buildOfficeholderBlock wording is load-bearing: "name them SPECIFICALLY / do NOT write 'the current mayor'" — required for Plan 02 auto-seeder
+- officeholders field is optional — 17 existing configs need zero changes; undefined treated as empty array in prompt builder
+- Both city and state prompt builders get officeholders param for future state-level officeholder use
+
 ### Pending Todos
 
 All three v2.1 deferred items now addressed in v2.2 roadmap:
@@ -68,8 +74,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-15
-Stopped at: Completed 63-01-PLAN.md — Scaffold Bug 2 fixed
+Last session: 2026-03-15T19:50:05Z
+Stopped at: Completed 64-01-PLAN.md — OfficeholderEntry type foundation + prompt injection
 Resume file: None
 
-Next action: Run `/gsd:plan-phase 64` to plan structured officeholders phase
+Next action: Execute 64-02-PLAN.md (auto-seeder and audit tooling)
