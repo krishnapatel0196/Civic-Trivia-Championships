@@ -12,6 +12,8 @@
  */
 
 import 'dotenv/config';
+import { existsSync } from 'fs';
+import { resolve } from 'path';
 import { db } from '../db/index.js';
 import { collections, questions } from '../db/schema.js';
 import { eq, sql } from 'drizzle-orm';
@@ -84,6 +86,13 @@ function validate(args: ParsedArgs): void {
     errors.push(`--prefix "${args.prefix}" must match /^[a-z]{2,4}$/ (2–4 lowercase letters)`);
   }
 
+  if (args.slug && args.slug.trim() !== '') {
+    const bannerPath = resolve(process.cwd(), `../frontend/public/images/collections/${args.slug}.jpg`);
+    if (!existsSync(bannerPath)) {
+      errors.push(`missing banner image: frontend/public/images/collections/${args.slug}.jpg`);
+    }
+  }
+
   if (errors.length > 0) {
     console.error('Validation errors:');
     for (const e of errors) console.error(`  - ${e}`);
@@ -148,7 +157,8 @@ async function main(): Promise<void> {
 DRY RUN — no changes made.
 Would activate:
   Collection: ${collection.name} (${slug}) — currently ${activeStatus}
-  Questions: ${draftCount} draft questions matching '${prefix}-*'
+  Banner:     frontend/public/images/collections/${slug}.jpg ✓
+  Questions:  ${draftCount} draft questions matching '${prefix}-*'
 `);
       process.exit(0);
     }

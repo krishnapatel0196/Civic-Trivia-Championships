@@ -13,6 +13,8 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
   // Set search path to trivia schema
   options: '-c search_path=trivia',
+  // Drop idle connections after 30s so Supabase never gets the chance to terminate them
+  idleTimeoutMillis: 30_000,
 });
 
 // Test connection on startup
@@ -20,7 +22,12 @@ pool.on('connect', () => {
   console.log('PostgreSQL connected');
 });
 
-pool.on('error', (err) => {
+pool.on('error', (err: Error & { code?: string }) => {
+  // 57P01 = admin_shutdown: Supabase closed an idle connection — recoverable, pool will reconnect
+  if (err.code === '57P01') {
+    console.warn('PostgreSQL connection closed by server (57P01), pool will reconnect automatically.');
+    return;
+  }
   console.error('PostgreSQL pool error:', err);
   process.exit(-1);
 });
