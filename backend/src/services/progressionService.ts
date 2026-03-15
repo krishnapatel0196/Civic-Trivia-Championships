@@ -90,36 +90,46 @@ export async function checkAccountContext(
 }
 
 /**
- * Award platform gems to a Connected-tier user via the award_gems RPC.
- * Uses (supabaseAdmin as any).rpc to avoid cross-schema TypeScript type error.
- * Retries up to 3 times with exponential backoff. Never throws — returns a result object.
+ * Award platform gems to a Connected-tier user via the Empowered Accounts gems award API.
+ * Uses plain try/catch (no retry). Never throws — returns a result object.
+ * Idempotent: same idempotencyKey prevents double-awards.
  *
  * @param userId - UUID of the user to award gems to
  * @param amount - Number of gems to award
+ * @param idempotencyKey - Unique key to prevent double-awards (use ctc-gems-{sessionId}-{userId})
  * @returns confirmed: true on success, confirmed: false with error on failure
  */
-// TODO: Route through accounts API (POST /api/gems/award) using X-Service-Key,
-// same pattern as awardPlatformXp(). Currently calls connect.credit_gems RPC
-// directly via service role, bypassing user validation on the accounts side.
 export async function awardPlatformGems(
   userId: string,
-  amount: number
+  amount: number,
+  idempotencyKey: string
 ): Promise<{ confirmed: boolean; error?: string }> {
-  const result = await withRetry(async () => {
-    const { error } = await (supabaseAdmin as any).schema('connect').rpc('credit_gems', {
-      p_user_id: userId,
-      p_gem_type: 'yellow',
-      p_amount: amount,
-      p_transaction_type: 'game_completed',
-      p_source_ref: 'civic_trivia',
+  const accountsUrl = process.env.EMPOWERED_ACCOUNTS_API_URL;
+  const gemsKey = process.env.TRIVIA_GEMS_KEY;
+
+  if (!accountsUrl || !gemsKey) {
+    console.warn('[progressionService] EMPOWERED_ACCOUNTS_API_URL or TRIVIA_GEMS_KEY not set — skipping gem award');
+    return { confirmed: false, error: 'Missing env vars' };
+  }
+
+  try {
+    const resp = await fetch(`${accountsUrl}/api/gems/award`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Service-Key': gemsKey,
+      },
+      body: JSON.stringify({ userId, gemType: 'yellow', amount, idempotencyKey }),
     });
-    if (error) throw new Error(error.message);
-  });
-  if (result.success) {
+    if (!resp.ok) {
+      const error = await resp.text();
+      console.warn(`[progressionService] gem award API returned ${resp.status}: ${error}`);
+      return { confirmed: false, error };
+    }
     return { confirmed: true };
-  } else {
-    console.error(`[progressionService] award_gems failed after retries: ${result.error}`);
-    return { confirmed: false, error: result.error };
+  } catch (err: any) {
+    console.warn('[progressionService] gem award API call failed:', err?.message);
+    return { confirmed: false, error: err?.message };
   }
 }
 
