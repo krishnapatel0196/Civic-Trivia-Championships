@@ -45,7 +45,6 @@ export function ResultsScreen({
   } | null>(null);
 
   const motionScore     = useMotionValue(0);
-  const gemsMotionValue = useMotionValue(0);
   const accordionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const accuracy      = Math.round((result.totalCorrect / result.totalQuestions) * 100);
@@ -94,21 +93,6 @@ export function ResultsScreen({
       setShowLevelUp(true);
     }
   }, [result.progression, priorLevel]);
-
-  // Animate gems counter
-  useEffect(() => {
-    if (result.progression) {
-      const controls = animate(gemsMotionValue, result.progression.gemsEarned, {
-        type: 'spring', stiffness: 100, damping: 20, mass: 0.5, duration: 1.5,
-      });
-      return () => controls.stop();
-    }
-  }, [result.progression, gemsMotionValue]);
-
-  const [displayGems, setDisplayGems] = useState(0);
-  useEffect(() => {
-    return gemsMotionValue.on('change', (v) => setDisplayGems(Math.round(v)));
-  }, [gemsMotionValue]);
 
   const toggleQuestion = (index: number) => {
     const next = new Set(expandedQuestions);
@@ -341,23 +325,27 @@ export function ResultsScreen({
             {result.progression.xp?.confirmed && (
               <XpReveal xpResult={result.progression.xp} />
             )}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              marginTop: result.progression.xp?.confirmed ? '12px' : '0',
-            }}>
-              <GemIcon className={`w-5 h-5 ${isPerfectGame ? 'text-yellow-400' : 'text-purple-400'}`} />
-              <span style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: '28px',
-                letterSpacing: '0.06em',
-                color: isPerfectGame ? C.gold : '#c084fc',
+            {result.progression.gemsEarned > 0 && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                marginTop: result.progression.xp?.confirmed ? '12px' : '0',
               }}>
-                +{displayGems} GEMS
-              </span>
-            </div>
+                {Array.from({ length: result.progression.gemsEarned }).map((_, i) => (
+                  <GemIcon key={i} className="w-5 h-5 text-yellow-400" />
+                ))}
+                <span style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '28px',
+                  letterSpacing: '0.06em',
+                  color: C.gold,
+                }}>
+                  +{result.progression.gemsEarned} {result.progression.gemsEarned === 1 ? 'GEM' : 'GEMS'}
+                </span>
+              </div>
+            )}
           </motion.div>
         ) : (
           <motion.div

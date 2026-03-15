@@ -21,8 +21,8 @@ export function calculateProgression(
   // XP formula: 50 base + 1 per correct answer
   const xpEarned = 50 + correctAnswers;
 
-  // Gems formula: 10 base + 1 per correct answer
-  const gemsEarned = 10 + correctAnswers;
+  // Gems formula: 2 for perfect game, 1 for 7+, 0 otherwise
+  const gemsEarned = correctAnswers === totalQuestions ? 2 : correctAnswers >= 7 ? 1 : 0;
 
   return { xpEarned, gemsEarned };
 }
