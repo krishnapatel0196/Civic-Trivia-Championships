@@ -74,10 +74,10 @@ Plans:
   2. `connect.credit_gems` RPC call is fully removed from the codebase
   3. `TRIVIA_GEMS_KEY` is validated on startup with a warning if missing (mirrors `TRIVIA_SERVICE_KEY` pattern)
   4. Gem awards still land correctly in the accounts gem ledger (verified in production)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 66-01: Migrate awardPlatformGems() to POST /api/gems/award and add TRIVIA_GEMS_KEY env validation
+- [ ] 66-01-PLAN.md — Migrate awardPlatformGems() to POST /api/gems/award, update game.ts call-site, add TRIVIA_GEMS_KEY env validation
 
 #### Phase 67: Leaderboard
 **Goal**: Players can see a ranked leaderboard of top CTC players, sourced from the accounts public profile API
@@ -277,6 +277,6 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 63. Scaffold Fix | v2.2 | 1/1 | Complete | 2026-03-15 |
 | 64. Structured Officeholders | v2.2 | 2/2 | Complete | 2026-03-15 |
 | 65. Auto-Regenerate Expired Questions | v2.2 | 2/2 | Complete | 2026-03-15 |
-| 66. Gem Award Migration | v2.2 | 0/TBD | Not started | - |
+| 66. Gem Award Migration | v2.2 | 0/1 | Not started | - |
 | 67. Leaderboard | v2.2 | 0/TBD | Not started | - |
 | 68. Santa Monica, CA Collection | v2.2 | 0/TBD | Not started | - |
