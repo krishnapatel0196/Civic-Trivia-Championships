@@ -355,36 +355,30 @@ function step3RegisterLocale(args: ParsedArgs, configVarName: string): void {
   const filePath = resolve(process.cwd(), 'src/scripts/content-generation/generate-locale-questions.ts');
   let content = readFileSync(filePath, 'utf-8');
 
-  // Insert into supportedLocales object — find closing `};` of that object
-  // The pattern we look for is the end of the supportedLocales record
+  // Insert into supportedLocales object — find the object literal assignment, not the type annotation
   const supportedLocalesStart = content.indexOf('const supportedLocales:');
   if (supportedLocalesStart === -1) {
     console.error('Error: Could not find `const supportedLocales:` in generate-locale-questions.ts');
     process.exit(1);
   }
 
-  // Find the closing `};` after supportedLocales start
-  const closingBraceForLocales = content.indexOf('\n  };', supportedLocalesStart);
-  if (closingBraceForLocales === -1) {
-    // Try alternate closing format (just `};`)
-    const altClose = content.indexOf('\n};', supportedLocalesStart);
-    if (altClose === -1) {
-      console.error('Error: Could not find closing `};` for supportedLocales in generate-locale-questions.ts');
-      process.exit(1);
-    }
+  // Skip past the TypeScript type annotation by finding ` = {` (the object literal assignment)
+  // This avoids miscounting braces from the type annotation: `Record<string, () => Promise<{ ... }>>  = {`
+  const assignmentPos = content.indexOf(' = {', supportedLocalesStart);
+  if (assignmentPos === -1) {
+    console.error('Error: Could not find ` = {` assignment for supportedLocales in generate-locale-questions.ts');
+    process.exit(1);
   }
 
-  // Find the exact closing `};` of supportedLocales using a targeted approach
-  // We need to find the closing brace of the object assigned to supportedLocales
+  // Scan brace depth starting from the opening `{` of the object literal
+  const objectOpenPos = assignmentPos + 3; // position of `{`
   let braceDepth = 0;
-  let inObject = false;
   let objectClosePos = -1;
 
-  for (let i = supportedLocalesStart; i < content.length; i++) {
+  for (let i = objectOpenPos; i < content.length; i++) {
     if (content[i] === '{') {
       braceDepth++;
-      inObject = true;
-    } else if (content[i] === '}' && inObject) {
+    } else if (content[i] === '}') {
       braceDepth--;
       if (braceDepth === 0) {
         objectClosePos = i;
@@ -438,6 +432,17 @@ function step3RegisterLocale(args: ParsedArgs, configVarName: string): void {
 
   writeFileSync(filePath, content, 'utf-8');
   console.log(`  - backend/src/scripts/content-generation/generate-locale-questions.ts (locale registered)`);
+
+  // Post-write sanity check — confirm both insertion sites landed correctly
+  const written = readFileSync(filePath, 'utf-8');
+  if (!written.includes(`'${args.slug}'`)) {
+    console.error(`Error: Post-write check failed — slug '${args.slug}' not found in supportedLocales after write`);
+    process.exit(1);
+  }
+  if (!written.includes(`${configVarName}Config`)) {
+    console.error(`Error: Post-write check failed — '${configVarName}Config' not found in configKeys after write`);
+    process.exit(1);
+  }
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
