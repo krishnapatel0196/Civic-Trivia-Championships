@@ -1,11 +1,13 @@
 import { db } from '../db/index.js';
-import { questions } from '../db/schema.js';
+import { questions, collectionQuestions, collections } from '../db/schema.js';
 import { eq, and, lte, gt, isNotNull, sql } from 'drizzle-orm';
+import { generateReplacement } from './replacementGenerator.js';
 
 /**
  * Expiration sweep job
  *
  * Finds newly expired questions and updates their status to 'expired'
+ * After each archival, attempts to generate a replacement question
  * Logs expiring-soon questions (within 30 days) for monitoring
  * Outputs structured JSON logs for observability
  */
@@ -16,13 +18,19 @@ export async function runExpirationSweep(): Promise<void> {
 
   try {
     // Find newly expired questions (expires_at <= now AND status = 'active')
-    const expiredQuestions = await db
+    // Join collectionQuestions + collections to resolve collection context for replacement generation
+    const expiredRows = await db
       .select({
         id: questions.id,
         externalId: questions.externalId,
-        expiresAt: questions.expiresAt
+        expiresAt: questions.expiresAt,
+        subcategory: questions.subcategory,
+        collectionId: collectionQuestions.collectionId,
+        collectionSlug: collections.slug,
       })
       .from(questions)
+      .innerJoin(collectionQuestions, eq(collectionQuestions.questionId, questions.id))
+      .innerJoin(collections, eq(collections.id, collectionQuestions.collectionId))
       .where(
         and(
           isNotNull(questions.expiresAt),
@@ -30,6 +38,19 @@ export async function runExpirationSweep(): Promise<void> {
           eq(questions.status, 'active')
         )
       );
+
+    // Deduplicate by question id — a question in multiple collections appears as multiple rows;
+    // only the first collection encountered is used for replacement generation
+    const seen = new Set<number>();
+    const expiredQuestions = expiredRows.filter(row => {
+      if (seen.has(row.id)) return false;
+      seen.add(row.id);
+      return true;
+    });
+
+    // Replacement tracking counters
+    let replacedCount = 0;
+    let skippedCount = 0;
 
     // Update each newly expired question
     for (const question of expiredQuestions) {
@@ -39,6 +60,7 @@ export async function runExpirationSweep(): Promise<void> {
         previousExpiresAt: question.expiresAt?.toISOString()
       };
 
+      // CRITICAL: Archive FIRST, then attempt replacement
       await db
         .update(questions)
         .set({
@@ -56,6 +78,40 @@ export async function runExpirationSweep(): Promise<void> {
         externalId: question.externalId,
         expiresAt: question.expiresAt?.toISOString()
       }));
+
+      // Attempt replacement generation (never-throw — always returns result)
+      const result = await generateReplacement(
+        question.id,
+        question.externalId,
+        question.subcategory,
+        question.collectionSlug,
+        question.collectionId,
+      );
+
+      if (result.replaced) {
+        replacedCount++;
+        console.log(JSON.stringify({
+          level: 'info',
+          job: 'expiration-sweep',
+          message: 'Replacement generated',
+          questionId: question.id,
+          externalId: question.externalId,
+          collectionSlug: question.collectionSlug,
+          topic: question.subcategory,
+        }));
+      } else {
+        skippedCount++;
+        console.log(JSON.stringify({
+          level: 'warn',
+          job: 'expiration-sweep',
+          message: 'Replacement skipped',
+          questionId: question.id,
+          externalId: question.externalId,
+          collectionSlug: question.collectionSlug,
+          topic: question.subcategory,
+          reason: result.reason,
+        }));
+      }
     }
 
     // Find expiring-soon questions (expires_at > now AND expires_at <= now + 30 days AND status = 'active')
@@ -99,6 +155,8 @@ export async function runExpirationSweep(): Promise<void> {
       job: 'expiration-sweep',
       message: 'Sweep complete',
       newlyExpiredCount: expiredQuestions.length,
+      replacedCount,
+      skippedCount,
       expiringSoonCount: expiringSoonQuestions.length,
       durationMs
     }));
