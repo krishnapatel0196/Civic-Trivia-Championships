@@ -47,8 +47,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 64-01-PLAN.md — Add OfficeholderEntry type, prompt injection helper, and populate Biloxi/WDC configs
-- [ ] 64-02-PLAN.md — Add post-generation expiresAt auto-seeder and audit coverage reporting
+- [x] 64-01-PLAN.md — Add OfficeholderEntry type, prompt injection helper, and populate Biloxi/WDC configs
+- [x] 64-02-PLAN.md — Add post-generation expiresAt auto-seeder and audit coverage reporting
 
 #### Phase 65: Auto-Regenerate Expired Questions
 **Goal**: When the hourly expiry cron archives an expired question, it automatically generates and seeds a fresh replacement in the same topic — the collection never shrinks
@@ -274,7 +274,7 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 56. Post-v2.0 XP Tech Debt | v2.0 | 1/1 | Complete | 2026-03-08 |
 | 57–62. Collection Excellence Phases | v2.1 | 13/13 | Complete | 2026-03-15 |
 | 63. Scaffold Fix | v2.2 | 1/1 | Complete | 2026-03-15 |
-| 64. Structured Officeholders | v2.2 | 0/2 | Not started | - |
+| 64. Structured Officeholders | v2.2 | 2/2 | Complete | 2026-03-15 |
 | 65. Auto-Regenerate Expired Questions | v2.2 | 0/TBD | Not started | - |
 | 66. Gem Award Migration | v2.2 | 0/TBD | Not started | - |
 | 67. Leaderboard | v2.2 | 0/TBD | Not started | - |

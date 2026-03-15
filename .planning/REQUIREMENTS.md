@@ -53,11 +53,11 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TOOL-01 | Phase 63 | Pending |
-| TOOL-02 | Phase 64 | Pending |
-| TOOL-03 | Phase 64 | Pending |
-| TOOL-04 | Phase 64 | Pending |
-| TOOL-05 | Phase 64 | Pending |
+| TOOL-01 | Phase 63 | Complete |
+| TOOL-02 | Phase 64 | Complete |
+| TOOL-03 | Phase 64 | Complete |
+| TOOL-04 | Phase 64 | Complete |
+| TOOL-05 | Phase 64 | Complete |
 | COPS-01 | Phase 65 | Pending |
 | COPS-02 | Phase 65 | Pending |
 | COPS-03 | Phase 65 | Pending |
