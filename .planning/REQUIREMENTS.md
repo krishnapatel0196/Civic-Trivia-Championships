@@ -7,7 +7,7 @@
 
 ### Tooling
 
-- [ ] **TOOL-01**: `scaffold-collection.ts` runs without corrupting `generate-locale-questions.ts` (Scaffold Bug 2 fix)
+- [x] **TOOL-01**: `scaffold-collection.ts` runs without corrupting `generate-locale-questions.ts` (Scaffold Bug 2 fix)
 - [ ] **TOOL-02**: LocaleConfig has optional `officeholders` field (name, role, termEnd date)
 - [ ] **TOOL-03**: Generation prompt injects officeholder names and roles when `officeholders` field is present
 - [ ] **TOOL-04**: Post-generation step auto-sets `expiresAt` on questions referencing officeholders by name

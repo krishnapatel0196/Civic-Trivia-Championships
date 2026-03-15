@@ -27,18 +27,15 @@ Every collection follows this 7-step process:
 
 ## 2. Known Bugs and Workarounds
 
-### Scaffold Bug 2 (active as of Phase 57)
+### Scaffold Bug 2 — FIXED in Phase 63
 
-**Symptom:** After running `scaffold-collection.ts`, `generate-locale-questions.ts` is corrupted — a `step3` string is inserted into a TypeScript type annotation line.
+**Was:** After running `scaffold-collection.ts`, `generate-locale-questions.ts` was corrupted — a string was inserted into the TypeScript type annotation line instead of the object literal.
 
-**Cause:** The scaffold script incorrectly injects a registration line into the wrong location in generate-locale-questions.ts.
+**Root cause:** The brace-depth scanner started from `const supportedLocales:` which included annotation braces `{ default?: LocaleConfig; [key: string]: unknown }` before reaching the actual `= {` object literal.
 
-**Workaround:**
-1. Run `git diff backend/src/scripts/content-generation/generate-locale-questions.ts` after scaffolding
-2. If the file is modified, revert it: `git checkout backend/src/scripts/content-generation/generate-locale-questions.ts`
-3. State collections are auto-discovered from `locale-configs/state-configs/{locale}.ts` — no manual registration in generate-locale-questions.ts is needed for state locales
+**Fix (Phase 63):** Scanner now calls `content.indexOf(' = {', supportedLocalesStart)` to skip past the type annotation and start depth counting from the object literal opening brace. A post-write sanity check also validates both insertion sites.
 
-**Status:** Not fixed in v2.0. Fix is backlog.
+**No workaround needed.** The `git checkout` workaround previously documented here is no longer required.
 
 ---
 

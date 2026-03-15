@@ -273,7 +273,7 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 55. XP History Panel | v2.0 | 3/3 | Complete | 2026-03-08 |
 | 56. Post-v2.0 XP Tech Debt | v2.0 | 1/1 | Complete | 2026-03-08 |
 | 57–62. Collection Excellence Phases | v2.1 | 13/13 | Complete | 2026-03-15 |
-| 63. Scaffold Fix | v2.2 | 0/1 | Not started | - |
+| 63. Scaffold Fix | v2.2 | 1/1 | Complete | 2026-03-15 |
 | 64. Structured Officeholders | v2.2 | 0/TBD | Not started | - |
 | 65. Auto-Regenerate Expired Questions | v2.2 | 0/TBD | Not started | - |
 | 66. Gem Award Migration | v2.2 | 0/TBD | Not started | - |
