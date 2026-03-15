@@ -82,6 +82,17 @@ export const biloxiMsConfig: LocaleConfig = {
     'casino-resilience': 10,
   },
 
+  officeholders: [
+    { name: 'Andrew "FoFo" Gilich, Jr.', role: 'Mayor', termEnd: '2029-06-01T00:00:00Z' },
+    { name: 'Wayne Gray', role: 'City Council', district: 'Ward 1', termEnd: '2029-06-01T00:00:00Z' },
+    { name: 'Anthony Marshall', role: 'City Council', district: 'Ward 2', termEnd: '2029-06-01T00:00:00Z' },
+    { name: 'Mike Nail', role: 'City Council', district: 'Ward 3', termEnd: '2029-06-01T00:00:00Z' },
+    { name: 'Jamie Creel', role: 'City Council', district: 'Ward 4', termEnd: '2029-06-01T00:00:00Z' },
+    { name: 'Paul Tisdale', role: 'City Council', district: 'Ward 5', termEnd: '2029-06-01T00:00:00Z' },
+    { name: 'Kenny Glavan', role: 'City Council', district: 'Ward 6', termEnd: '2029-06-01T00:00:00Z' },
+    { name: 'David Shoemaker', role: 'City Council', district: 'Ward 7', termEnd: '2029-06-01T00:00:00Z' },
+  ],
+
   // Wikipedia-first source URLs per carry-forward rule (Phase 58-02)
   // Do NOT use biloxi.ms.us as primary source -- government portal pages return navigation/sitemap content
   sourceUrls: [

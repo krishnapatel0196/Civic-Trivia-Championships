@@ -80,6 +80,13 @@ export const washingtonDcConfig: LocaleConfig = {
     },
   ],
 
+  officeholders: [
+    { name: 'Muriel Bowser', role: 'Mayor', termEnd: '2027-01-02T00:00:00Z' },
+    { name: 'Phil Mendelson', role: 'Council Chair', termEnd: '2027-01-02T00:00:00Z' },
+    { name: 'Brian Schwalb', role: 'Attorney General', termEnd: '2027-01-02T00:00:00Z' },
+    { name: 'Eleanor Holmes Norton', role: 'Delegate to Congress', termEnd: '2027-01-03T00:00:00Z' },
+  ],
+
   topicDistribution: {
     'dc-government-structure': 35,
     'constitutional-status': 28,
