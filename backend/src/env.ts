@@ -19,3 +19,9 @@ const _missingAccounts = _requiredForAccounts.filter(k => !process.env[k]);
 if (_missingAccounts.length > 0) {
   console.warn(`[env] Missing env vars (Connected tier checks will fail — all users appear non-Connected): ${_missingAccounts.join(', ')}`);
 }
+
+const _requiredForGems = ['TRIVIA_GEMS_KEY'];
+const _missingGems = _requiredForGems.filter(k => !process.env[k]);
+if (_missingGems.length > 0) {
+  console.warn(`[env] Missing env vars (gem awards will be skipped): ${_missingGems.join(', ')}`);
+}
