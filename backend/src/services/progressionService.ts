@@ -79,6 +79,7 @@ export async function checkAccountContext(
       return { isConnected: false, isSuspended: false };
     }
     const data = await resp.json() as { tier?: string; account_standing?: string };
+    console.log(`[progressionService] account context: tier=${data.tier}, standing=${data.account_standing}`);
     return {
       isConnected: data.tier === 'connected' || data.tier === 'empowered',
       isSuspended: data.account_standing === 'suspended',
