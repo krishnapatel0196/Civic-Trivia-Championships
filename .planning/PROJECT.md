@@ -96,9 +96,15 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Expiring-question ratio warning in `audit-collection-readiness.ts` (non-blocking, warns <15%) — v2.1
 - ✓ `COLLECTION-PLAYBOOK.md` bootstrapped with 6 sections and 5 phase retrospectives — v2.1
 
-### Active (v2.2 — TBD)
+### Active (v2.2 — Pipeline Intelligence)
 
-*(Fresh requirements to be defined via `/gsd:new-milestone`)*
+**Goal:** Automate the content operations lifecycle — structured officeholders with zero manual passes, auto-regeneration of expired questions, scaffold tooling fix, and Santa Monica CA collection.
+
+**Target features:**
+- Fix Scaffold Bug 2 (generate-locale-questions.ts corruption on every scaffold run)
+- Structured officeholders in LocaleConfig: officeholder list drives both prompt injection AND auto-seeding of expiresAt on generated questions — zero manual targeted pass required
+- Auto-regenerate expired questions: hourly expiry cron archives expired question + generates a fresh replacement on the same topic in one pass
+- Santa Monica, CA collection — standard city playbook
 
 ### Out of Scope
 
@@ -278,4 +284,4 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | State Speaker Pro Tem must be named in locale config | Generation consistently misses Speaker Pro Tem unless explicitly listed; documented carry-forward rule | Good — prevents repeat gap in future state collections |
 
 ---
-*Last updated: 2026-03-15 after v2.1 milestone*
+*Last updated: 2026-03-15 after v2.2 milestone started*

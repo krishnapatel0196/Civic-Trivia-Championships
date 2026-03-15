@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Planning next milestone (v2.2)
+**Current focus:** v2.2 Pipeline Intelligence
 
 ## Current Position
 
-Phase: Not started
-Plan: Not started
-Status: Ready to plan — v2.1 archived
-Last activity: 2026-03-15 — v2.1 milestone complete and archived
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-15 — Milestone v2.2 Pipeline Intelligence started
 
 Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | 17 collections active | ~2,058 active questions | v2.2 not yet planned
 
@@ -91,4 +91,4 @@ Last session: 2026-03-15
 Stopped at: v2.1 milestone archived — all files committed, tagged v2.1
 Resume file: None
 
-Next action: Run `/gsd:new-milestone` to plan v2.2
+Next action: Run `/gsd:plan-phase [N]` to start execution
