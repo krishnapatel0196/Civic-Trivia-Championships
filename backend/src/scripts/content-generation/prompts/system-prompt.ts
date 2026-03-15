@@ -1,4 +1,20 @@
 import { QUALITY_GUIDELINES } from './quality-guidelines.js';
+import type { OfficeholderEntry } from '../locale-configs/bloomington-in.js';
+
+/**
+ * Builds the officeholder block appended to system prompts when locale config
+ * has a populated officeholders array. The "name them SPECIFICALLY" instruction
+ * and "do NOT write 'the current mayor'" contrast are load-bearing for the
+ * auto-seeder in Plan 02 — do not weaken this wording.
+ */
+export function buildOfficeholderBlock(officeholders: OfficeholderEntry[]): string {
+  if (officeholders.length === 0) return '';
+  const lines = officeholders.map(o => {
+    const districtPart = o.district ? `, ${o.district}` : '';
+    return `  - ${o.role}${districtPart}: ${o.name} (term ends ${o.termEnd.split('T')[0]})`;
+  }).join('\n');
+  return `\n\n## OFFICEHOLDERS\n\nThese are active, named officials. Generate questions that name them SPECIFICALLY\n(use their exact name — do NOT write "the current mayor" or "the current council member").\nSet expiresAt to the term end date shown for each person.\n\n${lines}`;
+}
 
 /**
  * Builds the system prompt for civic trivia question generation.
@@ -7,7 +23,8 @@ import { QUALITY_GUIDELINES } from './quality-guidelines.js';
 export function buildSystemPrompt(
   localeName: string,
   topicDistribution: Record<string, number>,
-  localeSlug?: string
+  localeSlug?: string,
+  officeholders?: OfficeholderEntry[]
 ): string {
   const topicLines = Object.entries(topicDistribution)
     .map(([slug, count]) => `  - ${slug}: ${count} questions`)
@@ -102,7 +119,7 @@ Distribute difficulty across the full batch:
 - Phone numbers, street addresses, or contact information in answer options — these test memorization of contact details, not civic knowledge
 - Anything that could embarrass or politically compromise the civic education mission
 
-${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}${localeSlug === 'plano-tx' ? buildPlanoVoiceGuidance() : ''}${localeSlug === 'portland-or' ? buildPortlandVoiceGuidance() : ''}${localeSlug === 'washington-dc' ? buildWashingtonDcVoiceGuidance() : ''}`;
+${QUALITY_GUIDELINES}${localeSlug === 'fremont-ca' ? buildFremontSensitivityInstructions() : ''}${localeSlug === 'norwich-uk' ? buildNorwichVoiceGuidance() : ''}${localeSlug === 'cambridge-ma' ? buildCambridgeVoiceGuidance() : ''}${localeSlug === 'plano-tx' ? buildPlanoVoiceGuidance() : ''}${localeSlug === 'portland-or' ? buildPortlandVoiceGuidance() : ''}${localeSlug === 'washington-dc' ? buildWashingtonDcVoiceGuidance() : ''}${officeholders && officeholders.length > 0 ? buildOfficeholderBlock(officeholders) : ''}`;
 }
 
 /**

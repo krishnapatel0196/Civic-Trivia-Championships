@@ -10,11 +10,14 @@
  */
 
 import { QUALITY_GUIDELINES } from './quality-guidelines.js';
+import type { OfficeholderEntry } from '../locale-configs/bloomington-in.js';
+import { buildOfficeholderBlock } from './system-prompt.js';
 
 export function buildStateSystemPrompt(
   stateName: string,
   stateFeatures: string,
-  topicDistribution: Record<string, number>
+  topicDistribution: Record<string, number>,
+  officeholders?: OfficeholderEntry[]
 ): string {
   const topicLines = Object.entries(topicDistribution)
     .map(([slug, count]) => `  - ${slug}: ${count} questions`)
@@ -165,5 +168,5 @@ ${QUALITY_GUIDELINES}
 "What is the relationship between the state constitution and the U.S. Constitution?"
 "How does California's ballot proposition system enable direct democracy?"
 
-Remember: You're teaching civic engagement, not testing government trivia knowledge. Every question should help someone become a more informed, engaged citizen of ${stateName}.`;
+Remember: You're teaching civic engagement, not testing government trivia knowledge. Every question should help someone become a more informed, engaged citizen of ${stateName}.${officeholders && officeholders.length > 0 ? buildOfficeholderBlock(officeholders) : ''}`;
 }

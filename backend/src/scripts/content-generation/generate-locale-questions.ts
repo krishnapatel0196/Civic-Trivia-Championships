@@ -201,9 +201,9 @@ async function generateBatch(
   let systemPromptText: string;
   if (stateFeatures) {
     const { buildStateSystemPrompt } = await import('./prompts/state-system-prompt.js');
-    systemPromptText = buildStateSystemPrompt(config.name, stateFeatures, batchTopicDistribution);
+    systemPromptText = buildStateSystemPrompt(config.name, stateFeatures, batchTopicDistribution, config.officeholders);
   } else {
-    systemPromptText = buildSystemPrompt(config.name, batchTopicDistribution, config.locale);
+    systemPromptText = buildSystemPrompt(config.name, batchTopicDistribution, config.locale, config.officeholders);
   }
 
   // Determine next ID range for this batch, offset above any pre-existing IDs in the DB
@@ -635,9 +635,9 @@ Return ONLY a JSON object with a "questions" array containing exactly 1 question
     let systemPromptText: string;
     if (stateFeatures) {
       const { buildStateSystemPrompt } = await import('./prompts/state-system-prompt.js');
-      systemPromptText = buildStateSystemPrompt(config.name, stateFeatures, config.topicDistribution);
+      systemPromptText = buildStateSystemPrompt(config.name, stateFeatures, config.topicDistribution, config.officeholders);
     } else {
-      systemPromptText = buildSystemPrompt(config.name, config.topicDistribution, config.locale);
+      systemPromptText = buildSystemPrompt(config.name, config.topicDistribution, config.locale, config.officeholders);
     }
 
     const response = await client.messages.create({
