@@ -8,17 +8,17 @@
 ### Tooling
 
 - [x] **TOOL-01**: `scaffold-collection.ts` runs without corrupting `generate-locale-questions.ts` (Scaffold Bug 2 fix)
-- [ ] **TOOL-02**: LocaleConfig has optional `officeholders` field (name, role, termEnd date)
-- [ ] **TOOL-03**: Generation prompt injects officeholder names and roles when `officeholders` field is present
-- [ ] **TOOL-04**: Post-generation step auto-sets `expiresAt` on questions referencing officeholders by name
-- [ ] **TOOL-05**: `audit-collection-readiness.ts` reports officeholder `expiresAt` coverage
+- [x] **TOOL-02**: LocaleConfig has optional `officeholders` field (name, role, termEnd date)
+- [x] **TOOL-03**: Generation prompt injects officeholder names and roles when `officeholders` field is present
+- [x] **TOOL-04**: Post-generation step auto-sets `expiresAt` on questions referencing officeholders by name
+- [x] **TOOL-05**: `audit-collection-readiness.ts` reports officeholder `expiresAt` coverage
 
 ### Content Operations
 
-- [ ] **COPS-01**: Hourly expiry cron archives expired questions AND triggers replacement generation for the same collection
-- [ ] **COPS-02**: Replacement question generated in same topic category as the expired question
-- [ ] **COPS-03**: Replacement seeded as active (replacing a previously-active question — no draft step)
-- [ ] **COPS-04**: If regeneration fails, expiry proceeds silently (never-throw — mirrors `awardPlatformXp` pattern)
+- [x] **COPS-01**: Hourly expiry cron archives expired questions AND triggers replacement generation for the same collection
+- [x] **COPS-02**: Replacement question generated in same topic category as the expired question
+- [x] **COPS-03**: Replacement seeded as active (replacing a previously-active question — no draft step)
+- [x] **COPS-04**: If regeneration fails, expiry proceeds silently (never-throw — mirrors `awardPlatformXp` pattern)
 
 ### Platform Integration
 

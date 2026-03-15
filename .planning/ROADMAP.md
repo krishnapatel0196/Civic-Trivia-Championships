@@ -62,8 +62,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 65-01-PLAN.md — Create replacementGenerator.ts with generateReplacement() helper (generation, quality rules, dedup, seeding)
-- [ ] 65-02-PLAN.md — Extend expirationSweep.ts with collection-aware query and replacement wiring
+- [x] 65-01-PLAN.md — Create replacementGenerator.ts with generateReplacement() helper (generation, quality rules, dedup, seeding)
+- [x] 65-02-PLAN.md — Extend expirationSweep.ts with collection-aware query and replacement wiring
 
 #### Phase 66: Gem Award Migration
 **Goal**: CTC gem awards route through the accounts API — deprecated direct RPC removed, new endpoint wired with `TRIVIA_GEMS_KEY`
@@ -276,7 +276,7 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 57–62. Collection Excellence Phases | v2.1 | 13/13 | Complete | 2026-03-15 |
 | 63. Scaffold Fix | v2.2 | 1/1 | Complete | 2026-03-15 |
 | 64. Structured Officeholders | v2.2 | 2/2 | Complete | 2026-03-15 |
-| 65. Auto-Regenerate Expired Questions | v2.2 | 0/2 | Not started | - |
+| 65. Auto-Regenerate Expired Questions | v2.2 | 2/2 | Complete | 2026-03-15 |
 | 66. Gem Award Migration | v2.2 | 0/TBD | Not started | - |
 | 67. Leaderboard | v2.2 | 0/TBD | Not started | - |
 | 68. Santa Monica, CA Collection | v2.2 | 0/TBD | Not started | - |
