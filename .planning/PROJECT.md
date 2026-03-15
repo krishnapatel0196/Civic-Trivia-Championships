@@ -87,17 +87,18 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ XP transaction history panel on profile page — paginated, Connected tier only, via `get_ctc_xp_history()` Supabase RPC — v2.0
 - ✓ Startup env validation warnings for missing `TRIVIA_SERVICE_KEY` / `EMPOWERED_ACCOUNTS_API_URL` / `EMPOWERED_ACCOUNTS_URL` — v2.0
 
-### Active (v2.1 Collection Excellence)
+- ✓ Portland, OR city collection (83 questions, 18.1% expiring) — v2.1
+- ✓ Oregon State collection (81 questions, structural 7.4% expiring ceiling) — v2.1
+- ✓ Washington, DC collection (154 questions, district framing, 9.7% expiring) — v2.1
+- ✓ Biloxi, MS city collection (170 questions, 15.3% expiring) — v2.1
+- ✓ Mississippi State collection (86 questions, 15.1% expiring) — v2.1
+- ✓ Semantic near-duplicate detection automated in `generate-locale-questions.ts` (`runWithinCollectionSemanticDedup()` auto-runs after seeding) — v2.1
+- ✓ Expiring-question ratio warning in `audit-collection-readiness.ts` (non-blocking, warns <15%) — v2.1
+- ✓ `COLLECTION-PLAYBOOK.md` bootstrapped with 6 sections and 5 phase retrospectives — v2.1
 
-- [ ] Portland, OR city collection — scaffold, generate, curate, activate, retrospective
-- [ ] Oregon State collection — scaffold, generate, curate, activate, retrospective
-- [ ] Washington, DC collection — scaffold, generate, curate, activate, retrospective (unique: district, not city or state)
-- [ ] Biloxi, MS city collection — scaffold, generate, curate, activate, retrospective
-- [ ] Mississippi State collection — scaffold, generate, curate, activate, retrospective
-- [ ] Pipeline improvement: semantic near-duplicate detection automated (not manual-only)
-- [ ] Pipeline improvement: expiring question ratio (15–30%) enforced at audit-collection-readiness time
-- [ ] Process documentation: living COLLECTION-PLAYBOOK.md capturing learnings from each iteration
-- [ ] Process documentation: retrospective template added to collection workflow
+### Active (v2.2 — TBD)
+
+*(Fresh requirements to be defined via `/gsd:new-milestone`)*
 
 ### Out of Scope
 
@@ -120,8 +121,8 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v2.0 shipped 2026-03-08):**
-- 12 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60) — all on shared Supabase project (kxsdzaojfaibhuzmclfq); ~1,484 active questions
+**Current state (v2.1 shipped 2026-03-15):**
+- 17 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60), Portland OR (83), Oregon (81), Washington DC (154), Biloxi MS (170), Mississippi (86) — all on shared Supabase project (kxsdzaojfaibhuzmclfq); ~2,058 active questions
 - XP integration: `awardPlatformXp()` awards 50–200 XP server-side after each game for Connected players; idempotent by sessionId; displayed on start screen (`XpStrip`), end screen (`XpReveal`, `LevelUpOverlay`), and profile XP history tab
 - XP history: `get_ctc_xp_history()` Supabase SECURITY DEFINER RPC — established pattern for cross-schema `connect` data access from CTC backend
 - Collection infrastructure: DB-driven tier lookups, state configs auto-discovered — zero hardcoded maps; `audit-collection-readiness.ts` + `verify-post-activation.ts` standardize activation workflow
@@ -267,6 +268,14 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | 24h session TTL after XP award | 1h default caused xp: null on repeated /results; 24h only on post-award save | Good — targeted fix, submitAnswer path unaffected |
 | Two-tab Profile layout tier-gated on `tierResolved && isConnected` | Prevents flash of tab chrome before account fetch resolves | Good — clean tier gating |
 | `priorLevel` captured at game idle state for level-up detection | Comparison at results time requires pre-game snapshot; `levelUpShownRef` prevents double-trigger | Good — correct level-up detection |
+| `runWithinCollectionSemanticDedup()` auto-runs in generation pipeline | Eliminates separate manual scan-duplicates.ts pass per collection — every new collection gets dedup automatically | Good — zero-friction dedup |
+| Expiring ratio warning non-blocking (exit 0) in audit script | Enforcing as block would prevent activating legacy collections with 0% expiring; forward-looking nudge is correct | Good — avoids regressing older collections |
+| COLLECTION-PLAYBOOK.md in .planning/ root | Cross-phase living document; retrospective appended after each collection phase; not per-phase artifact | Good — durable across milestones |
+| Wikipedia API fetch fix: w/api.php extracts | en.wikipedia.org/wiki/ HTML scraping blocked by bot protection (0 bytes); API endpoint is reliable and universal | Good — universal fix for all future collections |
+| DC uses city tier; district framing via voice guidance | No district tier in schema; voice guidance encodes DC's unique structure cleanly without schema change | Good — pragmatic and correct |
+| Oregon State 7.4% expiring ratio is documented structural ceiling | 6 viable statewide offices in 81 questions ≈ 7.4%; forcing artificial expiry would create bad questions | Good — quality over ratio compliance |
+| Large-council officeholder budget rule (Biloxi) | 7-ward council needs 2q/ward + 4q/mayor to reach 15% in 130–170 question pool; single-pass only reaches 8–9% | Good — applies to any multi-ward city collection |
+| State Speaker Pro Tem must be named in locale config | Generation consistently misses Speaker Pro Tem unless explicitly listed; documented carry-forward rule | Good — prevents repeat gap in future state collections |
 
 ---
-*Last updated: 2026-03-09 after v2.1 milestone start*
+*Last updated: 2026-03-15 after v2.1 milestone*

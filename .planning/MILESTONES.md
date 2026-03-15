@@ -1,5 +1,34 @@
 # Project Milestones: Civic Trivia Championship
 
+## v2.1 Collection Excellence (Shipped: 2026-03-15)
+
+**Delivered:** Shipped 5 new collections (Portland OR, Oregon State, Washington DC, Biloxi MS, Mississippi State), automated semantic deduplication inside the generation pipeline, added expiring-question ratio enforcement to the activation audit, and produced a living COLLECTION-PLAYBOOK.md with retrospectives for every collection shipped.
+
+**Phases completed:** 57–62 (13 plans total)
+
+**Key accomplishments:**
+
+- Automated semantic near-duplicate detection wired into `generate-locale-questions.ts` — `runWithinCollectionSemanticDedup()` runs unconditionally after seeding, eliminating the separate manual scan-duplicates.ts pass from the standard workflow
+- Expiring-question ratio warning added to `audit-collection-readiness.ts` — emits non-blocking WARNING when a collection is below 15% expiring before activation; two-query model (ratio vs 90-day window) avoids conflating targets
+- `COLLECTION-PLAYBOOK.md` created with 6 sections (standard workflow, known bugs, content patterns, quality conventions, dedup resolution, retrospective template) and 5 phase retrospectives appended across Phases 58–62
+- Portland, OR (83q, 18.1% expiring) and Oregon State (81q, documented 7.4% structural ceiling) activated; Wikipedia API fetch fix (w/api.php extracts) applied universally for future collections
+- Washington, DC (154q, 9.7%) activated — district framing, DC Council + Mayor structure, Home Rule Charter 1973 civic angles captured; scaffold + expiry corrections documented
+- Biloxi, MS (170q, 15.3%) and Mississippi State (86q, 15.1%) activated; large-council officeholder budget rule established (2q/ward + 4q/mayor for 7-ward council)
+
+**Stats:**
+
+- 135 files changed (19,043 insertions, 4,550 deletions)
+- ~45,500+ lines TypeScript total (frontend ~14,000 + backend ~31,500)
+- 6 phases, 13 plans, 9 requirements delivered
+- 7 days from first phase to ship (2026-03-08 → 2026-03-15)
+- +574 questions across 5 collections; ~2,058 total active questions across 17 collections
+
+**Git range:** `feat(57-01)` → `docs(62): complete Mississippi State phase`
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v2.0 XP Integration (Shipped: 2026-03-08)
 
 **Delivered:** End-to-end XP integration with the Empowered Accounts platform — XP awarded server-side after each game for Connected players, displayed on start/end screens with level-up animation, and reviewable via paginated transaction history on the profile page.

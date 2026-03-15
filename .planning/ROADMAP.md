@@ -13,7 +13,7 @@
 - ✅ **v1.8 Empowered Identity** — Phases 40–46 (shipped 2026-03-01)
 - ✅ **v1.9 Geographic Expansion** — Phases 47–52 (shipped 2026-03-03)
 - ✅ **v2.0 XP Integration** — Phases 53–56 (shipped 2026-03-08)
-- ✅ **v2.1 Collection Excellence** — Phases 57–62 (shipped 2026-03-15)
+- ✅ **v2.1 Collection Excellence** — Phases 57–62 (shipped 2026-03-15) — [archive](milestones/v2.1-ROADMAP.md)
 
 ## Phases
 
@@ -144,102 +144,19 @@ Full archive: [milestones/v2.0-ROADMAP.md](milestones/v2.0-ROADMAP.md)
 
 </details>
 
-### 🚧 v2.1 Collection Excellence (In Progress)
+<details>
+<summary>✅ v2.1 Collection Excellence (Phases 57–62) — SHIPPED 2026-03-15</summary>
 
-**Milestone Goal:** Ship 5 new collections (Portland OR, Oregon, Washington DC, Biloxi MS, Mississippi) while hardening the generation pipeline with automated dedup and expiring-question ratio enforcement, and building a living playbook that captures iteration learnings.
+- [x] Phase 57: Pipeline & Playbook Foundation (2/2 plans) — completed 2026-03-09
+- [x] Phase 58: Portland, OR Collection (3/3 plans) — completed 2026-03-09
+- [x] Phase 59: Oregon State Collection (2/2 plans) — completed 2026-03-12
+- [x] Phase 60: Washington, DC Collection (2/2 plans) — completed 2026-03-14
+- [x] Phase 61: Biloxi, MS Collection (2/2 plans) — completed 2026-03-14
+- [x] Phase 62: Mississippi State Collection (2/2 plans) — completed 2026-03-15
 
-#### Phase 57: Pipeline & Playbook Foundation
-**Goal**: The generation pipeline catches near-duplicates automatically, the activation check enforces expiring-question ratio, and the collection playbook is bootstrapped with accumulated learnings
-**Depends on**: Phase 56 (v2.0 complete)
-**Requirements**: PIPELINE-01, PIPELINE-02, PLAYBOOK-01
-**Plans:** 2 plans
-**Success Criteria** (what must be TRUE):
-  1. Running `generate-locale-questions.ts` on any collection automatically surfaces and archives semantic near-duplicates — no separate manual pass required
-  2. Running `audit-collection-readiness.ts` on a collection with fewer than 15% expiring questions prints a warning before activation proceeds
-  3. `COLLECTION-PLAYBOOK.md` exists in `.planning/` and contains bootstrapped learnings from Phases 47–52, including the near-duplicate detection gap, mixed-durability pattern, and scaffold bug workarounds
-  4. A retrospective template is documented in the playbook and ready to be completed at the end of each collection phase
+Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 
-Plans:
-- [ ] 57-01-PLAN.md — Automate semantic dedup inside generate-locale-questions.ts pipeline
-- [ ] 57-02-PLAN.md — Add expiring-question ratio warning to audit-collection-readiness.ts and bootstrap COLLECTION-PLAYBOOK.md
-
-#### Phase 58: Portland, OR Collection
-**Goal**: Portland, OR is a fully activated, playable collection with a completed retrospective feeding the living playbook
-**Depends on**: Phase 57
-**Requirements**: CONTENT-01, PLAYBOOK-02 (retrospective)
-**Success Criteria** (what must be TRUE):
-  1. Portland, OR collection is active and playable in production with at least 80 questions meeting quality standards
-  2. The automated dedup pipeline runs during generation — no manual near-duplicate pass required after activation
-  3. At least 15% of Portland questions have `expiresAt` set (current mayor, city council members, commissioner roles), satisfying the ratio enforcement introduced in Phase 57
-  4. A completed retrospective for Portland is appended to `COLLECTION-PLAYBOOK.md` covering what broke, what was fixed, and any carry-forward rules
-
-Plans:
-- [ ] 58-01-PLAN.md — Scaffold, generate, and curate Portland, OR collection
-- [ ] 58-02-PLAN.md — Activate Portland, OR and complete playbook retrospective
-- [ ] 58-03-PLAN.md — Top-up generation pass using Wikipedia URLs to close question count gap (61 → 80+)
-
-#### Phase 59: Oregon State Collection
-**Goal**: Oregon State is a fully activated, playable collection with a completed retrospective feeding the living playbook
-**Depends on**: Phase 58
-**Requirements**: CONTENT-02, PLAYBOOK-02 (retrospective)
-**Success Criteria** (what must be TRUE):
-  1. Oregon State collection is active and playable in production with at least 80 questions meeting quality standards
-  2. State-only curation rule applied — no city or regional landmark questions in the final set
-  3. Mixed-durability pattern applied — current-officeholder questions carry `expiresAt`, durable civic facts carry null
-  4. A completed retrospective for Oregon State is appended to `COLLECTION-PLAYBOOK.md` covering what broke, what was fixed, and any carry-forward rules
-
-**Plans:** 2 plans
-
-Plans:
-- [ ] 59-01-PLAN.md — Scaffold, locale config, generate, and curate Oregon State (Wave 1)
-- [ ] 59-02-PLAN.md — Add banner image, activate, post-activation verify, and playbook retrospective (Wave 2)
-
-#### Phase 60: Washington, DC Collection
-**Goal**: Washington, DC is a fully activated, playable collection — framed as a district (not a state or typical city) — with civic questions that make DC's unique constitutional status legible and interesting, plus a completed retrospective
-**Depends on**: Phase 59
-**Requirements**: CONTENT-03, PLAYBOOK-02 (retrospective)
-**Plans:** 2 plans
-**Success Criteria** (what must be TRUE):
-  1. Washington, DC collection is active and playable in production with at least 80 questions meeting quality standards
-  2. DC's unique civic structure is accurately represented: DC Council + Mayor (not Congress), Home Rule Charter (1973), no voting representation in the House or Senate — questions reflect district framing, not city or state framing
-  3. At least 15% of DC questions carry `expiresAt` (current Mayor, Council Chair, at-large members) satisfying the ratio enforcement check
-  4. A completed retrospective for Washington, DC is appended to `COLLECTION-PLAYBOOK.md` covering what broke, what was fixed, and any carry-forward rules (including DC-specific voice guidance decisions)
-
-Plans:
-- [ ] 60-01-PLAN.md — Scaffold, generate, and curate Washington, DC collection
-- [ ] 60-02-PLAN.md — Activate Washington, DC and complete playbook retrospective
-
-#### Phase 61: Biloxi, MS Collection
-**Goal**: Biloxi, MS is a fully activated, playable collection with a completed retrospective feeding the living playbook
-**Depends on**: Phase 60
-**Requirements**: CONTENT-04, PLAYBOOK-02 (retrospective)
-**Plans:** 2 plans
-**Success Criteria** (what must be TRUE):
-  1. Biloxi, MS collection is active and playable in production with at least 70 questions meeting quality standards
-  2. The automated dedup pipeline runs during generation — no manual near-duplicate pass required after activation
-  3. At least 15% of Biloxi questions have `expiresAt` set (current mayor, council members) satisfying the ratio enforcement check
-  4. A completed retrospective for Biloxi is appended to `COLLECTION-PLAYBOOK.md` covering what broke, what was fixed, and any carry-forward rules
-
-Plans:
-- [ ] 61-01-PLAN.md — Scaffold, generate, and curate Biloxi, MS collection
-- [ ] 61-02-PLAN.md — Activate Biloxi, MS and complete playbook retrospective
-
-#### Phase 62: Mississippi State Collection
-**Goal**: Mississippi State is a fully activated, playable collection with a completed retrospective that closes out the v2.1 milestone playbook
-**Depends on**: Phase 61
-**Requirements**: CONTENT-05, PLAYBOOK-02 (retrospective)
-**Success Criteria** (what must be TRUE):
-  1. Mississippi State collection is active and playable in production with at least 80 questions meeting quality standards
-  2. State-only curation rule applied — no city or regional landmark questions in the final set
-  3. Mixed-durability pattern applied — current-officeholder questions carry `expiresAt`, durable civic facts carry null
-  4. A completed retrospective for Mississippi State is appended to `COLLECTION-PLAYBOOK.md` and the playbook reflects all carry-forward rules accumulated across Phases 58–62
-  5. Total active questions across all collections reaches approximately 1,900+
-
-**Plans:** 2 plans
-
-Plans:
-- [ ] 62-01-PLAN.md — Scaffold, generate, and curate Mississippi State collection
-- [ ] 62-02-PLAN.md — Activate Mississippi State and complete playbook retrospective
+</details>
 
 ## Progress
 
@@ -264,9 +181,4 @@ Plans:
 | 54. XP Game UI | v2.0 | 5/5 | Complete | 2026-03-08 |
 | 55. XP History Panel | v2.0 | 3/3 | Complete | 2026-03-08 |
 | 56. Post-v2.0 XP Tech Debt | v2.0 | 1/1 | Complete | 2026-03-08 |
-| 57. Pipeline & Playbook Foundation | v2.1 | 2/2 | Complete | 2026-03-09 |
-| 58. Portland, OR Collection | v2.1 | 3/3 | Complete | 2026-03-09 |
-| 59. Oregon State Collection | v2.1 | 2/2 | Complete | 2026-03-12 |
-| 60. Washington, DC Collection | v2.1 | 2/2 | Complete | 2026-03-14 |
-| 61. Biloxi, MS Collection | v2.1 | 2/2 | Complete | 2026-03-14 |
-| 62. Mississippi State Collection | v2.1 | 2/2 | Complete | 2026-03-15 |
+| 57–62. Collection Excellence Phases | v2.1 | 13/13 | Complete | 2026-03-15 |

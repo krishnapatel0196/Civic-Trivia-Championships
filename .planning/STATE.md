@@ -2,29 +2,29 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-09)
+See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.1 Collection Excellence — ALL PHASES COMPLETE (Phases 57–62 shipped)
+**Current focus:** Planning next milestone (v2.2)
 
 ## Current Position
 
-Phase: 62 of 62 (Mississippi State Collection) — COMPLETE
-Plan: 02 of 2 — complete
-Status: Phase 62 complete — v2.1 MILESTONE COMPLETE
-Last activity: 2026-03-15 — Completed 62-02: Mississippi State activated (86q, 15.1% expiring, New State Capitol banner, v2.1 milestone summary + retrospective appended to COLLECTION-PLAYBOOK.md)
+Phase: Not started
+Plan: Not started
+Status: Ready to plan — v2.1 archived
+Last activity: 2026-03-15 — v2.1 milestone complete and archived
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | 16 collections active | ~2,800 questions | v2.1 ALL phases complete ✓
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | 17 collections active | ~2,058 active questions | v2.2 not yet planned
 
 **Milestone history:**
-- v1.0–v2.0 (Phases 1–56): All Complete — see .planning/MILESTONES.md
+- v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com / https://ctc.empowered.vote
 - Backend LIVE: https://civic-trivia-backend.onrender.com
 - Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
-- Active collections (14 total — including Washington DC pending activation): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR, Oregon, Washington DC (inactive)
+- Active collections (17 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR, Oregon, Washington DC, Biloxi MS, Mississippi
 
 ## Accumulated Context
 
@@ -67,8 +67,9 @@ Key decisions relevant to v2.1:
 
 ### Pending Todos
 
-- [x] **Enforce 15–30% expiring question ratio** — DONE (57-02): audit script warns when ratio < 15%
 - [ ] **Auto-regenerate expired questions** — deferred to future milestone after ratio enforcement lands
+- [ ] **Fix Scaffold Bug 2** — generate-locale-questions.ts corrupted on every scaffold run; backlogged for dedicated cleanup phase
+- [ ] **Structured officeholders in LocaleConfig** — add field with automatic expiresAt seeding; every v2.1 collection needed manual targeted pass
 
 ### Blockers/Concerns
 
@@ -87,7 +88,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-15
-Stopped at: 62-02 complete — Mississippi State activated (86q, 15.1% expiring); v2.1 milestone complete
+Stopped at: v2.1 milestone archived — all files committed, tagged v2.1
 Resume file: None
 
-Next action: Run `/gsd:audit-milestone` to verify v2.1 cross-phase integration, then `/gsd:complete-milestone` to archive v2.1 and plan v2.2
+Next action: Run `/gsd:new-milestone` to plan v2.2
