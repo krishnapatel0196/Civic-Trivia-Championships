@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 
 ## Current Position
 
-Phase: 64 of 66 (Structured Officeholders)
-Plan: 02 of 02 — COMPLETE
-Status: Phase 64 complete
-Last activity: 2026-03-15 — Completed 64-02-PLAN.md (Pipeline integration + audit tooling)
+Phase: 65 of 66 (Auto-Regenerate Expired Questions)
+Plan: 01 of 02 — COMPLETE
+Status: In progress
+Last activity: 2026-03-15 — Completed 65-01-PLAN.md (replacementGenerator.ts core helper)
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 complete (3/6 phases progress)
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 complete, Phase 65 Plan 01 complete (4/6 phases progress)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -57,6 +57,14 @@ Key decisions from Phase 64 Plan 02 (2026-03-15):
 - tryLoadLocaleConfig returns null (not throws) for collections without locale configs — 17 existing collections silently skip coverage section
 - Officeholder coverage section is non-blocking — zero-coverage count warns only, consistent with expiring-ratio warning pattern
 
+Key decisions from Phase 65 Plan 01 (2026-03-15):
+- generateReplacement() is entirely wrapped in try/catch — returns { replaced: false, reason } on any error, never throws (mirrors awardPlatformXp pattern)
+- QuestionSchema.parse used (not BatchSchema) — BatchSchema has min(15) constraint and throws on single-question AI response
+- Direct insert with status 'active' (not seedQuestionBatch which hardcodes draft) — replacements must be immediately playable
+- tryLoadLocaleConfig uses absolute paths via fileURLToPath + resolve() — relative paths break in cron context
+- getNextExternalId queries ALL question statuses — archived IDs remain in DB with UNIQUE constraint
+- Quality fail is non-retrying — cleanliness over gap-filling; single retry on parse-error and near-duplicate only
+
 ### Pending Todos
 
 All three v2.1 deferred items now addressed in v2.2 roadmap:
@@ -80,8 +88,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-15T19:56:38Z
-Stopped at: Completed 64-02-PLAN.md — post-generation expiresAt seeder + audit coverage reporting
+Last session: 2026-03-15T21:02:40Z
+Stopped at: Completed 65-01-PLAN.md — replacementGenerator.ts core helper
 Resume file: None
 
-Next action: Plan Phase 65 (auto-regenerate expired questions)
+Next action: Execute Phase 65 Plan 02 (wire generateReplacement into expiration sweep cron)
