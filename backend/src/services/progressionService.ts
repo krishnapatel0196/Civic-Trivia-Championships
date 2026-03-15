@@ -113,6 +113,7 @@ export async function awardPlatformGems(
   }
 
   try {
+    console.log(`[progressionService] awarding ${amount} gem(s) to ${userId} via ${accountsUrl}/api/gems/award`);
     const resp = await fetch(`${accountsUrl}/api/gems/award`, {
       method: 'POST',
       headers: {
@@ -121,6 +122,7 @@ export async function awardPlatformGems(
       },
       body: JSON.stringify({ userId, gemType: 'yellow', amount, idempotencyKey }),
     });
+    console.log(`[progressionService] gem award response: ${resp.status}`);
     if (!resp.ok) {
       const error = await resp.text();
       console.warn(`[progressionService] gem award API returned ${resp.status}: ${error}`);
