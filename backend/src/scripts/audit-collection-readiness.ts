@@ -18,6 +18,7 @@ import 'dotenv/config';
 import { db } from '../db/index.js';
 import { questions, collections } from '../db/schema.js';
 import { eq, sql } from 'drizzle-orm';
+import type { LocaleConfig } from './content-generation/locale-configs/bloomington-in.js';
 
 // ─── CLI argument parsing ─────────────────────────────────────────────────────
 
@@ -91,6 +92,30 @@ function validate(args: ParsedArgs): void {
     for (const e of errors) console.error(`  - ${e}`);
     process.exit(1);
   }
+}
+
+// ─── Locale config loader ─────────────────────────────────────────────────────
+
+async function tryLoadLocaleConfig(slug: string): Promise<LocaleConfig | null> {
+  const paths = [
+    `./content-generation/locale-configs/${slug}.js`,
+    `./content-generation/locale-configs/state-configs/${slug}.js`,
+  ];
+
+  for (const path of paths) {
+    try {
+      const mod = await import(path);
+      for (const key of Object.keys(mod)) {
+        const val = mod[key];
+        if (val && typeof val === 'object' && 'locale' in val && 'externalIdPrefix' in val) {
+          return val as LocaleConfig;
+        }
+      }
+    } catch {
+      // File not found — try next path
+    }
+  }
+  return null;
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -218,6 +243,37 @@ async function main(): Promise<void> {
       console.warn(`  Consider adding more current-officeholder questions (mayor, council members, etc.) with expiresAt set.`);
       console.warn(`  Target range: 15–30% of questions should have expiresAt set.`);
       console.warn('');
+    }
+
+    // ─── Officeholder coverage check (non-blocking) ──────────────────────────
+    const localeConfig = await tryLoadLocaleConfig(slug);
+    if (localeConfig?.officeholders && localeConfig.officeholders.length > 0) {
+      console.log('\n  Officeholder Coverage:');
+
+      const allWithExpiry = await db
+        .select({ text: questions.text, expiresAt: questions.expiresAt })
+        .from(questions)
+        .where(sql`
+          ${questions.externalId} LIKE ${prefixPattern}
+          AND ${questions.status} IN ('draft', 'active')
+          AND ${questions.expiresAt} IS NOT NULL
+        `);
+
+      let zeroCoverageCount = 0;
+      for (const official of localeConfig.officeholders) {
+        const nameLower = official.name.toLowerCase();
+        const covered = allWithExpiry.filter(q => q.text.toLowerCase().includes(nameLower));
+        const icon = covered.length === 0 ? 'WARNING' : 'OK';
+        console.log(`    [${icon}] ${official.role}${official.district ? `, ${official.district}` : ''} — ${official.name}: ${covered.length} question(s)`);
+        if (covered.length === 0) zeroCoverageCount++;
+      }
+
+      if (zeroCoverageCount > 0) {
+        console.warn(`\n  WARNING: ${zeroCoverageCount} officeholder(s) have zero question coverage.`);
+        console.warn('  Consider re-running generation with officeholders defined in locale config.\n');
+      } else {
+        console.log(`    All ${localeConfig.officeholders.length} officeholders have question coverage.\n`);
+      }
     }
 
     process.exit(0);
