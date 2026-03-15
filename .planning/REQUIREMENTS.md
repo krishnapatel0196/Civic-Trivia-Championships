@@ -12,7 +12,7 @@
 - [ ] **CONTENT-02**: Oregon State collection scaffolded, generated, curated, and activated
 - [ ] **CONTENT-03**: Washington, DC collection scaffolded, generated, curated, and activated *(district framing: no voting representation in Congress, DC Council + Mayor structure, voting rights civic angle)*
 - [ ] **CONTENT-04**: Biloxi, MS city collection scaffolded, generated, curated, and activated
-- [ ] **CONTENT-05**: Mississippi State collection scaffolded, generated, curated, and activated
+- [x] **CONTENT-05**: Mississippi State collection scaffolded, generated, curated, and activated
 
 ### Pipeline
 
@@ -22,7 +22,7 @@
 ### Playbook
 
 - [ ] **PLAYBOOK-01**: `COLLECTION-PLAYBOOK.md` created in `.planning/` as a living document bootstrapped with learnings from Phases 47–52 (v1.9)
-- [ ] **PLAYBOOK-02**: Each of the 5 collection phases (58–62) ends with a structured retrospective: what broke, what was fixed, what carry-forward rules were added — playbook updated each time
+- [x] **PLAYBOOK-02**: Each of the 5 collection phases (58–62) ends with a structured retrospective: what broke, what was fixed, what carry-forward rules were added — playbook updated each time
 
 ## Future Requirements
 
@@ -45,11 +45,11 @@
 | PIPELINE-02 | Phase 57 | Complete |
 | PLAYBOOK-01 | Phase 57 | Complete |
 | CONTENT-01 | Phase 58 | Complete |
-| PLAYBOOK-02 | Phases 58–62 | Pending |
+| PLAYBOOK-02 | Phases 58–62 | Complete |
 | CONTENT-02 | Phase 59 | Complete |
 | CONTENT-03 | Phase 60 | Complete |
 | CONTENT-04 | Phase 61 | Complete |
-| CONTENT-05 | Phase 62 | Pending |
+| CONTENT-05 | Phase 62 | Complete |
 
 **Coverage:**
 - v2.1 requirements: 9 total

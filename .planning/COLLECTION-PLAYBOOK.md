@@ -270,3 +270,122 @@ Copy this template and fill it in at the end of each collection phase. Append to
 - Expiring question ratio: 15.3% (26/170 — meets 15% target)
 - Generation cost: not logged
 - Time to activate: ~1 day (scaffold + generate + curation checkpoint + officeholder passes + activation)
+
+---
+
+## Retrospective: Mississippi State (Phase 62, 2026-03-15)
+
+### What went well
+- **Locale config voice guidance worked.** The 8-topic distribution with explicit framing guidance for civil rights and the 2020 flag change produced substantive civic content. The generator respected the "civic lens" framing — civil rights questions focus on voter registration mechanics, federal enforcement, constitutional amendments in action, not cultural or emotional angles.
+- **State-scale rule held.** Jackson, Gulfport, Natchez, and Biloxi appeared in questions only as seats of state institutions. The locale config's "ZERO tolerance" language in voice guidance was effective.
+- **First generation pass strong.** 102 questions seeded (125 attempted, 23 failed validation), 38 archived by semantic dedup = 64 net unique questions. A second pass brought total to 107 before curation. Total generation cost: ~$2.13 for the first pass.
+- **Scaffold Bug 2 workaround is now routine.** The revert + manual registration pattern takes ~10 minutes and runs clean every time. No surprises.
+- **Official Wikipedia API image fetch worked** for the New State Capitol banner (1,280px wide, 339KB, public domain).
+
+### What broke or was harder than expected
+- **Expiring ratio was 12% after generation** (10 of 83 questions after curation). The generator set expiresAt on the 7 key target offices but the ratio fell short of 15%. A targeted insert pass (mis-401 to mis-403) added 3 questions to reach 15.1%.
+- **Speaker Pro Tem (Trey Lamar) not covered by generation.** The keyword "lamar" didn't match any generated question — the generator focused on higher-profile offices. Added manually as mis-401.
+- **Second generation pass was killed mid-run** in a previous session. The partial output was still committed to the DB and counted (partially bumping the total before the kill). Net effect: 107 draft questions before curation, more than needed.
+
+### Bugs encountered
+- **Scaffold Bug 2 (5th consecutive collection):** generate-locale-questions.ts corrupted after scaffold — reverted per documented workaround. Persistent, not fixed.
+
+### Carry-forward rules (new conventions for future collections)
+
+- **State collections with 7+ target offices: budget 3 targeted inserts minimum.** Even when all 7 target offices appear in generated questions, the expiring ratio for an 83-question state collection only reaches 12%. Budget 3–5 additional targeted inserts to close the gap to 15% without needing a multi-pass officeholder script.
+- **Speaker Pro Tem is consistently skipped by generation.** The second-ranking legislative leader (Speaker Pro Tem, Majority Leader, etc.) is rarely generated unless explicitly listed by name in voice guidance. Include the full name in the locale config officeholders section for future state collections.
+- **Wikipedia API image fetch is the right pattern for state capitols.** The `?action=query&prop=pageimages&pithumbsize=1200` endpoint returns a direct CDN URL for the featured image. This worked for Mississippi and generalizes to any state capitol article. Add this to the collection creation runbook.
+
+### Final stats
+- Questions generated (1 full pass + partial second pass): ~107 draft before curation
+- After semantic dedup (automated): net ~83 unique questions in DB
+- After human curation: 83 draft (good curator pass, ~24 archived)
+- Officeholder inserts (targeted script): 3 questions (mis-401 to mis-403, all expiresAt 2028-01-13)
+- Total active at launch: 86
+- Expiring question ratio: 15.1% (13/86 — meets 15% target)
+- Banner image: Mississippi New State Capitol (1903 Beaux-Arts, Jackson), 339KB, public domain
+- Generation cost: ~$2.13 (first pass only)
+- Time to activate: ~4 hours total
+
+---
+
+## v2.1 Milestone Summary
+
+**Milestone: Collection Excellence — Phases 57–62 (shipped 2026-03-09 to 2026-03-15)**
+
+### Collections shipped (6 total)
+
+| Collection | Phase | Active Questions | Expiring Ratio | Notes |
+|------------|-------|-----------------|----------------|-------|
+| Portland, OR | 58 | 83 | 18.1% | Gap-closed via Wikipedia sources after initial 61q yield |
+| Oregon State | 59 | 81 | 7.4% | Structural ceiling (6 offices) — documented and accepted |
+| Washington, DC | 60 | 154 | 9.7% | Pre-existing active questions diluted ratio; district tier via city + voice guidance |
+| Biloxi, MS | 61 | 170 | 15.3% | 3-pass officeholder strategy for 7-ward council |
+| Mississippi State | 62 | 86 | 15.1% | Civil rights + Lt. Gov power as core content |
+
+### Pipeline hardening achievements (Phase 57+)
+
+- **Semantic near-duplicate detection built into generator** (Phase 57): `runWithinCollectionSemanticDedup()` auto-runs after every generation pass. Manual `scan-duplicates.ts` pass no longer required per collection.
+- **`audit-collection-readiness.ts` with expiring ratio enforcement** (Phase 57): warns when ratio < 15%; non-blocking (exit 0) to avoid gating older collections. Two-query expiry model: `expiresAt IS NOT NULL` for ratio, 90-day window for net count blocker.
+- **Mixed-durability pattern established** across all v2.1 collections: expiring (officeholder questions with `expiresAt`) + durable (civic facts with `null`) in every collection. Target 15–30%.
+- **Collection playbook as living document**: retrospective appended after each phase, carry-forward rules accumulated and actionable.
+
+### Key patterns that emerged across Phases 58–62
+
+1. **State collections need a mandatory targeted officeholder pass.** The main generator reliably generates questions about current officeholders but does NOT reliably set `expiresAt` even when the locale config declares them with expiry dates. Every collection since Phase 58 required a post-generation pass to set or add `expiresAt` fields. **Backlog: add officeholders as a structured LocaleConfig field with automatic expiry seeding.**
+
+2. **Supplementation is consistently needed for state collections.** Automated pipeline yields 50–70 unique questions for most US states before hitting dedup saturation. Manual supplementation to reach 80 is the normal pattern:
+   - Oregon: 25 hand-crafted questions
+   - Mississippi: 3 targeted inserts (officeholder gap)
+   Plan for this upfront in every state collection phase.
+
+3. **State-scale rule requires active enforcement.** City associations are strong — generators reliably produce city-level content for state collections (Jackson neighborhoods, Natchez landmarks, etc.) even with explicit prohibitions. The ZERO-tolerance language in voice guidance reduces but does not eliminate violations; the curation checkpoint catches the rest.
+
+4. **Topic distribution should lead with the most distinctive civic fact.** Mississippi's Lt. Governor power, Oregon's no-Lt.-Governor structure, DC's Home Rule — these distinctive structural facts generate the most interesting questions and should be the highest-weighted topic in the locale config.
+
+5. **Playbook retrospectives are most valuable when they capture specific curation decisions.** The most actionable retrospectives document: what keywords to search for in the admin panel, which topics tend to overflow, what voice guidance language actually worked.
+
+6. **Second-ranking legislative leaders are skipped by generation.** Speaker Pro Tem, Majority Leader, President Pro Tem — these roles are consistently missed unless their names appear explicitly in the locale config. Include full names in officeholders section for every collection.
+
+### Consolidated carry-forward rules (from Phases 58–62)
+
+**Generation**
+- Use Wikipedia URLs as primary sources for all collections; government portal pages return navigation content
+- State collections: include judiciary source URLs (Supreme Court, AG) upfront to fill structural gaps
+- Budget 1.4× question overshoot target; expect 2–3 generation runs for state collections
+- Spot-check 2–3 source URLs before generation — verify they return substantive content, not redirects
+
+**Scaffolding**
+- Scaffold Bug 2 is permanent and expected: always revert generate-locale-questions.ts post-scaffold
+- Post-scaffold checklist: (1) revert generate-locale-questions.ts, (2) manually add import + configKey, (3) verify localeName is short-form, (4) verify description uses double-quote string if tagline has apostrophe
+- For non-standard jurisdictions (DC, territories): use city tier + voice guidance — no new tiers needed
+
+**Expiring questions**
+- State collections: expiring ratio ceiling is 7–15% depending on number of elected executives
+- Generator does not reliably set `expiresAt`; plan a targeted pass for every collection
+- Include full names of all target officeholders (including 2nd-ranking legislative leaders) in locale config
+- Officeholder term dates for Mississippi: 2028-01-13 (all statewide officials elected Nov 2023)
+
+**Curation**
+- For state collections: test every question against "could this belong in a future city collection?" — cut all that pass
+- Casino/gambling questions: cap at 8–10 max for Gulf Coast and Nevada-adjacent collections
+- Civil rights content: verify framing is civic (policy, legislation, constitutional mechanics), not cultural
+
+**Activation**
+- Run `audit-collection-readiness.ts --dry-run` before every activation
+- Banner images: use Wikipedia API `?action=query&prop=pageimages&pithumbsize=1200` for clean CDN URLs
+- State capitols: always use the current (newest) state capitol building, not historic ones
+
+### Vision: /create-collection skill
+
+The v2.1 milestone built all the prerequisite infrastructure for a future single-command collection workflow:
+
+```
+/create-collection "Jackson, MS" --tier city --prefix jxn
+```
+
+This would encapsulate: scaffold → locale config authoring → source URL selection → generate → auto-dedup → curation checkpoint → officeholder pass → banner image fetch → audit → activate → playbook retrospective. All the components exist; the workflow just needs orchestration. Target for v2.2 or v2.3.
+
+### What's next
+
+Run `/gsd:audit-milestone` to verify v2.1 cross-phase integration before archiving. Then `/gsd:complete-milestone` to archive and start planning v2.2.

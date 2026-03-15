@@ -13,7 +13,7 @@
 - ✅ **v1.8 Empowered Identity** — Phases 40–46 (shipped 2026-03-01)
 - ✅ **v1.9 Geographic Expansion** — Phases 47–52 (shipped 2026-03-03)
 - ✅ **v2.0 XP Integration** — Phases 53–56 (shipped 2026-03-08)
-- 🚧 **v2.1 Collection Excellence** — Phases 57–62 (in progress)
+- ✅ **v2.1 Collection Excellence** — Phases 57–62 (shipped 2026-03-15)
 
 ## Phases
 
@@ -269,4 +269,4 @@ Plans:
 | 59. Oregon State Collection | v2.1 | 2/2 | Complete | 2026-03-12 |
 | 60. Washington, DC Collection | v2.1 | 2/2 | Complete | 2026-03-14 |
 | 61. Biloxi, MS Collection | v2.1 | 2/2 | Complete | 2026-03-14 |
-| 62. Mississippi State Collection | v2.1 | 0/2 | Not started | - |
+| 62. Mississippi State Collection | v2.1 | 2/2 | Complete | 2026-03-15 |

@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.1 Collection Excellence — Phase 62: Mississippi State Collection (next)
+**Current focus:** v2.1 Collection Excellence — ALL PHASES COMPLETE (Phases 57–62 shipped)
 
 ## Current Position
 
-Phase: 61 of 62 (Biloxi, MS Collection) — COMPLETE
+Phase: 62 of 62 (Mississippi State Collection) — COMPLETE
 Plan: 02 of 2 — complete
-Status: Phase 61 complete
-Last activity: 2026-03-14 — Completed 61-02: Biloxi, MS activated (170q, 15.3% expiring, Biloxi Lighthouse banner, COLLECTION-PLAYBOOK.md retrospective appended)
+Status: Phase 62 complete — v2.1 MILESTONE COMPLETE
+Last activity: 2026-03-15 — Completed 62-02: Mississippi State activated (86q, 15.1% expiring, New State Capitol banner, v2.1 milestone summary + retrospective appended to COLLECTION-PLAYBOOK.md)
 
-Progress: [██████████] v1.0–v2.0 complete (Phases 1–56) | 15 collections active | ~2,600 questions | v2.1 Phases 57–61 complete ✓ → Phase 62 next
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | 16 collections active | ~2,800 questions | v2.1 ALL phases complete ✓
 
 **Milestone history:**
 - v1.0–v2.0 (Phases 1–56): All Complete — see .planning/MILESTONES.md
@@ -60,6 +60,10 @@ Key decisions relevant to v2.1:
 - Biloxi, MS curation (61-01): curator removed casino questions (over 9-question cap), muted others; 144 draft questions post-curation; Ward 4 name "Jamie Creel" not flagged — confirmed carry-forward for officeholder pass
 - Biloxi, MS activation (61-02): 26 officeholder questions added via 3-pass strategy (bxl-401 to bxl-436, all expiresAt 2029-06-01); 15.3% expiring ratio achieved; 170 total active questions; Biloxi Lighthouse banner (CC BY-SA 3.0, 1200x900); Phase 61 complete
 - Large council budget rule (61-02): 7-ward council requires 2q/ward-member (forward + reverse lookup) + 4q/mayor to reach 15% expiring target in 130-170 question pool; single-pass at 1q/ward only reaches ~8-9%
+- Mississippi State scaffold (62-01): Scaffold Bug 2 triggered (5th consecutive) — revert + manual registration; localeName='Mississippi' (short form)
+- Mississippi State generation (62-01): 107 draft questions after 1 full pass + partial second; 83 after human curation
+- Mississippi State activation (62-02): 3 targeted questions added (mis-401-403, expiresAt 2028-01-13); 15.1% expiring ratio; 86 active questions; New State Capitol banner (public domain, 339KB); v2.1 COMPLETE
+- State collection officeholder gap (62-02): Speaker Pro Tem consistently missed by generation; must be listed by name in locale config or added manually
 
 ### Pending Todos
 
@@ -82,8 +86,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-14
-Stopped at: 61-02 complete — Biloxi, MS activated (170q, 15.3% expiring); Phase 61 complete
+Last session: 2026-03-15
+Stopped at: 62-02 complete — Mississippi State activated (86q, 15.1% expiring); v2.1 milestone complete
 Resume file: None
 
-Next action: Begin Phase 62 — Mississippi State Collection (scaffold, generate, curate, activate)
+Next action: Run `/gsd:audit-milestone` to verify v2.1 cross-phase integration, then `/gsd:complete-milestone` to archive v2.1 and plan v2.2
