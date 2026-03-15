@@ -26,7 +26,7 @@ import { BatchSchema, QuestionSchema, type ValidatedQuestion } from './question-
 import { buildSystemPrompt } from './prompts/system-prompt.js';
 import { fetchSources } from './rag/fetch-sources.js';
 import { loadSourceDocuments } from './rag/parse-sources.js';
-import type { LocaleConfig } from './locale-configs/bloomington-in.js';
+import type { LocaleConfig, OfficeholderEntry } from './locale-configs/bloomington-in.js';
 import { validateAndRetry, createReport, saveReport, type RegenerateFn } from './utils/quality-validation.js';
 import { DuplicateDetector } from '../../services/qualityRules/rules/duplicate.js';
 
@@ -450,6 +450,60 @@ async function runWithinCollectionSemanticDedup(prefix: string, collectionSlug: 
   );
 }
 
+// ─── Officeholder expiresAt seeder ───────────────────────────────────────────
+
+/**
+ * After questions are seeded to the database, scan question text for officeholder
+ * names and set expiresAt to the officeholder's termEnd date.
+ *
+ * Only touches questions with expiresAt IS NULL to avoid overwriting manually
+ * corrected dates. Runs on draft AND active questions for this collection.
+ */
+async function seedOfficeholderExpiresAt(
+  config: LocaleConfig,
+  officeholders: OfficeholderEntry[]
+): Promise<{ updated: number }> {
+  if (officeholders.length === 0) return { updated: 0 };
+
+  const { db: dbSeeder } = await import('../../db/index.js');
+  const { questions: questionsSeeder } = await import('../../db/schema.js');
+  const { sql: sqlSeeder } = await import('drizzle-orm');
+
+  const prefixPattern = config.externalIdPrefix + '-%';
+
+  // Fetch draft AND active questions with no expiresAt for this collection
+  const rows = await dbSeeder
+    .select({ id: questionsSeeder.id, externalId: questionsSeeder.externalId, text: questionsSeeder.text })
+    .from(questionsSeeder)
+    .where(sqlSeeder`${questionsSeeder.externalId} LIKE ${prefixPattern} AND ${questionsSeeder.status} IN ('draft', 'active') AND ${questionsSeeder.expiresAt} IS NULL`);
+
+  let updated = 0;
+
+  for (const official of officeholders) {
+    const nameLower = official.name.toLowerCase();
+    const termEnd = new Date(official.termEnd);
+
+    if (isNaN(termEnd.getTime())) {
+      console.warn(`  [Officeholder seeder] WARNING: Invalid termEnd "${official.termEnd}" for ${official.name} — skipping`);
+      continue;
+    }
+
+    const matches = rows.filter(q => q.text.toLowerCase().includes(nameLower));
+
+    for (const q of matches) {
+      await dbSeeder
+        .update(questionsSeeder)
+        .set({ expiresAt: termEnd })
+        .where(sqlSeeder`${questionsSeeder.id} = ${q.id}`);
+
+      console.log(`  [Officeholder seeder] Set expiresAt ${official.termEnd.split('T')[0]} on ${q.externalId} (matched: ${official.name})`);
+      updated++;
+    }
+  }
+
+  return { updated };
+}
+
 // ─── Main orchestrator ────────────────────────────────────────────────────────
 
 async function main(): Promise<void> {
@@ -735,6 +789,14 @@ Return ONLY a JSON object with a "questions" array containing exactly 1 question
         const result = await seedQuestionBatch(validationResult.passed, collectionId, topicIdMap);
         totalSeeded += result.seeded;
         totalSkipped += result.skipped;
+      }
+
+      // After seeding, set expiresAt on questions whose text mentions an officeholder by name
+      if (!args.dryRun && config.officeholders && config.officeholders.length > 0) {
+        const { updated } = await seedOfficeholderExpiresAt(config, config.officeholders);
+        if (updated > 0) {
+          console.log(`  Officeholder expiresAt seeded: ${updated} question(s) updated`);
+        }
       }
 
       console.log(`  Validation complete: ${validationResult.passed.length} passed, ${validationResult.failed.length} failed`);
