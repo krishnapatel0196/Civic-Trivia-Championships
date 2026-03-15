@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 ## Current Position
 
 Phase: 64 of 66 (Structured Officeholders)
-Plan: 01 of 02 — COMPLETE
-Status: In progress (Plan 02 remaining)
-Last activity: 2026-03-15 — Completed 64-01-PLAN.md (Type foundation + prompt injection)
+Plan: 02 of 02 — COMPLETE
+Status: Phase 64 complete
+Last activity: 2026-03-15 — Completed 64-02-PLAN.md (Pipeline integration + audit tooling)
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 Plan 01 complete (2/6 phases progress)
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 complete (3/6 phases progress)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -51,6 +51,12 @@ Key decisions from Phase 64 Plan 01 (2026-03-15):
 - officeholders field is optional — 17 existing configs need zero changes; undefined treated as empty array in prompt builder
 - Both city and state prompt builders get officeholders param for future state-level officeholder use
 
+Key decisions from Phase 64 Plan 02 (2026-03-15):
+- seedOfficeholderExpiresAt uses dynamic imports for db/questions/sql (consistent with runWithinCollectionSemanticDedup pattern)
+- expiresAt IS NULL filter in seeder query is mandatory — prevents overwriting manually corrected expiry dates on re-runs
+- tryLoadLocaleConfig returns null (not throws) for collections without locale configs — 17 existing collections silently skip coverage section
+- Officeholder coverage section is non-blocking — zero-coverage count warns only, consistent with expiring-ratio warning pattern
+
 ### Pending Todos
 
 All three v2.1 deferred items now addressed in v2.2 roadmap:
@@ -74,8 +80,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-15T19:50:05Z
-Stopped at: Completed 64-01-PLAN.md — OfficeholderEntry type foundation + prompt injection
+Last session: 2026-03-15T19:56:38Z
+Stopped at: Completed 64-02-PLAN.md — post-generation expiresAt seeder + audit coverage reporting
 Resume file: None
 
-Next action: Execute 64-02-PLAN.md (auto-seeder and audit tooling)
+Next action: Plan Phase 65 (auto-regenerate expired questions)
