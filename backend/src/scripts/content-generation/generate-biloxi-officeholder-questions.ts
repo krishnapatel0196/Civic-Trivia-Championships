@@ -31,7 +31,7 @@ import { DuplicateDetector } from '../../services/qualityRules/rules/duplicate.j
 const DRY_RUN = process.argv.includes('--dry-run');
 
 const client = new Anthropic();
-const MODEL = 'claude-opus-4-6';
+const MODEL = 'claude-sonnet-4-6';
 
 // ─── Expiration date ───────────────────────────────────────────────────────────
 
