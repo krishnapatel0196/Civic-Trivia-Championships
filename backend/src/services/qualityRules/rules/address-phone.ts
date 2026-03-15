@@ -6,9 +6,9 @@
  * the question is testing memorization of contact details rather than
  * civic knowledge.
  *
- * This rule is ADVISORY — legitimate civic location questions can have
- * address-based answers (e.g., "Where is the Supreme Court located?").
- * Flagged questions require human review before any archival decision.
+ * This rule is BLOCKING — questions where answer choices contain contact
+ * information are never acceptable. If a question needs an address or phone
+ * number as the answer, it is testing the wrong thing.
  *
  * CRITICAL: Scans ONLY question.options (the 4 answer choices).
  * Does NOT scan question.text or question.explanation.
@@ -65,12 +65,11 @@ function findContactPatterns(text: string): string[] {
 }
 
 /**
- * ADVISORY RULE: Check for phone numbers or street addresses in answer options
+ * BLOCKING RULE: Check for phone numbers or street addresses in answer options
  *
  * Scans ONLY answer options (not question text or explanation).
- * Produces ADVISORY violations (not blocking) because:
- * 1. Some civic questions legitimately test knowledge of physical locations
- * 2. Human review is needed before deciding to archive
+ * Produces BLOCKING violations — questions with address/phone answers
+ * are never acceptable and are rejected during generation.
  *
  * @param question - Question to evaluate
  * @returns Rule result with any violations found
@@ -84,7 +83,7 @@ export function checkAddressPhone(question: QuestionInput): RuleResult {
     if (matches.length > 0) {
       violations.push({
         rule: 'address-phone',
-        severity: 'advisory',
+        severity: 'blocking',
         message: 'Answer option contains a phone number or street address',
         evidence: matches.join('; ')
       });
