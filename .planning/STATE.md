@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 
 ## Current Position
 
-Phase: 65 of 66 (Auto-Regenerate Expired Questions)
-Plan: 02 of 02 — COMPLETE
-Status: Phase 65 complete
-Last activity: 2026-03-15 — Completed 65-02-PLAN.md (expirationSweep.ts wired to generateReplacement)
+Phase: 66 of 66 (Gem Award Migration)
+Plan: 01 of 01 — COMPLETE
+Status: Phase 66 complete
+Last activity: 2026-03-15 — Completed 66-01-PLAN.md (connect.credit_gems RPC replaced with POST /api/gems/award)
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 complete, Phase 65 complete (5/6 phases progress)
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 complete, Phase 65 complete, Phase 66 complete (6/6 phases progress — v2.2 COMPLETE)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -32,8 +32,15 @@ Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) 
 
 Full decision log in PROJECT.md Key Decisions table.
 
+Key decisions from Phase 66 Plan 01 (2026-03-15):
+- awardPlatformGems uses plain try/catch (no withRetry) — contrast with awardPlatformXp which retries 3x
+- TRIVIA_GEMS_KEY is a separate scoped key (not TRIVIA_SERVICE_KEY) — scope ["yellow"] configured on accounts side
+- gemType hardcoded to 'yellow' — not caller-configurable
+- Warning-only startup validation for TRIVIA_GEMS_KEY — server boots without it, awards fail gracefully at runtime
+- connect.credit_gems Supabase RPC fully removed from TypeScript (DB function itself untouched)
+
 Key decisions relevant to v2.2 (from ONBOARDING-CTC.md):
-- Gem award migration (GEMS-01): `connect.credit_gems` direct RPC deprecated; new endpoint is `POST /api/gems/award` with `TRIVIA_GEMS_KEY`; key scope ["yellow"] configured on accounts side by Chris
+- Gem award migration (GEMS-01): `connect.credit_gems` direct RPC deprecated; new endpoint is `POST /api/gems/award` with `TRIVIA_GEMS_KEY`; key scope ["yellow"] configured on accounts side by Chris — COMPLETED in Phase 66
 - Leaderboard data source (LEAD-01): `GET /api/account/profile/:userId` on accounts API — no auth required, returns username/tier/level/total_xp; no gems or sensitive data
 - Accounts URL: ONBOARDING-CTC.md uses `ACCOUNTS_URL` (= `https://ev-accounts-api.onrender.com`); CTC currently uses `EMPOWERED_ACCOUNTS_API_URL` — verify alignment before Phase 66
 - `xp_in_level` and `xp_to_next_level` returned by `GET /api/account/me` — use directly, no need to recompute thresholds client-side
@@ -94,8 +101,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-15T21:08:25Z
-Stopped at: Completed 65-02-PLAN.md — expirationSweep.ts wired to generateReplacement()
+Last session: 2026-03-15T22:25:12Z
+Stopped at: Completed 66-01-PLAN.md — gem award migration complete, v2.2 Pipeline Intelligence roadmap complete
 Resume file: None
 
-Next action: Plan and execute Phase 66 (Gems migration — connect.credit_gems → POST /api/gems/award)
+Next action: Deploy to Render and set TRIVIA_GEMS_KEY env var. Then plan v2.3 roadmap (Phase 67+).
