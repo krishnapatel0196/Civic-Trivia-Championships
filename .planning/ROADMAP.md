@@ -30,10 +30,10 @@
   1. Running `scaffold-collection.ts` leaves `generate-locale-questions.ts` byte-for-byte identical to its pre-scaffold state
   2. The post-scaffold `git checkout` workaround is no longer needed or documented as required
   3. An existing collection can be regenerated immediately after scaffolding a new one without manual intervention
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 63-01: Diagnose and fix Scaffold Bug 2 (generate-locale-questions.ts corruption)
+- [ ] 63-01-PLAN.md — Fix brace-depth scanner in step3RegisterLocale and verify with test scaffold
 
 #### Phase 64: Structured Officeholders
 **Goal**: LocaleConfig can declare officeholders once and the pipeline automatically seeds expiresAt on matching questions — zero manual targeted pass required
@@ -273,7 +273,7 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 55. XP History Panel | v2.0 | 3/3 | Complete | 2026-03-08 |
 | 56. Post-v2.0 XP Tech Debt | v2.0 | 1/1 | Complete | 2026-03-08 |
 | 57–62. Collection Excellence Phases | v2.1 | 13/13 | Complete | 2026-03-15 |
-| 63. Scaffold Fix | v2.2 | 0/TBD | Not started | - |
+| 63. Scaffold Fix | v2.2 | 0/1 | Not started | - |
 | 64. Structured Officeholders | v2.2 | 0/TBD | Not started | - |
 | 65. Auto-Regenerate Expired Questions | v2.2 | 0/TBD | Not started | - |
 | 66. Gem Award Migration | v2.2 | 0/TBD | Not started | - |
