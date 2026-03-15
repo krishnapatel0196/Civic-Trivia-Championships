@@ -2,6 +2,7 @@
 
 ## Milestones
 
+- ◆ **v2.2 Pipeline Intelligence** — Phases 63–68 (in progress)
 - ✅ **v1.0 MVP** — Phases 1–7 (shipped 2026-02-13)
 - ✅ **v1.1 Production Hardening** — Phases 8–12 (shipped 2026-02-18)
 - ✅ **v1.2 Community Collections** — Phases 13–17 (shipped 2026-02-19)
@@ -16,6 +17,96 @@
 - ✅ **v2.1 Collection Excellence** — Phases 57–62 (shipped 2026-03-15) — [archive](milestones/v2.1-ROADMAP.md)
 
 ## Phases
+
+### ◆ v2.2 Pipeline Intelligence (In Progress)
+
+**Milestone Goal:** Automate the content operations lifecycle — fix the scaffold tooling bug, add structured officeholders to LocaleConfig so expiresAt is seeded automatically, extend the hourly expiry cron to regenerate fresh replacements, migrate gem awards to the new accounts API endpoint, add a leaderboard, and ship Santa Monica CA as the first collection built entirely with the new infrastructure.
+
+#### Phase 63: Scaffold Fix
+**Goal**: The scaffold tool runs cleanly without corrupting the generation pipeline
+**Depends on**: Phase 62 (nothing functional, but establishes starting point for v2.2)
+**Requirements**: TOOL-01
+**Success Criteria** (what must be TRUE):
+  1. Running `scaffold-collection.ts` leaves `generate-locale-questions.ts` byte-for-byte identical to its pre-scaffold state
+  2. The post-scaffold `git checkout` workaround is no longer needed or documented as required
+  3. An existing collection can be regenerated immediately after scaffolding a new one without manual intervention
+**Plans**: TBD
+
+Plans:
+- [ ] 63-01: Diagnose and fix Scaffold Bug 2 (generate-locale-questions.ts corruption)
+
+#### Phase 64: Structured Officeholders
+**Goal**: LocaleConfig can declare officeholders once and the pipeline automatically seeds expiresAt on matching questions — zero manual targeted pass required
+**Depends on**: Phase 63
+**Requirements**: TOOL-02, TOOL-03, TOOL-04, TOOL-05
+**Success Criteria** (what must be TRUE):
+  1. A locale config with an `officeholders` array (name, role, termEnd) passes TypeScript type-checking without error
+  2. Generation prompts include each officeholder's name and role when the field is present, visibly shaping AI output toward current-officeholder questions
+  3. After generation, any question whose text references an officeholder by name has `expiresAt` automatically set to that officeholder's `termEnd` date — no manual pass needed
+  4. `audit-collection-readiness.ts` reports how many officeholders have at least one question with matching `expiresAt`, and flags any officeholder with zero coverage
+**Plans**: TBD
+
+Plans:
+- [ ] 64-01: Add `officeholders` field to LocaleConfig type and update prompt injection logic
+- [ ] 64-02: Implement post-generation expiresAt auto-seeding and audit coverage reporting
+
+#### Phase 65: Auto-Regenerate Expired Questions
+**Goal**: When the hourly expiry cron archives an expired question, it automatically generates and seeds a fresh replacement in the same topic — the collection never shrinks
+**Depends on**: Phase 64
+**Requirements**: COPS-01, COPS-02, COPS-03, COPS-04
+**Success Criteria** (what must be TRUE):
+  1. Running the hourly cron when expired questions are present archives those questions AND seeds active replacements in a single pass — no separate step required
+  2. Each replacement question shares the topic category of the question it replaces, maintaining collection topic balance
+  3. Replacement questions are seeded directly as active (status = 'active'), not as drafts requiring admin review
+  4. If replacement generation throws or returns an error, the expiry still completes and logs a warning — the cron never fails because of a generation error
+**Plans**: TBD
+
+Plans:
+- [ ] 65-01: Extend hourly expiry cron with replacement generation and never-throw error handling
+
+#### Phase 66: Gem Award Migration
+**Goal**: CTC gem awards route through the accounts API — deprecated direct RPC removed, new endpoint wired with `TRIVIA_GEMS_KEY`
+**Depends on**: Phase 65 (independent, but sequenced after content ops work)
+**Requirements**: GEMS-01, GEMS-02
+**Success Criteria** (what must be TRUE):
+  1. `awardPlatformGems()` calls `POST /api/gems/award` with `TRIVIA_GEMS_KEY` — no direct Supabase RPC call remains
+  2. `connect.credit_gems` RPC call is fully removed from the codebase
+  3. `TRIVIA_GEMS_KEY` is validated on startup with a warning if missing (mirrors `TRIVIA_SERVICE_KEY` pattern)
+  4. Gem awards still land correctly in the accounts gem ledger (verified in production)
+**Plans**: TBD
+
+Plans:
+- [ ] 66-01: Migrate awardPlatformGems() to POST /api/gems/award and add TRIVIA_GEMS_KEY env validation
+
+#### Phase 67: Leaderboard
+**Goal**: Players can see a ranked leaderboard of top CTC players, sourced from the accounts public profile API
+**Depends on**: Phase 66 (accounts API integration work establishes pattern)
+**Requirements**: LEAD-01, LEAD-02
+**Success Criteria** (what must be TRUE):
+  1. Leaderboard page is accessible without auth and shows top players ranked by total XP
+  2. Each row shows username, tier badge, level, and total XP — sourced from `GET /api/account/profile/:userId`
+  3. Logged-in user's own rank is visually highlighted if they appear on the leaderboard
+  4. Page loads within performance budget (FCP <1.5s)
+**Plans**: TBD
+
+Plans:
+- [ ] 67-01: Build leaderboard page with accounts public profile API integration
+
+#### Phase 68: Santa Monica, CA Collection
+**Goal**: Santa Monica, CA is a fully activated collection with 80–100 questions and uses the `officeholders` field to achieve 15–30% expiring ratio without a manual targeted pass
+**Depends on**: Phase 64 (officeholders field must exist before scaffolding)
+**Requirements**: COLL-01, COLL-02, COLL-03
+**Success Criteria** (what must be TRUE):
+  1. Santa Monica collection card appears in the collection picker and is playable in production
+  2. Collection has 80–100 active questions across its defined topic categories, all passing quality rules
+  3. Expiring question ratio is 15–30%, achieved via the `officeholders` field in locale config (no manual targeted pass)
+  4. Semantic dedup ran automatically during generation and confirmed zero within-collection duplicates at activation
+  5. Banner image is an iconic Santa Monica landmark (not a generic placeholder)
+**Plans**: TBD
+
+Plans:
+- [ ] 68-01: Scaffold Santa Monica, generate questions, curate
+- [ ] 68-02: Activate Santa Monica collection in production
 
 <details>
 <summary>✅ v1.0 MVP (Phases 1–7) — SHIPPED 2026-02-13</summary>
@@ -182,3 +273,9 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 55. XP History Panel | v2.0 | 3/3 | Complete | 2026-03-08 |
 | 56. Post-v2.0 XP Tech Debt | v2.0 | 1/1 | Complete | 2026-03-08 |
 | 57–62. Collection Excellence Phases | v2.1 | 13/13 | Complete | 2026-03-15 |
+| 63. Scaffold Fix | v2.2 | 0/TBD | Not started | - |
+| 64. Structured Officeholders | v2.2 | 0/TBD | Not started | - |
+| 65. Auto-Regenerate Expired Questions | v2.2 | 0/TBD | Not started | - |
+| 66. Gem Award Migration | v2.2 | 0/TBD | Not started | - |
+| 67. Leaderboard | v2.2 | 0/TBD | Not started | - |
+| 68. Santa Monica, CA Collection | v2.2 | 0/TBD | Not started | - |
