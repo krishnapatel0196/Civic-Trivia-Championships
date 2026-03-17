@@ -6,12 +6,15 @@ import { useAuthStore } from '../store/authStore';
 import { useLeaderboard } from '../features/leaderboard/hooks/useLeaderboard';
 import { LeaderboardTabs } from '../features/leaderboard/components/LeaderboardTabs';
 import { LeaderboardRow } from '../features/leaderboard/components/LeaderboardRow';
+import { LeaderboardPodium } from '../features/leaderboard/components/LeaderboardPodium';
+import { LeaderboardStickyYou } from '../features/leaderboard/components/LeaderboardStickyYou';
 import type { LeaderboardTab } from '../features/leaderboard/types';
 
 export function Leaderboard() {
   const navigate = useNavigate();
   const { C } = useTheme();
   const userId = useAuthStore((s) => s.user?.id ?? null);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const [tab, setTab] = useState<LeaderboardTab>('all_time');
   const { data, isLoading, error, refetch } = useLeaderboard(tab, userId);
@@ -118,16 +121,8 @@ export function Leaderboard() {
 
   const rankedList = data && data.entries.length > 0 && (
     <div>
-      {/* Plan 03: Replace with LeaderboardPodium */}
-      {data.entries
-        .filter((e) => e.rank <= 3)
-        .map((entry) => (
-          <LeaderboardRow
-            key={entry.user_id}
-            entry={entry}
-            isYou={entry.user_id === userId}
-          />
-        ))}
+      {/* Podium — top 3 visual treatment */}
+      <LeaderboardPodium entries={data.entries.filter((e) => e.rank <= 3)} />
 
       {/* Positions 4-25 */}
       {data.entries
@@ -139,6 +134,13 @@ export function Leaderboard() {
             isYou={entry.user_id === userId}
           />
         ))}
+
+      {/* Sticky you row — personal rank below list */}
+      <LeaderboardStickyYou
+        userRank={data.userRank}
+        isAuthenticated={isAuthenticated}
+        isInTop25={data.entries.some((e) => e.user_id === userId)}
+      />
     </div>
   );
 
@@ -183,6 +185,15 @@ export function Leaderboard() {
         {!isLoading && error && errorState}
         {!isLoading && !error && data && data.entries.length === 0 && emptyState}
         {!isLoading && !error && rankedList}
+
+        {/* Sign-in prompt when leaderboard is empty and user is logged out */}
+        {!isLoading && !error && data && data.entries.length === 0 && (
+          <LeaderboardStickyYou
+            userRank={null}
+            isAuthenticated={isAuthenticated}
+            isInTop25={false}
+          />
+        )}
       </div>
     </div>
   );
