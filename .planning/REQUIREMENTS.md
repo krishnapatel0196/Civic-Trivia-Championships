@@ -22,13 +22,13 @@
 
 ### Platform Integration
 
-- [ ] **GEMS-01**: `awardPlatformGems()` migrated from deprecated `connect.credit_gems` RPC to `POST /api/gems/award` with `TRIVIA_GEMS_KEY`
-- [ ] **GEMS-02**: `TRIVIA_GEMS_KEY` env var added and validated on startup; direct Supabase RPC call removed
+- [x] **GEMS-01**: `awardPlatformGems()` migrated from deprecated `connect.credit_gems` RPC to `POST /api/gems/award` with `TRIVIA_GEMS_KEY`
+- [x] **GEMS-02**: `TRIVIA_GEMS_KEY` env var added and validated on startup; direct Supabase RPC call removed
 
 ### Leaderboard
 
-- [ ] **LEAD-01**: Leaderboard page shows top players (username, tier, level, total XP) sourced from `GET /api/account/profile/:userId` on the accounts API
-- [ ] **LEAD-02**: Leaderboard ranks by total XP, accessible without auth; logged-in user's own rank is highlighted
+- [x] **LEAD-01**: Leaderboard page shows top players (username, tier, level, total XP) sourced from CTC backend querying Supabase directly
+- [x] **LEAD-02**: Leaderboard ranks by total XP, accessible without auth; logged-in user's own rank is highlighted
 
 ### Collections
 
@@ -58,14 +58,14 @@
 | TOOL-03 | Phase 64 | Complete |
 | TOOL-04 | Phase 64 | Complete |
 | TOOL-05 | Phase 64 | Complete |
-| COPS-01 | Phase 65 | Pending |
-| COPS-02 | Phase 65 | Pending |
-| COPS-03 | Phase 65 | Pending |
-| COPS-04 | Phase 65 | Pending |
-| GEMS-01 | Phase 66 | Pending |
-| GEMS-02 | Phase 66 | Pending |
-| LEAD-01 | Phase 67 | Pending |
-| LEAD-02 | Phase 67 | Pending |
+| COPS-01 | Phase 65 | Complete |
+| COPS-02 | Phase 65 | Complete |
+| COPS-03 | Phase 65 | Complete |
+| COPS-04 | Phase 65 | Complete |
+| GEMS-01 | Phase 66 | Complete |
+| GEMS-02 | Phase 66 | Complete |
+| LEAD-01 | Phase 67 | Complete |
+| LEAD-02 | Phase 67 | Complete |
 | COLL-01 | Phase 68 | Pending |
 | COLL-02 | Phase 68 | Pending |
 | COLL-03 | Phase 68 | Pending |

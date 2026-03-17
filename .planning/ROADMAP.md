@@ -91,9 +91,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 67-01-PLAN.md — Backend leaderboard route: inspect Supabase schema, build GET /api/leaderboard with caching
-- [ ] 67-02-PLAN.md — Frontend core: types, data hook, tabs, ranked list, loading/error/empty states, route
-- [ ] 67-03-PLAN.md — Podium top-3, sticky you row, Header/ResultsScreen nav links, visual verification
+- [x] 67-01-PLAN.md — Backend leaderboard route: inspect Supabase schema, build GET /api/leaderboard with caching
+- [x] 67-02-PLAN.md — Frontend core: types, data hook, tabs, ranked list, loading/error/empty states, route
+- [x] 67-03-PLAN.md — Podium top-3, sticky you row, Header/ResultsScreen nav links, visual verification
 
 #### Phase 68: Santa Monica, CA Collection
 **Goal**: Santa Monica, CA is a fully activated collection with 80–100 questions and uses the `officeholders` field to achieve 15–30% expiring ratio without a manual targeted pass
@@ -280,5 +280,5 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 64. Structured Officeholders | v2.2 | 2/2 | Complete | 2026-03-15 |
 | 65. Auto-Regenerate Expired Questions | v2.2 | 2/2 | Complete | 2026-03-15 |
 | 66. Gem Award Migration | v2.2 | 0/1 | Not started | - |
-| 67. Leaderboard | v2.2 | 0/3 | Not started | - |
+| 67. Leaderboard | v2.2 | 3/3 | Complete | 2026-03-17 |
 | 68. Santa Monica, CA Collection | v2.2 | 0/TBD | Not started | - |
