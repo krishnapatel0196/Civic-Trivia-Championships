@@ -121,7 +121,7 @@ export async function awardPlatformGems(
         'Content-Type': 'application/json',
         'X-Service-Key': gemsKey,
       },
-      body: JSON.stringify({ userId, gemType: 'yellow', amount, idempotencyKey }),
+      body: JSON.stringify({ user_id: userId, gem_type: 'yellow', amount, idempotency_key: idempotencyKey }),
     });
     console.log(`[progressionService] gem award response: ${resp.status}`);
     if (!resp.ok) {
