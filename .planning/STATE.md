@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 
 ## Current Position
 
-Phase: 67 of 68 (Leaderboard)
-Plan: 02 of 03 — COMPLETE
-Status: In progress
-Last activity: 2026-03-17 — Completed 67-02-PLAN.md (frontend /leaderboard page with tabs, ranked rows, loading/error/empty states)
+Phase: 67 of 68 (Leaderboard) — COMPLETE
+Plan: 03 of 03 — COMPLETE
+Status: Phase 67 complete
+Last activity: 2026-03-17 — Completed 67-03-PLAN.md (podium top-3, sticky-you row, Header nav, ResultsScreen button — leaderboard feature complete and human-verified)
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3: Phase 67 plan 02 complete (2/3 plans)
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3: Phase 67 complete (3/3 plans)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -31,6 +31,12 @@ Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) 
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Key decisions from Phase 67 Plan 03 (2026-03-17):
+- StickyYou rendered as page-bottom section (not position:sticky) — 25-row list has no scroll container; avoids sticky parent issues
+- Privacy-by-default: other users' display names blanked on leaderboard; only authenticated user's own name shown; plain circle replaces ? avatar
+- LEADERBOARD added to Header for both auth states: authenticated hamburger dropdown (between PROFILE and LOG OUT), unauthenticated nav link cluster
+- Podium layout: 2nd-1st-3rd flex order, center card elevated via marginTop offset, Framer Motion stagger with useReducedMotion respect
 
 Key decisions from Phase 67 Plan 02 (2026-03-17):
 - useRef (not useState) for per-tab leaderboard cache — avoids re-render on cache write; cache lives for component lifetime
@@ -116,10 +122,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-17T16:58:04Z
-Stopped at: Completed 67-02-PLAN.md — leaderboard frontend page complete
+Last session: 2026-03-17
+Stopped at: Completed 67-03-PLAN.md — leaderboard feature complete, Phase 67 done
 Resume file: None
 
-Next action: Execute 67-03 (nav integration, podium, sticky "you" row).
-
-Next action: Execute 67-02 (frontend leaderboard page).
+Next action: Execute Phase 68 (final phase in v2.3 roadmap).
