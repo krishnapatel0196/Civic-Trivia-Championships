@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import type { GameResult, Question, LearningContent } from '../../../types/game';
 import { TOPIC_ICONS, TOPIC_LABELS } from './TopicIcon';
@@ -44,6 +45,7 @@ export function ResultsScreen({
     correctAnswer: number;
   } | null>(null);
 
+  const navigate        = useNavigate();
   const motionScore     = useMotionValue(0);
   const accordionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -429,6 +431,34 @@ export function ResultsScreen({
             onMouseLeave={e => (e.currentTarget.style.background = C.accent)}
           >
             PLAY AGAIN
+          </button>
+          <button
+            onClick={() => navigate('/leaderboard')}
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '14px',
+              minHeight: '48px',
+              background: 'transparent',
+              color: C.muted,
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '16px',
+              letterSpacing: '0.2em',
+              border: `1px solid ${C.rule}`,
+              cursor: 'pointer',
+              marginBottom: '10px',
+              transition: 'border-color 0.15s, color 0.15s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = C.inkLight;
+              e.currentTarget.style.color = C.ink;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = C.rule;
+              e.currentTarget.style.color = C.muted;
+            }}
+          >
+            LEADERBOARD
           </button>
           <button
             onClick={onHome}

@@ -166,6 +166,26 @@ export function Header() {
                       PROFILE
                     </button>
                     <button
+                      onClick={() => handleMenuItemClick(() => navigate('/leaderboard'))}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '8px 16px',
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: '14px',
+                        letterSpacing: '0.12em',
+                        color: C.inkLight,
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                    >
+                      LEADERBOARD
+                    </button>
+                    <button
                       onClick={() => handleMenuItemClick(handleLogout)}
                       style={{
                         display: 'block',
@@ -191,6 +211,20 @@ export function Header() {
             </div>
           ) : (
             <div className="flex items-center gap-5">
+              <Link
+                to="/leaderboard"
+                style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '15px',
+                  letterSpacing: '0.14em',
+                  color: C.muted,
+                  textDecoration: 'none',
+                }}
+                onMouseEnter={e => ((e.target as HTMLElement).style.color = C.ink)}
+                onMouseLeave={e => ((e.target as HTMLElement).style.color = C.muted)}
+              >
+                LEADERBOARD
+              </Link>
               <Link
                 to="/login"
                 style={{
