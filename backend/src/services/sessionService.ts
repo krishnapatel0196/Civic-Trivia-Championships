@@ -363,7 +363,7 @@ export class SessionManager {
       totalScore += answer.totalPoints;
       totalBasePoints += answer.basePoints;
       totalSpeedBonus += answer.speedBonus;
-      if (answer.basePoints > 0) {
+      if (answer.basePoints > 0 || (answer.wager !== undefined && answer.totalPoints > 0)) {
         totalCorrect++;
       }
     }

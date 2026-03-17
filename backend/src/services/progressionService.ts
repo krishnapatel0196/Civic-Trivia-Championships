@@ -79,7 +79,6 @@ export async function checkAccountContext(
       return { isConnected: false, isSuspended: false };
     }
     const data = await resp.json() as { tier?: string; account_standing?: string };
-    console.log(`[progressionService] account context: tier=${data.tier}, standing=${data.account_standing}`);
     return {
       isConnected: data.tier === 'connected' || data.tier === 'empowered',
       isSuspended: data.account_standing === 'suspended',
@@ -114,7 +113,6 @@ export async function awardPlatformGems(
   }
 
   try {
-    console.log(`[progressionService] awarding ${amount} gem(s) to ${userId} via ${accountsUrl}/api/gems/award`);
     const resp = await fetch(`${accountsUrl}/api/gems/award`, {
       method: 'POST',
       headers: {
@@ -123,7 +121,6 @@ export async function awardPlatformGems(
       },
       body: JSON.stringify({ user_id: userId, gem_type: 'yellow', amount, idempotency_key: idempotencyKey }),
     });
-    console.log(`[progressionService] gem award response: ${resp.status}`);
     if (!resp.ok) {
       const error = await resp.text();
       console.warn(`[progressionService] gem award API returned ${resp.status}: ${error}`);
