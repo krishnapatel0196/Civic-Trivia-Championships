@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 ## Current Position
 
 Phase: 67 of 68 (Leaderboard)
-Plan: 01 of 03 — COMPLETE
+Plan: 02 of 03 — COMPLETE
 Status: In progress
-Last activity: 2026-03-17 — Completed 67-01-PLAN.md (GET /api/leaderboard backend route with Supabase query and Redis cache)
+Last activity: 2026-03-17 — Completed 67-02-PLAN.md (frontend /leaderboard page with tabs, ranked rows, loading/error/empty states)
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3: Phase 67 plan 01 complete (1/3 plans)
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3: Phase 67 plan 02 complete (2/3 plans)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -31,6 +31,12 @@ Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) 
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Key decisions from Phase 67 Plan 02 (2026-03-17):
+- useRef (not useState) for per-tab leaderboard cache — avoids re-render on cache write; cache lives for component lifetime
+- refetchTick counter in useEffect deps enables forced refetch without resetting cache state
+- API_URL (VITE_API_URL = CTC backend) used for leaderboard fetch, not ACCOUNTS_API_URL — consistent with Plan 01
+- Top-3 entries rendered as plain LeaderboardRow until Plan 03 replaces with podium component
 
 Key decisions from Phase 67 Plan 01 (2026-03-17):
 - Direct supabaseAdmin.schema('connect').from() access works — no SECURITY DEFINER function needed for connect schema tables
@@ -110,8 +116,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-17T16:49:40Z
-Stopped at: Completed 67-01-PLAN.md — leaderboard backend route complete
+Last session: 2026-03-17T16:58:04Z
+Stopped at: Completed 67-02-PLAN.md — leaderboard frontend page complete
 Resume file: None
+
+Next action: Execute 67-03 (nav integration, podium, sticky "you" row).
 
 Next action: Execute 67-02 (frontend leaderboard page).
