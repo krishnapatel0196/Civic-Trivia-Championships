@@ -80,18 +80,20 @@ Plans:
 - [ ] 66-01-PLAN.md — Migrate awardPlatformGems() to POST /api/gems/award, update game.ts call-site, add TRIVIA_GEMS_KEY env validation
 
 #### Phase 67: Leaderboard
-**Goal**: Players can see a ranked leaderboard of top CTC players, sourced from the accounts public profile API
+**Goal**: Players can see a ranked leaderboard of top CTC players, sourced from the shared Supabase database via a CTC backend route
 **Depends on**: Phase 66 (accounts API integration work establishes pattern)
 **Requirements**: LEAD-01, LEAD-02
 **Success Criteria** (what must be TRUE):
   1. Leaderboard page is accessible without auth and shows top players ranked by total XP
-  2. Each row shows username, tier badge, level, and total XP — sourced from `GET /api/account/profile/:userId`
+  2. Each row shows username, tier badge, level, and total XP — sourced from CTC backend leaderboard route querying Supabase directly
   3. Logged-in user's own rank is visually highlighted if they appear on the leaderboard
   4. Page loads within performance budget (FCP <1.5s)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 67-01: Build leaderboard page with accounts public profile API integration
+- [ ] 67-01-PLAN.md — Backend leaderboard route: inspect Supabase schema, build GET /api/leaderboard with caching
+- [ ] 67-02-PLAN.md — Frontend core: types, data hook, tabs, ranked list, loading/error/empty states, route
+- [ ] 67-03-PLAN.md — Podium top-3, sticky you row, Header/ResultsScreen nav links, visual verification
 
 #### Phase 68: Santa Monica, CA Collection
 **Goal**: Santa Monica, CA is a fully activated collection with 80–100 questions and uses the `officeholders` field to achieve 15–30% expiring ratio without a manual targeted pass
@@ -278,5 +280,5 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 64. Structured Officeholders | v2.2 | 2/2 | Complete | 2026-03-15 |
 | 65. Auto-Regenerate Expired Questions | v2.2 | 2/2 | Complete | 2026-03-15 |
 | 66. Gem Award Migration | v2.2 | 0/1 | Not started | - |
-| 67. Leaderboard | v2.2 | 0/TBD | Not started | - |
+| 67. Leaderboard | v2.2 | 0/3 | Not started | - |
 | 68. Santa Monica, CA Collection | v2.2 | 0/TBD | Not started | - |
