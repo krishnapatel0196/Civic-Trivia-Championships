@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.2 Pipeline Intelligence — Phase 65: Auto-Regenerate Expired Questions (6 phases total: 63–68)
+**Current focus:** v2.3 Leaderboard — Phase 67: Leaderboard (3 plans: backend, frontend, nav/integration)
 
 ## Current Position
 
-Phase: 66 of 66 (Gem Award Migration)
-Plan: 01 of 01 — COMPLETE
-Status: Phase 66 complete
-Last activity: 2026-03-15 — Completed 66-01-PLAN.md (connect.credit_gems RPC replaced with POST /api/gems/award)
+Phase: 67 of 68 (Leaderboard)
+Plan: 01 of 03 — COMPLETE
+Status: In progress
+Last activity: 2026-03-17 — Completed 67-01-PLAN.md (GET /api/leaderboard backend route with Supabase query and Redis cache)
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2: Phase 63 complete, Phase 64 complete, Phase 65 complete, Phase 66 complete (6/6 phases progress — v2.2 COMPLETE)
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3: Phase 67 plan 01 complete (1/3 plans)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -31,6 +31,15 @@ Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) 
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Key decisions from Phase 67 Plan 01 (2026-03-17):
+- Direct supabaseAdmin.schema('connect').from() access works — no SECURITY DEFINER function needed for connect schema tables
+- Leaderboard cache uses storageFactory.getRawClient() (raw Redis) + module-level Map fallback — SessionStorage abstraction is typed for GameSession, cannot store arbitrary strings
+- Tier derived from connect.connected_profiles.verification_status: 'verified' → 'connected', else 'inform' (empowered not distinguishable from DB alone)
+- This-week XP aggregated in JS after fetching xp_transactions for rolling 7 days (Supabase JS client has no GROUP BY)
+- Cache keys: entries shared (leaderboard:entries:{tab}), rank personalized (leaderboard:rank:{tab}:{userId})
+- connect.connected_profiles confirmed as XP source: user_id, display_name, total_xp, current_level, verification_status
+- connect.xp_transactions confirmed as weekly XP source: user_id, amount, created_at
 
 Key decisions from Phase 66 Plan 01 (2026-03-15):
 - awardPlatformGems uses plain try/catch (no withRetry) — contrast with awardPlatformXp which retries 3x
@@ -101,8 +110,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-15T22:25:12Z
-Stopped at: Completed 66-01-PLAN.md — gem award migration complete, v2.2 Pipeline Intelligence roadmap complete
+Last session: 2026-03-17T16:49:40Z
+Stopped at: Completed 67-01-PLAN.md — leaderboard backend route complete
 Resume file: None
 
-Next action: Deploy to Render and set TRIVIA_GEMS_KEY env var. Then plan v2.3 roadmap (Phase 67+).
+Next action: Execute 67-02 (frontend leaderboard page).
