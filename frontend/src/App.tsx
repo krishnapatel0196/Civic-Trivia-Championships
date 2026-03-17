@@ -20,6 +20,7 @@ import { FlagReviewPage } from './pages/admin/FlagReviewPage';
 import { DuplicateReviewPage } from './pages/admin/DuplicateReviewPage';
 import { ElectionsPage } from './pages/admin/ElectionsPage';
 import { AdminsPage } from './pages/admin/AdminsPage';
+import { Leaderboard } from './pages/Leaderboard';
 
 // AdminGuard component: checks admin_users table (via isAdmin in store)
 function AdminGuard() {
@@ -50,6 +51,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/play" element={<Game />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
 
             {/* Protected routes — require auth */}
             <Route element={<ProtectedRoute />}>
