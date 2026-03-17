@@ -90,6 +90,18 @@ function deriveTier(verificationStatus: string | null): Tier {
 }
 
 /**
+ * Returns a safe public username for display on the leaderboard.
+ * Privacy rule: never expose email addresses on a public page.
+ * Empowered accounts (when tier detection is available) will always show.
+ * Until a pseudonym system exists, email-shaped display_names are blanked.
+ */
+function safeUsername(displayName: string | null | undefined): string {
+  if (!displayName) return '';
+  if (displayName.includes('@')) return ''; // email address — never show publicly
+  return displayName;
+}
+
+/**
  * Fetch all-time leaderboard: top 25 users by total_xp from connected_profiles.
  */
 async function fetchAllTimeEntries(): Promise<LeaderboardEntry[]> {
@@ -106,7 +118,7 @@ async function fetchAllTimeEntries(): Promise<LeaderboardEntry[]> {
   return data.map((row: any, idx: number): LeaderboardEntry => ({
     rank: idx + 1,
     user_id: row.user_id,
-    username: row.display_name ?? 'Unknown',
+    username: safeUsername(row.display_name),
     tier: deriveTier(row.verification_status),
     level: row.current_level ?? 0,
     total_xp: row.total_xp ?? 0,
@@ -168,7 +180,7 @@ async function fetchThisWeekEntries(): Promise<LeaderboardEntry[]> {
     return {
       rank: idx + 1,
       user_id: userId,
-      username: profile?.display_name ?? 'Unknown',
+      username: safeUsername(profile?.display_name),
       tier: deriveTier(profile?.verification_status ?? null),
       level: profile?.current_level ?? 0,
       total_xp: weekXp,
@@ -243,7 +255,7 @@ async function fetchUserRank(
 
     return {
       rank,
-      username: profileData.display_name ?? 'Unknown',
+      username: safeUsername(profileData.display_name),
       tier: deriveTier(profileData.verification_status),
       level: profileData.current_level ?? 0,
       total_xp: userXp,
@@ -280,7 +292,7 @@ async function fetchUserRank(
 
       return {
         rank,
-        username: profileData?.display_name ?? 'Unknown',
+        username: safeUsername(profileData?.display_name),
         tier: deriveTier(profileData?.verification_status ?? null),
         level: profileData?.current_level ?? 0,
         total_xp: userWeeklyXp,
@@ -304,7 +316,7 @@ async function fetchUserRank(
 
     return {
       rank,
-      username: profileData?.display_name ?? 'Unknown',
+      username: safeUsername(profileData?.display_name),
       tier: deriveTier(profileData?.verification_status ?? null),
       level: profileData?.current_level ?? 0,
       total_xp: userWeeklyXp,

@@ -59,7 +59,7 @@ export function LeaderboardRow({ entry, isYou }: LeaderboardRowProps) {
       />
 
       {/* Avatar */}
-      <Avatar name={entry.username} size={28} />
+      <Avatar name={entry.username || '?'} size={28} />
 
       {/* Username + level */}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -67,13 +67,14 @@ export function LeaderboardRow({ entry, isYou }: LeaderboardRowProps) {
           style={{
             fontFamily: "'Lora', Georgia, serif",
             fontSize: '14px',
-            color: C.ink,
+            color: entry.username ? C.ink : C.muted,
+            fontStyle: entry.username ? 'normal' : 'italic',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
           }}
         >
-          {entry.username}
+          {entry.username || 'Anonymous'}
         </div>
         <div
           style={{

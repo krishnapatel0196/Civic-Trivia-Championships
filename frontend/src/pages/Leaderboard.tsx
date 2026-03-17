@@ -194,6 +194,64 @@ export function Leaderboard() {
             isInTop25={false}
           />
         )}
+
+        {/* Navigation footer */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '12px',
+            marginTop: '40px',
+            paddingTop: '24px',
+            borderTop: `1px solid ${C.rule}`,
+          }}
+        >
+          <button
+            onClick={() => navigate(-1)}
+            style={{
+              flex: 1,
+              padding: '13px',
+              background: 'transparent',
+              color: C.muted,
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '15px',
+              letterSpacing: '0.14em',
+              border: `1px solid ${C.rule}`,
+              borderRadius: '2px',
+              cursor: 'pointer',
+              minHeight: '44px',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = C.inkLight;
+              e.currentTarget.style.color = C.ink;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = C.rule;
+              e.currentTarget.style.color = C.muted;
+            }}
+          >
+            ← BACK
+          </button>
+          <button
+            onClick={() => navigate('/play')}
+            style={{
+              flex: 1,
+              padding: '13px',
+              background: C.accent,
+              color: '#FFFFFF',
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '15px',
+              letterSpacing: '0.14em',
+              border: 'none',
+              borderRadius: '2px',
+              cursor: 'pointer',
+              minHeight: '44px',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = C.accentHover)}
+            onMouseLeave={(e) => (e.currentTarget.style.background = C.accent)}
+          >
+            PLAY
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -64,7 +64,7 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate }: PodiumCa
 
       {/* Avatar with tier dot */}
       <div style={{ position: 'relative' }}>
-        <Avatar name={entry.username} size={40} />
+        <Avatar name={entry.username || '?'} size={40} />
         <div
           style={{
             position: 'absolute',
@@ -84,7 +84,8 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate }: PodiumCa
         style={{
           fontFamily: "'Lora', Georgia, serif",
           fontSize: '13px',
-          color: C.ink,
+          color: entry.username ? C.ink : C.muted,
+          fontStyle: entry.username ? 'normal' : 'italic',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -93,9 +94,9 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate }: PodiumCa
           display: 'block',
           width: '100%',
         }}
-        title={entry.username}
+        title={entry.username || 'Anonymous'}
       >
-        {entry.username}
+        {entry.username || 'Anonymous'}
       </span>
 
       {/* Level */}
