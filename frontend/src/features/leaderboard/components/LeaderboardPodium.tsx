@@ -66,7 +66,10 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate, isYou }: P
 
       {/* Avatar with tier dot */}
       <div style={{ position: 'relative' }}>
-        <Avatar name={isYou ? (entry.username || '?') : '?'} size={40} />
+        {isYou
+          ? <Avatar name={entry.username || 'You'} size={40} />
+          : <div style={{ width: 40, height: 40, borderRadius: '50%', background: `${podiumColor}40`, flexShrink: 0 }} />
+        }
         <div
           style={{
             position: 'absolute',

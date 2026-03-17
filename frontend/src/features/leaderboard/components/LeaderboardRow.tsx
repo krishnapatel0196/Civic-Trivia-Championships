@@ -59,7 +59,10 @@ export function LeaderboardRow({ entry, isYou }: LeaderboardRowProps) {
       />
 
       {/* Avatar */}
-      <Avatar name={isYou ? (entry.username || '?') : '?'} size={28} />
+      {isYou
+        ? <Avatar name={entry.username || 'You'} size={28} />
+        : <div style={{ width: 28, height: 28, borderRadius: '50%', background: C.ruleLight, flexShrink: 0 }} />
+      }
 
       {/* Username + level */}
       <div style={{ flex: 1, minWidth: 0 }}>
