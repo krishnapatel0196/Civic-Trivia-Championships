@@ -8,6 +8,7 @@ import { router as profileRouter } from './routes/profile.js';
 import { router as healthRouter } from './routes/health.js';
 import { router as adminRouter } from './routes/admin.js';
 import feedbackRouter from './routes/feedback.js';
+import { router as leaderboardRouter } from './routes/leaderboard.js';
 import { storageFactory } from './config/redis.js';
 import { initializeSessionManager } from './services/sessionService.js';
 import { startExpirationCron, startElectionDetectionCron } from './cron/startCron.js';
@@ -63,6 +64,9 @@ async function startServer() {
 
   // Feedback routes
   app.use('/api/feedback', feedbackRouter);
+
+  // Leaderboard routes (public — no auth required)
+  app.use('/api/leaderboard', leaderboardRouter);
 
   // Start server
   app.listen(PORT, () => {
