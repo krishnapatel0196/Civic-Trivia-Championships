@@ -23,6 +23,7 @@ const TIER_COLORS = {
 
 interface LeaderboardPodiumProps {
   entries: LeaderboardEntry[];
+  currentUserId: string | null;
 }
 
 interface PodiumCardProps {
@@ -30,9 +31,10 @@ interface PodiumCardProps {
   isCenter: boolean;
   animationDelay: number;
   shouldAnimate: boolean;
+  isYou: boolean;
 }
 
-function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate }: PodiumCardProps) {
+function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate, isYou }: PodiumCardProps) {
   const { C } = useTheme();
   const podiumColor = PODIUM_COLORS[entry.rank] ?? '#9A9A9A';
   const tierColor = TIER_COLORS[entry.tier] ?? C.muted;
@@ -64,7 +66,7 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate }: PodiumCa
 
       {/* Avatar with tier dot */}
       <div style={{ position: 'relative' }}>
-        <Avatar name={entry.username || '?'} size={40} />
+        <Avatar name={isYou ? (entry.username || '?') : '?'} size={40} />
         <div
           style={{
             position: 'absolute',
@@ -84,8 +86,8 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate }: PodiumCa
         style={{
           fontFamily: "'Lora', Georgia, serif",
           fontSize: '13px',
-          color: entry.username ? C.ink : C.muted,
-          fontStyle: entry.username ? 'normal' : 'italic',
+          color: isYou ? C.ink : C.muted,
+          fontStyle: isYou ? 'normal' : 'italic',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -94,9 +96,9 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate }: PodiumCa
           display: 'block',
           width: '100%',
         }}
-        title={entry.username || 'Anonymous'}
+        title={isYou ? (entry.username || 'You') : ''}
       >
-        {entry.username || 'Anonymous'}
+        {isYou ? (entry.username || 'You') : ''}
       </span>
 
       {/* Level */}
@@ -126,7 +128,7 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate }: PodiumCa
   );
 }
 
-export function LeaderboardPodium({ entries }: LeaderboardPodiumProps) {
+export function LeaderboardPodium({ entries, currentUserId }: LeaderboardPodiumProps) {
   const prefersReducedMotion = useReducedMotion();
   const shouldAnimate = !prefersReducedMotion;
 
@@ -160,6 +162,7 @@ export function LeaderboardPodium({ entries }: LeaderboardPodiumProps) {
           isCenter={isCenter}
           animationDelay={delay}
           shouldAnimate={shouldAnimate}
+          isYou={entry.user_id === currentUserId}
         />
       ))}
     </div>

@@ -122,7 +122,7 @@ export function Leaderboard() {
   const rankedList = data && data.entries.length > 0 && (
     <div>
       {/* Podium — top 3 visual treatment */}
-      <LeaderboardPodium entries={data.entries.filter((e) => e.rank <= 3)} />
+      <LeaderboardPodium entries={data.entries.filter((e) => e.rank <= 3)} currentUserId={userId} />
 
       {/* Positions 4-25 */}
       {data.entries
