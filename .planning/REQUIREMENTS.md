@@ -66,9 +66,9 @@
 | GEMS-02 | Phase 66 | Complete |
 | LEAD-01 | Phase 67 | Complete |
 | LEAD-02 | Phase 67 | Complete |
-| COLL-01 | Phase 68 | Pending |
-| COLL-02 | Phase 68 | Pending |
-| COLL-03 | Phase 68 | Pending |
+| COLL-01 | Phase 68 | Complete |
+| COLL-02 | Phase 68 | Complete |
+| COLL-03 | Phase 68 | Complete |
 
 **Coverage:**
 - v1 requirements: 17 total

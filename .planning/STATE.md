@@ -11,8 +11,8 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 
 Phase: 68 of 68 (Santa Monica, CA Collection) — COMPLETE
 Plan: 03 of 03 — Complete
-Status: All plans complete — Santa Monica, CA live as 18th collection; both verification gaps closed
-Last activity: 2026-03-18 — Completed 68-03 (officeholder gap closure); active 77→91, expiring ratio 5.2%→19.8%
+Status: All plans complete — Santa Monica, CA live as 18th collection (84 active, 13.1% expiring; 1-per-officeholder rule applied)
+Last activity: 2026-03-18 — Completed 68-03 gap closure; archived 7 duplicate officeholder questions per rule; Phase 68 verified and closed
 
 Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3 complete (Phases 67–68)
 

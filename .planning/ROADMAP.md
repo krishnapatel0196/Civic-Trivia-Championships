@@ -108,8 +108,9 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 68-01-PLAN.md — Scaffold Santa Monica, author locale config with officeholders, generate questions, curate
-- [ ] 68-02-PLAN.md — Activate collection, verify in production, append playbook retrospective
+- [x] 68-01-PLAN.md — Scaffold Santa Monica, author locale config with officeholders, generate questions, curate
+- [x] 68-02-PLAN.md — Activate collection, verify in production, append playbook retrospective
+- [x] 68-03-PLAN.md — Gap closure: officeholder questions insertion (84 active, 13.1% expiring, 1-per-officeholder rule)
 
 <details>
 <summary>✅ v1.0 MVP (Phases 1–7) — SHIPPED 2026-02-13</summary>
@@ -281,4 +282,4 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 65. Auto-Regenerate Expired Questions | v2.2 | 2/2 | Complete | 2026-03-15 |
 | 66. Gem Award Migration | v2.2 | 0/1 | Not started | - |
 | 67. Leaderboard | v2.2 | 3/3 | Complete | 2026-03-17 |
-| 68. Santa Monica, CA Collection | v2.2 | 0/TBD | Not started | - |
+| 68. Santa Monica, CA Collection | v2.2 | 3/3 | Complete | 2026-03-18 |
