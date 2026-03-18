@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-15)
 ## Current Position
 
 Phase: 68 of 68 (Santa Monica, CA Collection) — In progress
-Plan: 01 of 02 — At checkpoint (human curation)
-Status: Awaiting human curation of draft questions
-Last activity: 2026-03-18 — Completed 68-01 Tasks 1-2; paused at checkpoint for curation
+Plan: 02 of 02 — Ready to execute (activation)
+Status: Plan 01 complete; 77 curated draft questions ready for activation
+Last activity: 2026-03-18 — Completed 68-01 (scaffold, generate, curate); ready for 68-02
 
 Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3: Phase 67 complete, Phase 68 in progress (01/02)
 
@@ -31,6 +31,11 @@ Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) 
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Key decisions from Phase 68 Plan 01 (2026-03-18):
+- Expiring ratio 5.2% for Santa Monica (below 15–30% target) — AI places officeholder names as answer options, not in question text; name-match seeder can't find them; documented for playbook retrospective, not re-generated
+- 77 questions retained after curation (107 draft → 30 archived for SM/LA conflation and low quality)
+- Banner: Santa Monica Pier photo (285KB, Wikimedia Commons) — pier is the canonical local landmark
 
 Key decisions from Phase 67 Plan 03 (2026-03-17):
 - StickyYou rendered as page-bottom section (not position:sticky) — 25-row list has no scroll container; avoids sticky parent issues
@@ -123,7 +128,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: 68-01-PLAN.md Tasks 1-2 complete; paused at human curation checkpoint
+Stopped at: 68-01-PLAN.md complete (all tasks including curation checkpoint approved)
 Resume file: None
 
-Next action: After curation approval, resume 68-01 for SUMMARY.md creation, then execute 68-02 (activation).
+Next action: Execute 68-02 (activate Santa Monica collection — run activate-collection.ts, flip isActive, deploy).
