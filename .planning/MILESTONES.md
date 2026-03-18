@@ -1,5 +1,34 @@
 # Project Milestones: Civic Trivia Championship
 
+## v2.2 Pipeline Intelligence (Shipped: 2026-03-18)
+
+**Delivered:** Automated the content operations lifecycle — structured officeholders in LocaleConfig drive prompt injection and `expiresAt` auto-seeding; hourly cron replaces expired questions automatically; gem awards migrated to accounts API; public leaderboard shipped; Santa Monica CA activated as the 18th collection.
+
+**Phases completed:** 63–68 (12 plans total)
+
+**Key accomplishments:**
+
+- Scaffold Bug 2 fixed — `scaffold-collection.ts` brace scanner now starts from ` = {` assignment; post-scaffold `git checkout` workaround permanently eliminated
+- `OfficeholderEntry` structured type in LocaleConfig drives both prompt injection and post-generation `expiresAt` auto-seeding — zero manual targeted pass required for any collection with the field populated
+- Hourly expiry cron extended with `generateReplacement()` — archive-first, never-throw, topic-matching replacement seeded as active; collections never shrink due to expiry
+- `awardPlatformGems()` migrated from deprecated `connect.credit_gems` Supabase RPC to `POST /api/gems/award` with `TRIVIA_GEMS_KEY` and idempotency key
+- Public leaderboard live at `/leaderboard` — top-25 ranked by XP, gold/silver/bronze podium, sticky-you row, privacy-by-default, accessible without auth
+- Santa Monica, CA (18th collection) activated with 84 active questions and 19.8% expiring ratio — first collection built end-to-end with the officeholders field
+
+**Stats:**
+
+- 74 files changed (9,788 insertions, 354 deletions)
+- ~45,500 lines of TypeScript (frontend ~14,000 + backend ~31,500)
+- 6 phases, 12 plans, 17 requirements delivered
+- 4 days (2026-03-14 → 2026-03-18)
+- 18 active collections, ~2,142 active questions
+
+**Git range:** `fix(63-01)` → `docs(68): complete Santa Monica CA phase`
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v2.1 Collection Excellence (Shipped: 2026-03-15)
 
 **Delivered:** Shipped 5 new collections (Portland OR, Oregon State, Washington DC, Biloxi MS, Mississippi State), automated semantic deduplication inside the generation pipeline, added expiring-question ratio enforcement to the activation audit, and produced a living COLLECTION-PLAYBOOK.md with retrospectives for every collection shipped.

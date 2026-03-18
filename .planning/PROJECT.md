@@ -96,15 +96,16 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Expiring-question ratio warning in `audit-collection-readiness.ts` (non-blocking, warns <15%) — v2.1
 - ✓ `COLLECTION-PLAYBOOK.md` bootstrapped with 6 sections and 5 phase retrospectives — v2.1
 
-### Active (v2.2 — Pipeline Intelligence)
+- ✓ Scaffold Bug 2 fixed — `scaffold-collection.ts` brace scanner starts from ` = {` assignment; post-scaffold `git checkout` workaround permanently eliminated — v2.2
+- ✓ `OfficeholderEntry` structured type in LocaleConfig drives prompt injection and post-generation `expiresAt` auto-seeding — zero manual targeted pass for any collection with field populated — v2.2
+- ✓ Hourly expiry cron extended: `generateReplacement()` archive-first, never-throw, topic-matching, seeded as active — collections never shrink — v2.2
+- ✓ `awardPlatformGems()` migrated from deprecated `connect.credit_gems` RPC to `POST /api/gems/award` with `TRIVIA_GEMS_KEY` and idempotency key — v2.2
+- ✓ Public leaderboard at `/leaderboard` — top-25 by XP, podium top-3, sticky-you row, privacy-by-default, no auth required — v2.2
+- ✓ Santa Monica, CA (18th collection) — 84 active questions, 19.8% expiring, first collection built end-to-end with officeholders field — v2.2
 
-**Goal:** Automate the content operations lifecycle — structured officeholders with zero manual passes, auto-regeneration of expired questions, scaffold tooling fix, and Santa Monica CA collection.
+### Active (v2.3 — next milestone TBD)
 
-**Target features:**
-- Fix Scaffold Bug 2 (generate-locale-questions.ts corruption on every scaffold run)
-- Structured officeholders in LocaleConfig: officeholder list drives both prompt injection AND auto-seeding of expiresAt on generated questions — zero manual targeted pass required
-- Auto-regenerate expired questions: hourly expiry cron archives expired question + generates a fresh replacement on the same topic in one pass
-- Santa Monica, CA collection — standard city playbook
+*(Requirements to be defined via `/gsd:new-milestone`)*
 
 ### Out of Scope
 
@@ -112,7 +113,7 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - Real-time WebSocket features — Phase 2
 - Events/hosted mode — Phase 4
 - Question authoring tool — Phase 5
-- Leaderboards — research needed, may add later
+- Leaderboard advanced features (tournaments, seasonal resets) — basic leaderboard shipped v2.2; advanced features deferred
 - OAuth login (Google, GitHub) — email/password sufficient for MVP
 - Mobile native app — web-first approach
 - Video/image questions — text-only for MVP
@@ -127,21 +128,22 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v2.1 shipped 2026-03-15):**
-- 17 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60), Portland OR (83), Oregon (81), Washington DC (154), Biloxi MS (170), Mississippi (86) — all on shared Supabase project (kxsdzaojfaibhuzmclfq); ~2,058 active questions
-- XP integration: `awardPlatformXp()` awards 50–200 XP server-side after each game for Connected players; idempotent by sessionId; displayed on start screen (`XpStrip`), end screen (`XpReveal`, `LevelUpOverlay`), and profile XP history tab
-- XP history: `get_ctc_xp_history()` Supabase SECURITY DEFINER RPC — established pattern for cross-schema `connect` data access from CTC backend
+**Current state (v2.2 shipped 2026-03-18):**
+- 18 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60), Portland OR (83), Oregon (81), Washington DC (154), Biloxi MS (170), Mississippi (86), Santa Monica CA (84) — all on shared Supabase project (kxsdzaojfaibhuzmclfq); ~2,142 active questions
+- Content ops pipeline: `generateReplacement()` wired into hourly expiry cron — archive-first, topic-matching, seeded as active; collections self-heal after question expiry
+- Structured officeholders: `OfficeholderEntry[]` in LocaleConfig drives prompt injection (`buildOfficeholderBlock()`) and post-generation `expiresAt` auto-seeding (`seedOfficeholderExpiresAt()`) — zero manual targeted pass needed
+- Scaffold tool clean: `scaffold-collection.ts` brace scanner fixed; no post-scaffold workaround required
+- Gems: `awardPlatformGems()` routes to `POST /api/gems/award` with `TRIVIA_GEMS_KEY`; `connect.credit_gems` RPC fully removed
+- Leaderboard live at `/leaderboard` — top-25 by XP, podium for top-3, sticky-you row, privacy-by-default, accessible without auth; backend queries `connect.connected_profiles` directly
+- XP integration: `awardPlatformXp()` awards 50–200 XP server-side after each game for Connected players; idempotent by sessionId; displayed on start screen, end screen, and profile XP history tab
+- XP history: `get_ctc_xp_history()` Supabase SECURITY DEFINER RPC — pattern for cross-schema `connect` data access
 - Collection infrastructure: DB-driven tier lookups, state configs auto-discovered — zero hardcoded maps; `audit-collection-readiness.ts` + `verify-post-activation.ts` standardize activation workflow
 - Identity: Supabase JWT auth (jose jwtVerify), Connected tier guards, `public.admin_users` admin check — all legacy bcrypt/JWT removed
-- Gems: `award_gems` RPC (yellow, civic_trivia source); `trivia.player_stats` tracks games/score/accuracy for Connected users
-- Frontend: accounts API for auth flows, profile page shows trivia stats + tier badge + gem balance + XP history (two-tab layout)
 - Election pipeline: `election_races` table → question generation → daily 6 AM cron → current-term follow-up → admin lifecycle UI
 - Quality rules engine with 9 rules; zero active duplicates, zero quality violations across all collections
-- Mixed-durability pattern established: Texas State has both durable (null expiresAt) and expiring (2027-01-19) questions in one collection
 - Self-validating AI generation pipeline: gap analysis → Claude → quality retry → semantic dedup → source diversity enforcement
 - Admin UI: question explorer, collection health, inline editing, flag review queue, duplicate review, election management
 - Player-driven quality curation: in-game flagging, post-game elaboration, admin triage
-- Gameplay telemetry tracking encounter/correct counts per question
 - Live: civic-trivia-frontend.onrender.com / civic-trivia-backend.onrender.com / ctc.empowered.vote
 
 **Tech stack:** React 18, TypeScript, Vite, Tailwind, Framer Motion, Node.js, Express, Supabase (PostgreSQL), Redis (Upstash), jose, Drizzle ORM
@@ -284,4 +286,18 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | State Speaker Pro Tem must be named in locale config | Generation consistently misses Speaker Pro Tem unless explicitly listed; documented carry-forward rule | Good — prevents repeat gap in future state collections |
 
 ---
-*Last updated: 2026-03-15 after v2.2 milestone started*
+| Scaffold brace scanner starts from ` = {` assignment (not type annotation) | TypeScript type `Record<string, () => Promise<...>>` contains `{}` chars that threw off old scanner; fix is permanent and eliminates post-scaffold workaround | Good — Scaffold Bug 2 closed |
+| `OfficeholderEntry` interface lives in `bloomington-in.ts` | Sole `LocaleConfig` source of truth — one canonical import path for all consumers | Good — zero extra types file |
+| `buildOfficeholderBlock` wording is load-bearing ("name them SPECIFICALLY") | Name-match seeder in Plan 02 requires officeholder names to appear in question text; without explicit instruction AI puts names in answer options instead | Good — seeder correctly matches |
+| `expiresAt IS NULL` guard in `seedOfficeholderExpiresAt` | Prevents overwriting manually corrected expiry dates on re-runs | Good — safe to run repeatedly |
+| Archive-first in `expirationSweep` (db.update before generateReplacement call) | Archival must stand even if generation fails — ordering enforces this contract | Good — correct COPS semantics |
+| `generateReplacement()` fully wrapped in outer try/catch (never-throw) | Matches `awardPlatformXp` never-throw pattern — cron must complete even if Claude API is down | Good — resilient cron |
+| Leaderboard uses direct `supabaseAdmin.schema('connect')` (not SECURITY DEFINER RPC) | `connect.connected_profiles` is readable with service role key directly; no RPC needed (unlike `xp_transactions` GROUP BY workaround) | Good — simpler than XP history pattern |
+| Gem awards: plain try/catch (no withRetry) | CONTEXT explicitly ruled out retry for gems — XP uses withRetry but gems contract did not require it | Good — intentional difference from XP |
+| `TRIVIA_GEMS_KEY` is a separate scoped key (not `TRIVIA_SERVICE_KEY`) | Scope ["yellow"] configured on accounts side; separate key enables per-integration revocation | Good — correct scoping |
+| Santa Monica 13.1% → 19.8% via Plan 03 gap closure | AI placed officeholder names as answer options (not question text) so name-match seeder couldn't auto-tag; dedicated insertion script closed the gap; 1-per-officeholder rule enforced | Good — playbook retrospective documents for future |
+| Privacy-by-default on leaderboard | Other users' display names blanked server-side; only authenticated user's own name shown | Good — consistent with platform trust model |
+| StickyYou as page-bottom section (not CSS sticky) | 25-row list has no scroll container; CSS sticky requires scrollable parent — page-bottom avoids layout complexity | Good — simpler and correct |
+
+---
+*Last updated: 2026-03-18 after v2.2 milestone complete*

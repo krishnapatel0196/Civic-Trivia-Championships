@@ -2,22 +2,22 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-15)
+See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.3 Content — COMPLETE. All phases done. Ready for milestone audit.
+**Current focus:** Planning next milestone — v2.2 complete, starting v2.3
 
 ## Current Position
 
-Phase: 68 of 68 (Santa Monica, CA Collection) — COMPLETE
-Plan: 03 of 03 — Complete
-Status: All plans complete — Santa Monica, CA live as 18th collection (84 active, 13.1% expiring; 1-per-officeholder rule applied)
-Last activity: 2026-03-18 — Completed 68-03 gap closure; archived 7 duplicate officeholder questions per rule; Phase 68 verified and closed
+Phase: Not started (v2.3 not yet planned)
+Plan: Not started
+Status: Ready to plan — v2.2 milestone archived; next milestone requires `/gsd:new-milestone`
+Last activity: 2026-03-18 — v2.2 milestone complete and archived
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3 complete (Phases 67–68)
+Progress: [██████████] v1.0–v2.2 complete (Phases 1–68)
 
 **Milestone history:**
-- v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
+- v1.0–v2.2 (Phases 1–68): All Complete — see .planning/MILESTONES.md
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com / https://ctc.empowered.vote
@@ -32,7 +32,7 @@ Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) 
 
 Full decision log in PROJECT.md Key Decisions table.
 
-Key decisions from Phase 68 Plan 02 (2026-03-18):
+v2.2 decisions archived to PROJECT.md. Key decisions from v2.2 milestone (2026-03-14 → 2026-03-18):
 - Tagline shortened to "Where Route 66 meets the Pacific." — punchy declaration over verbose rhetorical question
 - Banner iterated 3x: night shot (too dark) → daytime pier → sunset pier + ferris wheel (final, user-selected)
 - Santa Monica activated as 18th collection (77 questions, isActive: true); v2.3 content milestone complete
@@ -133,7 +133,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: 68-03-PLAN.md complete — Santa Monica CA officeholder gap closure done; both verification gaps closed
+Stopped at: v2.2 milestone archived — all phases (63–68) complete, git tag v2.2 created
 Resume file: None
 
-Next action: /gsd:audit-milestone — all phases of v2.3 content complete (18 active collections).
+Next action: `/gsd:new-milestone` — start v2.3 (questioning → research → requirements → roadmap)
