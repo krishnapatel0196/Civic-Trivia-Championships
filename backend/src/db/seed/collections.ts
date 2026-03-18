@@ -196,7 +196,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Santa Monica, CA',
     slug: 'santa-monica-ca',
-    description: 'Where Route 66 meets the Pacific — how well do you know the city at the end of the road?',
+    description: 'Where Route 66 meets the Pacific.',
     localeCode: 'en-US',
     localeName: 'Santa Monica, California',
     iconIdentifier: 'flag-ca',
