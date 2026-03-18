@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.3 Content — Phase 68: Santa Monica, CA Collection (2 plans)
+**Current focus:** v2.3 Content — COMPLETE. All phases done. Ready for milestone audit.
 
 ## Current Position
 
-Phase: 68 of 68 (Santa Monica, CA Collection) — In progress
-Plan: 02 of 02 — Ready to execute (activation)
-Status: Plan 01 complete; 77 curated draft questions ready for activation
-Last activity: 2026-03-18 — Completed 68-01 (scaffold, generate, curate); ready for 68-02
+Phase: 68 of 68 (Santa Monica, CA Collection) — COMPLETE
+Plan: 02 of 02 — Complete
+Status: All plans complete — Santa Monica, CA live as 18th collection
+Last activity: 2026-03-18 — Completed 68-02 (activation); Phase 68 and v2.3 content milestone done
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3: Phase 67 complete, Phase 68 in progress (01/02)
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3 complete (Phases 67–68)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -24,13 +24,18 @@ Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) 
 - Backend LIVE: https://civic-trivia-backend.onrender.com
 - Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
-- Active collections (17 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR, Oregon, Washington DC, Biloxi MS, Mississippi
+- Active collections (18 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR, Oregon, Washington DC, Biloxi MS, Mississippi, Santa Monica CA
 
 ## Accumulated Context
 
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Key decisions from Phase 68 Plan 02 (2026-03-18):
+- Tagline shortened to "Where Route 66 meets the Pacific." — punchy declaration over verbose rhetorical question
+- Banner iterated 3x: night shot (too dark) → daytime pier → sunset pier + ferris wheel (final, user-selected)
+- Santa Monica activated as 18th collection (77 questions, isActive: true); v2.3 content milestone complete
 
 Key decisions from Phase 68 Plan 01 (2026-03-18):
 - Expiring ratio 5.2% for Santa Monica (below 15–30% target) — AI places officeholder names as answer options, not in question text; name-match seeder can't find them; documented for playbook retrospective, not re-generated
@@ -128,7 +133,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: 68-01-PLAN.md complete (all tasks including curation checkpoint approved)
+Stopped at: 68-02-PLAN.md complete — Santa Monica CA activated, Phase 68 done, v2.3 content milestone done
 Resume file: None
 
-Next action: Execute 68-02 (activate Santa Monica collection — run activate-collection.ts, flip isActive, deploy).
+Next action: /gsd:audit-milestone — all phases of v2.3 content complete (18 active collections).
