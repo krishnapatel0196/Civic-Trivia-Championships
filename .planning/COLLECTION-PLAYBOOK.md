@@ -386,3 +386,48 @@ This would encapsulate: scaffold → locale config authoring → source URL sele
 ### What's next
 
 Run `/gsd:audit-milestone` to verify v2.1 cross-phase integration before archiving. Then `/gsd:complete-milestone` to archive and start planning v2.2.
+
+---
+
+## Retrospective: Santa Monica, CA (Phase 68, 2026-03-18)
+
+**Role:** 18th collection; first built end-to-end with Phase 64 officeholders infrastructure
+
+---
+
+### What went well
+
+- **Scaffold ran cleanly**: Phase 63's brace-scanner fix held — no post-scaffold git checkout needed. The `santaMonicaCaConfig` import and registration in `generate-locale-questions.ts` were clean.
+- **Generation volume**: 200 questions generated, 189 passed validation, 82 archived by semantic dedup — leaving 107 draft questions before curation. Healthy pipeline with no batch errors.
+- **SM/LA conflation was manageable**: Voice guidance in the locale config (SMPD not LAPD, SMMUSD not LAUSD, Big Blue Bus not LA Metro, at-large not districts) successfully shaped generation. Most conflation issues caught during curation were minor.
+- **Banner image download succeeded**: Wikimedia Commons download via curl worked. 285KB Santa Monica Pier entrance photo, properly scaled.
+- **Cost-effective**: $2.04 for the full generation run with 3.4M cached tokens.
+
+### What broke or was harder than expected
+
+- **Officeholder expiresAt auto-seeder underperformed**: Target was 15-30% expiring ratio via the Phase 64 officeholders field. Actual: 5.2% after curation. Root cause: the name-match seeder requires officeholder names to appear in **question text**, but the AI consistently placed names as **answer options** instead ("Who is Santa Monica's mayor?" → answer: "Caroline Torosis"). The seeder looks for names in the question body, not the answer options. This is a systemic limitation of the current seeder pattern.
+- **Manual expiresAt setting required**: To achieve target ratio, questions must be manually identified during curation and have expiresAt set via the admin panel. This partially negates the "no manual targeted pass" goal of Phase 64.
+
+### Bugs encountered
+
+- No new bugs. Scaffold Bug 2 confirmed fixed (Phase 63).
+
+### Carry-forward rules for future California city collections
+
+- **SM/LA conflation voice guidance is a template**: Reuse the "independent city" pattern for any California city adjacent to a major city (e.g., Pasadena/LA, Culver City/LA). The specific substitutions (SMPD, SMMUSD, Big Blue Bus) will vary but the pattern is reusable.
+- **Officeholder auto-seeder limitation**: The name-match expiresAt seeder achieves low ratios when the AI answers "who is X" questions with the name as an answer option. For future collections where target expiring ratio is important, consider: (a) post-generation script to find "who is [role]" questions and set expiresAt, or (b) curation guidance to manually set expiresAt on identifiable officeholder questions.
+- **At-large council structure**: SM's at-large council (no districts) simplifies locale config — no ward/district entries needed in officeholders. Contrast with Biloxi's 7-ward council.
+
+### Final stats
+
+| Metric | Value |
+|--------|-------|
+| Questions generated | 200 |
+| Passed validation | 189 |
+| After semantic dedup | 107 draft |
+| After curation | 77 draft |
+| Total active at launch | 77 |
+| Expiring question ratio | 5.2% |
+| Generation cost | $2.04 |
+| Generation time | ~17 min |
+| Total phase time | ~2 hours |
