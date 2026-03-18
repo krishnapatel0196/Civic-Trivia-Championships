@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-15)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.3 Leaderboard — Phase 67: Leaderboard (3 plans: backend, frontend, nav/integration)
+**Current focus:** v2.3 Content — Phase 68: Santa Monica, CA Collection (2 plans)
 
 ## Current Position
 
-Phase: 67 of 68 (Leaderboard) — COMPLETE
-Plan: 03 of 03 — COMPLETE
-Status: Phase 67 complete
-Last activity: 2026-03-17 — Completed 67-03-PLAN.md (podium top-3, sticky-you row, Header nav, ResultsScreen button — leaderboard feature complete and human-verified)
+Phase: 68 of 68 (Santa Monica, CA Collection) — In progress
+Plan: 01 of 02 — At checkpoint (human curation)
+Status: Awaiting human curation of draft questions
+Last activity: 2026-03-18 — Completed 68-01 Tasks 1-2; paused at checkpoint for curation
 
-Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3: Phase 67 complete (3/3 plans)
+Progress: [██████████] v1.0–v2.1 complete (Phases 1–62) | v2.2 complete (Phases 63–66) | v2.3: Phase 67 complete, Phase 68 in progress (01/02)
 
 **Milestone history:**
 - v1.0–v2.1 (Phases 1–62): All Complete — see .planning/MILESTONES.md
@@ -122,8 +122,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-17
-Stopped at: Completed 67-03-PLAN.md — leaderboard feature complete, Phase 67 done
+Last session: 2026-03-18
+Stopped at: 68-01-PLAN.md Tasks 1-2 complete; paused at human curation checkpoint
 Resume file: None
 
-Next action: Execute Phase 68 (final phase in v2.3 roadmap).
+Next action: After curation approval, resume 68-01 for SUMMARY.md creation, then execute 68-02 (activation).
