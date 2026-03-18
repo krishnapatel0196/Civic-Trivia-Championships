@@ -193,4 +193,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 16
   },
+  {
+    name: 'Santa Monica, CA',
+    slug: 'santa-monica-ca',
+    description: 'Where Route 66 meets the Pacific — how well do you know the city at the end of the road?',
+    localeCode: 'en-US',
+    localeName: 'Santa Monica, California',
+    iconIdentifier: 'flag-ca',
+    themeColor: '#1E6B8A',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 17
+  },
 ];
