@@ -105,11 +105,11 @@ Plans:
   3. Expiring question ratio is 15–30%, achieved via the `officeholders` field in locale config (no manual targeted pass)
   4. Semantic dedup ran automatically during generation and confirmed zero within-collection duplicates at activation
   5. Banner image is an iconic Santa Monica landmark (not a generic placeholder)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 68-01: Scaffold Santa Monica, generate questions, curate
-- [ ] 68-02: Activate Santa Monica collection in production
+- [ ] 68-01-PLAN.md — Scaffold Santa Monica, author locale config with officeholders, generate questions, curate
+- [ ] 68-02-PLAN.md — Activate collection, verify in production, append playbook retrospective
 
 <details>
 <summary>✅ v1.0 MVP (Phases 1–7) — SHIPPED 2026-02-13</summary>
