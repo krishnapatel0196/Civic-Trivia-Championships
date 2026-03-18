@@ -202,7 +202,7 @@ export const collectionsData: NewCollection[] = [
     iconIdentifier: 'flag-ca',
     themeColor: '#1E6B8A',
     tier: 'city',
-    isActive: false,
+    isActive: true,
     sortOrder: 17
   },
 ];
