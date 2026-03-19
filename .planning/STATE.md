@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.3 UX & Rewards Polish — Phase 70 Plan 01 complete, Plan 02 next
+**Current focus:** v2.3 UX & Rewards Polish — Phase 70 Plan 02 complete, Plan 03 next
 
 ## Current Position
 
 Phase: 70 — Gem Scoring & Wager Preview
-Plan: 01 of 03 — complete
+Plan: 02 of 03 — complete
 Status: In progress
-Last activity: 2026-03-19 — Completed 70-01-PLAN.md (Score-based gem threshold)
+Last activity: 2026-03-19 — Completed 70-02-PLAN.md (WagerScreen gem indicator)
 
-Progress: [██████████] v1.0–v2.2 complete (Phases 1–68) | v2.3 in progress (2/3 phases, 1 plan done in Phase 70)
+Progress: [██████████] v1.0–v2.2 complete (Phases 1–68) | v2.3 in progress (2/3 phases, 2 plans done in Phase 70)
 
 **Milestone history:**
 - v1.0–v2.2 (Phases 1–68): All Complete — see .planning/MILESTONES.md
 
 **v2.3 phase status:**
 - Phase 69: Game Flow Buttons — COMPLETE (2026-03-19)
-- Phase 70: Gem Scoring & Wager Preview — In progress (Plan 01 complete)
+- Phase 70: Gem Scoring & Wager Preview — In progress (Plans 01 and 02 complete)
 - Phase 71: Leaderboard Cache Fix — Not started
 
 **Deployment Status:**
@@ -41,6 +41,11 @@ v2.2 decisions archived to PROJECT.md. Key decisions from v2.2 milestone (2026-0
 - Tagline shortened to "Where Route 66 meets the Pacific." — punchy declaration over verbose rhetorical question
 - Banner iterated 3x: night shot (too dark) → daytime pier → sunset pier + ferris wheel (final, user-selected)
 - Santa Monica activated as 18th collection (77 questions, isActive: true); v2.3 content milestone complete
+
+Key decisions from Phase 70 Plan 02 (2026-03-19):
+- GEM_SCORE_THRESHOLD local constant (not imported from backend) in WagerScreen — frontend standalone, manually kept in sync with progressionService.ts
+- Gem indicator uses motion.div animate for color/opacity — simpler than variants for a one-off threshold transition
+- Tooltip on score number triggered on both click and hover — covers mobile tap and desktop hover
 
 Key decisions from Phase 70 Plan 01 (2026-03-19):
 - GEM_SCORE_THRESHOLD = 1000 exported from progressionService.ts — wager preview UI (Phase 70-02) imports same constant
@@ -163,7 +168,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Completed 69-01-PLAN.md — Phase 69 Game Flow Buttons complete, human verified
+Stopped at: Completed 70-02-PLAN.md — WagerScreen gem indicator and score tooltip
 Resume file: None
 
-Next action: `/gsd:plan-phase 70` — plan Gem Scoring & Wager Preview phase
+Next action: Execute 70-03-PLAN.md — ResultsScreen gem messaging (or verify if already done)
