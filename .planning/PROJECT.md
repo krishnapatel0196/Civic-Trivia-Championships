@@ -103,15 +103,13 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Public leaderboard at `/leaderboard` — top-25 by XP, podium top-3, sticky-you row, privacy-by-default, no auth required — v2.2
 - ✓ Santa Monica, CA (18th collection) — 84 active questions, 19.8% expiring, first collection built end-to-end with officeholders field — v2.2
 
-### Active (v2.3 — UX & Rewards Polish)
+- ✓ "Next Question" / "Last Question" / "Game Recap" buttons replace tap-anywhere icon — v2.3
+- ✓ Full game screen fits without scrolling on mobile and desktop (timer shrinks 80px→56px during reveal; overflow-hidden on both containers) — v2.3
+- ✓ Gem threshold: 1 gem at 1,000+ final score (replaces 6/8 or 7/8 accuracy rule); 2 gems for 8/8 perfect unchanged — v2.3
+- ✓ Wager screen yellow gem indicator lights up when projected score (currentScore + proposedWager) ≥ 1,000 — v2.3
+- ✓ Leaderboard reflects XP within ~1 minute (CACHE_TTL reduced 300s → 60s) — v2.3
 
-**Milestone goal:** Upgrade the core game feel — replace tap-anywhere with explicit flow buttons, shift gem rewards to a score-based threshold that rewards wager strategy, and fix a leaderboard cache lag bug.
-
-- [ ] "Next Question" / "Last Question" / "Game Recap" buttons replace tap-anywhere icon
-- [ ] Timer/layout repositioned as needed so full game screen fits without scrolling (mobile + desktop)
-- [ ] Gem threshold: 1 gem at 1000+ final score (replaces 6/8 or 7/8 rule); 2 gems for 8/8 perfect (unchanged)
-- [ ] Wager screen shows yellow gem indicator lighting up when projected score (currentScore + wager) ≥ 1000
-- [ ] Leaderboard reflects XP within ~1 minute (fix 5-minute cache lag)
+### Active
 
 ### Out of Scope
 
@@ -134,8 +132,12 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v2.2 shipped 2026-03-18):**
+**Current state (v2.3 shipped 2026-03-19):**
 - 18 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60), Portland OR (83), Oregon (81), Washington DC (154), Biloxi MS (170), Mississippi (86), Santa Monica CA (84) — all on shared Supabase project (kxsdzaojfaibhuzmclfq); ~2,142 active questions
+- Game flow: `NextStepButton` component with contextual labels (NEXT QUESTION / LAST QUESTION / GAME RECAP); tap-anywhere fully removed; timer shrinks to 56px during reveal to prevent mobile scroll
+- Gem scoring: `GEM_SCORE_THRESHOLD = 1000` in `progressionService.ts`; 1 gem when finalScore ≥ 1000; 2 gems for perfect 8/8; wager strategy meaningful for gem earning
+- Wager preview: gem indicator on wager screen (gold/dim Framer Motion transition) signals gem outcome before final answer
+- Leaderboard cache: CACHE_TTL = 60s (down from 300s) — XP rankings reflect earned XP within ~1 minute
 - Content ops pipeline: `generateReplacement()` wired into hourly expiry cron — archive-first, topic-matching, seeded as active; collections self-heal after question expiry
 - Structured officeholders: `OfficeholderEntry[]` in LocaleConfig drives prompt injection (`buildOfficeholderBlock()`) and post-generation `expiresAt` auto-seeding (`seedOfficeholderExpiresAt()`) — zero manual targeted pass needed
 - Scaffold tool clean: `scaffold-collection.ts` brace scanner fixed; no post-scaffold workaround required
@@ -306,4 +308,14 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | StickyYou as page-bottom section (not CSS sticky) | 25-row list has no scroll container; CSS sticky requires scrollable parent — page-bottom avoids layout complexity | Good — simpler and correct |
 
 ---
-*Last updated: 2026-03-18 after v2.3 milestone started*
+| `NextStepButton` delayed fade-in (delay: 0.55s) | Button fades in after answer reveal settles — avoids accidental tap before reveal completes | Good — correct timing |
+| Label derived from props (isFinalQuestion + questionIndex vs totalQuestions - 2) | Contextual label logic in component, not hardcoded question numbers | Good — flexible for game length changes |
+| Timer shrinks to 56px during reveal phase | Reclaims vertical space for NextStepButton; prevents mobile scroll on 375×667 | Good — precise fix |
+| `GEM_SCORE_THRESHOLD = 1000` exported from `progressionService.ts` | Wager preview UI needs same value — exported constant avoids drift | Good — single source of truth for backend |
+| `GEM_SCORE_THRESHOLD` duplicated as local const in `WagerScreen.tsx` and `ResultsScreen.tsx` | Frontend cannot import from backend services; replication intentional; all 3 agree on 1000 | Tech debt — future threshold change needs 3 edits |
+| Perfect game check before score threshold in `calculateProgression` | Perfect game (8/8) at low score still earns 2 gems — check order prevents downgrade to 1 gem | Good — correct reward semantics |
+| `CACHE_TTL = 60` (single constant, no env var override) | 60s is the right value; env var would be over-engineering per research; both cache key patterns use same constant | Good — minimal complexity |
+| Push-based leaderboard cache invalidation (LEAD-F01) deferred | Requires cross-route coordination; 60s polling is sufficient for now | Deferred to v2.4+ |
+
+---
+*Last updated: 2026-03-19 after v2.3 milestone*

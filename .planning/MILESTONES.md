@@ -1,5 +1,33 @@
 # Project Milestones: Civic Trivia Championship
 
+## v2.3 UX & Rewards Polish (Shipped: 2026-03-19)
+
+**Delivered:** Replaced tap-anywhere game navigation with explicit contextual buttons, shifted gem rewards to a score-based threshold (1,000+ points) that makes wager strategy meaningful, added a real-time gem indicator on the wager screen, and fixed a 5-minute leaderboard cache lag down to ~1 minute.
+
+**Phases completed:** 69–71 (5 plans total)
+
+**Key accomplishments:**
+
+- `NextStepButton` component replaces tap-anywhere — contextual labels (NEXT QUESTION / LAST QUESTION / GAME RECAP) with delayed fade-in after answer reveal; tap hint SVG and container onClick fully removed
+- Timer shrinks 80px → 56px during reveal phase; overflow-hidden on both scroll containers — full game screen fits 375×667 mobile without scrolling
+- Score-based gem threshold: `GEM_SCORE_THRESHOLD = 1000` exported from `progressionService.ts`; 1 gem at ≥1,000 final score replaces accuracy-based 6/8 rule; wager strategy now directly affects gem earning
+- Wager screen gem indicator: lights gold (Framer Motion color transition) when `currentScore + proposedWager ≥ 1000`, with inline "+1 GEM" badge and score tooltip explaining the threshold
+- Results screen threshold messaging: "Score 1,000+ points for a gem" educates players about the updated rule
+- Leaderboard CACHE_TTL reduced 300s → 60s — XP rankings reflect earned XP within ~1 minute; human-verified in production
+
+**Stats:**
+
+- 26 files changed (+2,502/-116 lines)
+- ~45,500 lines TypeScript total (frontend ~14,000 + backend ~31,500)
+- 3 phases, 5 plans, 15 requirements delivered
+- 1 day (2026-03-19)
+
+**Git range:** `docs(69): research phase domain` (fe565d5) → `docs(71): complete leaderboard-cache-fix phase` (a642119)
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v2.2 Pipeline Intelligence (Shipped: 2026-03-18)
 
 **Delivered:** Automated the content operations lifecycle — structured officeholders in LocaleConfig drive prompt injection and `expiresAt` auto-seeding; hourly cron replaces expired questions automatically; gem awards migrated to accounts API; public leaderboard shipped; Santa Monica CA activated as the 18th collection.
