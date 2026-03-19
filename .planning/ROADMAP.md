@@ -203,10 +203,12 @@ Plans:
   3. On the wager screen, a yellow gem indicator lights up when the player's current score plus their proposed wager reaches or exceeds 1,000 — signaling they will earn a gem if they answer correctly
   4. When the proposed wager keeps the projected total below 1,000, the gem indicator is visually dim/inactive
   5. The results screen messaging communicates the score-based gem threshold (e.g., "Score 1,000+ points for a gem") so players understand the updated rule
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 70-01: TBD
+- [ ] 70-01-PLAN.md — Backend gem scoring update (calculateProgression + GEM_SCORE_THRESHOLD)
+- [ ] 70-02-PLAN.md — Wager screen gem indicator + live score display
+- [ ] 70-03-PLAN.md — Results screen gem messaging + score tooltip
 
 #### Phase 71: Leaderboard Cache Fix
 **Goal**: Leaderboard XP rankings reflect recently earned XP within approximately one minute
@@ -251,5 +253,5 @@ Plans:
 | 67. Leaderboard | v2.2 | 3/3 | Complete | 2026-03-17 |
 | 68. Santa Monica, CA Collection | v2.2 | 3/3 | Complete | 2026-03-18 |
 | 69. Game Flow Buttons | v2.3 | 1/1 | Complete | 2026-03-19 |
-| 70. Gem Scoring & Wager Preview | v2.3 | 0/TBD | Not started | - |
+| 70. Gem Scoring & Wager Preview | v2.3 | 0/3 | Not started | - |
 | 71. Leaderboard Cache Fix | v2.3 | 0/TBD | Not started | - |
