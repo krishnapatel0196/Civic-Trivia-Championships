@@ -425,7 +425,7 @@ export function GameScreen({
       {/* Main content container */}
       <div className="relative h-full flex flex-col py-2 md:py-4 px-4">
         {/* Top HUD - Score, Timer, Collection name, Progress dots */}
-        <div className="flex flex-col items-center mb-2 md:mb-4 max-w-5xl mx-auto w-full flex-shrink-0">
+        <div className="flex flex-col items-center mb-1 max-w-5xl mx-auto w-full flex-shrink-0">
           {/* Controls row - three equal columns for true centering */}
           <div className="grid grid-cols-3 items-center w-full">
             {/* Score display (left) */}
@@ -532,7 +532,7 @@ export function GameScreen({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
-            className="flex-1 flex flex-col items-center justify-start pt-4 md:pt-12 lg:pt-16 gap-1 md:gap-3 max-w-[700px] mx-auto w-full px-4 min-h-0 overflow-hidden"
+            className="flex-1 flex flex-col items-center justify-center max-w-[700px] mx-auto w-full px-4 min-h-0 overflow-hidden gap-2 md:gap-4 lg:gap-5"
           >
             {/* Final question badge */}
             {isFinalQuestion && (

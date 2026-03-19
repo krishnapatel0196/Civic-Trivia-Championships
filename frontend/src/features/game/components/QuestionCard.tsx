@@ -9,7 +9,7 @@ interface QuestionCardProps {
 export function QuestionCard({ question, questionNumber, totalQuestions }: QuestionCardProps) {
   return (
     <div
-      className="flex flex-col items-center gap-2 max-w-3xl mx-auto px-2 md:px-6"
+      className="flex flex-col items-center gap-2 lg:gap-3 max-w-3xl mx-auto px-2 md:px-6"
       role="region"
       aria-label={`Question ${questionNumber} of ${totalQuestions}`}
     >
@@ -27,7 +27,7 @@ export function QuestionCard({ question, questionNumber, totalQuestions }: Quest
       <div style={{
         fontFamily: "'Lora', Georgia, serif",
         color: '#F5EDD8',
-        fontSize: 'clamp(18px, 4vw, 26px)',
+        fontSize: 'clamp(18px, 3.5vw, 28px)',
         fontWeight: 600,
         textAlign: 'center',
         lineHeight: 1.35,

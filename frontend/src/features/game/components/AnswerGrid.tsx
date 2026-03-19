@@ -179,7 +179,7 @@ export function AnswerGrid({
   return (
     <div className="w-full max-w-3xl mx-auto px-2 md:px-6">
       {/* Answer grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2.5 mb-2 md:mb-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 lg:gap-3.5 mb-2 md:mb-3">
         {options.map((option, index) => (
           <motion.button
             key={index}
@@ -214,12 +214,12 @@ export function AnswerGrid({
             }}
             style={{
               position: 'relative',
-              padding: '10px 12px',
+              padding: 'clamp(8px, 1.2vh, 14px) clamp(12px, 1.5vw, 20px)',
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
               textAlign: 'left',
-              minHeight: '52px',
+              minHeight: 'clamp(48px, 6vh, 64px)',
               cursor: canSelect ? 'pointer' : 'default',
               borderRadius: '3px',
               transition: 'background 0.15s, border-color 0.15s',
