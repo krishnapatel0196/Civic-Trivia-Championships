@@ -217,10 +217,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. The leaderboard backend cache TTL is set to 60 seconds (reduced from 300 seconds)
   2. A Connected player who earns XP after completing a game sees their updated rank and XP total on the leaderboard within approximately 1 minute without any manual intervention
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 71-01: TBD
+- [ ] 71-01-PLAN.md — Reduce CACHE_TTL from 300s to 60s in leaderboard route
 
 ## Progress
 
@@ -254,4 +254,4 @@ Plans:
 | 68. Santa Monica, CA Collection | v2.2 | 3/3 | Complete | 2026-03-18 |
 | 69. Game Flow Buttons | v2.3 | 1/1 | Complete | 2026-03-19 |
 | 70. Gem Scoring & Wager Preview | v2.3 | 3/3 | Complete | 2026-03-19 |
-| 71. Leaderboard Cache Fix | v2.3 | 0/TBD | Not started | - |
+| 71. Leaderboard Cache Fix | v2.3 | 0/1 | Not started | - |
