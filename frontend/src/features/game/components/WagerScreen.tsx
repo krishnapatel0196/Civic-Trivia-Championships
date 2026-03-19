@@ -1,7 +1,11 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { TOPIC_LABELS } from './TopicIcon';
 import type { TopicCategory } from '../../../types/game';
 import { useTheme } from '../../../hooks/useTheme';
+import { GemIcon } from '../../../components/icons/GemIcon';
+
+const GEM_SCORE_THRESHOLD = 1000;
 
 interface WagerScreenProps {
   currentScore: number;
@@ -26,6 +30,9 @@ export function WagerScreen({
   const categoryLabel = TOPIC_LABELS[category as TopicCategory] || category;
   const ifCorrect = currentScore + wagerAmount;
   const ifWrong   = currentScore - wagerAmount;
+
+  const meetsGemThreshold = ifCorrect >= GEM_SCORE_THRESHOLD;
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSetWager(parseInt(e.target.value, 10));
@@ -94,13 +101,46 @@ export function WagerScreen({
           }}>
             YOUR SCORE
           </div>
-          <div style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: '52px',
-            lineHeight: 1,
-            color: C.ink,
-          }}>
-            {currentScore.toLocaleString()}
+          <div
+            onClick={() => setShowTooltip(!showTooltip)}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            style={{ cursor: 'pointer', position: 'relative', display: 'inline-block' }}
+          >
+            <div style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '52px',
+              lineHeight: 1,
+              color: C.ink,
+            }}>
+              {currentScore.toLocaleString()}
+            </div>
+            <AnimatePresence>
+              {showTooltip && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  style={{
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    bottom: '-8px',
+                    background: C.ink,
+                    color: C.paper,
+                    padding: '8px 14px',
+                    fontSize: '12px',
+                    fontFamily: "'Lora', Georgia, serif",
+                    whiteSpace: 'nowrap',
+                    zIndex: 10,
+                    borderRadius: '2px',
+                  }}
+                >
+                  Score 1,000+ to earn a gem. Perfect score earns 2 gems.
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -139,6 +179,27 @@ export function WagerScreen({
               POINTS
             </div>
           </div>
+
+          {/* Gem indicator */}
+          <motion.div
+            animate={{
+              color: meetsGemThreshold ? C.gold : C.mutedFg,
+              opacity: meetsGemThreshold ? 1 : 0.4,
+            }}
+            transition={{ duration: 0.3 }}
+            style={{ textAlign: 'center', marginBottom: '16px' }}
+          >
+            <GemIcon className="w-6 h-6" />
+            <div style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '9px',
+              letterSpacing: '0.16em',
+              color: C.mutedFg,
+              marginTop: '4px',
+            }}>
+              1,000 PTS FOR A GEM
+            </div>
+          </motion.div>
 
           {/* Slider */}
           {hasPoints ? (
@@ -198,13 +259,26 @@ export function WagerScreen({
               borderTop: `1px solid ${C.ruleLight}`,
             }}>
               <span style={{ fontStyle: 'italic', fontSize: '14px', color: C.muted }}>If correct:</span>
-              <span style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: '22px',
-                color: C.correct,
-                transition: 'color 0.2s',
-              }}>
-                +{ifCorrect.toLocaleString()}
+              <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                <span style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '22px',
+                  color: C.correct,
+                  transition: 'color 0.2s',
+                }}>
+                  +{ifCorrect.toLocaleString()}
+                </span>
+                {meetsGemThreshold && (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginLeft: '8px' }}>
+                    <span style={{ color: C.gold }}><GemIcon className="w-4 h-4" /></span>
+                    <span style={{
+                      fontFamily: "'Bebas Neue', sans-serif",
+                      fontSize: '14px',
+                      letterSpacing: '0.06em',
+                      color: C.gold,
+                    }}>+1 GEM</span>
+                  </span>
+                )}
               </span>
             </div>
             <div style={{
