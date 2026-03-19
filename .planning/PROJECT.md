@@ -103,9 +103,15 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Public leaderboard at `/leaderboard` — top-25 by XP, podium top-3, sticky-you row, privacy-by-default, no auth required — v2.2
 - ✓ Santa Monica, CA (18th collection) — 84 active questions, 19.8% expiring, first collection built end-to-end with officeholders field — v2.2
 
-### Active (v2.3 — next milestone TBD)
+### Active (v2.3 — UX & Rewards Polish)
 
-*(Requirements to be defined via `/gsd:new-milestone`)*
+**Milestone goal:** Upgrade the core game feel — replace tap-anywhere with explicit flow buttons, shift gem rewards to a score-based threshold that rewards wager strategy, and fix a leaderboard cache lag bug.
+
+- [ ] "Next Question" / "Last Question" / "Game Recap" buttons replace tap-anywhere icon
+- [ ] Timer/layout repositioned as needed so full game screen fits without scrolling (mobile + desktop)
+- [ ] Gem threshold: 1 gem at 1000+ final score (replaces 6/8 or 7/8 rule); 2 gems for 8/8 perfect (unchanged)
+- [ ] Wager screen shows yellow gem indicator lighting up when projected score (currentScore + wager) ≥ 1000
+- [ ] Leaderboard reflects XP within ~1 minute (fix 5-minute cache lag)
 
 ### Out of Scope
 
@@ -300,4 +306,4 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | StickyYou as page-bottom section (not CSS sticky) | 25-row list has no scroll container; CSS sticky requires scrollable parent — page-bottom avoids layout complexity | Good — simpler and correct |
 
 ---
-*Last updated: 2026-03-18 after v2.2 milestone complete*
+*Last updated: 2026-03-18 after v2.3 milestone started*

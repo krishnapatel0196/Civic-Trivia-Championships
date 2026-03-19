@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 
 ## Current Position
 
-Phase: Not started (v2.3 not yet planned)
+Phase: Not started (v2.3 roadmap pending)
 Plan: Not started
-Status: Ready to plan — v2.2 milestone archived; next milestone requires `/gsd:new-milestone`
-Last activity: 2026-03-18 — v2.2 milestone complete and archived
+Status: Requirements defined — roadmap being created
+Last activity: 2026-03-18 — v2.3 milestone started
 
 Progress: [██████████] v1.0–v2.2 complete (Phases 1–68)
 
@@ -136,4 +136,4 @@ Last session: 2026-03-18
 Stopped at: v2.2 milestone archived — all phases (63–68) complete, git tag v2.2 created
 Resume file: None
 
-Next action: `/gsd:new-milestone` — start v2.3 (questioning → research → requirements → roadmap)
+Next action: `/gsd:plan-phase 69` — plan Game Flow Buttons phase

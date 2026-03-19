@@ -1,0 +1,77 @@
+# Requirements: Civic Trivia Championship
+
+**Defined:** 2026-03-18
+**Core Value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
+
+## v1 Requirements (v2.3 milestone)
+
+### Game Flow Buttons
+
+- [ ] **FLOW-01**: Player sees a "Next Question" button after answer reveal for questions 1–6 (replacing tap-anywhere icon)
+- [ ] **FLOW-02**: Player sees a "Last Question" button after answer reveal for question 7 (penultimate — builds anticipation)
+- [ ] **FLOW-03**: Player sees a "Game Recap" button after answering the final question (question 8 / wager)
+- [ ] **FLOW-04**: Tap-anywhere / tap icon is deprecated and removed from the game screen
+- [ ] **FLOW-05**: Full game screen (question, answers, timer, button) fits without scrolling on both mobile and desktop — timer may be repositioned or resized to achieve this
+- [ ] **FLOW-06**: Button text is legible (not too small or thin); subtle styling that matches the game show aesthetic per the frontend-design skill doc
+
+### Gem Scoring
+
+- [ ] **GEM-01**: Backend `calculateProgression()` awards 1 gem when `finalScore >= 1000` (replaces `correctAnswers >= totalQuestions - 2`)
+- [ ] **GEM-02**: 2 gems for a perfect game (8/8 correct) remains unchanged — perfect accuracy still the top reward
+- [ ] **GEM-03**: `calculateProgression()` accepts `finalScore` as a parameter in addition to existing params
+- [ ] **GEM-04**: Frontend results screen gem display reflects the new score-based threshold messaging (e.g., "Score 1,000+ points for a gem")
+
+### Wager Screen Gem Preview
+
+- [ ] **WAGER-01**: Wager slider displays a yellow gem indicator that lights up when `currentScore + proposedWager >= 1000` (i.e., player will earn a gem if they answer correctly)
+- [ ] **WAGER-02**: When wager is below the gem threshold, gem indicator is visually dim/inactive
+- [ ] **WAGER-03**: Gem indicator communicates this is the expected reward only if the answer is correct (not a guarantee)
+
+### Leaderboard Cache Fix
+
+- [ ] **LEAD-01**: Leaderboard cache TTL reduced from 5 minutes to 60 seconds so XP updates appear within ~1 minute of being earned
+- [ ] **LEAD-02**: A player with a Connected account who earns XP will see their updated rank on the leaderboard within ~1 minute (verified manually)
+
+## Future Requirements
+
+### Leaderboard Cache (v2.4+)
+
+- **LEAD-F01**: Cache invalidation on XP award (push-based) — requires cross-route coordination between game results route and leaderboard cache; deferred to later milestone
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| XP formula change | User did not request; stays correctAnswers-based (50–200 XP) |
+| 2-gem score threshold | 2 gems = 8/8 perfect only; no second score tier |
+| Real-time leaderboard websocket | Out of scope per PROJECT.md — deferred to Phase 2 |
+| Streak bonuses | Deferred; current day-streak logic is placeholder |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| FLOW-01 | Phase 69 | Pending |
+| FLOW-02 | Phase 69 | Pending |
+| FLOW-03 | Phase 69 | Pending |
+| FLOW-04 | Phase 69 | Pending |
+| FLOW-05 | Phase 69 | Pending |
+| FLOW-06 | Phase 69 | Pending |
+| GEM-01 | Phase 70 | Pending |
+| GEM-02 | Phase 70 | Pending |
+| GEM-03 | Phase 70 | Pending |
+| GEM-04 | Phase 70 | Pending |
+| WAGER-01 | Phase 70 | Pending |
+| WAGER-02 | Phase 70 | Pending |
+| WAGER-03 | Phase 70 | Pending |
+| LEAD-01 | Phase 71 | Pending |
+| LEAD-02 | Phase 71 | Pending |
+
+**Coverage:**
+- v1 requirements: 15 total
+- Mapped to phases: 15
+- Unmapped: 0 ✓
+
+---
+*Requirements defined: 2026-03-18*
+*Last updated: 2026-03-18 after initial definition*
