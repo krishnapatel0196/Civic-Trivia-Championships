@@ -188,10 +188,10 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
   3. After answering the final question (8 / wager), a "Game Recap" button appears and navigates to the results screen
   4. No tap-anywhere mechanic or tap icon remains anywhere in the active game screen
   5. The full game screen — question text, answer options, timer, and navigation button — fits without scrolling on both mobile and desktop viewports
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 69-01: TBD
+- [ ] 69-01-PLAN.md — Replace tap-anywhere with NextStepButton (Next Question / Last Question / Game Recap)
 
 #### Phase 70: Gem Scoring & Wager Preview
 **Goal**: Gem rewards reflect score-based skill rather than raw accuracy, and the wager screen previews the gem outcome in real time
@@ -250,6 +250,6 @@ Plans:
 | 66. Gem Award Migration | v2.2 | 1/1 | Complete | 2026-03-15 |
 | 67. Leaderboard | v2.2 | 3/3 | Complete | 2026-03-17 |
 | 68. Santa Monica, CA Collection | v2.2 | 3/3 | Complete | 2026-03-18 |
-| 69. Game Flow Buttons | v2.3 | 0/TBD | Not started | - |
+| 69. Game Flow Buttons | v2.3 | 0/1 | Not started | - |
 | 70. Gem Scoring & Wager Preview | v2.3 | 0/TBD | Not started | - |
 | 71. Leaderboard Cache Fix | v2.3 | 0/TBD | Not started | - |
