@@ -394,7 +394,7 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
 
     if (session.userId && session.userId !== 'anonymous' && !session.progressionAwarded) {
       // UUID user path — platform gem award + stats
-      const { gemsEarned } = calculateProgression(results.totalCorrect, results.totalQuestions);
+      const { gemsEarned } = calculateProgression(results.totalCorrect, results.totalQuestions, results.totalScore);
 
       let gemsConfirmed = false;
       let gemError: string | undefined;
