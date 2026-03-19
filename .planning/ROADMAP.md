@@ -206,9 +206,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 70-01-PLAN.md — Backend gem scoring update (calculateProgression + GEM_SCORE_THRESHOLD)
-- [ ] 70-02-PLAN.md — Wager screen gem indicator + live score display
-- [ ] 70-03-PLAN.md — Results screen gem messaging + score tooltip
+- [x] 70-01-PLAN.md — Backend gem scoring update (calculateProgression + GEM_SCORE_THRESHOLD) — completed 2026-03-19
+- [x] 70-02-PLAN.md — Wager screen gem indicator + live score display — completed 2026-03-19
+- [x] 70-03-PLAN.md — Results screen gem messaging + score tooltip — completed 2026-03-19
 
 #### Phase 71: Leaderboard Cache Fix
 **Goal**: Leaderboard XP rankings reflect recently earned XP within approximately one minute
@@ -253,5 +253,5 @@ Plans:
 | 67. Leaderboard | v2.2 | 3/3 | Complete | 2026-03-17 |
 | 68. Santa Monica, CA Collection | v2.2 | 3/3 | Complete | 2026-03-18 |
 | 69. Game Flow Buttons | v2.3 | 1/1 | Complete | 2026-03-19 |
-| 70. Gem Scoring & Wager Preview | v2.3 | 0/3 | Not started | - |
+| 70. Gem Scoring & Wager Preview | v2.3 | 3/3 | Complete | 2026-03-19 |
 | 71. Leaderboard Cache Fix | v2.3 | 0/TBD | Not started | - |

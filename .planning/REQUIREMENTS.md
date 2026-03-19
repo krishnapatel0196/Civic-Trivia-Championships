@@ -16,16 +16,16 @@
 
 ### Gem Scoring
 
-- [ ] **GEM-01**: Backend `calculateProgression()` awards 1 gem when `finalScore >= 1000` (replaces `correctAnswers >= totalQuestions - 2`)
-- [ ] **GEM-02**: 2 gems for a perfect game (8/8 correct) remains unchanged — perfect accuracy still the top reward
-- [ ] **GEM-03**: `calculateProgression()` accepts `finalScore` as a parameter in addition to existing params
-- [ ] **GEM-04**: Frontend results screen gem display reflects the new score-based threshold messaging (e.g., "Score 1,000+ points for a gem")
+- [x] **GEM-01**: Backend `calculateProgression()` awards 1 gem when `finalScore >= 1000` (replaces `correctAnswers >= totalQuestions - 2`) — Complete (Phase 70)
+- [x] **GEM-02**: 2 gems for a perfect game (8/8 correct) remains unchanged — perfect accuracy still the top reward — Complete (Phase 70)
+- [x] **GEM-03**: `calculateProgression()` accepts `finalScore` as a parameter in addition to existing params — Complete (Phase 70)
+- [x] **GEM-04**: Frontend results screen gem display reflects the new score-based threshold messaging (e.g., "Score 1,000+ points for a gem") — Complete (Phase 70)
 
 ### Wager Screen Gem Preview
 
-- [ ] **WAGER-01**: Wager slider displays a yellow gem indicator that lights up when `currentScore + proposedWager >= 1000` (i.e., player will earn a gem if they answer correctly)
-- [ ] **WAGER-02**: When wager is below the gem threshold, gem indicator is visually dim/inactive
-- [ ] **WAGER-03**: Gem indicator communicates this is the expected reward only if the answer is correct (not a guarantee)
+- [x] **WAGER-01**: Wager slider displays a yellow gem indicator that lights up when `currentScore + proposedWager >= 1000` (i.e., player will earn a gem if they answer correctly) — Complete (Phase 70)
+- [x] **WAGER-02**: When wager is below the gem threshold, gem indicator is visually dim/inactive — Complete (Phase 70)
+- [x] **WAGER-03**: Gem indicator communicates this is the expected reward only if the answer is correct (not a guarantee) — Complete (Phase 70)
 
 ### Leaderboard Cache Fix
 
@@ -57,13 +57,13 @@
 | FLOW-04 | Phase 69 | Pending |
 | FLOW-05 | Phase 69 | Pending |
 | FLOW-06 | Phase 69 | Pending |
-| GEM-01 | Phase 70 | Pending |
-| GEM-02 | Phase 70 | Pending |
-| GEM-03 | Phase 70 | Pending |
-| GEM-04 | Phase 70 | Pending |
-| WAGER-01 | Phase 70 | Pending |
-| WAGER-02 | Phase 70 | Pending |
-| WAGER-03 | Phase 70 | Pending |
+| GEM-01 | Phase 70 | Complete |
+| GEM-02 | Phase 70 | Complete |
+| GEM-03 | Phase 70 | Complete |
+| GEM-04 | Phase 70 | Complete |
+| WAGER-01 | Phase 70 | Complete |
+| WAGER-02 | Phase 70 | Complete |
+| WAGER-03 | Phase 70 | Complete |
 | LEAD-01 | Phase 71 | Pending |
 | LEAD-02 | Phase 71 | Pending |
 

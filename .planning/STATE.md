@@ -174,7 +174,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Completed 70-02-PLAN.md — WagerScreen gem indicator and score tooltip
+Stopped at: Completed Phase 70 — Gem Scoring & Wager Preview (all 3 plans, verified)
 Resume file: None
 
-Next action: Execute 70-03-PLAN.md — ResultsScreen gem messaging (or verify if already done)
+Next action: `/gsd:plan-phase 71` — plan Leaderboard Cache Fix phase
