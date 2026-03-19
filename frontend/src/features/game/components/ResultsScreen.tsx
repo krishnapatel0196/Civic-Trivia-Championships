@@ -15,6 +15,8 @@ import { ACCOUNTS_WEB_URL } from '../../../services/accountsApi';
 import { useTheme } from '../../../hooks/useTheme';
 import { Header } from '../../../components/layout/Header';
 
+const GEM_SCORE_THRESHOLD = 1000;
+
 interface ResultsScreenProps {
   result: GameResult;
   questions: Question[];
@@ -39,6 +41,7 @@ export function ResultsScreen({
   onLevelCaptured,
 }: ResultsScreenProps) {
   const [expandedQuestions, setExpandedQuestions] = useState<Set<number>>(new Set());
+  const [showScoreTooltip, setShowScoreTooltip] = useState(false);
   const [learnMoreQuestion, setLearnMoreQuestion] = useState<{
     content: LearningContent;
     userAnswer: number | null;
@@ -189,24 +192,57 @@ export function ResultsScreen({
           transition={{ delay: 0.15, duration: 0.3 }}
           style={{ textAlign: 'center', marginTop: '16px' }}
         >
-          <div style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 'clamp(72px, 22vw, 128px)',
-            lineHeight: 0.88,
-            color: scoreColor,
-            letterSpacing: '-0.01em',
-          }}>
-            {displayScore.toLocaleString()}
+          <div
+            onClick={() => setShowScoreTooltip(!showScoreTooltip)}
+            onMouseEnter={() => setShowScoreTooltip(true)}
+            onMouseLeave={() => setShowScoreTooltip(false)}
+            style={{ cursor: 'pointer', position: 'relative', display: 'inline-block' }}
+          >
+            <div style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: 'clamp(72px, 22vw, 128px)',
+              lineHeight: 0.88,
+              color: scoreColor,
+              letterSpacing: '-0.01em',
+            }}>
+              {displayScore.toLocaleString()}
+            </div>
+            <p style={{
+              fontFamily: "'Bebas Neue', sans-serif",
+              letterSpacing: '0.22em',
+              fontSize: '12px',
+              color: C.muted,
+              margin: '6px 0 0',
+            }}>
+              TOTAL POINTS
+            </p>
+            <AnimatePresence>
+              {showScoreTooltip && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  style={{
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    bottom: '-12px',
+                    background: C.ink,
+                    color: C.paper,
+                    padding: '8px 14px',
+                    fontSize: '12px',
+                    fontFamily: "'Lora', Georgia, serif",
+                    whiteSpace: 'nowrap',
+                    zIndex: 10,
+                    borderRadius: '2px',
+                  }}
+                >
+                  Score 1,000+ to earn a gem. Perfect score earns 2 gems.
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-          <p style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            letterSpacing: '0.22em',
-            fontSize: '12px',
-            color: C.muted,
-            margin: '6px 0 0',
-          }}>
-            TOTAL POINTS
-          </p>
 
           {isPerfectGame && (
             <motion.div
@@ -345,6 +381,25 @@ export function ResultsScreen({
                   color: C.gold,
                 }}>
                   +{result.progression.gemsEarned} {result.progression.gemsEarned === 1 ? 'GEM' : 'GEMS'}
+                </span>
+              </div>
+            )}
+            {result.progression.gemsEarned === 0 && (
+              <div style={{
+                marginTop: result.progression.xp?.confirmed ? '12px' : '0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+              }}>
+                <span style={{ color: C.mutedFg }}><GemIcon className="w-4 h-4" /></span>
+                <span style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: '14px',
+                  letterSpacing: '0.08em',
+                  color: C.mutedFg,
+                }}>
+                  REACH {GEM_SCORE_THRESHOLD.toLocaleString()} POINTS TO EARN A GEM
                 </span>
               </div>
             )}
