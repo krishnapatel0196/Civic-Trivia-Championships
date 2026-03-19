@@ -10,17 +10,17 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 ## Current Position
 
 Phase: 69 — Game Flow Buttons
-Plan: Not started
-Status: Roadmap created — ready to plan Phase 69
-Last activity: 2026-03-18 — v2.3 roadmap created (Phases 69–71)
+Plan: 01 of 01 — complete
+Status: Phase 69 complete
+Last activity: 2026-03-19 — Completed 69-01-PLAN.md (Game Flow Buttons)
 
-Progress: [██████████] v1.0–v2.2 complete (Phases 1–68) | v2.3 starting
+Progress: [██████████] v1.0–v2.2 complete (Phases 1–68) | v2.3 in progress (1/3 phases done)
 
 **Milestone history:**
 - v1.0–v2.2 (Phases 1–68): All Complete — see .planning/MILESTONES.md
 
 **v2.3 phase status:**
-- Phase 69: Game Flow Buttons — Not started
+- Phase 69: Game Flow Buttons — COMPLETE (2026-03-19)
 - Phase 70: Gem Scoring & Wager Preview — Not started
 - Phase 71: Leaderboard Cache Fix — Not started
 
@@ -128,12 +128,14 @@ Key decisions from Phase 65 Plan 02 (2026-03-15):
 - Fix: reduce to 60 seconds — acceptable lag, no architectural change needed
 - Push-based cache invalidation (LEAD-F01) deferred to v2.4+
 
-**Game flow (Phase 69):**
-- Game is 8 questions (not 10 as in original v1.0)
-- Q1–Q6: show "Next Question" button after answer reveal
-- Q7: show "Last Question" button (builds anticipation for the final)
-- Q8 (wager question): show "Game Recap" button after wager resolution
-- Tap-anywhere icon fully removed — no hidden tap targets remaining
+**Game flow (Phase 69) — COMPLETE:**
+- NextStepButton component replaces tap-anywhere with contextual labels
+- Q1–Q6: "NEXT QUESTION"; Q7: "LAST QUESTION"; Q8 wager: "GAME RECAP"
+- Timer shrinks 80px → 56px during reveal phase to reclaim vertical space
+- Both root div and inner motion.div use overflow-hidden — mobile 375x667 fits without scroll
+- Label derived from props (isFinalQuestion, questionIndex, totalQuestions) — not hardcoded
+- Disabled prop dims button to 0.4 opacity when LearnMore modal is open
+- Tap-anywhere onClick and tap hint SVG fully removed from GameScreen
 
 ### Pending Todos
 
@@ -155,8 +157,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-18
-Stopped at: v2.3 roadmap created — Phases 69–71 defined, all 15 requirements mapped
+Last session: 2026-03-19
+Stopped at: Completed 69-01-PLAN.md — Phase 69 Game Flow Buttons complete, human verified
 Resume file: None
 
-Next action: `/gsd:plan-phase 69` — plan Game Flow Buttons phase
+Next action: `/gsd:plan-phase 70` — plan Gem Scoring & Wager Preview phase
