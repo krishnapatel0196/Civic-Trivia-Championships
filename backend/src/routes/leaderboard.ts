@@ -1,5 +1,5 @@
 /**
- * GET /api/leaderboard — Public leaderboard route with 5-minute cache.
+ * GET /api/leaderboard — Public leaderboard route with 60-second cache.
  *
  * Schema findings (2026-03-17):
  *   - connect.connected_profiles: user_id, display_name, total_xp, current_level,
@@ -26,7 +26,7 @@ import { storageFactory } from '../config/redis.js';
 
 export const router = Router();
 
-const CACHE_TTL = 300; // 5 minutes in seconds
+const CACHE_TTL = 60; // 60 seconds
 const LEADERBOARD_LIMIT = 25;
 
 // ---- Cache helpers ----
