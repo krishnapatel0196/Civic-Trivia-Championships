@@ -7,12 +7,12 @@
 
 ### Game Flow Buttons
 
-- [ ] **FLOW-01**: Player sees a "Next Question" button after answer reveal for questions 1–6 (replacing tap-anywhere icon)
-- [ ] **FLOW-02**: Player sees a "Last Question" button after answer reveal for question 7 (penultimate — builds anticipation)
-- [ ] **FLOW-03**: Player sees a "Game Recap" button after answering the final question (question 8 / wager)
-- [ ] **FLOW-04**: Tap-anywhere / tap icon is deprecated and removed from the game screen
-- [ ] **FLOW-05**: Full game screen (question, answers, timer, button) fits without scrolling on both mobile and desktop — timer may be repositioned or resized to achieve this
-- [ ] **FLOW-06**: Button text is legible (not too small or thin); subtle styling that matches the game show aesthetic per the frontend-design skill doc
+- [x] **FLOW-01**: Player sees a "Next Question" button after answer reveal for questions 1–6 (replacing tap-anywhere icon) — Complete (Phase 69)
+- [x] **FLOW-02**: Player sees a "Last Question" button after answer reveal for question 7 (penultimate — builds anticipation) — Complete (Phase 69)
+- [x] **FLOW-03**: Player sees a "Game Recap" button after answering the final question (question 8 / wager) — Complete (Phase 69)
+- [x] **FLOW-04**: Tap-anywhere / tap icon is deprecated and removed from the game screen — Complete (Phase 69)
+- [x] **FLOW-05**: Full game screen (question, answers, timer, button) fits without scrolling on both mobile and desktop — timer may be repositioned or resized to achieve this — Complete (Phase 69)
+- [x] **FLOW-06**: Button text is legible (not too small or thin); subtle styling that matches the game show aesthetic per the frontend-design skill doc — Complete (Phase 69)
 
 ### Gem Scoring
 
