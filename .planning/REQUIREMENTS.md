@@ -29,8 +29,8 @@
 
 ### Leaderboard Cache Fix
 
-- [ ] **LEAD-01**: Leaderboard cache TTL reduced from 5 minutes to 60 seconds so XP updates appear within ~1 minute of being earned
-- [ ] **LEAD-02**: A player with a Connected account who earns XP will see their updated rank on the leaderboard within ~1 minute (verified manually)
+- [x] **LEAD-01**: Leaderboard cache TTL reduced from 5 minutes to 60 seconds so XP updates appear within ~1 minute of being earned — Complete (Phase 71)
+- [x] **LEAD-02**: A player with a Connected account who earns XP will see their updated rank on the leaderboard within ~1 minute (verified manually) — Complete (Phase 71)
 
 ## Future Requirements
 

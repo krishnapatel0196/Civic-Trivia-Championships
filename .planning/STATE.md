@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.3 UX & Rewards Polish — Phase 70 complete (all 3 plans), Phase 71 (Leaderboard Cache Fix) next
+**Current focus:** v2.3 UX & Rewards Polish — COMPLETE (Phases 69–71 all shipped 2026-03-19)
 
 ## Current Position
 
-Phase: 70 — Gem Scoring & Wager Preview
-Plan: 02 of 03 — complete
-Status: Phase complete
-Last activity: 2026-03-19 — Completed 70-03-PLAN.md (Results screen gem threshold messaging)
+Phase: 71 — Leaderboard Cache Fix
+Plan: 01 of 01 — complete
+Status: Phase complete — milestone v2.3 complete
+Last activity: 2026-03-19 — Completed 71-01-PLAN.md (CACHE_TTL 300s → 60s, human-verified in production)
 
-Progress: [██████████] v1.0–v2.2 complete (Phases 1–68) | v2.3 in progress (2/3 phases, Phase 70 complete, Phase 71 next)
+Progress: [██████████] v1.0–v2.3 complete (Phases 1–71)
 
 **Milestone history:**
 - v1.0–v2.2 (Phases 1–68): All Complete — see .planning/MILESTONES.md
@@ -22,7 +22,7 @@ Progress: [██████████] v1.0–v2.2 complete (Phases 1–68) 
 **v2.3 phase status:**
 - Phase 69: Game Flow Buttons — COMPLETE (2026-03-19)
 - Phase 70: Gem Scoring & Wager Preview — COMPLETE (2026-03-19, all 3 plans)
-- Phase 71: Leaderboard Cache Fix — Not started
+- Phase 71: Leaderboard Cache Fix — COMPLETE (2026-03-19)
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com / https://ctc.empowered.vote
@@ -174,7 +174,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Completed Phase 70 — Gem Scoring & Wager Preview (all 3 plans, verified)
+Stopped at: Completed Phase 71 — Leaderboard Cache Fix (1 plan, verified in production)
 Resume file: None
 
-Next action: `/gsd:plan-phase 71` — plan Leaderboard Cache Fix phase
+Next action: `/gsd:audit-milestone` — audit v2.3 before archiving

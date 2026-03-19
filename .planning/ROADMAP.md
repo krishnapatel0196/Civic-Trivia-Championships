@@ -15,7 +15,7 @@
 - ✅ **v1.9 Geographic Expansion** — Phases 47–52 (shipped 2026-03-03)
 - ✅ **v2.0 XP Integration** — Phases 53–56 (shipped 2026-03-08)
 - ✅ **v2.1 Collection Excellence** — Phases 57–62 (shipped 2026-03-15) — [archive](milestones/v2.1-ROADMAP.md)
-- 🚧 **v2.3 UX & Rewards Polish** — Phases 69–71 (in progress)
+- ✅ **v2.3 UX & Rewards Polish** — Phases 69–71 (shipped 2026-03-19)
 
 ## Phases
 
@@ -220,7 +220,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 71-01-PLAN.md — Reduce CACHE_TTL from 300s to 60s in leaderboard route
+- [x] 71-01-PLAN.md — Reduce CACHE_TTL from 300s to 60s in leaderboard route — completed 2026-03-19
 
 ## Progress
 
@@ -254,4 +254,4 @@ Plans:
 | 68. Santa Monica, CA Collection | v2.2 | 3/3 | Complete | 2026-03-18 |
 | 69. Game Flow Buttons | v2.3 | 1/1 | Complete | 2026-03-19 |
 | 70. Gem Scoring & Wager Preview | v2.3 | 3/3 | Complete | 2026-03-19 |
-| 71. Leaderboard Cache Fix | v2.3 | 0/1 | Not started | - |
+| 71. Leaderboard Cache Fix | v2.3 | 1/1 | Complete | 2026-03-19 |
