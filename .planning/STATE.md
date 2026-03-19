@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** v2.3 UX & Rewards Polish — Phase 70 Plan 02 complete, Plan 03 next
+**Current focus:** v2.3 UX & Rewards Polish — Phase 70 complete (all 3 plans), Phase 71 (Leaderboard Cache Fix) next
 
 ## Current Position
 
 Phase: 70 — Gem Scoring & Wager Preview
 Plan: 02 of 03 — complete
-Status: In progress
-Last activity: 2026-03-19 — Completed 70-02-PLAN.md (WagerScreen gem indicator)
+Status: Phase complete
+Last activity: 2026-03-19 — Completed 70-03-PLAN.md (Results screen gem threshold messaging)
 
-Progress: [██████████] v1.0–v2.2 complete (Phases 1–68) | v2.3 in progress (2/3 phases, 2 plans done in Phase 70)
+Progress: [██████████] v1.0–v2.2 complete (Phases 1–68) | v2.3 in progress (2/3 phases, Phase 70 complete, Phase 71 next)
 
 **Milestone history:**
 - v1.0–v2.2 (Phases 1–68): All Complete — see .planning/MILESTONES.md
 
 **v2.3 phase status:**
 - Phase 69: Game Flow Buttons — COMPLETE (2026-03-19)
-- Phase 70: Gem Scoring & Wager Preview — In progress (Plans 01 and 02 complete)
+- Phase 70: Gem Scoring & Wager Preview — COMPLETE (2026-03-19, all 3 plans)
 - Phase 71: Leaderboard Cache Fix — Not started
 
 **Deployment Status:**
@@ -41,6 +41,12 @@ v2.2 decisions archived to PROJECT.md. Key decisions from v2.2 milestone (2026-0
 - Tagline shortened to "Where Route 66 meets the Pacific." — punchy declaration over verbose rhetorical question
 - Banner iterated 3x: night shot (too dark) → daytime pier → sunset pier + ferris wheel (final, user-selected)
 - Santa Monica activated as 18th collection (77 questions, isActive: true); v2.3 content milestone complete
+
+Key decisions from Phase 70 Plan 03 (2026-03-19):
+- GEM_SCORE_THRESHOLD duplicated as local const in ResultsScreen (not imported) -- frontend cannot import from backend; value replication is intentional
+- 0-gem message renders inside result.progression block -- anonymous users never see gem messaging
+- Tooltip positioned bottom: -12px below TOTAL POINTS label -- avoids overlap with animated counter
+- Existing gemsEarned > 0 display (1-gem and 2-gem) left unchanged -- plan specified no changes to those paths
 
 Key decisions from Phase 70 Plan 02 (2026-03-19):
 - GEM_SCORE_THRESHOLD local constant (not imported from backend) in WagerScreen — frontend standalone, manually kept in sync with progressionService.ts
