@@ -22,6 +22,7 @@ import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { announce } from '../../../utils/announce';
 import type { GameState, Question, LearningContent } from '../../../types/game';
 import { XpStrip } from './XpStrip';
+import { NextStepButton } from './NextStepButton';
 import { ACCOUNTS_WEB_URL } from '../../../services/accountsApi';
 
 const QUESTION_DURATION = 20; // seconds
@@ -268,6 +269,13 @@ export function GameScreen({
     }
   }, [state.phase, state.currentQuestionIndex, isFinalQuestion, showOptions]);
 
+  // Derive the current advance button label for screen reader messages
+  const advanceLabel = isFinalQuestion
+    ? 'Game Recap'
+    : state.currentQuestionIndex === state.totalQuestions - 2
+    ? 'Last Question'
+    : 'Next Question';
+
   // Answer reveal announcements for screen readers
   useEffect(() => {
     if (state.phase === 'revealing' && state.answers.length > 0) {
@@ -281,11 +289,11 @@ export function GameScreen({
 
       let message = '';
       if (latestAnswer.correct) {
-        message = `Correct! The answer is ${correctLetter}, ${correctText}. You earned ${latestAnswer.totalPoints} points. Press Space or tap Next to continue.`;
+        message = `Correct! The answer is ${correctLetter}, ${correctText}. You earned ${latestAnswer.totalPoints} points. Press Space or click ${advanceLabel} to continue.`;
       } else if (latestAnswer.selectedOption !== null) {
-        message = `Not quite. The correct answer was ${correctLetter}, ${correctText}. Press Space or tap Next to continue.`;
+        message = `Not quite. The correct answer was ${correctLetter}, ${correctText}. Press Space or click ${advanceLabel} to continue.`;
       } else {
-        message = `Time's up. The correct answer was ${correctLetter}, ${correctText}. Press Space or tap Next to continue.`;
+        message = `Time's up. The correct answer was ${correctLetter}, ${correctText}. Press Space or click ${advanceLabel} to continue.`;
       }
 
       announce.polite(message);
@@ -400,13 +408,8 @@ export function GameScreen({
 
   return (
     <div
-      className={`h-screen h-[100dvh] relative ${state.phase === 'revealing' ? 'overflow-y-auto' : 'overflow-hidden'}`}
+      className="h-screen h-[100dvh] relative overflow-hidden"
       style={{ background: '#0F0D09' }}
-      onClick={() => {
-        if (state.phase === 'revealing' && !isLearnMoreOpen) {
-          nextQuestion();
-        }
-      }}
     >
       {/* Degraded mode banner - shown only when backend is in fallback mode */}
       <DegradedBanner visible={state.degraded} />
@@ -436,7 +439,10 @@ export function GameScreen({
             </div>
 
             {/* Timer (center - grid guarantees true center, min-h reserves space) */}
-            <div className="flex items-center justify-center min-h-[80px]">
+            <div
+              className="flex items-center justify-center"
+              style={{ minHeight: state.phase === 'revealing' ? '56px' : '80px' }}
+            >
               {(showOptions || state.phase === 'locked' || state.phase === 'revealing' || (state.phase === 'selected' && state.currentQuestionIndex === state.totalQuestions - 1)) && (
                 <GameTimer
                   key={timerKey}
@@ -444,7 +450,7 @@ export function GameScreen({
                   onTimeout={onTimeout}
                   onTimeUpdate={setCurrentTimeRemaining}
                   isPaused={state.isTimerPaused || !showOptions}
-                  size={80}
+                  size={state.phase === 'revealing' ? 56 : 80}
                 />
               )}
             </div>
@@ -526,7 +532,7 @@ export function GameScreen({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
-            className="flex-1 flex flex-col items-center justify-start pt-4 md:pt-12 lg:pt-16 gap-1 md:gap-3 max-w-[700px] mx-auto w-full px-4 min-h-0 overflow-y-auto"
+            className="flex-1 flex flex-col items-center justify-start pt-4 md:pt-12 lg:pt-16 gap-1 md:gap-3 max-w-[700px] mx-auto w-full px-4 min-h-0 overflow-hidden"
           >
             {/* Final question badge */}
             {isFinalQuestion && (
@@ -609,6 +615,19 @@ export function GameScreen({
                       </div>
                     </div>
                   )}
+
+                  {/* Navigation button — shown during reveal phase */}
+                  {state.phase === 'revealing' && (
+                    <div className="flex justify-center mt-3">
+                      <NextStepButton
+                        questionIndex={state.currentQuestionIndex}
+                        totalQuestions={state.totalQuestions}
+                        isFinalQuestion={isFinalQuestion}
+                        onAdvance={nextQuestion}
+                        disabled={isLearnMoreOpen}
+                      />
+                    </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -627,22 +646,6 @@ export function GameScreen({
           correctAnswer={latestAnswer.correctAnswer}
         />
         </div>
-      )}
-
-      {/* Tap hint — fixed overlay, lives here to avoid transform context from sliding motion.div */}
-      {state.phase === 'revealing' && (
-        <motion.img
-          src="/images/noun-tap-8166713-03B9D2.svg"
-          alt=""
-          aria-hidden="true"
-          initial={{ opacity: 0, scale: 1 }}
-          animate={{ opacity: 0.7, scale: [1, 1.12, 1] }}
-          transition={{
-            opacity: { delay: 1, duration: 0.6 },
-            scale: { delay: 1.6, duration: 2.5, repeat: Infinity, ease: 'easeInOut' },
-          }}
-          className="fixed bottom-6 right-6 w-14 h-14 pointer-events-none select-none"
-        />
       )}
 
       {/* Pause overlay */}
