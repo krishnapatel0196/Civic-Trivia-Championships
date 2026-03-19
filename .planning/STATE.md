@@ -5,19 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Planning next milestone — v2.2 complete, starting v2.3
+**Current focus:** v2.3 UX & Rewards Polish — Phase 69 (Game Flow Buttons) is next
 
 ## Current Position
 
-Phase: Not started (v2.3 roadmap pending)
+Phase: 69 — Game Flow Buttons
 Plan: Not started
-Status: Requirements defined — roadmap being created
-Last activity: 2026-03-18 — v2.3 milestone started
+Status: Roadmap created — ready to plan Phase 69
+Last activity: 2026-03-18 — v2.3 roadmap created (Phases 69–71)
 
-Progress: [██████████] v1.0–v2.2 complete (Phases 1–68)
+Progress: [██████████] v1.0–v2.2 complete (Phases 1–68) | v2.3 starting
 
 **Milestone history:**
 - v1.0–v2.2 (Phases 1–68): All Complete — see .planning/MILESTONES.md
+
+**v2.3 phase status:**
+- Phase 69: Game Flow Buttons — Not started
+- Phase 70: Gem Scoring & Wager Preview — Not started
+- Phase 71: Leaderboard Cache Fix — Not started
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com / https://ctc.empowered.vote
@@ -109,12 +114,30 @@ Key decisions from Phase 65 Plan 02 (2026-03-15):
 - No second try/catch wrapper around generateReplacement — its own outer try/catch is sufficient; wrapping would mask bugs
 - expiring-soon query left untouched — monitoring-only, replacement inappropriate for non-expired questions
 
+### v2.3 Context
+
+**Gem scoring rule change (Phase 70):**
+- Old rule: 1 gem at correctAnswers >= totalQuestions - 2 (i.e., 6/8 or 7/8)
+- New rule: 1 gem when finalScore >= 1000
+- 2 gems for 8/8 perfect: unchanged
+- Wager strategy now matters for gem earning — a player with 800 points can wager 400, hit correct, reach 1200, and earn a gem even with prior misses
+- Max wager = floor(currentScore / 2); gem indicator threshold = currentScore + proposedWager >= 1000
+
+**Leaderboard cache (Phase 71):**
+- Current TTL: 300 seconds (5 minutes) — players see stale XP for up to 5 minutes after a game
+- Fix: reduce to 60 seconds — acceptable lag, no architectural change needed
+- Push-based cache invalidation (LEAD-F01) deferred to v2.4+
+
+**Game flow (Phase 69):**
+- Game is 8 questions (not 10 as in original v1.0)
+- Q1–Q6: show "Next Question" button after answer reveal
+- Q7: show "Last Question" button (builds anticipation for the final)
+- Q8 (wager question): show "Game Recap" button after wager resolution
+- Tap-anywhere icon fully removed — no hidden tap targets remaining
+
 ### Pending Todos
 
-All three v2.1 deferred items now addressed in v2.2 roadmap:
-- [x] Fix Scaffold Bug 2 → Phase 63
-- [x] Structured officeholders in LocaleConfig → Phase 64
-- [x] Auto-regenerate expired questions → Phase 65
+None — v2.3 roadmap complete, ready to plan phases.
 
 ### Blockers/Concerns
 
@@ -133,7 +156,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: v2.2 milestone archived — all phases (63–68) complete, git tag v2.2 created
+Stopped at: v2.3 roadmap created — Phases 69–71 defined, all 15 requirements mapped
 Resume file: None
 
 Next action: `/gsd:plan-phase 69` — plan Game Flow Buttons phase

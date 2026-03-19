@@ -15,6 +15,7 @@
 - ✅ **v1.9 Geographic Expansion** — Phases 47–52 (shipped 2026-03-03)
 - ✅ **v2.0 XP Integration** — Phases 53–56 (shipped 2026-03-08)
 - ✅ **v2.1 Collection Excellence** — Phases 57–62 (shipped 2026-03-15) — [archive](milestones/v2.1-ROADMAP.md)
+- 🚧 **v2.3 UX & Rewards Polish** — Phases 69–71 (in progress)
 
 ## Phases
 
@@ -173,6 +174,52 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 
 </details>
 
+### v2.3 UX & Rewards Polish (In Progress)
+
+**Milestone Goal:** Upgrade the core game feel — replace tap-anywhere with explicit flow buttons, shift gem rewards to a score-based threshold that rewards wager strategy, and fix a leaderboard cache lag bug.
+
+#### Phase 69: Game Flow Buttons
+**Goal**: Players navigate the game through clearly labeled buttons — no tap-anywhere ambiguity
+**Depends on**: Phase 68 (complete)
+**Requirements**: FLOW-01, FLOW-02, FLOW-03, FLOW-04, FLOW-05, FLOW-06
+**Success Criteria** (what must be TRUE):
+  1. After answering questions 1–6, a "Next Question" button is visible and advances the game when tapped/clicked
+  2. After answering question 7, a "Last Question" button appears (replacing the Next Question label) to build anticipation
+  3. After answering the final question (8 / wager), a "Game Recap" button appears and navigates to the results screen
+  4. No tap-anywhere mechanic or tap icon remains anywhere in the active game screen
+  5. The full game screen — question text, answer options, timer, and navigation button — fits without scrolling on both mobile and desktop viewports
+**Plans**: TBD
+
+Plans:
+- [ ] 69-01: TBD
+
+#### Phase 70: Gem Scoring & Wager Preview
+**Goal**: Gem rewards reflect score-based skill rather than raw accuracy, and the wager screen previews the gem outcome in real time
+**Depends on**: Phase 69
+**Requirements**: GEM-01, GEM-02, GEM-03, GEM-04, WAGER-01, WAGER-02, WAGER-03
+**Success Criteria** (what must be TRUE):
+  1. A player who finishes with a final score of 1,000 or more earns 1 gem (even if they answered only 5 or 6 questions correctly)
+  2. A player who answers all 8 questions correctly earns 2 gems regardless of final score
+  3. On the wager screen, a yellow gem indicator lights up when the player's current score plus their proposed wager reaches or exceeds 1,000 — signaling they will earn a gem if they answer correctly
+  4. When the proposed wager keeps the projected total below 1,000, the gem indicator is visually dim/inactive
+  5. The results screen messaging communicates the score-based gem threshold (e.g., "Score 1,000+ points for a gem") so players understand the updated rule
+**Plans**: TBD
+
+Plans:
+- [ ] 70-01: TBD
+
+#### Phase 71: Leaderboard Cache Fix
+**Goal**: Leaderboard XP rankings reflect recently earned XP within approximately one minute
+**Depends on**: Phase 69 (independent — can execute any order after 68)
+**Requirements**: LEAD-01, LEAD-02
+**Success Criteria** (what must be TRUE):
+  1. The leaderboard backend cache TTL is set to 60 seconds (reduced from 300 seconds)
+  2. A Connected player who earns XP after completing a game sees their updated rank and XP total on the leaderboard within approximately 1 minute without any manual intervention
+**Plans**: TBD
+
+Plans:
+- [ ] 71-01: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -203,3 +250,6 @@ Full archive: [milestones/v2.1-ROADMAP.md](milestones/v2.1-ROADMAP.md)
 | 66. Gem Award Migration | v2.2 | 1/1 | Complete | 2026-03-15 |
 | 67. Leaderboard | v2.2 | 3/3 | Complete | 2026-03-17 |
 | 68. Santa Monica, CA Collection | v2.2 | 3/3 | Complete | 2026-03-18 |
+| 69. Game Flow Buttons | v2.3 | 0/TBD | Not started | - |
+| 70. Gem Scoring & Wager Preview | v2.3 | 0/TBD | Not started | - |
+| 71. Leaderboard Cache Fix | v2.3 | 0/TBD | Not started | - |
