@@ -8,21 +8,26 @@ import { db } from '../db/index.js';
 import { playerStats } from '../db/schema.js';
 import { sql } from 'drizzle-orm';
 
+export const GEM_SCORE_THRESHOLD = 1000;
+
 /**
  * Calculate XP and gems earned based on game performance
  * @param correctAnswers - Number of correct answers
  * @param totalQuestions - Total questions in the game
+ * @param finalScore - Final score achieved in the game
  * @returns XP and gems earned
  */
 export function calculateProgression(
   correctAnswers: number,
-  totalQuestions: number
+  totalQuestions: number,
+  finalScore: number
 ): { xpEarned: number; gemsEarned: number } {
   // XP formula: 50 base + 1 per correct answer
   const xpEarned = 50 + correctAnswers;
 
-  // Gems formula: 2 for perfect game, 1 if missed at most 2, 0 otherwise
-  const gemsEarned = correctAnswers === totalQuestions ? 2 : correctAnswers >= totalQuestions - 2 ? 1 : 0;
+  // Gems formula: 2 for perfect game (8/8), 1 for score >= 1000, 0 otherwise
+  const isPerfect = correctAnswers === totalQuestions;
+  const gemsEarned = isPerfect ? 2 : finalScore >= GEM_SCORE_THRESHOLD ? 1 : 0;
 
   return { xpEarned, gemsEarned };
 }
