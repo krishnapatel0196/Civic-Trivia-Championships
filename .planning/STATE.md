@@ -58,11 +58,12 @@ None.
 | 025 | Mobile-friendly admin panel — card lists, full-screen panels, responsive layouts | 2026-03-09 | [025-mobile-friendly-admin-panel](./quick/025-mobile-friendly-admin-panel/) |
 | 026 | Push 32 commits to origin/master — fix Portland image 404, ship Phases 58–59 | 2026-03-12 | [026-fix-portland-image-404-and-push-portland](./quick/026-fix-portland-image-404-and-push-portland/) |
 | 027 | Spread out gameplay layout — vertically centered on large screens, responsive on mobile/tablet | 2026-03-19 | [027-spread-out-gameplay-layout-centered-resp](./quick/027-spread-out-gameplay-layout-centered-resp/) |
+| 028 | Leaderboard show pseudonyms — all players shown, not just current user | 2026-03-19 | [028-leaderboard-show-pseudonyms](./quick/028-leaderboard-show-pseudonyms/) |
 
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Quick task 027 — complete (human-verify checkpoint approved)
+Stopped at: Quick task 028 — complete
 Resume file: None
 
 Next action: `/gsd:new-milestone` — plan next milestone
