@@ -46,7 +46,7 @@ import type { LocaleConfig } from './bloomington-in.js';
 export const indioCaConfig: LocaleConfig = {
   locale: 'indio-ca',
   name: 'Indio, CA',
-  externalIdPrefix: 'ind',
+  externalIdPrefix: 'ica',
   collectionSlug: 'indio-ca',
   targetQuestions: 130,
   batchSize: 25,
