@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 Phase: 71 of 71 — all phases complete
 Plan: N/A
 Status: v2.3 milestone complete — ready to plan next milestone
-Last activity: 2026-03-19 — Completed quick task 028: Show pseudonyms on leaderboard
+Last activity: 2026-03-20 — Completed quick task 029: Create collection for Indio, CA
 
 Progress: [██████████] v1.0–v2.3 complete (Phases 1–71)
 
@@ -60,11 +60,12 @@ None.
 | 027 | Spread out gameplay layout — vertically centered on large screens, responsive on mobile/tablet | 2026-03-19 | [027-spread-out-gameplay-layout-centered-resp](./quick/027-spread-out-gameplay-layout-centered-resp/) |
 | 028 | Show pseudonyms for all leaderboard players — not emails or real names | 2026-03-19 | [028-leaderboard-show-pseudonyms](./quick/028-leaderboard-show-pseudonyms/) |
 | 028 | Leaderboard show pseudonyms — all players shown, not just current user | 2026-03-19 | [028-leaderboard-show-pseudonyms](./quick/028-leaderboard-show-pseudonyms/) |
+| 029 | Create collection for Indio, CA — 19th active collection, 169 questions (ica prefix) | 2026-03-20 | [029-create-collection-for-indio-ca](./quick/029-create-collection-for-indio-ca/) |
 
 ## Session Continuity
 
-Last session: 2026-03-19
-Stopped at: Quick task 028 — complete
+Last session: 2026-03-20
+Stopped at: Quick task 029 — complete
 Resume file: None
 
 Next action: `/gsd:new-milestone` — plan next milestone
