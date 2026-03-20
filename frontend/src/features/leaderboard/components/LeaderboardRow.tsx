@@ -59,10 +59,7 @@ export function LeaderboardRow({ entry, isYou }: LeaderboardRowProps) {
       />
 
       {/* Avatar */}
-      {isYou
-        ? <Avatar name={entry.username || 'You'} size={28} />
-        : <div style={{ width: 28, height: 28, borderRadius: '50%', background: C.ruleLight, flexShrink: 0 }} />
-      }
+      <Avatar name={entry.username || (isYou ? 'You' : 'Player')} size={28} />
 
       {/* Username + level */}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -71,13 +68,13 @@ export function LeaderboardRow({ entry, isYou }: LeaderboardRowProps) {
             fontFamily: "'Lora', Georgia, serif",
             fontSize: '14px',
             color: isYou ? C.ink : C.muted,
-            fontStyle: isYou ? 'normal' : 'italic',
+            fontStyle: 'normal',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
           }}
         >
-          {isYou ? (entry.username || 'You') : ''}
+          {entry.username || (isYou ? 'You' : 'Player')}
         </div>
         <div
           style={{

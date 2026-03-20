@@ -66,10 +66,7 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate, isYou }: P
 
       {/* Avatar with tier dot */}
       <div style={{ position: 'relative' }}>
-        {isYou
-          ? <Avatar name={entry.username || 'You'} size={40} />
-          : <div style={{ width: 40, height: 40, borderRadius: '50%', background: `${podiumColor}40`, flexShrink: 0 }} />
-        }
+        <Avatar name={entry.username || (isYou ? 'You' : 'Player')} size={40} />
         <div
           style={{
             position: 'absolute',
@@ -90,7 +87,7 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate, isYou }: P
           fontFamily: "'Lora', Georgia, serif",
           fontSize: '13px',
           color: isYou ? C.ink : C.muted,
-          fontStyle: isYou ? 'normal' : 'italic',
+          fontStyle: 'normal',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -99,9 +96,9 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate, isYou }: P
           display: 'block',
           width: '100%',
         }}
-        title={isYou ? (entry.username || 'You') : ''}
+        title={entry.username || (isYou ? 'You' : 'Player')}
       >
-        {isYou ? (entry.username || 'You') : ''}
+        {entry.username || (isYou ? 'You' : 'Player')}
       </span>
 
       {/* Level */}
