@@ -208,7 +208,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Indio, CA',
     slug: 'indio-ca',
-    description: 'Where desert governance meets festival grounds -- how well do you know the City of Festivals?',
+    description: 'Where desert governance meets festival grounds',
     localeCode: 'en-US',
     localeName: 'Indio, California',
     iconIdentifier: 'flag-ca',
