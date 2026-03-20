@@ -205,4 +205,16 @@ export const collectionsData: NewCollection[] = [
     isActive: true,
     sortOrder: 17
   },
+  {
+    name: 'Indio, CA',
+    slug: 'indio-ca',
+    description: 'Where desert governance meets festival grounds -- how well do you know the City of Festivals?',
+    localeCode: 'en-US',
+    localeName: 'Indio, California',
+    iconIdentifier: 'flag-ca',
+    themeColor: '#D97706',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 18
+  },
 ];
