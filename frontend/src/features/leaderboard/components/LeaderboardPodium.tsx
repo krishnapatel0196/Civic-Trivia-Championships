@@ -66,7 +66,7 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate, isYou }: P
 
       {/* Avatar with tier dot */}
       <div style={{ position: 'relative' }}>
-        <Avatar name={entry.username || (isYou ? 'You' : 'Player')} size={40} />
+        <Avatar name={entry.username || (isYou ? 'You' : '')} size={40} />
         <div
           style={{
             position: 'absolute',
@@ -96,9 +96,9 @@ function PodiumCard({ entry, isCenter, animationDelay, shouldAnimate, isYou }: P
           display: 'block',
           width: '100%',
         }}
-        title={entry.username || (isYou ? 'You' : 'Player')}
+        title={entry.username || (isYou ? 'You' : '')}
       >
-        {entry.username || (isYou ? 'You' : 'Player')}
+        {entry.username || (isYou ? 'You' : '')}
       </span>
 
       {/* Level */}
