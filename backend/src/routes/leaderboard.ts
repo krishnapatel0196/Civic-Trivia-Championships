@@ -90,10 +90,10 @@ function deriveTier(verificationStatus: string | null): Tier {
 }
 
 /**
- * Returns a safe public username for display on the leaderboard.
+ * Returns a safe public pseudonym for display on the leaderboard.
  * Privacy rule: never expose email addresses on a public page.
- * Empowered accounts (when tier detection is available) will always show.
- * Until a pseudonym system exists, email-shaped display_names are blanked.
+ * display_name from connected_profiles is the user's chosen pseudonym.
+ * Email-shaped values are stripped as a safety net.
  */
 function safeUsername(displayName: string | null | undefined): string {
   if (!displayName) return '';
