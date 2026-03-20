@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 Phase: 71 of 71 — all phases complete
 Plan: N/A
 Status: v2.3 milestone complete — ready to plan next milestone
-Last activity: 2026-03-19 — v2.3 milestone archived (Phases 69–71)
+Last activity: 2026-03-19 — Completed quick task 028: Show pseudonyms on leaderboard
 
 Progress: [██████████] v1.0–v2.3 complete (Phases 1–71)
 
@@ -58,6 +58,7 @@ None.
 | 025 | Mobile-friendly admin panel — card lists, full-screen panels, responsive layouts | 2026-03-09 | [025-mobile-friendly-admin-panel](./quick/025-mobile-friendly-admin-panel/) |
 | 026 | Push 32 commits to origin/master — fix Portland image 404, ship Phases 58–59 | 2026-03-12 | [026-fix-portland-image-404-and-push-portland](./quick/026-fix-portland-image-404-and-push-portland/) |
 | 027 | Spread out gameplay layout — vertically centered on large screens, responsive on mobile/tablet | 2026-03-19 | [027-spread-out-gameplay-layout-centered-resp](./quick/027-spread-out-gameplay-layout-centered-resp/) |
+| 028 | Show pseudonyms for all leaderboard players — not emails or real names | 2026-03-19 | [028-leaderboard-show-pseudonyms](./quick/028-leaderboard-show-pseudonyms/) |
 | 028 | Leaderboard show pseudonyms — all players shown, not just current user | 2026-03-19 | [028-leaderboard-show-pseudonyms](./quick/028-leaderboard-show-pseudonyms/) |
 
 ## Session Continuity
