@@ -289,4 +289,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 24
   },
+  {
+    name: 'Tucson, AZ',
+    slug: 'tucson-az',
+    description: 'The Old Pueblo's been here longer than Arizona itself.',
+    localeCode: 'en-US',
+    localeName: 'Tucson, Arizona',
+    iconIdentifier: 'flag-az',
+    themeColor: '#CC5200',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 25
+  },
 ];
