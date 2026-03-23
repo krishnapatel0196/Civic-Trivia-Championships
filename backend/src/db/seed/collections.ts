@@ -241,4 +241,40 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 20
   },
+  {
+    name: 'Springfield, MO',
+    slug: 'springfield-mo',
+    description: 'How well do you know the Queen City of the Ozarks?',
+    localeCode: 'en-US',
+    localeName: 'Springfield, Missouri',
+    iconIdentifier: 'flag-mo',
+    themeColor: '#003DA5',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 21
+  },
+  {
+    name: 'St. Louis, MO',
+    slug: 'st-louis-mo',
+    description: 'The Gateway City is calling — are you ready to answer?',
+    localeCode: 'en-US',
+    localeName: 'St. Louis, Missouri',
+    iconIdentifier: 'flag-mo',
+    themeColor: '#BE1E2D',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 22
+  },
+  {
+    name: 'Missouri',
+    slug: 'missouri',
+    description: 'Can the Show-Me State stump you?',
+    localeCode: 'en-US',
+    localeName: 'Missouri',
+    iconIdentifier: 'flag-missouri',
+    themeColor: '#002868',
+    tier: 'state',
+    isActive: false,
+    sortOrder: 23
+  },
 ];
