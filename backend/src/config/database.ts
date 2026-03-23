@@ -11,16 +11,17 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   // SSL configuration for production
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
-  // Set search path to trivia schema; 10s statement timeout prevents hung queries from
-  // crashing the process via the pool error handler below
-  options: '-c search_path=trivia -c statement_timeout=10000',
   // Drop idle connections after 30s so Supabase never gets the chance to terminate them
   idleTimeoutMillis: 30_000,
 });
 
-// Test connection on startup
-pool.on('connect', () => {
+// On every new connection: set search_path and statement_timeout explicitly.
+// Using SET commands here is more reliable than the `options` connection parameter,
+// which Supabase's Supavisor pooler may not consistently forward on new connections.
+pool.on('connect', (client) => {
   console.log('PostgreSQL connected');
+  client.query("SET search_path TO trivia, public; SET statement_timeout TO '10s'")
+    .catch((err: Error) => console.error('Failed to set session parameters:', err));
 });
 
 pool.on('error', (err: Error & { code?: string }) => {
