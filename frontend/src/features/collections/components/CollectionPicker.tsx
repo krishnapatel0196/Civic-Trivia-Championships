@@ -9,9 +9,9 @@ interface CollectionPickerProps {
   onSelect: (id: number) => void;
 }
 
-function getCategory(slug: string): 'local' | 'state' | 'federal' {
-  if (slug === 'federal') return 'federal';
-  if (slug.endsWith('-state')) return 'state';
+function getCategory(collection: CollectionSummary): 'local' | 'state' | 'federal' {
+  if (collection.tier === 'federal') return 'federal';
+  if (collection.tier === 'state') return 'state';
   return 'local';
 }
 
@@ -29,7 +29,7 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
       category,
       label: GROUP_LABELS[category],
       collections: collections
-        .filter((c) => getCategory(c.slug) === category)
+        .filter((c) => getCategory(c) === category)
         .sort((a, b) => a.name.localeCompare(b.name)),
     }))
     .filter((g) => g.collections.length > 0);

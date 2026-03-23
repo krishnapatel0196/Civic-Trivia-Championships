@@ -232,7 +232,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Louisiana',
     slug: 'louisiana',
-    description: 'Parishes, pelicans, and the Kingfish — how deep does your Louisiana knowledge run?',
+    description: 'Parishes, pelicans, and the Kingfish await.',
     localeCode: 'en-US',
     localeName: 'Louisiana',
     iconIdentifier: 'flag-louisiana',
