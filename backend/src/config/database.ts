@@ -13,6 +13,8 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
   // Drop idle connections after 30s so Supabase never gets the chance to terminate them
   idleTimeoutMillis: 30_000,
+  // Fail fast if a connection can't be acquired — prevents indefinite hangs on cold start
+  connectionTimeoutMillis: 10_000,
 });
 
 // On every new connection: set search_path and statement_timeout explicitly.
