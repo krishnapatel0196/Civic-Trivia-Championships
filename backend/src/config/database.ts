@@ -26,6 +26,13 @@ pool.on('connect', (client) => {
     .catch((err: Error) => console.error('Failed to set session parameters:', err));
 });
 
+// Keep-alive: prevent Supavisor from dropping the idle connection.
+// Runs every 20s — under the 30s idleTimeoutMillis — so there's always
+// a warm connection ready and the first real query never pays reconnect cost.
+setInterval(() => {
+  pool.query('SELECT 1').catch(() => {});
+}, 20_000);
+
 pool.on('error', (err: Error & { code?: string }) => {
   // 57P01 = admin_shutdown: Supabase closed an idle connection — recoverable, pool will reconnect
   // 57014 = query_canceled: statement_timeout fired — recoverable, individual query throws
