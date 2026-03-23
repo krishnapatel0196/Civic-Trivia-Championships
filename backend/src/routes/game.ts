@@ -401,11 +401,13 @@ router.get('/results/:sessionId', async (req: Request, res: Response) => {
 
       // Only award gems and write stats for Connected, non-suspended users
       if (session.isConnected === true && session.isSuspended !== true) {
-        // Award gems via platform API
-        const gemIdempotencyKey = `ctc-gems-${session.sessionId}-${session.userId}`;
-        const gemResult = await awardPlatformGems(session.userId, gemsEarned, gemIdempotencyKey);
-        gemsConfirmed = gemResult.confirmed;
-        gemError = gemResult.error;
+        // Award gems via platform API (only when gems were actually earned)
+        if (gemsEarned > 0) {
+          const gemIdempotencyKey = `ctc-gems-${session.sessionId}-${session.userId}`;
+          const gemResult = await awardPlatformGems(session.userId, gemsEarned, gemIdempotencyKey);
+          gemsConfirmed = gemResult.confirmed;
+          gemError = gemResult.error;
+        }
 
         // Award XP via platform API
         const xpAmount = calculateXpAmount(results.totalCorrect, results.totalQuestions);
