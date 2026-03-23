@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc && cp -r src/data dist/ && mkdir -p dist/db/seed && cp src/db/seed/sources.json dist/db/seed/",
-    "start": "node dist/server.js",
+    "start": "node --dns-result-order=ipv4first dist/server.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit push",
     "db:seed": "tsx src/db/seed/seed.ts",
