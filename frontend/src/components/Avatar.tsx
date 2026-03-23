@@ -13,7 +13,7 @@ export function Avatar({ name, imageUrl, size = 80, onUpload }: AvatarProps) {
 
   // Extract initials (first letter of first and last name parts)
   const getInitials = (name: string): string => {
-    const parts = name.trim().split(/\s+/);
+    const parts = name.trim().split(/\s+/).filter(p => p.length > 0);
     if (parts.length === 0) return '?';
     if (parts.length === 1) return parts[0][0].toUpperCase();
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
