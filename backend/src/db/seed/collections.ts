@@ -277,4 +277,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 23
   },
+  {
+    name: 'Arizona',
+    slug: 'arizona',
+    description: '48 states entered the Union — Arizona made them wait.',
+    localeCode: 'en-US',
+    localeName: 'Arizona',
+    iconIdentifier: 'flag-arizona',
+    themeColor: '#003B7D',
+    tier: 'state',
+    isActive: false,
+    sortOrder: 24
+  },
 ];
