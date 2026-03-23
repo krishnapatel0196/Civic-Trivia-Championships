@@ -16,8 +16,60 @@
 - ✅ **v2.0 XP Integration** — Phases 53–56 (shipped 2026-03-08)
 - ✅ **v2.1 Collection Excellence** — Phases 57–62 (shipped 2026-03-15) — [archive](milestones/v2.1-ROADMAP.md)
 - ✅ **v2.3 UX & Rewards Polish** — Phases 69–71 (shipped 2026-03-19)
+- 🔄 **v2.4 Geographic Expansion + Collection UX** — Phases 72–74 (in progress)
 
 ## Phases
+
+<details>
+<summary>🔄 v2.4 Geographic Expansion + Collection UX (Phases 72–74) — IN PROGRESS</summary>
+
+### Phase 72: Arizona State Collection
+
+**Goal:** Players can choose and play the Arizona state collection in production.
+
+**Dependencies:** None — /create-collection skill operates end-to-end autonomously.
+
+**Requirements:** COLL-01
+
+**Success Criteria:**
+1. Arizona collection card appears in the State tier of the collection picker.
+2. A player can start and complete a full 8-question game from the Arizona collection.
+3. The collection has at least 80 active questions meeting the established quality bar (no blocking violations, zero active duplicates confirmed by semantic dedup).
+4. At least 15% of questions are expiring (officeholder questions with expiresAt set), or the structural ceiling is documented if that ratio cannot be reached.
+
+---
+
+### Phase 73: Tucson, AZ City Collection
+
+**Goal:** Players can choose and play the Tucson, AZ city collection in production.
+
+**Dependencies:** Phase 72 (Arizona state collection active — establishes AZ-specific quality guidance that informs Tucson locale config voice guidance and strict state-scale boundary).
+
+**Requirements:** COLL-02
+
+**Success Criteria:**
+1. Tucson collection card appears in the City tier of the collection picker.
+2. A player can start and complete a full 8-question game from the Tucson collection.
+3. The collection has at least 80 active questions with zero overlap with Phase 72 Arizona state questions (city-only scope enforced).
+4. At least 15% of questions are expiring (councilmember + mayor officeholder questions with expiresAt set).
+
+---
+
+### Phase 74: Collection Picker Search/Filter
+
+**Goal:** Players can find any collection instantly by typing, without scrolling through the full grouped list.
+
+**Dependencies:** None — pure frontend feature; no backend changes required.
+
+**Requirements:** PICK-01, PICK-02, PICK-03, PICK-04, PICK-05
+
+**Success Criteria:**
+1. A search input is visible at the top of the collection picker screen before any interaction.
+2. Typing a partial name (e.g., "ariz") shows only matching collections in a flat list, collapsing all tier groupings while the input is non-empty.
+3. Clearing the input (by deleting text or pressing the clear button) immediately restores the full grouped view with Federal / State / City sections intact.
+4. The filter is case-insensitive — typing "ARIZONA" and "arizona" produce identical results.
+
+</details>
 
 <details>
 <summary>✅ v2.2 Pipeline Intelligence (Phases 63–68) — SHIPPED 2026-03-18</summary>
@@ -216,3 +268,6 @@ Full archive: [milestones/v2.3-ROADMAP.md](milestones/v2.3-ROADMAP.md)
 | 67. Leaderboard | v2.2 | 3/3 | Complete | 2026-03-17 |
 | 68. Santa Monica, CA Collection | v2.2 | 3/3 | Complete | 2026-03-18 |
 | 69–71. UX & Rewards Polish Phases | v2.3 | 5/5 | Complete | 2026-03-19 |
+| 72. Arizona State Collection | v2.4 | 0/— | Pending | — |
+| 73. Tucson, AZ City Collection | v2.4 | 0/— | Pending | — |
+| 74. Collection Picker Search/Filter | v2.4 | 0/— | Pending | — |

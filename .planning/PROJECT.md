@@ -111,6 +111,10 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ### Active
 
+- Arizona state collection (active, playable in production) — v2.4
+- Tucson, AZ city collection (active, playable in production) — v2.4
+- Collection picker search/filter bar (type to filter all collections by name) — v2.4
+
 ### Out of Scope
 
 - Team/multiplayer mode — Phase 2
@@ -122,7 +126,7 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - Mobile native app — web-first approach
 - Video/image questions — text-only for MVP
 - Classroom dashboard — future consideration
-- Location-based auto-assignment of collections — need more collections first
+- Location-based auto-assignment of collections — deferred until Connected account address integration is ready (v2.4 ships manual filter as foundation)
 - Collection search/browse — not enough collections yet to need search
 - Volunteer question authoring portal — AI generation + manual review sufficient for now
 - Numeric/date answer questions (Wits & Wagers style) — requires multiplayer first
@@ -318,4 +322,4 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Push-based leaderboard cache invalidation (LEAD-F01) deferred | Requires cross-route coordination; 60s polling is sufficient for now | Deferred to v2.4+ |
 
 ---
-*Last updated: 2026-03-19 after v2.3 milestone*
+*Last updated: 2026-03-23 after v2.4 milestone start*

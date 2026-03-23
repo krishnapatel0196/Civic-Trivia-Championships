@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-19)
+See: .planning/PROJECT.md (updated 2026-03-23)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Planning next milestone — v2.3 complete, run `/gsd:new-milestone`
+**Current focus:** v2.4 — Geographic Expansion + Collection UX
 
 ## Current Position
 
-Phase: 71 of 71 — all phases complete
-Plan: N/A
-Status: v2.3 milestone complete — ready to plan next milestone
-Last activity: 2026-03-20 — Completed quick task 030: Reposition score popup animations to scoreboard
+Phase: 72 (next to start)
+Plan: —
+Status: Roadmap created — ready to begin Phase 72
+Last activity: 2026-03-23 — v2.4 roadmap written (Phases 72–74)
 
-Progress: [██████████] v1.0–v2.3 complete (Phases 1–71)
+Progress: [██████████] v1.0–v2.3 complete (Phases 1–71) | v2.4 roadmap ready (Phases 72–74)
 
 **Milestone history:**
 - v1.0–v2.3 (Phases 1–71): All Complete — see .planning/MILESTONES.md
@@ -24,7 +24,7 @@ Progress: [██████████] v1.0–v2.3 complete (Phases 1–71)
 - Backend LIVE: https://civic-trivia-backend.onrender.com
 - Database: Supabase shared project (kxsdzaojfaibhuzmclfq) — trivia schema deployed, TypeScript types generated
 - Redis: Upstash (stirred-pika-7510)
-- Active collections (18 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR, Oregon, Washington DC, Biloxi MS, Mississippi, Santa Monica CA
+- Active collections (24 total): Federal, Bloomington IN, Fremont CA, Los Angeles CA, Indiana, California, Norwich England, Cambridge MA, Massachusetts, Plano TX, Texas, Portland OR, Oregon, Washington DC, Biloxi MS, Mississippi, Santa Monica CA, Indio CA, Alexandria LA, Louisiana, Springfield MO, St. Louis MO, Missouri
 
 ## Accumulated Context
 
@@ -42,7 +42,7 @@ v2.3 decisions archived to PROJECT.md. Key decisions from v2.3 milestone (2026-0
 
 ### Pending Todos
 
-None — v2.3 complete.
+- trivia_service DB role needs password reset via Supabase dashboard to work with pooler (currently using postgres superuser — functional but not ideal long-term)
 
 ### Blockers/Concerns
 
@@ -65,8 +65,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-20
-Stopped at: Quick task 030 — complete
+Last session: 2026-03-23
+Stopped at: v2.4 roadmap created (Phases 72–74)
 Resume file: None
 
-Next action: `/gsd:new-milestone` — plan next milestone
+Next action: `/gsd:plan-phase 72` — Arizona State Collection

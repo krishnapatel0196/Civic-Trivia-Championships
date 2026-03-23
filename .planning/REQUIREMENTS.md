@@ -1,0 +1,56 @@
+# Requirements: Civic Trivia Championship v2.4
+
+**Defined:** 2026-03-23
+**Core Value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
+
+## v2.4 Requirements
+
+### Collections
+
+- [ ] **COLL-01**: Arizona state collection is created, activated, and playable in production
+- [ ] **COLL-02**: Tucson, AZ city collection is created, activated, and playable in production
+
+### Collection Picker UX
+
+- [ ] **PICK-01**: A search/filter bar is visible at the top of the collection picker screen
+- [ ] **PICK-02**: Typing in the search bar filters all collections by name (case-insensitive, across all tiers)
+- [ ] **PICK-03**: When the search input is empty, all collections are shown (default view unchanged)
+- [ ] **PICK-04**: Filtering collapses tier grouping — matching collections from any tier appear in a single flat list
+- [ ] **PICK-05**: Clearing the search input restores the full grouped collection view
+
+## Future Requirements (deferred)
+
+### Location-Based Personalization
+
+- **LOC-01**: Connected players can see collections relevant to their registered address automatically surfaced
+- **LOC-02**: Location-based collection ranking uses address stored in Connected account
+- **LOC-03**: Manual filter (PICK-01–05) remains available as fallback when no address is set
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Location-based auto-assignment | Requires Connected account address integration — deferred to future milestone; manual filter ships now as foundation |
+| Collection recommendations / "you might like" | Not enough user behavior data yet |
+| Collection favorites / pinning | UX complexity not justified at 23 collections |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| COLL-01 | Phase 72 | Pending |
+| COLL-02 | Phase 73 | Pending |
+| PICK-01 | Phase 74 | Pending |
+| PICK-02 | Phase 74 | Pending |
+| PICK-03 | Phase 74 | Pending |
+| PICK-04 | Phase 74 | Pending |
+| PICK-05 | Phase 74 | Pending |
+
+**Coverage:**
+- v2.4 requirements: 7 total
+- Mapped to phases: 7
+- Unmapped: 0 ✓
+
+---
+*Requirements defined: 2026-03-23*
+*Last updated: 2026-03-23 — traceability confirmed, all phases Pending*
