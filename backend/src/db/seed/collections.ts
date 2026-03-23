@@ -229,4 +229,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 19
   },
+  {
+    name: 'Louisiana',
+    slug: 'louisiana',
+    description: 'Parishes, pelicans, and the Kingfish — how deep does your Louisiana knowledge run?',
+    localeCode: 'en-US',
+    localeName: 'Louisiana',
+    iconIdentifier: 'flag-louisiana',
+    themeColor: '#003087',
+    tier: 'state',
+    isActive: false,
+    sortOrder: 20
+  },
 ];
