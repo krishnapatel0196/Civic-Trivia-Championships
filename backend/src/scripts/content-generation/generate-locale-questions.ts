@@ -110,6 +110,7 @@ async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
     'biloxi-ms': () => import('./locale-configs/biloxi-ms.js') as Promise<{ biloxiMsConfig: LocaleConfig }>,
       'santa-monica-ca': () => import('./locale-configs/santa-monica-ca.js') as Promise<{ santaMonicaCaConfig: LocaleConfig }>,
       'indio-ca': () => import('./locale-configs/indio-ca.js') as Promise<{ indioCaConfig: LocaleConfig }>,
+      'alexandria-la': () => import('./locale-configs/alexandria-la.js') as Promise<{ alexandriaLaConfig: LocaleConfig }>,
   };
 
   const loader = supportedLocales[locale];
@@ -119,7 +120,7 @@ async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
     const module = await loader();
 
     // Extract the config from the module (different export names per file)
-    const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig', 'cambridgeMaConfig', 'planoTxConfig', 'portlandOrConfig', 'washingtonDcConfig', 'biloxiMsConfig', 'santaMonicaCaConfig', 'indioCaConfig'];
+    const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig', 'cambridgeMaConfig', 'planoTxConfig', 'portlandOrConfig', 'washingtonDcConfig', 'biloxiMsConfig', 'santaMonicaCaConfig', 'indioCaConfig', 'alexandriaLaConfig'];
     for (const key of configKeys) {
       if (module[key]) return { config: module[key] as LocaleConfig };
     }

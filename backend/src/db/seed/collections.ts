@@ -217,4 +217,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 18
   },
+  {
+    name: 'Alexandria, LA',
+    slug: 'alexandria-la',
+    description: 'Think you know the Heart of Louisiana?',
+    localeCode: 'en-US',
+    localeName: 'Alexandria, Louisiana',
+    iconIdentifier: 'flag-la',
+    themeColor: '#1A4B8E',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 19
+  },
 ];
