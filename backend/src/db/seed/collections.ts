@@ -292,7 +292,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Tucson, AZ',
     slug: 'tucson-az',
-    description: 'The Old Pueblo's been here longer than Arizona itself.',
+    description: 'Older than Arizona itself — do you know the Old Pueblo?',
     localeCode: 'en-US',
     localeName: 'Tucson, Arizona',
     iconIdentifier: 'flag-az',
@@ -300,5 +300,17 @@ export const collectionsData: NewCollection[] = [
     tier: 'city',
     isActive: false,
     sortOrder: 25
+  },
+  {
+    name: 'Phoenix, AZ',
+    slug: 'phoenix-az',
+    description: 'Rise from the ashes — how well do you know Phoenix?',
+    localeCode: 'en-US',
+    localeName: 'Phoenix, Arizona',
+    iconIdentifier: 'flag-az',
+    themeColor: '#8C1D40',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 26
   },
 ];

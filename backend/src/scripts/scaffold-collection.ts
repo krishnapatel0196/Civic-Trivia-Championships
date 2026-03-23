@@ -142,7 +142,7 @@ Usage: npx tsx src/scripts/scaffold-collection.ts [options]
 Required:
   --name <string>        Display name (e.g. "Austin, TX")
   --slug <string>        URL slug (e.g. austin-tx)  [a-z0-9-]
-  --prefix <string>      External ID prefix, 2–4 chars (e.g. aut)  [a-z]{2,4}
+  --prefix <string>      External ID prefix, 2–5 chars (e.g. austx)  [a-z]{2,5}
   --theme <hex>          Theme color as 6-digit hex (e.g. "#7C3AED")
 
 Optional:
@@ -173,8 +173,8 @@ function validate(args: ParsedArgs): void {
     errors.push(`--slug "${args.slug}" must match /^[a-z0-9-]+$/`);
   }
 
-  if (args.prefix && !/^[a-z]{2,4}$/.test(args.prefix)) {
-    errors.push(`--prefix "${args.prefix}" must match /^[a-z]{2,4}$/ (2–4 lowercase letters)`);
+  if (args.prefix && !/^[a-z]{2,5}$/.test(args.prefix)) {
+    errors.push(`--prefix "${args.prefix}" must match /^[a-z]{2,5}$/ (2–5 lowercase letters)`);
   }
 
   if (args.theme && !/^#[0-9A-Fa-f]{6}$/.test(args.theme)) {

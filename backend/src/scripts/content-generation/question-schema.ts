@@ -9,8 +9,8 @@ export const QuestionSchema = z.object({
   externalId: z
     .string()
     .regex(
-      /^[a-z]{2,4}-\d{3}$/,
-      'externalId must match pattern like "bli-001" or "lac-001"'
+      /^[a-z]{2,5}-\d{3}$/,
+      'externalId must match pattern like "bli-001", "lac-001", or "alxla-001"'
     ),
 
   // Question text

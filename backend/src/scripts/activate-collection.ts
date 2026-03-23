@@ -82,8 +82,8 @@ function validate(args: ParsedArgs): void {
 
   if (!args.prefix) {
     errors.push('--prefix is required');
-  } else if (!/^[a-z]{2,4}$/.test(args.prefix)) {
-    errors.push(`--prefix "${args.prefix}" must match /^[a-z]{2,4}$/ (2–4 lowercase letters)`);
+  } else if (!/^[a-z]{2,5}$/.test(args.prefix)) {
+    errors.push(`--prefix "${args.prefix}" must match /^[a-z]{2,5}$/ (2–5 lowercase letters)`);
   }
 
   if (args.slug && args.slug.trim() !== '') {
