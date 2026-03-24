@@ -63,11 +63,12 @@ None.
 | 028 | Show pseudonyms for all leaderboard players — not emails or real names | 2026-03-19 | [028-leaderboard-show-pseudonyms](./quick/028-leaderboard-show-pseudonyms/) |
 | 029 | Create collection for Indio, CA — 19th active collection, 169 questions (ica prefix) | 2026-03-20 | [029-create-collection-for-indio-ca](./quick/029-create-collection-for-indio-ca/) |
 | 030 | Reposition score popup animations near top-left scoreboard (from screen-center) | 2026-03-20 | [030-points-speed-bonus-animate-over-scorebo](./quick/030-points-speed-bonus-animate-over-scorebo/) |
+| 031 | Add admin archive question button in game — in-game moderation with verdict modal | 2026-03-24 | [031-add-admin-archive-question-button-in-gam](./quick/031-add-admin-archive-question-button-in-gam/) |
 
 ## Session Continuity
 
-Last session: 2026-03-23
-Stopped at: v2.4 milestone archived — all phases shipped and archived
+Last session: 2026-03-24
+Stopped at: Quick task 031 complete — admin archive button in game
 Resume file: None
 
 Next action: `/gsd:new-milestone` — start v2.5 milestone planning
