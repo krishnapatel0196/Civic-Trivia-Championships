@@ -325,4 +325,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 27
   },
+  {
+    name: 'North Carolina',
+    slug: 'north-carolina',
+    description: 'First in Freedom — how well do you know North Carolina?',
+    localeCode: 'en-US',
+    localeName: 'North Carolina',
+    iconIdentifier: 'flag-carolina',
+    themeColor: '#CC0000',
+    tier: 'state',
+    isActive: false,
+    sortOrder: 28
+  },
 ];
