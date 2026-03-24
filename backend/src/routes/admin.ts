@@ -195,6 +195,8 @@ router.post('/questions/:id/renew', async (req: Request, res: Response) => {
 
 /**
  * POST /questions/:id/archive - Permanently retire a question
+ * Accepts optional body: { verdict?: string }
+ * Records verdict and archiving admin's user ID in expirationHistory.
  */
 router.post('/questions/:id/archive', async (req: Request, res: Response) => {
   try {
@@ -214,10 +216,12 @@ router.post('/questions/:id/archive', async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Question not found' });
     }
 
-    // Build history entry
+    // Build history entry with optional verdict and archivedBy
     const historyEntry = {
       action: 'archived' as const,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      verdict: req.body.verdict || null,
+      archivedBy: req.userId || null,
     };
 
     // Update question: set status to 'archived', append to history
@@ -234,6 +238,53 @@ router.post('/questions/:id/archive', async (req: Request, res: Response) => {
     res.json(updatedQuestion);
   } catch (error) {
     console.error('Error archiving question:', error);
+    res.status(500).json({ error: 'Failed to archive question' });
+  }
+});
+
+/**
+ * POST /questions/by-external-id/:externalId/archive - Archive a question by externalId
+ * Used by the game frontend which only has externalId (e.g. "fre-001"), not numeric DB id.
+ * Accepts optional body: { verdict?: string }
+ * Records verdict and archiving admin's user ID in expirationHistory.
+ */
+router.post('/questions/by-external-id/:externalId/archive', async (req: Request, res: Response) => {
+  try {
+    const { externalId } = req.params;
+
+    // Fetch current question by externalId
+    const [question] = await db
+      .select()
+      .from(questions)
+      .where(eq(questions.externalId, externalId))
+      .limit(1);
+
+    if (!question) {
+      return res.status(404).json({ error: 'Question not found' });
+    }
+
+    // Build history entry with optional verdict and archivedBy
+    const historyEntry = {
+      action: 'archived' as const,
+      timestamp: new Date().toISOString(),
+      verdict: req.body.verdict || null,
+      archivedBy: req.userId || null,
+    };
+
+    // Update question: set status to 'archived', append to history
+    const [updatedQuestion] = await db
+      .update(questions)
+      .set({
+        status: 'archived',
+        expirationHistory: sql`${questions.expirationHistory} || ${JSON.stringify([historyEntry])}::jsonb`,
+        updatedAt: new Date()
+      })
+      .where(eq(questions.externalId, externalId))
+      .returning();
+
+    res.json(updatedQuestion);
+  } catch (error) {
+    console.error('Error archiving question by external ID:', error);
     res.status(500).json({ error: 'Failed to archive question' });
   }
 });
