@@ -16,7 +16,7 @@
 - ✅ **v2.0 XP Integration** — Phases 53–56 (shipped 2026-03-08)
 - ✅ **v2.1 Collection Excellence** — Phases 57–62 (shipped 2026-03-15) — [archive](milestones/v2.1-ROADMAP.md)
 - ✅ **v2.3 UX & Rewards Polish** — Phases 69–71 (shipped 2026-03-19)
-- 🔄 **v2.4 Geographic Expansion + Collection UX** — Phases 72–74 (in progress)
+- ✅ **v2.4 Geographic Expansion + Collection UX** — Phases 72–74 (shipped 2026-03-23) — [archive](milestones/v2.4-ROADMAP.md)
 
 ## Phases
 

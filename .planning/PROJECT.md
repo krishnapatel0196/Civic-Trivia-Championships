@@ -109,11 +109,14 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - ✓ Wager screen yellow gem indicator lights up when projected score (currentScore + proposedWager) ≥ 1,000 — v2.3
 - ✓ Leaderboard reflects XP within ~1 minute (CACHE_TTL reduced 300s → 60s) — v2.3
 
+- ✓ Arizona state collection — 98 active questions, 15.3% expiring, playable in production — v2.4
+- ✓ Tucson, AZ city collection — 96 active questions, zero overlap with AZ state questions, playable in production — v2.4
+- ✓ Phoenix, AZ city collection (bonus) — 91 active questions, playable in production — v2.4
+- ✓ Collection picker search/filter — debounced text input (150ms) filters 26+ collections by name; flat grid when filtering, full Federal/State/Local grouped view when cleared; case-insensitive substring match — v2.4
+
 ### Active
 
-- Arizona state collection (active, playable in production) — v2.4
-- Tucson, AZ city collection (active, playable in production) — v2.4
-- Collection picker search/filter bar (type to filter all collections by name) — v2.4
+_(defined in next milestone — run `/gsd:new-milestone` to set requirements)_
 
 ### Out of Scope
 
@@ -126,8 +129,8 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 - Mobile native app — web-first approach
 - Video/image questions — text-only for MVP
 - Classroom dashboard — future consideration
-- Location-based auto-assignment of collections — deferred until Connected account address integration is ready (v2.4 ships manual filter as foundation)
-- Collection search/browse — not enough collections yet to need search
+- Location-based auto-assignment of collections — deferred until Connected account address integration is ready (manual search filter shipped v2.4 as foundation)
+- Collection recommendations / "you might like" — not enough user behavior data yet
 - Volunteer question authoring portal — AI generation + manual review sufficient for now
 - Numeric/date answer questions (Wits & Wagers style) — requires multiplayer first
 - Auto-difficulty calibration — collecting telemetry data, calibrate later
@@ -136,10 +139,12 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ## Context
 
-**Current state (v2.3 shipped 2026-03-19):**
-- 18 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60), Portland OR (83), Oregon (81), Washington DC (154), Biloxi MS (170), Mississippi (86), Santa Monica CA (84) — all on shared Supabase project (kxsdzaojfaibhuzmclfq); ~2,142 active questions
+**Current state (v2.4 shipped 2026-03-23):**
+- 26 collections active: Federal, Bloomington IN, Los Angeles CA, Indiana, California, Fremont CA, Norwich UK, Cambridge MA (125), Massachusetts (90), Plano TX (85), Texas (60), Portland OR (83), Oregon (81), Washington DC (154), Biloxi MS (170), Mississippi (86), Santa Monica CA (84), Indio CA (169), Alexandria LA, Louisiana, Springfield MO, St. Louis MO, Missouri, Arizona (98), Tucson AZ (96), Phoenix AZ (91) — all on shared Supabase project (kxsdzaojfaibhuzmclfq); ~2,967 active questions
+- Collection picker: search/filter bar at top — debounced (150ms), case-insensitive substring match on collection name; flat grid when filtering, full Federal/State/Local grouped view when cleared; empty state for zero matches
+- `/create-collection` skill proven autonomous end-to-end — AZ collections created with no manual steps; DB state is authoritative verification record (no phase dirs required for skill-created collections)
 - Game flow: `NextStepButton` component with contextual labels (NEXT QUESTION / LAST QUESTION / GAME RECAP); tap-anywhere fully removed; timer shrinks to 56px during reveal to prevent mobile scroll
-- Gem scoring: `GEM_SCORE_THRESHOLD = 1000` in `progressionService.ts`; 1 gem when finalScore ≥ 1000; 2 gems for perfect 8/8; wager strategy meaningful for gem earning
+- Gem scoring: `GEM_SCORE_THRESHOLD = 1000` in `progressionService.ts`; 1 gem when finalScore ≥ 1000; 2 gems for perfect 8/8; wager strategy meaningful for gem earning; gem award API call skipped when gemsEarned === 0
 - Wager preview: gem indicator on wager screen (gold/dim Framer Motion transition) signals gem outcome before final answer
 - Leaderboard cache: CACHE_TTL = 60s (down from 300s) — XP rankings reflect earned XP within ~1 minute
 - Content ops pipeline: `generateReplacement()` wired into hourly expiry cron — archive-first, topic-matching, seeded as active; collections self-heal after question expiry
@@ -322,4 +327,13 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 | Push-based leaderboard cache invalidation (LEAD-F01) deferred | Requires cross-route coordination; 60s polling is sufficient for now | Deferred to v2.4+ |
 
 ---
-*Last updated: 2026-03-23 after v2.4 milestone start*
+| No auto-focus on CollectionPicker search input | Mobile keyboard would pop up unexpectedly on collection screen load; explicit tap to search is correct | Good — avoids jarring UX |
+| 150ms debounce on search input (useDebounce) | Fast enough to feel responsive; avoids per-keystroke re-renders on 26+ collections | Good — minimal complexity |
+| Inline styles only on new CollectionPicker elements | Consistent with existing component style approach (no Tailwind on this component) | Good — style consistency |
+| Flat grid when filtering — no category headers | Cleaner scan when player is looking for a specific collection; grouped view preserved for default browse | Good — correct UX semantics |
+| Search matches name field only — "ariz" matches "Arizona", not "Tucson, AZ" | Substring match on collection.name; state abbreviations in city names require typing "az", "tucson", or "phoenix" — correct by implementation | Good — documented; no code change needed |
+| Skip gem award API call when gemsEarned === 0 | Avoids unnecessary HTTP POST to accounts platform; 0-gem games are common (score < 1000, not perfect) | Good — reduces external calls |
+| DB state as authoritative verification for skill-created collections | /create-collection phases have no phase dirs; DB query (active count, tier, is_active, collection_questions rows) is the execution record | Good — establishes verification pattern for autonomous skill output |
+
+---
+*Last updated: 2026-03-23 after v2.4 milestone*

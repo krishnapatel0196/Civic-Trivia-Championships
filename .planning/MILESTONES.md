@@ -1,5 +1,33 @@
 # Project Milestones: Civic Trivia Championship
 
+## v2.4 Geographic Expansion + Collection UX (Shipped: 2026-03-23)
+
+**Delivered:** Added Arizona state collection, Tucson AZ city collection, and Phoenix AZ city collection (bonus), growing the library to 26 active collections; added a debounced search/filter bar to the collection picker so players can find any collection instantly by typing.
+
+**Phases completed:** 72–74 (3 plans total)
+
+**Key accomplishments:**
+
+- Arizona State Collection — 98 active questions, 15.3% expiring (meets 15% target), tier=state, playable in production; first AZ-area collection to anchor future city collections
+- Tucson, AZ City Collection — 96 active questions, tier=city, zero overlap with Arizona state questions (city-only scope enforced), playable in production
+- Phoenix, AZ City Collection (bonus) — 91 active questions added within milestone, growing active collections to 26 total
+- Collection picker search/filter — debounced search input (150ms) added to CollectionPicker; typing produces flat filtered grid, clearing restores full Federal/State/Local grouped view; case-insensitive substring match; empty-state paragraph for zero matches
+- `/create-collection` skill fully proven autonomous end-to-end — all three AZ collections created without manual steps; DB state serves as authoritative verification record
+
+**Stats:**
+
+- 21 files changed (+1,237 / -59 lines)
+- ~45,500 lines TypeScript total (frontend ~14,000 + backend ~31,500)
+- 3 phases, 3 plans, 7 requirements delivered
+- 1 day (2026-03-23)
+- 26 active collections, ~2,967 active questions
+
+**Git range:** `4cfbb93` (feat: Arizona state collection) → `829ba8a` (docs: phases 72-73 complete)
+
+**What's next:** TBD — start with `/gsd:new-milestone`
+
+---
+
 ## v2.3 UX & Rewards Polish (Shipped: 2026-03-19)
 
 **Delivered:** Replaced tap-anywhere game navigation with explicit contextual buttons, shifted gem rewards to a score-based threshold (1,000+ points) that makes wager strategy meaningful, added a real-time gem indicator on the wager screen, and fixed a 5-minute leaderboard cache lag down to ~1 minute.
