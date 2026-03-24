@@ -66,7 +66,7 @@
 **Plans:** 1 plan
 
 Plans:
-- [ ] 74-01-PLAN.md — Add search input and filter logic to CollectionPicker
+- [x] 74-01-PLAN.md — Add search input and filter logic to CollectionPicker
 
 **Success Criteria:**
 1. A search input is visible at the top of the collection picker screen before any interaction.
@@ -275,4 +275,4 @@ Full archive: [milestones/v2.3-ROADMAP.md](milestones/v2.3-ROADMAP.md)
 | 69–71. UX & Rewards Polish Phases | v2.3 | 5/5 | Complete | 2026-03-19 |
 | 72. Arizona State Collection | v2.4 | 0/— | Pending | — |
 | 73. Tucson, AZ City Collection | v2.4 | 0/— | Pending | — |
-| 74. Collection Picker Search/Filter | v2.4 | 0/1 | Planned | — |
+| 74. Collection Picker Search/Filter | v2.4 | 1/1 | Complete | 2026-03-23 |

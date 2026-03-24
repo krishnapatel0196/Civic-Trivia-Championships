@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 
 ## Current Position
 
-Phase: 74 (collection-picker-search-filter) — In progress
-Plan: 01 of ? completed
-Status: Plan 74-01 complete — search/filter shipped
-Last activity: 2026-03-23 — Completed 74-01-PLAN.md (CollectionPicker search/filter)
+Phase: 74 (complete) — Phase 72 next to start
+Plan: —
+Status: Phase 74 complete and verified (goal passed 4/4)
+Last activity: 2026-03-23 — Phase 74 Collection Picker Search/Filter executed and verified
 
-Progress: [██████████] v1.0–v2.3 complete (Phases 1–71) | v2.4 in progress (Phase 74 plan 01 done)
+Progress: [██████████] v1.0–v2.3 complete (Phases 1–71) | v2.4 in progress — Phase 74 complete, Phases 72–73 pending
 
 **Milestone history:**
 - v1.0–v2.3 (Phases 1–71): All Complete — see .planning/MILESTONES.md
@@ -66,7 +66,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-23
-Stopped at: Completed 74-01-PLAN.md — CollectionPicker search/filter input
+Stopped at: Phase 74 complete — Collection Picker Search/Filter verified and shipped
 Resume file: None
 
-Next action: Continue Phase 74 if more plans exist, or mark phase complete
+Next action: `/gsd:plan-phase 72` — Arizona State Collection

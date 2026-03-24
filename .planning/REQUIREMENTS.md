@@ -12,11 +12,11 @@
 
 ### Collection Picker UX
 
-- [ ] **PICK-01**: A search/filter bar is visible at the top of the collection picker screen
-- [ ] **PICK-02**: Typing in the search bar filters all collections by name (case-insensitive, across all tiers)
-- [ ] **PICK-03**: When the search input is empty, all collections are shown (default view unchanged)
-- [ ] **PICK-04**: Filtering collapses tier grouping — matching collections from any tier appear in a single flat list
-- [ ] **PICK-05**: Clearing the search input restores the full grouped collection view
+- [x] **PICK-01**: A search/filter bar is visible at the top of the collection picker screen
+- [x] **PICK-02**: Typing in the search bar filters all collections by name (case-insensitive, across all tiers)
+- [x] **PICK-03**: When the search input is empty, all collections are shown (default view unchanged)
+- [x] **PICK-04**: Filtering collapses tier grouping — matching collections from any tier appear in a single flat list
+- [x] **PICK-05**: Clearing the search input restores the full grouped collection view
 
 ## Future Requirements (deferred)
 
@@ -40,11 +40,11 @@
 |-------------|-------|--------|
 | COLL-01 | Phase 72 | Pending |
 | COLL-02 | Phase 73 | Pending |
-| PICK-01 | Phase 74 | Pending |
-| PICK-02 | Phase 74 | Pending |
-| PICK-03 | Phase 74 | Pending |
-| PICK-04 | Phase 74 | Pending |
-| PICK-05 | Phase 74 | Pending |
+| PICK-01 | Phase 74 | Complete |
+| PICK-02 | Phase 74 | Complete |
+| PICK-03 | Phase 74 | Complete |
+| PICK-04 | Phase 74 | Complete |
+| PICK-05 | Phase 74 | Complete |
 
 **Coverage:**
 - v2.4 requirements: 7 total
