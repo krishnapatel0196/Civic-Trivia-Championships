@@ -14,6 +14,7 @@ import { FinalQuestionAnnouncement } from './FinalQuestionAnnouncement';
 import { WagerScreen } from './WagerScreen';
 import { PauseOverlay } from './PauseOverlay';
 import { FlagButton } from './FlagButton';
+import { AdminArchiveButton } from './AdminArchiveButton';
 import { CelebrationEffects } from '../../../components/animations/CelebrationEffects';
 import { DegradedBanner } from '../../../components/DegradedBanner';
 import { useAuthStore } from '../../../store/authStore';
@@ -51,6 +52,7 @@ interface GameScreenProps {
   xpData: import('../../../hooks/usePlayerXp').PlayerXpData | null;
   isXpLoading: boolean;
   isXpConnected: boolean;
+  onArchiveQuestion?: (questionId: string) => void;
 }
 
 export function GameScreen({
@@ -75,6 +77,7 @@ export function GameScreen({
   xpData,
   isXpLoading,
   isXpConnected,
+  onArchiveQuestion,
 }: GameScreenProps) {
 
   const [showTimeoutFlash, setShowTimeoutFlash] = useState(false);
@@ -92,6 +95,10 @@ export function GameScreen({
 
   // Check if user is authenticated for flag button visibility
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
+  // Admin state for archive button
+  const isAdmin = useAuthStore((s) => s.isAdmin);
+  const accessToken = useAuthStore((s) => s.accessToken);
 
   // Confetti store for celebrations
   const { fireSmallBurst, fireMediumBurst } = useConfettiStore();
@@ -570,6 +577,17 @@ export function GameScreen({
                     flagged={flaggedQuestions.has(currentQuestion.id)}
                     disabled={isRateLimited}
                     onToggle={() => onFlagToggle(currentQuestion.id)}
+                  />
+                </div>
+              )}
+
+              {/* Admin archive button - shown during reveal for admin users */}
+              {state.phase === 'revealing' && isAdmin && currentQuestion && accessToken && (
+                <div className="absolute top-2 left-2 z-10" onClick={(e) => e.stopPropagation()}>
+                  <AdminArchiveButton
+                    questionId={currentQuestion.id}
+                    onArchived={() => onArchiveQuestion?.(currentQuestion.id)}
+                    accessToken={accessToken}
                   />
                 </div>
               )}

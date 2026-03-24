@@ -46,6 +46,9 @@ export function Game() {
 
   // Flag state management
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<string>>(new Set());
+
+  // Archived question tracking (admin only — purely for local UI feedback; read when badge display is added)
+  const [, setArchivedQuestions] = useState<Set<string>>(new Set());
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [showElaborationScreen, setShowElaborationScreen] = useState(false);
   const [elaborationComplete, setElaborationComplete] = useState(false);
@@ -70,6 +73,7 @@ export function Game() {
   useEffect(() => {
     if (state.phase === 'starting' || (state.phase === 'answering' && state.currentQuestionIndex === 0)) {
       setFlaggedQuestions(new Set());
+      setArchivedQuestions(new Set());
       setIsRateLimited(false);
       setShowElaborationScreen(false);
       setElaborationComplete(false);
@@ -102,6 +106,11 @@ export function Game() {
 
   // Wrapper for GameScreen startGame that passes collectionId
   const handleStartGame = () => startGame(collectionId);
+
+  // Handle admin archive — track locally for potential future UI feedback
+  const handleArchiveQuestion = (questionId: string) => {
+    setArchivedQuestions(prev => new Set(prev).add(questionId));
+  };
 
   // Handle elaboration submission
   const handleSubmitElaborations = async (elaborations: Array<{
@@ -310,6 +319,7 @@ export function Game() {
       xpData={xpData}
       isXpLoading={isXpLoading}
       isXpConnected={isXpConnected}
+      onArchiveQuestion={handleArchiveQuestion}
     />
   );
 }
