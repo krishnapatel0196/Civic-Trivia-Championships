@@ -21,7 +21,7 @@
 ## Phases
 
 <details>
-<summary>🔄 v2.4 Geographic Expansion + Collection UX (Phases 72–74) — IN PROGRESS</summary>
+<summary>✅ v2.4 Geographic Expansion + Collection UX (Phases 72–74) — SHIPPED 2026-03-23</summary>
 
 ### Phase 72: Arizona State Collection
 
@@ -273,6 +273,6 @@ Full archive: [milestones/v2.3-ROADMAP.md](milestones/v2.3-ROADMAP.md)
 | 67. Leaderboard | v2.2 | 3/3 | Complete | 2026-03-17 |
 | 68. Santa Monica, CA Collection | v2.2 | 3/3 | Complete | 2026-03-18 |
 | 69–71. UX & Rewards Polish Phases | v2.3 | 5/5 | Complete | 2026-03-19 |
-| 72. Arizona State Collection | v2.4 | 0/— | Pending | — |
-| 73. Tucson, AZ City Collection | v2.4 | 0/— | Pending | — |
+| 72. Arizona State Collection | v2.4 | 1/1 | Complete | 2026-03-23 |
+| 73. Tucson, AZ City Collection | v2.4 | 1/1 | Complete | 2026-03-23 |
 | 74. Collection Picker Search/Filter | v2.4 | 1/1 | Complete | 2026-03-23 |

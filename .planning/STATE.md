@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 
 ## Current Position
 
-Phase: 74 (complete) — Phase 72 next to start
+Phase: 74 (complete) — v2.4 milestone complete
 Plan: —
-Status: Phase 74 complete and verified (goal passed 4/4)
-Last activity: 2026-03-23 — Phase 74 Collection Picker Search/Filter executed and verified
+Status: All v2.4 phases complete (72, 73, 74)
+Last activity: 2026-03-23 — Phases 72 (Arizona), 73 (Tucson AZ), 74 (Collection Picker Search) all shipped
 
-Progress: [██████████] v1.0–v2.3 complete (Phases 1–71) | v2.4 in progress — Phase 74 complete, Phases 72–73 pending
+Progress: [██████████] v1.0–v2.4 complete (Phases 1–74) | Phoenix AZ also added via create-collection (bonus collection)
 
 **Milestone history:**
 - v1.0–v2.3 (Phases 1–71): All Complete — see .planning/MILESTONES.md
@@ -66,7 +66,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-23
-Stopped at: Phase 74 complete — Collection Picker Search/Filter verified and shipped
+Stopped at: v2.4 milestone complete — all phases shipped (72 Arizona, 73 Tucson AZ, 74 Collection Picker Search/Filter)
 Resume file: None
 
-Next action: `/gsd:plan-phase 72` — Arizona State Collection
+Next action: `/gsd:audit-milestone` — audit v2.4 before archiving

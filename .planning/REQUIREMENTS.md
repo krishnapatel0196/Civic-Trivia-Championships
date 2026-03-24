@@ -7,8 +7,8 @@
 
 ### Collections
 
-- [ ] **COLL-01**: Arizona state collection is created, activated, and playable in production
-- [ ] **COLL-02**: Tucson, AZ city collection is created, activated, and playable in production
+- [x] **COLL-01**: Arizona state collection is created, activated, and playable in production
+- [x] **COLL-02**: Tucson, AZ city collection is created, activated, and playable in production
 
 ### Collection Picker UX
 
@@ -38,8 +38,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| COLL-01 | Phase 72 | Pending |
-| COLL-02 | Phase 73 | Pending |
+| COLL-01 | Phase 72 | Complete |
+| COLL-02 | Phase 73 | Complete |
 | PICK-01 | Phase 74 | Complete |
 | PICK-02 | Phase 74 | Complete |
 | PICK-03 | Phase 74 | Complete |
