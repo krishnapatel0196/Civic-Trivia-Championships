@@ -313,4 +313,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 26
   },
+  {
+    name: 'Asheville, NC',
+    slug: 'asheville-nc',
+    description: 'How well do you really know the Land of the Sky?',
+    localeCode: 'en-US',
+    localeName: 'Asheville, North Carolina',
+    iconIdentifier: 'flag-nc',
+    themeColor: '#4A6FA5',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 27
+  },
 ];
