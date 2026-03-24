@@ -1,7 +1,7 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
-import { authService } from '../../services/authService';
+import { ACCOUNTS_API_URL } from '../../services/accountsApi';
 import { usePlayerXp } from '../../hooks/usePlayerXp';
 import { useTheme } from '../../hooks/useTheme';
 import { useTierColor } from '../../hooks/useTierColor';
@@ -9,8 +9,9 @@ import { useTierColor } from '../../hooks/useTierColor';
 export function Header() {
   const { user, accessToken, clearAuth, isAuthenticated, displayName } = useAuthStore();
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen]   = useState(false);
-  const menuRef                    = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen]             = useState(false);
+  const [showSignedOutToast, setShowSignedOutToast] = useState(false);
+  const menuRef                              = useRef<HTMLDivElement>(null);
   const userId                     = useAuthStore((s) => s.user?.id ?? null);
   const { xpData, isConnected: isXpConnected } = usePlayerXp(userId);
   const xpNeeded         = xpData ? xpData.xpInLevel + xpData.xpToNextLevel : 0;
@@ -20,13 +21,17 @@ export function Header() {
 
   const handleLogout = async () => {
     try {
-      if (accessToken) await authService.logout(accessToken);
+      await fetch(`${ACCOUNTS_API_URL}/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+      });
     } catch {
-      // Ignore logout errors - clear local state anyway
-    } finally {
-      clearAuth();
-      navigate('/login');
+      // Always clear local state regardless of logout errors
     }
+    clearAuth();
+    setShowSignedOutToast(true);
+    setTimeout(() => setShowSignedOutToast(false), 3000);
   };
 
   useEffect(() => {
@@ -45,6 +50,7 @@ export function Header() {
   };
 
   return (
+    <>
     <header style={{
       position: 'sticky',
       top: 0,
@@ -258,5 +264,25 @@ export function Header() {
         </div>
       </div>
     </header>
+    {showSignedOutToast && (
+      <div style={{
+        position: 'fixed',
+        bottom: '24px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 100,
+        background: '#1C1510',
+        color: '#ECE7D9',
+        fontFamily: "'Lora', Georgia, serif",
+        fontSize: '14px',
+        fontWeight: 500,
+        padding: '12px 20px',
+        borderRadius: '8px',
+        boxShadow: '0 4px 16px rgba(23,18,14,0.3)',
+      }}>
+        You've been signed out
+      </div>
+    )}
+    </>
   );
 }
