@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
-import { exchangeRefreshToken, fetchAccountProfile } from '../services/accountsApi';
+import { exchangeRefreshToken, fetchAccountProfile, ssoSessionCheck } from '../services/accountsApi';
 import { API_URL } from '../services/api';
 
 interface AuthInitializerProps {
@@ -12,18 +12,40 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const storedRefresh = localStorage.getItem('ev_refresh_token');
+      let storedRefresh = localStorage.getItem('ev_refresh_token');
 
-      // No stored refresh token — resolve immediately with no network call.
-      // New visitors and logged-out users skip the spinner entirely.
       if (!storedRefresh) {
-        clearAuth();
+        // No local refresh token — attempt silent SSO via ev_session cookie.
+        // Use a 150ms delay before showing the spinner to prevent flash for fast checks.
         setLoading(false);
-        useAuthStore.getState().setTierResolved(true);
-        return;
+        const spinnerTimer = setTimeout(() => setLoading(true), 150);
+
+        try {
+          const ssoResult = await ssoSessionCheck();
+          clearTimeout(spinnerTimer);
+
+          if (ssoResult) {
+            // SSO succeeded — write refresh token to localStorage and fall through
+            // to the existing exchange logic below.
+            localStorage.setItem('ev_refresh_token', ssoResult.refresh_token);
+            storedRefresh = ssoResult.refresh_token;
+          } else {
+            // No SSO session — resolve as unauthenticated silently.
+            clearAuth();
+            useAuthStore.getState().setTierResolved(true);
+            setLoading(false);
+            return;
+          }
+        } catch {
+          clearTimeout(spinnerTimer);
+          clearAuth();
+          useAuthStore.getState().setTierResolved(true);
+          setLoading(false);
+          return;
+        }
       }
 
-      // Exchange stored refresh token for a new access token
+      // Exchange stored refresh token (either pre-existing or from SSO above)
       try {
         const data = await exchangeRefreshToken();
 

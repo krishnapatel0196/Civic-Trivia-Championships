@@ -120,3 +120,40 @@ export async function fetchAccountProfile(accessToken: string): Promise<AccountP
     },
   });
 }
+
+/**
+ * Silent SSO session check. Reads the ev_session httpOnly cookie
+ * (set by accounts.empowered.vote on login) and exchanges it for tokens.
+ * Returns null if no cookie exists or exchange fails.
+ *
+ * Uses raw fetch with credentials: 'include' — the existing accountsApiFetch
+ * wrapper explicitly omits credentials (Bearer-only), so we bypass it here.
+ */
+export async function ssoSessionCheck(): Promise<{
+  access_token: string;
+  refresh_token: string;
+} | null> {
+  const url = `${ACCOUNTS_API_URL}/api/auth/session`;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+  try {
+    const res = await fetch(url, {
+      credentials: 'include',
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (res.status === 401) return null;
+    if (res.ok) return res.json();
+
+    // 5xx: retry once after 1s
+    await new Promise((r) => setTimeout(r, 1000));
+    const retry = await fetch(url, { credentials: 'include' });
+    if (!retry.ok) return null;
+    return retry.json();
+  } catch {
+    clearTimeout(timeoutId);
+    return null;
+  }
+}
