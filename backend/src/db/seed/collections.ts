@@ -337,4 +337,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 28
   },
+  {
+    name: 'West Monroe, LA',
+    slug: 'west-monroe-la',
+    description: 'From Cotton Port to Twin City — do you know West Monroe?',
+    localeCode: 'en-US',
+    localeName: 'West Monroe, Louisiana',
+    iconIdentifier: 'flag-la',
+    themeColor: '#1B4F72',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 29
+  },
 ];
