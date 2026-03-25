@@ -349,4 +349,52 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 29
   },
+  {
+    name: 'New York',
+    slug: 'new-york-state',
+    description: 'Albany to the Adirondacks — do you know the Empire State?',
+    localeCode: 'en-US',
+    localeName: 'New York State',
+    iconIdentifier: 'flag-state',
+    themeColor: '#003087',
+    tier: 'state',
+    isActive: true,
+    sortOrder: 30
+  },
+  {
+    name: 'Queens, NY',
+    slug: 'queens-ny',
+    description: '138 languages, one borough — can you keep up?',
+    localeCode: 'en-US',
+    localeName: 'Queens, New York',
+    iconIdentifier: 'flag-ny',
+    themeColor: '#4A235A',
+    tier: 'city',
+    isActive: true,
+    sortOrder: 31
+  },
+  {
+    name: 'Pennsylvania',
+    slug: 'pennsylvania',
+    description: 'Penn's woods, the Liberty Bell, Gettysburg — do you know PA?',
+    localeCode: 'en-US',
+    localeName: 'Pennsylvania',
+    iconIdentifier: 'flag-pennsylvania',
+    themeColor: '#002868',
+    tier: 'state',
+    isActive: false,
+    sortOrder: 32
+  },
+  {
+    name: 'Philadelphia, PA',
+    slug: 'philadelphia-pa',
+    description: 'Rocky's steps, brotherly love, and 1776 — do you know Philly?',
+    localeCode: 'en-US',
+    localeName: 'Philadelphia, Pennsylvania',
+    iconIdentifier: 'flag-pa',
+    themeColor: '#002B5B',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 33
+  },
 ];
