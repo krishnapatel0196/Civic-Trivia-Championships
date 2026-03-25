@@ -125,6 +125,7 @@ async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
       'queens-ny': () => import('./locale-configs/queens-ny.js') as Promise<{ queensNyConfig: LocaleConfig }>,
       'pennsylvania': () => import('./locale-configs/pennsylvania.js') as Promise<{ pennsylvaniaConfig: LocaleConfig }>,
       'philadelphia-pa': () => import('./locale-configs/philadelphia-pa.js') as Promise<{ philadelphiaPaConfig: LocaleConfig }>,
+      'pittsburgh-pa': () => import('./locale-configs/pittsburgh-pa.js') as Promise<{ pittsburghPaConfig: LocaleConfig }>,
   };
 
   const loader = supportedLocales[locale];
@@ -134,7 +135,7 @@ async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
     const module = await loader();
 
     // Extract the config from the module (different export names per file)
-    const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig', 'cambridgeMaConfig', 'planoTxConfig', 'portlandOrConfig', 'washingtonDcConfig', 'biloxiMsConfig', 'santaMonicaCaConfig', 'indioCaConfig', 'alexandriaLaConfig', 'louisianaConfig', 'springfieldMoConfig', 'stLouisMoConfig', 'missouriConfig', 'arizonaConfig', 'tucsonAzConfig', 'phoenixAzConfig', 'ashevilleNcConfig', 'northCarolinaConfig', 'westMonroeLaConfig', 'newYorkStateConfig', 'queensNyConfig', 'pennsylvaniaConfig', 'philadelphiaPaConfig'];
+    const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig', 'cambridgeMaConfig', 'planoTxConfig', 'portlandOrConfig', 'washingtonDcConfig', 'biloxiMsConfig', 'santaMonicaCaConfig', 'indioCaConfig', 'alexandriaLaConfig', 'louisianaConfig', 'springfieldMoConfig', 'stLouisMoConfig', 'missouriConfig', 'arizonaConfig', 'tucsonAzConfig', 'phoenixAzConfig', 'ashevilleNcConfig', 'northCarolinaConfig', 'westMonroeLaConfig', 'newYorkStateConfig', 'queensNyConfig', 'pennsylvaniaConfig', 'philadelphiaPaConfig', 'pittsburghPaConfig'];
     for (const key of configKeys) {
       if (module[key]) return { config: module[key] as LocaleConfig };
     }

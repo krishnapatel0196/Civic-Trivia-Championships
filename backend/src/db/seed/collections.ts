@@ -397,4 +397,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 33
   },
+  {
+    name: 'Pittsburgh, PA',
+    slug: 'pittsburgh-pa',
+    description: 'Steel City pride put to the test — how well do you know Pittsburgh?',
+    localeCode: 'en-US',
+    localeName: 'Pittsburgh, Pennsylvania',
+    iconIdentifier: 'flag-pa',
+    themeColor: '#FFB612',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 34
+  },
 ];
