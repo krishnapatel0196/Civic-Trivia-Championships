@@ -376,7 +376,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Pennsylvania',
     slug: 'pennsylvania',
-    description: 'Penn's woods, the Liberty Bell, Gettysburg — do you know PA?',
+    description: "Penn's woods, the Liberty Bell, Gettysburg — do you know PA?",
     localeCode: 'en-US',
     localeName: 'Pennsylvania',
     iconIdentifier: 'flag-pennsylvania',
@@ -388,7 +388,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Philadelphia, PA',
     slug: 'philadelphia-pa',
-    description: 'Rocky's steps, brotherly love, and 1776 — do you know Philly?',
+    description: "Rocky's steps, brotherly love, and 1776 — do you know Philly?",
     localeCode: 'en-US',
     localeName: 'Philadelphia, Pennsylvania',
     iconIdentifier: 'flag-pa',
