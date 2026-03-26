@@ -21,6 +21,20 @@ export interface AccountProfile {
     verification_status?: string;
     completed_onboarding?: boolean;
   };
+  jurisdiction?: {
+    congressional_district: string | null;
+    congressional_district_name: string | null;
+    state_senate_district: string | null;
+    state_senate_district_name: string | null;
+    state_house_district: string | null;
+    state_house_district_name: string | null;
+    county: string | null;
+    county_name: string | null;
+    school_district: string | null;
+    school_district_name: string | null;
+    state: string | null;
+    city: string | null;
+  } | null;
 }
 
 export interface AuthState {
