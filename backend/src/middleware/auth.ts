@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { jwtVerify } from 'jose';
+import { jwtVerify, createRemoteJWKSet } from 'jose';
 import { supabaseAdmin } from '../config/supabase.js';
 
 // Extend Express Request with Supabase auth properties
@@ -12,8 +12,10 @@ declare global {
   }
 }
 
-// Encode secret once at module level — reused on every request
-const SECRET_KEY = new TextEncoder().encode(process.env.SUPABASE_JWT_SECRET);
+// Supabase now issues ES256 JWTs — verify via JWKS endpoint (public key rotation safe)
+const JWKS = createRemoteJWKSet(
+  new URL(`${process.env.SUPABASE_URL}/auth/v1/.well-known/jwks.json`)
+);
 
 /**
  * Requires a valid Supabase JWT in the Authorization header.
@@ -32,7 +34,7 @@ export async function requireAuth(
   }
 
   try {
-    const { payload } = await jwtVerify(token, SECRET_KEY, {
+    const { payload } = await jwtVerify(token, JWKS, {
       issuer: `${process.env.SUPABASE_URL}/auth/v1`,
       audience: 'authenticated',
     });
@@ -64,7 +66,7 @@ export async function optionalAuth(
   }
 
   try {
-    const { payload } = await jwtVerify(token, SECRET_KEY, {
+    const { payload } = await jwtVerify(token, JWKS, {
       issuer: `${process.env.SUPABASE_URL}/auth/v1`,
       audience: 'authenticated',
     });
