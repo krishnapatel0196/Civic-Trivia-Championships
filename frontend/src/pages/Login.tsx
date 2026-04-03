@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { authService } from '../services/authService';
+import { fetchAccountProfile } from '../services/accountsApi';
 import type { AuthError } from '../types/auth';
 import { useTheme } from '../hooks/useTheme';
 
@@ -28,6 +29,9 @@ export function Login() {
       const response = await authService.login({ email, password });
       localStorage.setItem('ev_refresh_token', response.refresh_token);
       setAuth(response.access_token, response.user);
+      fetchAccountProfile(response.access_token)
+        .then((profile) => useAuthStore.getState().setDisplayName(profile.display_name))
+        .catch(() => {});
       if (from && from.startsWith('/')) {
         navigate(from);
       } else {
