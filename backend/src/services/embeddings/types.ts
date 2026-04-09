@@ -20,12 +20,13 @@ export interface QuestionForDedup {
   qualityScore: number | null;
 }
 
-export type CollectionTier = 'federal' | 'state' | 'city';
+export type CollectionTier = 'federal' | 'state' | 'city' | 'international';
 
 export const TIER_RANK: Record<CollectionTier, number> = {
   federal: 3,
   state: 2,
   city: 1,
+  international: 0,
 };
 
 /**

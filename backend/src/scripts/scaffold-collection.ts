@@ -146,7 +146,7 @@ Required:
   --theme <hex>          Theme color as 6-digit hex (e.g. "#7C3AED")
 
 Optional:
-  --tier <type>          city | state | federal  (default: city)
+  --tier <type>          city | state | federal | international  (default: city)
   --sort-order <n>       Sort order integer (default: auto-detect max+1)
   --locale-code <code>   Locale code (default: en-US)
   --description <text>   Collection tagline shown on the card — REQUIRED for production
@@ -181,9 +181,9 @@ function validate(args: ParsedArgs): void {
     errors.push(`--theme "${args.theme}" must be a 6-digit hex color like "#7C3AED"`);
   }
 
-  const validTiers = ['city', 'state', 'federal'];
+  const validTiers = ['city', 'state', 'federal', 'international'];
   if (!validTiers.includes(args.tier)) {
-    errors.push(`--tier "${args.tier}" must be one of: city, state, federal`);
+    errors.push(`--tier "${args.tier}" must be one of: city, state, federal, international`);
   }
 
   if (errors.length > 0) {
@@ -226,6 +226,7 @@ function deriveLocaleName(name: string, tier: string): string {
 function deriveIconIdentifier(slug: string, tier: string): string {
   if (tier === 'federal') return 'flag-us';
   if (tier === 'state') return 'state';
+  if (tier === 'international') return 'globe';
 
   // city: extract last segment after final hyphen
   const parts = slug.split('-');
