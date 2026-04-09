@@ -334,7 +334,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 78-01: Pipeline orchestration cron, pool regulation logic, generation_jobs logging, auto-throttle guard
+- [ ] 78-01-PLAN.md — Schema DDL (volatility + reason columns), computeExpiresAt(), InternationalLocaleConfig, status fix in run-pipeline.ts
+- [ ] 78-02-PLAN.md — poolRegulator.ts + pipelineCron.ts + startCron.ts wiring + server.ts startup
 
 ---
 
