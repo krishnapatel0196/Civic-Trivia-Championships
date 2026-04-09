@@ -48,6 +48,20 @@ export async function generateReplacement(
       return { replaced: false, reason: 'no-topic' };
     }
 
+    // Guard: skip replacement generation for international collections
+    // International questions are managed by the RSS pipeline, not expiration replacement
+    const { db: dbForTier } = await import('../db/index.js');
+    const { collections } = await import('../db/schema.js');
+    const { eq: eqForTier } = await import('drizzle-orm');
+    const collectionRows = await dbForTier
+      .select({ tier: collections.tier })
+      .from(collections)
+      .where(eqForTier(collections.id, collectionId))
+      .limit(1);
+    if (collectionRows[0]?.tier === 'international') {
+      return { replaced: false, reason: 'international-collection-no-replacement' };
+    }
+
     // 2. Load locale config — returns null if no config file exists
     const config = await tryLoadLocaleConfig(collectionSlug);
     if (config === null) {

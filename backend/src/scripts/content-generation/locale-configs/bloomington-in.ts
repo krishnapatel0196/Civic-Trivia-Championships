@@ -30,6 +30,24 @@ export interface LocaleConfig {
   officeholders?: OfficeholderEntry[];
 }
 
+/**
+ * Extended config for International collections.
+ * Required shape for any international locale config file (Phase 77+).
+ * Extends LocaleConfig with RSS pipeline and pool management fields.
+ */
+export interface InternationalLocaleConfig extends LocaleConfig {
+  /** RSS feed URLs for this collection (replaces sourceUrls for international) */
+  rssFeeds: string[];
+  /** Default confidence tier assigned to generated questions */
+  confidenceTierDefault: 'high' | 'medium' | 'low';
+  /** Trigger generation when active question count drops below this */
+  poolFloor: number;
+  /** Stop generating when active count reaches this target */
+  poolTarget: number;
+  /** Hard cap — archive oldest questions above this count before generating */
+  poolCeiling: number;
+}
+
 export const bloomingtonConfig: LocaleConfig = {
   locale: 'bloomington-in',
   name: 'Bloomington, Indiana',
