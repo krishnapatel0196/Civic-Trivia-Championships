@@ -21,6 +21,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0",
     "cheerio": "^1.2.0",
+    "compromise": "^14.15.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.45.1",
@@ -33,6 +34,7 @@
     "p-limit": "^7.3.0",
     "pg": "^8.11.3",
     "redis": "^4.6.12",
+    "rss-parser": "^3.13.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

@@ -77,6 +77,15 @@ export const generationJobs = triviaSchema.table('generation_jobs', {
   questionsGenerated: integer('questions_generated').notNull().default(0),
   questionsFlagged: integer('questions_flagged').notNull().default(0),
   questionsActivated: integer('questions_activated').notNull().default(0),
+  notes: jsonb('notes').$type<{
+    feedStats: Array<{
+      feedUrl: string;
+      articlesFound: number;
+      articlesSkipped: number;
+      error?: string;
+    }>;
+  }>(),
+  feedsFailed: integer('feeds_failed').notNull().default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
