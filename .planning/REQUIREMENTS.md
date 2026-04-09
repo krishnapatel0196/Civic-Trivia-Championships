@@ -66,8 +66,8 @@
 | PIPE-02 | Phase 77 | Pending |
 | PIPE-03 | Phase 77 | Pending |
 | PIPE-04 | Phase 77 | Pending |
-| PIPE-05 | Phase 78 | Pending |
-| PIPE-06 | Phase 78 | Pending |
+| PIPE-05 | Phase 78 | Complete |
+| PIPE-06 | Phase 78 | Complete |
 | INTL-01 | Phase 76 | Pending |
 | INTL-02 | Phase 75 | Pending |
 | INTL-03 | Phase 79 | Pending |

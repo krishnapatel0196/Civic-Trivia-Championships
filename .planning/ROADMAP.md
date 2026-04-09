@@ -421,6 +421,6 @@ Plans:
 | 75. DB Foundation + Type System | v2.5 | 2/2 | Complete | 2026-04-09 |
 | 76. Collection Picker International Section | v2.5 | 1/1 | Complete | 2026-04-09 |
 | 77. RSS Ingestion + Claim Extraction Pipeline | v2.5 | 2/2 | Complete | 2026-04-09 |
-| 78. Pipeline Cron Worker + Pool Regulation | v2.5 | 0/TBD | Not started | â |
+| 78. Pipeline Cron Worker + Pool Regulation | v2.5 | 2/2 | Complete | 2026-04-09 |
 | 79. Launch Collections | v2.5 | 0/TBD | Not started | â |
 | 80. Admin Visibility | v2.5 | 0/TBD | Not started | â |
