@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 76 — Collection Picker International Section (v2.5 International Collections)
+**Current focus:** Phase 77 — RSS Ingestion + Claim Extraction Pipeline (v2.5 International Collections)
 
 ## Current Position
 
-Phase: 76 of 80 (Collection Picker International Section)
-Plan: 1 of 1 in current phase
-Status: Phase complete
-Last activity: 2026-04-09 — Completed 76-01-PLAN.md (Collection Picker International Section)
+Phase: 77 of 80 (RSS Ingestion + Claim Extraction Pipeline)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-04-09 — Completed Phase 76 (Collection Picker International Section) — verified 5/5 must-haves
 
 Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–80 pending
 
@@ -63,7 +63,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Phase 76 complete — Collection Picker International Section (76-01)
+Stopped at: Phase 76 complete — verified 5/5 must-haves
 Resume file: None
 
 Next action: `/gsd:plan-phase 77`

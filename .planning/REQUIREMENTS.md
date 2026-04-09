@@ -16,7 +16,7 @@
 
 ### International Tier
 
-- [ ] **INTL-01**: Collection picker has an "International" section alongside Federal/State/City; International collection cards display a freshness indicator ("Updated X hours ago")
+- [x] **INTL-01**: Collection picker has an "International" section alongside Federal/State/City; International collection cards display a freshness indicator ("Updated X hours ago")
 - [x] **INTL-02**: `scaffold-collection.ts` supports `--tier international` flag; `InternationalLocaleConfig` interface defined
 - [ ] **INTL-03**: War in Iran collection — live at launch with a minimum 15 active questions; fast expiry (3–5 days); sourced from BBC/NPR/UN
 - [ ] **INTL-04**: Climate Agreements collection — live at launch with a minimum 15 active questions; medium expiry (7–14 days); sourced from BBC/The Guardian/UNFCCC
