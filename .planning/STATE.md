@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 75 — DB Foundation + Type System (v2.5 International Collections)
+**Current focus:** Phase 76 — Collection Picker International Section (v2.5 International Collections)
 
 ## Current Position
 
-Phase: 75 of 80 (DB Foundation + Type System)
-Plan: 01 of TBD in current phase
-Status: In progress
-Last activity: 2026-04-09 — Completed 75-01-PLAN.md (DB Foundation — tables, columns, Drizzle schema)
+Phase: 76 of 80 (Collection Picker International Section)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-04-09 — Completed Phase 75 (DB Foundation + Type System) — verified 9/9 must-haves
 
 Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–80 pending
 
@@ -57,7 +57,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Completed 75-01-PLAN.md (DB Foundation)
+Stopped at: Phase 75 complete — DB Foundation + Type System verified (9/9)
 Resume file: None
 
-Next action: Execute Phase 75 Plan 02 (75-02)
+Next action: `/gsd:plan-phase 76`
