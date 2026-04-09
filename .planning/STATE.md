@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 ## Current Position
 
 Phase: 77 of 80 (RSS Ingestion + Claim Extraction Pipeline)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-09 — Completed Phase 76 (Collection Picker International Section) — verified 5/5 must-haves
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-04-09 — Completed 77-01-PLAN.md (RSS Ingestion + generation_jobs schema)
 
 Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–80 pending
 
@@ -28,6 +28,12 @@ Progress: [██████████] v1.0–v2.4 complete (Phases 1–74);
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Phase 77-01 decisions (2026-04-09):
+- Feed list stored as typed const array (INTERNATIONAL_FEEDS) in rss-ingestor.ts — not hardcoded in logic, easily swappable to DB/config in Plan 77-02
+- articlesSkipped tracked inside processFeed but not in FeedResult.articles (only passing articles stored) — notes JSON currently sets articlesSkipped=0; Plan 77-02 can extend
+- HTTP-fetch-first / content:encoded-fallback body extraction strategy confirmed per CONTEXT.md (plan had it reversed in prose, CONTEXT.md is authoritative)
+- rss-parser ships own types — @types/rss-parser does not exist on npm
 
 Phase 76-01 decisions (2026-04-09):
 - International section appears after Federal in collection picker: Local > State > Federal > International
@@ -62,8 +68,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-09
-Stopped at: Phase 76 complete — verified 5/5 must-haves
+Last session: 2026-04-09T14:10:54Z
+Stopped at: Completed 77-01-PLAN.md
 Resume file: None
 
-Next action: `/gsd:plan-phase 77`
+Next action: Execute 77-02-PLAN.md (Claim Extraction + Question Generation)
