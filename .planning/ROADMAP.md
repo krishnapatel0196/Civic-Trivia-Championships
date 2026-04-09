@@ -17,6 +17,7 @@
 - ✅ **v2.1 Collection Excellence** — Phases 57–62 (shipped 2026-03-15) — [archive](milestones/v2.1-ROADMAP.md)
 - ✅ **v2.3 UX & Rewards Polish** — Phases 69–71 (shipped 2026-03-19)
 - ✅ **v2.4 Geographic Expansion + Collection UX** — Phases 72–74 (shipped 2026-03-23) — [archive](milestones/v2.4-ROADMAP.md)
+- 🚧 **v2.5 International Collections** — Phases 75–80 (in progress)
 
 ## Phases
 
@@ -242,6 +243,146 @@ Full archive: [milestones/v2.3-ROADMAP.md](milestones/v2.3-ROADMAP.md)
 
 </details>
 
+---
+
+### 🚧 v2.5 International Collections (In Progress)
+
+**Milestone Goal:** Add a live International tier to the collection picker, backed by a daily AI news pipeline that ingests RSS feeds, extracts verifiable claims, generates questions via Claude, and auto-regulates pool size — launching with two topic collections (War in Iran, Climate Agreements) and admin visibility into pipeline health.
+
+#### Phase 75: DB Foundation + Type System
+
+**Goal:** The database schema and TypeScript type system are extended to support the International tier — all downstream phases can build without schema migrations.
+
+**Dependencies:** None (first phase of milestone)
+
+**Requirements:** INTL-02
+
+**Success Criteria:**
+1. `trivia.generation_jobs` table exists with columns for collection_slug, status, question counts (generated/flagged/activated), and timestamp; queries against it return results without error.
+2. `trivia.questions` has three new nullable columns: `fact_snapshot text`, `confidence_tier text`, `generation_job_id integer FK`; existing questions are unaffected.
+3. `CollectionTier` TypeScript type includes `'international'`; `scaffold-collection.ts --tier international` scaffolds a collection with `tier: 'international'` set in seed and SQL.
+4. `expirationSweep.ts` replacement generator skips collections with `tier === 'international'` — no replacement questions are generated for expired International questions.
+5. `InternationalLocaleConfig` interface is defined and exported; it is the required config shape for any international locale config file.
+
+**Plans:** TBD
+
+Plans:
+- [ ] 75-01: DB schema migration (generation_jobs table, question columns, CollectionTier extension)
+- [ ] 75-02: TypeScript types, scaffold support, expirationSweep guard
+
+---
+
+#### Phase 76: Collection Picker International Section
+
+**Goal:** Players see an "International" section in the collection picker alongside Federal/State/City, with a freshness indicator on each International collection card.
+
+**Dependencies:** Phase 75 (CollectionTier type extended to include 'international')
+
+**Requirements:** INTL-01
+
+**Success Criteria:**
+1. The collection picker renders an "International" section that is visually grouped separately from Federal, State, and City sections.
+2. Each International collection card shows a freshness indicator ("Updated X hours ago") derived from the most recent active question's created_at timestamp.
+3. When no International collections are active, the International section does not appear (no empty section).
+4. The existing search/filter (Phase 74) correctly matches International collections by name.
+
+**Plans:** TBD
+
+Plans:
+- [ ] 76-01: CollectionPicker International section + freshness indicator
+
+---
+
+#### Phase 77: RSS Ingestion + Claim Extraction Pipeline
+
+**Goal:** The system can ingest RSS feeds from curated Tier 2 sources, extract article text, deduplicate stories, and generate quality-gated MCQ questions via Claude — with per-feed error isolation so no single bad feed aborts the batch.
+
+**Dependencies:** Phase 75 (DB schema and types ready)
+
+**Requirements:** PIPE-01, PIPE-02, PIPE-03, PIPE-04
+
+**Success Criteria:**
+1. Running the ingestion pipeline against all four configured feeds (BBC World, NPR, The Guardian, DW) completes even when one feed returns malformed XML or a network error; the error is logged with the offending feed URL, and the remaining feeds are processed.
+2. Articles with fewer than 300 words of extracted body text are skipped and logged; no Claude call is made for them.
+3. The same news event covered by multiple feeds in the same run produces at most one question cluster — story-level dedup runs before any Claude generation call.
+4. Questions where Claude detects partisan framing are saved as `draft` status (not `active`); questions passing the quality gate are saved as `active`; the distinction is observable by querying `trivia.questions.status`.
+5. Generated questions include `fact_snapshot`, `confidence_tier`, and `generation_job_id` columns populated; `source_url` points to the originating article URL.
+
+**Plans:** TBD
+
+Plans:
+- [ ] 77-01: RssIngestor service (feedsmith parsing, per-feed isolation, content extraction, 300-word gate)
+- [ ] 77-02: ClaimExtractor + QuestionGenerator services (story dedup, Claude integration, quality gate, draft/active routing)
+
+---
+
+#### Phase 78: Pipeline Cron Worker + Pool Regulation
+
+**Goal:** The pipeline runs automatically each night, regulates pool size per collection, and logs every run — so the International question pool self-maintains without manual intervention.
+
+**Dependencies:** Phase 77 (ingestion and generation services complete)
+
+**Requirements:** PIPE-05, PIPE-06
+
+**Success Criteria:**
+1. The cron job fires at 02:00 AM Eastern daily; each run is logged to `trivia.generation_jobs` with collection_slug, status, questions_generated, questions_flagged, questions_activated, and run timestamp.
+2. When an International collection has more than 80 active questions, the pipeline archives the oldest questions until the count returns to the target ceiling before generating new ones.
+3. A single pipeline run generates at most 8 new questions per collection; this cap is enforced even when many new articles are available.
+4. Each generated question has a `volatility` classification (`fast`/`medium`/`slow`/`stable`) assigned at generation time; `expiresAt` is set based on that classification (fast: 3–5 days, medium: 7–14 days, slow/stable: longer).
+5. When a collection's pending review count exceeds 20, the pipeline skips generation for that collection in the current run (auto-throttle).
+
+**Plans:** TBD
+
+Plans:
+- [ ] 78-01: Pipeline orchestration cron, pool regulation logic, generation_jobs logging, auto-throttle guard
+
+---
+
+#### Phase 79: Launch Collections
+
+**Goal:** Two International collections are live and playable — War in Iran and Climate Agreements — each with at least 15 active questions seeded at launch.
+
+**Dependencies:** Phase 78 (pipeline cron and pool regulation complete; questions can be generated and activated)
+
+**Requirements:** INTL-03, INTL-04
+
+**Success Criteria:**
+1. The "War in Iran" collection card appears in the International section of the collection picker; a player can start and complete a full 8-question game from it.
+2. The "War in Iran" collection has at least 15 active questions at launch; questions have `fast` volatility with `expiresAt` in the 3–5 day range.
+3. The "Climate Agreements" collection card appears in the International section; a player can start and complete a full 8-question game from it.
+4. The "Climate Agreements" collection has at least 15 active questions at launch; questions have `medium` volatility with `expiresAt` in the 7–14 day range.
+5. Both collections' freshness indicators in the collection picker reflect actual question timestamps (not placeholder values).
+
+**Plans:** TBD
+
+Plans:
+- [ ] 79-01: War in Iran collection (scaffold, seed, generate 15+ questions, activate)
+- [ ] 79-02: Climate Agreements collection (scaffold, seed, generate 15+ questions, activate)
+
+---
+
+#### Phase 80: Admin Visibility
+
+**Goal:** Admin can monitor International pipeline health — job history, pool depth, and pending review queue — directly from the admin dashboard.
+
+**Dependencies:** Phase 78 (generation_jobs table populated; pipeline running)
+
+**Requirements:** ADMIN-01, ADMIN-02, ADMIN-03
+
+**Success Criteria:**
+1. Admin can navigate to a pipeline job history view showing each run's date, collection, questions generated, questions flagged, and questions activated.
+2. The admin dashboard shows active question count per International collection; collections with fewer than 20 active questions display a visible warning indicator.
+3. The admin dashboard shows the current pending review count for International draft questions; the count updates without a page reload when new draft questions arrive.
+4. When the pending review count for a collection exceeds 20, a visible indicator communicates that the pipeline is throttled for that collection.
+
+**Plans:** TBD
+
+Plans:
+- [ ] 80-01: Admin pipeline job history view
+- [ ] 80-02: Admin pool health monitor + pending review count + throttle indicator
+
+---
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -276,3 +417,9 @@ Full archive: [milestones/v2.3-ROADMAP.md](milestones/v2.3-ROADMAP.md)
 | 72. Arizona State Collection | v2.4 | 1/1 | Complete | 2026-03-23 |
 | 73. Tucson, AZ City Collection | v2.4 | 1/1 | Complete | 2026-03-23 |
 | 74. Collection Picker Search/Filter | v2.4 | 1/1 | Complete | 2026-03-23 |
+| 75. DB Foundation + Type System | v2.5 | 0/TBD | Not started | — |
+| 76. Collection Picker International Section | v2.5 | 0/TBD | Not started | — |
+| 77. RSS Ingestion + Claim Extraction Pipeline | v2.5 | 0/TBD | Not started | — |
+| 78. Pipeline Cron Worker + Pool Regulation | v2.5 | 0/TBD | Not started | — |
+| 79. Launch Collections | v2.5 | 0/TBD | Not started | — |
+| 80. Admin Visibility | v2.5 | 0/TBD | Not started | — |
