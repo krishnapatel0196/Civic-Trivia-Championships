@@ -3,9 +3,10 @@
 //   npx tsx src/scripts/international/run-pipeline.ts --collection world-news --prefix wrld --dry-run
 
 import 'dotenv/config';
+import { fileURLToPath } from 'url';
 import { fetchAllFeeds, INTERNATIONAL_FEEDS, type FeedResult } from './rss-ingestor.js';
 import { clusterArticles, extractClaim } from './claim-extractor.js';
-import { generateQuestions, writePassingQuestions } from './question-generator.js';
+import { generateQuestions, writePassingQuestions, type Volatility } from './question-generator.js';
 
 // ─── CLI Argument Parsing ─────────────────────────────────────────────────────
 
@@ -41,14 +42,23 @@ function parseArgs(argv: string[]): {
   return { collection, prefix, dryRun };
 }
 
+// ─── Config Interface ─────────────────────────────────────────────────────────
+
+export interface InternationalLocaleConfig {
+  collectionSlug: string;
+  prefix: string;
+  volatility: Volatility;
+  maxQuestions?: number;
+}
+
 // ─── Pipeline ─────────────────────────────────────────────────────────────────
 
 export async function runPipeline(
   collectionSlug: string,
   prefix: string,
-  options: { dryRun?: boolean } = {},
+  options: { dryRun?: boolean; volatility?: Volatility; maxQuestions?: number } = {},
 ): Promise<void> {
-  const { dryRun = false } = options;
+  const { dryRun = false, volatility = 'fast', maxQuestions } = options;
 
   console.log(`[run-pipeline] Starting pipeline for collection: ${collectionSlug} (prefix: ${prefix})`);
   if (dryRun) {
@@ -68,8 +78,7 @@ export async function runPipeline(
     .limit(1);
 
   if (!collection) {
-    console.error(`[run-pipeline] Collection not found: ${collectionSlug}`);
-    process.exit(1);
+    throw new Error(`Collection not found in DB: ${collectionSlug}`);
   }
 
   // ── Create generation_jobs record ────────────────────────────────────────
@@ -94,7 +103,7 @@ export async function runPipeline(
 
   // ── Fetch all feeds ──────────────────────────────────────────────────────
   let feedResults: FeedResult[] = [];
-  let pipelineStatus: 'completed' | 'failed' = 'completed';
+  let pipelineStatus: 'success' | 'failed' = 'success';
 
   try {
     feedResults = await fetchAllFeeds(INTERNATIONAL_FEEDS);
@@ -128,13 +137,21 @@ export async function runPipeline(
     `[Pipeline] ${allArticles.length} articles → ${clusters.length} clusters after dedup`,
   );
 
+  const limitedClusters = maxQuestions !== undefined
+    ? clusters.slice(0, maxQuestions)
+    : clusters;
+
+  if (maxQuestions !== undefined && limitedClusters.length < clusters.length) {
+    console.log(`[Pipeline] Capped to ${limitedClusters.length} clusters (maxQuestions=${maxQuestions})`);
+  }
+
   let lowConfidenceSkipped = 0;
   let totalGenerated = 0;
   let totalBlocked = 0;
   const blockReasons: string[] = [];
 
   if (!dryRun) {
-    for (const cluster of clusters) {
+    for (const cluster of limitedClusters) {
       const claimResult = await extractClaim(cluster);
       if (!claimResult) {
         lowConfidenceSkipped++;
@@ -155,13 +172,14 @@ export async function runPipeline(
           collection.id,
           jobId,
           prefix,
+          volatility,
         );
         totalGenerated += written.length;
       }
     }
   } else {
     // Dry-run: cluster and log only — no Claude calls, no DB writes
-    for (const cluster of clusters) {
+    for (const cluster of limitedClusters) {
       console.log(
         `[DryRun] Would process cluster: "${cluster.representativeTitle}" (${cluster.articles.length} articles)`,
       );
@@ -215,8 +233,16 @@ export async function runPipeline(
 
 // ─── Entry Point ──────────────────────────────────────────────────────────────
 
-const { collection, prefix, dryRun } = parseArgs(process.argv);
-runPipeline(collection, prefix, { dryRun }).catch(err => {
-  console.error('[run-pipeline] Unhandled error:', err);
-  process.exit(1);
-});
+// Guard: only run CLI if this file is executed directly (not imported)
+const isDirectRun = process.argv[1] && (
+  process.argv[1] === fileURLToPath(import.meta.url) ||
+  process.argv[1].endsWith('/run-pipeline.ts') ||
+  process.argv[1].endsWith('/run-pipeline.js')
+);
+if (isDirectRun) {
+  const { collection, prefix, dryRun } = parseArgs(process.argv);
+  runPipeline(collection, prefix, { dryRun }).catch((err) => {
+    console.error('[run-pipeline] Unhandled error:', err);
+    process.exit(1);
+  });
+}

@@ -1,6 +1,27 @@
 import { client, MODEL } from '../../scripts/content-generation/anthropic-client.js';
 import type { ClaimResult } from './claim-extractor.js';
 
+// ─── Volatility Types & Helpers ───────────────────────────────────────────────
+
+export type Volatility = 'fast' | 'medium' | 'slow' | 'stable';
+
+/**
+ * Compute expiresAt for a new international question based on its volatility tier.
+ * fast = 4 days (midpoint 3-5), medium = 10 days (midpoint 7-14),
+ * slow = 60 days, stable = 180 days.
+ */
+export function computeExpiresAt(volatility: Volatility): Date {
+  const now = new Date();
+  const days: Record<Volatility, number> = {
+    fast: 4,
+    medium: 10,
+    slow: 60,
+    stable: 180,
+  };
+  const ms = days[volatility] * 24 * 60 * 60 * 1000;
+  return new Date(now.getTime() + ms);
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface GeneratedQuestion {
@@ -168,6 +189,7 @@ export async function writePassingQuestions(
   collectionId: number,
   jobId: number,
   externalIdPrefix: string,
+  volatility: Volatility,
 ): Promise<QuestionWriteResult[]> {
   const passingQuestions = questions.filter(q => q.qualityGate.passed);
   if (passingQuestions.length === 0) return [];
@@ -243,12 +265,13 @@ export async function writePassingQuestions(
           url: primarySource.url,
         },
         learningContent: null,
-        expiresAt: null,
+        expiresAt: computeExpiresAt(volatility),
         status: 'active' as const,
         expirationHistory: [],
         factSnapshot: claim.factSnapshot,
         confidenceTier: claim.confidenceTier,
         generationJobId: jobId,
+        volatility,
       })
       .onConflictDoNothing()
       .returning({ id: questionsTable.id });
