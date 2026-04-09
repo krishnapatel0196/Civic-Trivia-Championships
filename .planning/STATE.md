@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 ## Current Position
 
 Phase: 78 of 80 (Pipeline Cron Worker + Pool Regulation)
-Plan: 1 of 2 in current phase
-Status: Plan 1 complete
-Last activity: 2026-04-09 — Completed 78-01 (Schema DDL + Generator Foundations)
+Plan: 2 of 2 in current phase
+Status: Phase 78 complete
+Last activity: 2026-04-09 — Completed Phase 78 (Pipeline Cron Worker + Pool Regulation)
 
-Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–80 pending
+Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–78 complete; Phases 79–80 pending
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com / https://ctc.empowered.vote
@@ -28,6 +28,13 @@ Progress: [██████████] v1.0–v2.4 complete (Phases 1–74);
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Phase 78-02 decisions (2026-04-09):
+- INTERNATIONAL_COLLECTIONS array is empty pending Phase 79 — correct by design; cron logs "skipping" cleanly
+- POOL_CEILING = 72 — archive down to 72 so post-generation pool stays ≤80 (at most 8 new per run)
+- DRAFT_THROTTLE_LIMIT = 20 — matches CONTEXT.md requirement; prevents Claude spend when reviewer queue is full
+- MAX_QUESTIONS_PER_RUN = 8 — matches CONTEXT.md and plan requirement; limits API spend per collection per run
+- Failed collection writes own generation_jobs row — maintains audit trail even when pipeline throws
 
 Phase 78-01 decisions (2026-04-09):
 - volatility default is 'fast' — existing CLI usage unaffected; backward compatible
@@ -84,8 +91,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-09T20:23:58Z
-Stopped at: Completed 78-01-PLAN.md (Schema DDL + Generator Foundations)
+Last session: 2026-04-09T20:33:23Z
+Stopped at: Completed 78-02-PLAN.md (Pool Regulator + Pipeline Cron)
 Resume file: None
 
-Next action: Execute 78-02 (poolRegulator + pipelineCron + server wiring)
+Next action: Execute Phase 79 (Launch Collections) or Phase 80 (Admin Visibility) — both unblocked
