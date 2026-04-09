@@ -357,8 +357,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 79-01: War in Iran collection (scaffold, seed, generate 15+ questions, activate)
-- [ ] 79-02: Climate Agreements collection (scaffold, seed, generate 15+ questions, activate)
+- [ ] 79-01-PLAN.md — War in Iran collection (scaffold + game.ts threshold fix + pipeline seed + activate)
+- [ ] 79-02-PLAN.md — Climate Agreements collection (scaffold + medium-volatility seed script + pipeline seed + activate)
 
 ---
 
