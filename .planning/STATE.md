@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 ## Current Position
 
 Phase: 79 of 80 (Launch Collections)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-04-09 — Completed 79-01 (War in Iran Launch)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-04-09 — Completed 79-02 (Climate Agreements Launch)
 
-Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–79-01 complete; Phase 79-02 + 80 pending
+Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–79 complete; Phase 80 pending
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com / https://ctc.empowered.vote
@@ -28,6 +28,12 @@ Progress: [██████████] v1.0–v2.4 complete (Phases 1–74);
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Phase 79-02 decisions (2026-04-09):
+- seed-climate-agreements.ts calls runPipeline() programmatically with volatility=medium (CLI has no --volatility flag)
+- Blue Marble Earth photo (Apollo 17, NASA public domain) chosen as banner — no attribution required, global imagery
+- 3 pipeline runs produced 17 questions: same RSS dynamics as war-in-iran (3 clusters per run, ~5-6 questions each)
+- Medium volatility = expires_at +10 days (computeExpiresAt midpoint); verified all clima- questions have correct expiry
 
 Phase 79-01 decisions (2026-04-09):
 - MIN_INTERNATIONAL_THRESHOLD=8 added to game.ts — filter is now tier-conditional (8 for international, 50 for others)
@@ -97,8 +103,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-09T22:23:27Z
-Stopped at: Completed 79-01-PLAN.md (War in Iran Launch)
+Last session: 2026-04-09T22:48:11Z
+Stopped at: Completed 79-02-PLAN.md (Climate Agreements Launch) — Phase 79 fully complete
 Resume file: None
 
-Next action: Execute Phase 79-02 (Climate Agreements Launch) or Phase 80 (Admin Visibility) — both unblocked
+Next action: Execute Phase 80 (Admin Visibility) — fully unblocked
