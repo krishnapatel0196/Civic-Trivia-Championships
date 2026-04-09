@@ -7,10 +7,10 @@
 
 ### Pipeline (Daily AI News Generation)
 
-- [ ] **PIPE-01**: System ingests RSS feeds daily from curated Tier 2 sources (BBC World, NPR, The Guardian, DW) with per-feed error isolation — a single bad or malformed feed does not abort the batch
-- [ ] **PIPE-02**: System extracts article content using RSS-body-first strategy (`<content:encoded>` primary, HTTP fallback) with 300-word minimum gate; articles below threshold are skipped
-- [ ] **PIPE-03**: System deduplicates stories before Claude generation — the same news event covered by multiple sources generates at most one question cluster per run
-- [ ] **PIPE-04**: System generates MCQ questions via Claude with quality gate where partisan framing is a blocking rule (not advisory) for International content; questions failing the gate are queued for admin review (draft status); passing questions are published active
+- [x] **PIPE-01**: System ingests RSS feeds daily from curated Tier 2 sources (BBC World, NPR, The Guardian, DW) with per-feed error isolation — a single bad or malformed feed does not abort the batch
+- [x] **PIPE-02**: System extracts article content using RSS-body-first strategy (`<content:encoded>` primary, HTTP fallback) with 300-word minimum gate; articles below threshold are skipped
+- [x] **PIPE-03**: System deduplicates stories before Claude generation — the same news event covered by multiple sources generates at most one question cluster per run
+- [x] **PIPE-04**: System generates MCQ questions via Claude with quality gate where partisan framing is a blocking rule (not advisory) for International content; questions failing the gate are queued for admin review (draft status); passing questions are published active
 - [ ] **PIPE-05**: System regulates pool size per International collection: target 40–80 active questions; daily generation capped at 8 questions per collection per run; expiry duration 3–14 days based on per-question volatility classification (`fast`/`medium`/`slow`/`stable`) assigned at generation time
 - [ ] **PIPE-06**: System logs each pipeline run to `generation_jobs` table recording collection, status, questions generated/flagged/activated, and timestamp
 

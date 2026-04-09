@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 77 — RSS Ingestion + Claim Extraction Pipeline (v2.5 International Collections)
+**Current focus:** Phase 78 — Pipeline Cron Worker + Pool Regulation (v2.5 International Collections)
 
 ## Current Position
 
-Phase: 77 of 80 (RSS Ingestion + Claim Extraction Pipeline)
-Plan: 2 of 2 in current phase — PHASE COMPLETE
-Status: In progress (Phase 77 done; Phases 78–80 pending)
-Last activity: 2026-04-09 — Completed 77-02-PLAN.md (Claim Extraction + Question Generation)
+Phase: 78 of 80 (Pipeline Cron Worker + Pool Regulation)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-04-09 — Completed Phase 77 (RSS Ingestion + Claim Extraction Pipeline) — verified 12/12 must-haves
 
 Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–80 pending
 
@@ -69,7 +69,7 @@ v2.5 decisions at roadmap time (2026-04-08):
 
 - trivia_service DB role needs password reset via Supabase dashboard (non-blocking; using postgres superuser currently)
 - Tucson, AZ expiring ratio at 8.3% — below 15% advisory target; ~6 more officeholder questions would close it (non-blocking)
-- Decide AP News sourcing strategy before Phase 77 (skip AP or use verified aggregator)
+- Decide AP News sourcing strategy before Phase 79 (skip AP or use verified aggregator)
 
 ### Blockers/Concerns
 
@@ -77,8 +77,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-09T14:19:49Z
-Stopped at: Completed 77-02-PLAN.md (Phase 77 complete)
+Last session: 2026-04-09
+Stopped at: Phase 77 complete — verified 12/12 must-haves
 Resume file: None
 
-Next action: Execute Phase 78 (or Phases 79 + 80 in parallel per v2.5 plan)
+Next action: /gsd:discuss-phase 78 or /gsd:plan-phase 78
