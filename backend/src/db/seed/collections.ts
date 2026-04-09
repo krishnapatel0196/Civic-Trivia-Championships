@@ -421,4 +421,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 35
   },
+  {
+    name: 'Climate Agreements',
+    slug: 'climate-agreements',
+    description: 'The planet is at the table — are you?',
+    localeCode: 'en-US',
+    localeName: 'Climate Agreements',
+    iconIdentifier: 'globe',
+    themeColor: '#065F46',
+    tier: 'international',
+    isActive: false,
+    sortOrder: 36
+  },
 ];
