@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
-import { exchangeRefreshToken, fetchAccountProfile, ssoSessionCheck } from '../services/accountsApi';
+import { exchangeRefreshToken, fetchAccountProfile, ssoSessionCheck, ACCOUNTS_API_URL } from '../services/accountsApi';
 import { API_URL } from '../services/api';
 
 interface AuthInitializerProps {
@@ -101,6 +101,26 @@ export function AuthInitializer({ children }: AuthInitializerProps) {
 
     initializeAuth();
   }, [setAuth, clearAuth, setLoading]);
+
+  // Cross-app logout sync — detect ev_session cookie cleared by another app
+  const { isAuthenticated } = useAuthStore();
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const SESSION_URL = `${ACCOUNTS_API_URL}/api/auth/session`;
+    const poll = async () => {
+      if (document.visibilityState !== 'visible') return;
+      try {
+        const res = await fetch(SESSION_URL, { credentials: 'include' });
+        if (res.status === 401) clearAuth();
+      } catch {
+        // Network error — don't log out
+      }
+    };
+
+    const id = setInterval(poll, 60_000);
+    return () => clearInterval(id);
+  }, [isAuthenticated, clearAuth]);
 
   if (isLoading) {
     return (
