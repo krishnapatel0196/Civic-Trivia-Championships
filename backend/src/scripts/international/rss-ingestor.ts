@@ -18,6 +18,7 @@ export interface FeedResult {
   feedUrl: string;
   feedName: string;
   articles: ParsedArticle[];
+  articlesSkipped: number;
   error?: string;     // populated if feed fetch failed
 }
 

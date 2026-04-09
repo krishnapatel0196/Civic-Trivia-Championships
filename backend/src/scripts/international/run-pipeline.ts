@@ -178,8 +178,7 @@ export async function runPipeline(
     feedStats: feedResults.map(r => ({
       feedUrl: r.feedUrl,
       articlesFound: r.articles.length,
-      // articlesSkipped is tracked inside processFeed but not surfaced in FeedResult
-      articlesSkipped: 0,
+      articlesSkipped: r.articlesSkipped,
       ...(r.error ? { error: r.error } : {}),
     })),
     clusters: clusters.length,
