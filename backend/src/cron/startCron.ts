@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import { runExpirationSweep } from './expirationSweep.js';
 import { runElectionDetection } from './electionDetection.js';
+import { runPipelineCron } from './pipelineCron.js';
 
 /**
  * Start the expiration cron job
@@ -30,4 +31,18 @@ export function startElectionDetectionCron(): void {
   }, { timezone: 'America/New_York' });
 
   console.log('Election detection cron registered (runs daily at 6:00 AM Eastern)');
+}
+
+/**
+ * Start the international pipeline cron job.
+ *
+ * Runs daily at 2:00 AM Eastern Time.
+ * Processes each registered International collection: pool regulation then generation.
+ */
+export function startPipelineCron(): void {
+  cron.schedule('0 2 * * *', async () => {
+    await runPipelineCron();
+  }, { timezone: 'America/New_York' });
+
+  console.log('Pipeline cron registered (runs daily at 2:00 AM Eastern)');
 }

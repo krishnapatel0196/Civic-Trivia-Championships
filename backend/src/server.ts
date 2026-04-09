@@ -11,7 +11,7 @@ import feedbackRouter from './routes/feedback.js';
 import { router as leaderboardRouter } from './routes/leaderboard.js';
 import { storageFactory } from './config/redis.js';
 import { initializeSessionManager } from './services/sessionService.js';
-import { startExpirationCron, startElectionDetectionCron } from './cron/startCron.js';
+import { startExpirationCron, startElectionDetectionCron, startPipelineCron } from './cron/startCron.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,6 +34,9 @@ async function startServer() {
 
   // Start election detection cron job
   startElectionDetectionCron();
+
+  // Start international pipeline cron job
+  startPipelineCron();
 
   // Middleware
   app.use(cors({
