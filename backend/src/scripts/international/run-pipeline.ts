@@ -4,6 +4,8 @@
 
 import 'dotenv/config';
 import { fetchAllFeeds, INTERNATIONAL_FEEDS, type FeedResult } from './rss-ingestor.js';
+import { clusterArticles, extractClaim } from './claim-extractor.js';
+import { generateQuestions, writePassingQuestions } from './question-generator.js';
 
 // ─── CLI Argument Parsing ─────────────────────────────────────────────────────
 
@@ -119,19 +121,74 @@ export async function runPipeline(
     `[run-pipeline] Feed summary: ${feedResults.length} feeds, ${feedsFailed} failed, ${totalArticles} articles total`,
   );
 
+  // ── Claim extraction + question generation ───────────────────────────────
+  const allArticles = feedResults.flatMap(r => r.articles);
+  const clusters = clusterArticles(allArticles);
+  console.log(
+    `[Pipeline] ${allArticles.length} articles → ${clusters.length} clusters after dedup`,
+  );
+
+  let lowConfidenceSkipped = 0;
+  let totalGenerated = 0;
+  let totalBlocked = 0;
+  const blockReasons: string[] = [];
+
+  if (!dryRun) {
+    for (const cluster of clusters) {
+      const claimResult = await extractClaim(cluster);
+      if (!claimResult) {
+        lowConfidenceSkipped++;
+        continue;
+      }
+
+      const questions = await generateQuestions(claimResult);
+      const passing = questions.filter(q => q.qualityGate.passed);
+      const failing = questions.filter(q => !q.qualityGate.passed);
+
+      totalBlocked += failing.length;
+      blockReasons.push(...failing.map(q => q.qualityGate.reason));
+
+      if (passing.length > 0 && jobId !== null) {
+        const written = await writePassingQuestions(
+          passing,
+          claimResult,
+          collection.id,
+          jobId,
+          prefix,
+        );
+        totalGenerated += written.length;
+      }
+    }
+  } else {
+    // Dry-run: cluster and log only — no Claude calls, no DB writes
+    for (const cluster of clusters) {
+      console.log(
+        `[DryRun] Would process cluster: "${cluster.representativeTitle}" (${cluster.articles.length} articles)`,
+      );
+      totalGenerated += 1; // Estimate: 1 question per cluster in dry-run
+    }
+  }
+
+  console.log(
+    `[Pipeline] Run complete: ${totalGenerated} questions generated, ${totalBlocked} blocked, ${lowConfidenceSkipped} low-confidence skipped`,
+  );
+
   // Build notes JSON for generation_jobs
   const notes = {
     feedStats: feedResults.map(r => ({
       feedUrl: r.feedUrl,
       articlesFound: r.articles.length,
-      // articlesSkipped is computed inside processFeed; FeedResult only holds passing articles.
-      // Future: FeedResult can be extended to carry articlesSkipped count from Plan 77-02.
+      // articlesSkipped is tracked inside processFeed but not surfaced in FeedResult
       articlesSkipped: 0,
       ...(r.error ? { error: r.error } : {}),
     })),
+    clusters: clusters.length,
+    lowConfidenceSkipped,
+    questionsGenerated: totalGenerated,
+    questionsBlocked: totalBlocked,
+    blockReasons,
+    ...(dryRun ? { dryRun: true } : {}),
   };
-
-  // ── TODO: Plan 77-02 — pass articles to claim-extractor and question-generator ──
 
   // ── Update generation_jobs record ────────────────────────────────────────
   if (!dryRun && jobId !== null) {
@@ -140,13 +197,17 @@ export async function runPipeline(
       .set({
         status: pipelineStatus,
         feedsFailed,
-        notes,
+        questionsGenerated: totalGenerated,
+        questionsFlagged: totalBlocked,
+        questionsActivated: totalGenerated,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        notes: notes as any,
         updatedAt: sql`NOW()`,
       })
       .where(eq(generationJobs.id, jobId));
 
     console.log(
-      `[run-pipeline] Updated generation_jobs id=${jobId}: status=${pipelineStatus}, feedsFailed=${feedsFailed}`,
+      `[run-pipeline] Updated generation_jobs id=${jobId}: status=${pipelineStatus}, generated=${totalGenerated}, blocked=${totalBlocked}`,
     );
   }
 
