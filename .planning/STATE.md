@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 ## Current Position
 
 Phase: 78 of 80 (Pipeline Cron Worker + Pool Regulation)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-09 — Completed Phase 77 (RSS Ingestion + Claim Extraction Pipeline) — verified 12/12 must-haves
+Plan: 1 of 2 in current phase
+Status: Plan 1 complete
+Last activity: 2026-04-09 — Completed 78-01 (Schema DDL + Generator Foundations)
 
 Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–80 pending
 
@@ -28,6 +28,13 @@ Progress: [██████████] v1.0–v2.4 complete (Phases 1–74);
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Phase 78-01 decisions (2026-04-09):
+- volatility default is 'fast' — existing CLI usage unaffected; backward compatible
+- maxQuestions defaults to undefined (no cap) — backward-compatible CLI behavior preserved
+- computeExpiresAt uses midpoint of each volatility band: fast=4d, medium=10d, slow=60d, stable=180d
+- ESM import guard pattern established: process.argv[1] === fileURLToPath(import.meta.url)
+- parseArgs process.exit calls retained in parseArgs() (only called from isDirectRun block)
 
 Phase 77-02 decisions (2026-04-09):
 - Low-confidence claims skip Claude Call 2 entirely — extractClaim() returns null, lowConfidenceSkipped counter incremented
@@ -77,8 +84,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-09
-Stopped at: Phase 77 complete — verified 12/12 must-haves
+Last session: 2026-04-09T20:23:58Z
+Stopped at: Completed 78-01-PLAN.md (Schema DDL + Generator Foundations)
 Resume file: None
 
-Next action: /gsd:discuss-phase 78 or /gsd:plan-phase 78
+Next action: Execute 78-02 (poolRegulator + pipelineCron + server wiring)
