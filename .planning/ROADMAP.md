@@ -311,8 +311,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 77-01: RssIngestor service (feedsmith parsing, per-feed isolation, content extraction, 300-word gate)
-- [ ] 77-02: ClaimExtractor + QuestionGenerator services (story dedup, Claude integration, quality gate, draft/active routing)
+- [ ] 77-01-PLAN.md — RssIngestor service (npm install, schema DDL, RSS parsing, per-feed isolation, content extraction, 300-word gate)
+- [ ] 77-02-PLAN.md — ClaimExtractor + QuestionGenerator services (story dedup, Claude integration, quality gate, active-only routing, DB writes)
 
 ---
 
@@ -419,7 +419,7 @@ Plans:
 | 74. Collection Picker Search/Filter | v2.4 | 1/1 | Complete | 2026-03-23 |
 | 75. DB Foundation + Type System | v2.5 | 2/2 | Complete | 2026-04-09 |
 | 76. Collection Picker International Section | v2.5 | 1/1 | Complete | 2026-04-09 |
-| 77. RSS Ingestion + Claim Extraction Pipeline | v2.5 | 0/TBD | Not started | â |
+| 77. RSS Ingestion + Claim Extraction Pipeline | v2.5 | 0/2 | Planned | — |
 | 78. Pipeline Cron Worker + Pool Regulation | v2.5 | 0/TBD | Not started | â |
 | 79. Launch Collections | v2.5 | 0/TBD | Not started | â |
 | 80. Admin Visibility | v2.5 | 0/TBD | Not started | â |
