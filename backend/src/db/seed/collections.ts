@@ -409,4 +409,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 34
   },
+  {
+    name: 'War in Iran',
+    slug: 'war-in-iran',
+    description: 'The conflict shaping the region — how much do you know?',
+    localeCode: 'en-US',
+    localeName: 'War in Iran',
+    iconIdentifier: 'globe',
+    themeColor: '#B91C1C',
+    tier: 'international',
+    isActive: false,
+    sortOrder: 35
+  },
 ];

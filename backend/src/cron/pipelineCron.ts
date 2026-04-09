@@ -23,11 +23,10 @@ import { regulatePool } from './poolRegulator.js';
 import { runPipeline, type InternationalLocaleConfig } from '../scripts/international/run-pipeline.js';
 
 // ─── Registered International Collections ────────────────────────────────────
-// Phase 79 will add war-in-iran and climate-agreements entries here.
 
 const INTERNATIONAL_COLLECTIONS: InternationalLocaleConfig[] = [
-  // { collectionSlug: 'war-in-iran', prefix: 'wiran', volatility: 'fast' },
-  // { collectionSlug: 'climate-agreements', prefix: 'clima', volatility: 'medium' },
+  { collectionSlug: 'war-in-iran', prefix: 'wiran', volatility: 'fast' },
+  { collectionSlug: 'climate-agreements', prefix: 'clima', volatility: 'medium' },
 ];
 
 const DRAFT_THROTTLE_LIMIT = 20;

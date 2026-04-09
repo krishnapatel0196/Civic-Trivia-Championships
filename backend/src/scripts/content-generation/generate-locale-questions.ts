@@ -126,6 +126,7 @@ async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
       'pennsylvania': () => import('./locale-configs/pennsylvania.js') as Promise<{ pennsylvaniaConfig: LocaleConfig }>,
       'philadelphia-pa': () => import('./locale-configs/philadelphia-pa.js') as Promise<{ philadelphiaPaConfig: LocaleConfig }>,
       'pittsburgh-pa': () => import('./locale-configs/pittsburgh-pa.js') as Promise<{ pittsburghPaConfig: LocaleConfig }>,
+      'war-in-iran': () => import('./locale-configs/war-in-iran.js') as Promise<{ warInIranConfig: LocaleConfig }>,
   };
 
   const loader = supportedLocales[locale];
@@ -135,7 +136,7 @@ async function loadLocaleConfig(locale: string): Promise<LoadedConfig> {
     const module = await loader();
 
     // Extract the config from the module (different export names per file)
-    const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig', 'cambridgeMaConfig', 'planoTxConfig', 'portlandOrConfig', 'washingtonDcConfig', 'biloxiMsConfig', 'santaMonicaCaConfig', 'indioCaConfig', 'alexandriaLaConfig', 'louisianaConfig', 'springfieldMoConfig', 'stLouisMoConfig', 'missouriConfig', 'arizonaConfig', 'tucsonAzConfig', 'phoenixAzConfig', 'ashevilleNcConfig', 'northCarolinaConfig', 'westMonroeLaConfig', 'newYorkStateConfig', 'queensNyConfig', 'pennsylvaniaConfig', 'philadelphiaPaConfig', 'pittsburghPaConfig'];
+    const configKeys = ['bloomingtonConfig', 'losAngelesConfig', 'fremontConfig', 'norwichConfig', 'cambridgeMaConfig', 'planoTxConfig', 'portlandOrConfig', 'washingtonDcConfig', 'biloxiMsConfig', 'santaMonicaCaConfig', 'indioCaConfig', 'alexandriaLaConfig', 'louisianaConfig', 'springfieldMoConfig', 'stLouisMoConfig', 'missouriConfig', 'arizonaConfig', 'tucsonAzConfig', 'phoenixAzConfig', 'ashevilleNcConfig', 'northCarolinaConfig', 'westMonroeLaConfig', 'newYorkStateConfig', 'queensNyConfig', 'pennsylvaniaConfig', 'philadelphiaPaConfig', 'pittsburghPaConfig', 'warInIranConfig'];
     for (const key of configKeys) {
       if (module[key]) return { config: module[key] as LocaleConfig };
     }

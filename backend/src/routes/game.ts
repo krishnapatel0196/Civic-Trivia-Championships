@@ -14,6 +14,7 @@ const router = Router();
 
 // Minimum question threshold for a collection to be playable
 const MIN_QUESTION_THRESHOLD = 50;
+const MIN_INTERNATIONAL_THRESHOLD = 8;
 
 // Fisher-Yates shuffle algorithm
 function shuffle<T>(array: T[]): T[] {
@@ -90,7 +91,11 @@ router.get('/collections', async (_req: Request, res: Response) => {
       .orderBy(collections.sortOrder);
 
     // Filter out collections with fewer than minimum questions
-    const filtered = rows.filter(r => r.questionCount >= MIN_QUESTION_THRESHOLD);
+    // International collections use a lower threshold (8) to allow smaller, fast-refreshing pools
+    const filtered = rows.filter(r => {
+      const threshold = r.tier === 'international' ? MIN_INTERNATIONAL_THRESHOLD : MIN_QUESTION_THRESHOLD;
+      return r.questionCount >= threshold;
+    });
 
     res.status(200).json({ collections: filtered });
   } catch (error: any) {
