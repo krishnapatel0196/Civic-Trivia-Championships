@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 ## Current Position
 
 Phase: 77 of 80 (RSS Ingestion + Claim Extraction Pipeline)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-04-09 — Completed 77-01-PLAN.md (RSS Ingestion + generation_jobs schema)
+Plan: 2 of 2 in current phase — PHASE COMPLETE
+Status: In progress (Phase 77 done; Phases 78–80 pending)
+Last activity: 2026-04-09 — Completed 77-02-PLAN.md (Claim Extraction + Question Generation)
 
 Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–80 pending
 
@@ -28,6 +28,15 @@ Progress: [██████████] v1.0–v2.4 complete (Phases 1–74);
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Phase 77-02 decisions (2026-04-09):
+- Low-confidence claims skip Claude Call 2 entirely — extractClaim() returns null, lowConfidenceSkipped counter incremented
+- Quality gate is Claude-side in structured output (not post-hoc filter) — failing questions never written to DB
+- No draft writes: CONTEXT.md overrides roadmap "save as draft" — questions are active or discarded
+- World-news topic lazy-created in writePassingQuestions — no migration dependency
+- Notes JSON cast as any to extend beyond narrow generationJobs schema type — widening deferred to future phase
+- Dry-run mode skips all Claude calls (clusterArticles runs free) — preserves API budget during testing
+- external_id format for international: {prefix}-{NNNN} (4-digit zero-padded)
 
 Phase 77-01 decisions (2026-04-09):
 - Feed list stored as typed const array (INTERNATIONAL_FEEDS) in rss-ingestor.ts — not hardcoded in logic, easily swappable to DB/config in Plan 77-02
@@ -68,8 +77,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-09T14:10:54Z
-Stopped at: Completed 77-01-PLAN.md
+Last session: 2026-04-09T14:19:49Z
+Stopped at: Completed 77-02-PLAN.md (Phase 77 complete)
 Resume file: None
 
-Next action: Execute 77-02-PLAN.md (Claim Extraction + Question Generation)
+Next action: Execute Phase 78 (or Phases 79 + 80 in parallel per v2.5 plan)
