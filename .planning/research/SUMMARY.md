@@ -1,175 +1,142 @@
 # Project Research Summary
 
-**Project:** Civic Trivia Championship v1.7 - Live Civic Intelligence
-**Domain:** Election question pipeline, Norwich UK collection, quality rules
-**Researched:** 2026-02-25
-**Confidence:** HIGH
+**Project:** Civic Trivia Championship v2.5 — International Collections
+**Domain:** Daily AI-powered news pipeline + international tier for civic trivia
+**Researched:** 2026-04-08
+**Confidence:** MEDIUM-HIGH
 
 ---
 
 ## Executive Summary
 
-v1.7 adds three capabilities to the existing civic trivia platform: (1) time-boxed election questions that reflect real current races and expire on election day, (2) a quality rule blocking phone/address answers with retroactive audit, and (3) a Norwich, England collection. Research confirms all three are achievable with minimal new infrastructure — zero new npm packages required.
+v2.5 adds a new "International" tier to the collection picker backed by a daily AI news pipeline. The pipeline ingests RSS feeds from curated sources (Tier 1: .gov/UN, Tier 2: BBC/NPR/Guardian/DW), fetches article text using Mozilla Readability, extracts verifiable factual claims via Claude, and stores generated questions as drafts for admin review before activation. The architecture fits cleanly into the existing codebase: one new cron job, one new service directory, two new DB tables plus three new columns on questions, and two new npm packages. Zero new paid APIs are required.
 
-**The most important finding:** No reliable free API exists for US local election candidate data. Ballotpedia is paid; Google Civic deprecated its Representatives API in April 2025; OpenStates covers state legislature only. **The right approach for v1.7 is admin-entered race data**, with the generation pipeline designed to accept scraping later. This avoids fragile HTML scrapers while delivering the full election question lifecycle. Democracy Club provides free, open API data for UK elections (Norwich).
+The primary technical risks are not in generation quality but in feed reliability: silent stale cache responses, paywall-truncated articles, and JS-rendered pages that return empty bodies. The recommended mitigation is an RSS-body-first strategy (use the `<content:encoded>` field as primary text rather than fetching the full article URL), which bypasses both paywall and JS-rendering issues.
 
-**Critical architecture insight:** The election pipeline needs a new `election_races` PostgreSQL table with a `questions_generated` flag for cron idempotency. In-memory is insufficient — the cron runs in a stateless process and would re-generate on every daily run without this flag. The existing hourly cron infrastructure extends cleanly with a single new daily job (6 AM, 60-day lookahead).
+The most important product risk is admin review queue overload. The daily pipeline must target 5–8 auto-approved questions per collection per day. Quality gates should be calibrated so that questions failing any advisory rule are blocked rather than queued for the International tier — the pipeline should err toward omission. Collection muting is essential for launch: without a well-being opt-out, the product ships potentially distressing news content with no player control.
 
 ---
 
 ## Key Findings
 
-### Recommended Stack
+### Recommended Stack Additions
 
-**No new npm dependencies needed for v1.7.** The election pipeline uses existing infrastructure:
-- `node-cron` (already installed) — daily election detection job
-- Drizzle ORM (already in use) — new `election_races` table schema
-- Anthropic SDK (already installed) — election question generation
-- PostgreSQL (Supabase, already in use) — election race data storage
+```bash
+npm install feedsmith @mozilla/readability jsdom
+```
 
-**For UK election data (Norwich):** Democracy Club (`candidates.democracyclub.org.uk`) — free, open API, Creative Commons license, covers every UK election from district council level up. No API key required for read access. Covers Norwich City Council elections (13 wards, next election 2026).
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `feedsmith` | ^2.8.0 | RSS/Atom/JSON feed parsing with full namespace support. Preferred over `rss-parser` (3 years stale) for international feeds: handles Dublin Core and Media RSS namespaces used by international broadcasters. |
+| `@mozilla/readability` | ^0.6.0 | Extracts article body text from arbitrary news HTML without per-site CSS selectors. Exact library used by Firefox Reader View. |
+| `jsdom` | ^29.0.2 | Required DOM environment for Readability in Node.js. |
 
-**What NOT to use:**
-- Google Civic Information API — Representatives endpoint deprecated April 2025
-- OpenStates — state legislature only, not city council
-- Playwright/Puppeteer for county portal scraping — heavy, brittle, v1.8+ consideration
-- Ballotpedia API — paid subscription, not needed when admin entry achieves same result
+**Verified RSS feeds (2026-04-08):**
+- BBC World: `https://feeds.bbci.co.uk/news/world/rss.xml` — confirmed active
+- NPR World: `https://feeds.npr.org/1004/rss.xml` — confirmed active
+- The Guardian: `https://www.theguardian.com/world/rss` — confirmed active
+- DW: `https://rss.dw.com/rdf/rss-en-world` — confirmed active
+- Reuters: **no official RSS** (discontinued June 2020) — exclude
+- AP News: **no official RSS** — needs alternative sourcing before Phase 2
 
-### Expected Features
+Feed list must be data-driven (DB or config file) — not hardcoded.
 
-**Election pipeline table stakes:**
-- Race-specific questions with real candidate names and seat names
-- Expiration on election day (end of day, local timezone)
-- Admin activation gate — draft → active flow prevents unreviewed content
-- Election race DB record linking questions to races for follow-up workflow
+---
 
-**Election lifecycle (3 stages):**
-1. Pre-election: who is running, what party, is there an incumbent (expires election day)
-2. Post-primary: who won the primary, who advances to general (expires general election day)
-3. Post-general: who won, historical result (no expiry — permanent civic fact)
+### Table Stakes Features
 
-**Norwich must-haves:**
-- Explicit two-tier government framing (City Council vs Norfolk County Council)
-- UK terminology throughout (councillor, ward, by-election, MP)
-- ~55-90 questions across 6 categories (civic history, city government, landmarks, culture, Norfolk context, sports)
+| Feature | Why Required |
+|---------|-------------|
+| Daily RSS ingestion pipeline with draft generation | Freshness is the entire value proposition of the tier |
+| Per-question volatility classification (`fast`/`medium`/`slow`/`stable`) | Single expiry window produces either empty pools or stale facts |
+| Admin review queue (draft → active) | Safety gate on AI-generated news content; extends existing queue |
+| Pool floor monitoring + admin alert | Pool can drain silently; admin needs warning before players hit empty states |
+| International section in collection picker with freshness indicator | Structural separation from Federal/State/City; signals content is live |
+| Collection-level Pause (mute) with well-being framing | Without this, distressing news content has no player opt-out |
+| Source attribution on questions | Admin must verify claims; players need provenance on controversial answers |
+| At least 2 standalone topic collections at launch | A single collection is insufficient to demonstrate the tier |
 
-**Address/phone rule:**
-- Advisory severity (not blocking) — legitimate civic location questions exist
-- Flags any option containing a phone number or street address format
-- Report-only audit script (no auto-archival)
+**Anti-features (do not build in v2.5):** Fully automated publish, question-level muting/keyword filtering, real-time question updates mid-session, infinite pool growth without ceiling.
+
+---
 
 ### Architecture Approach
 
-The Architecture agent produced a comprehensive spec (see ARCHITECTURE.md). Key decisions:
+The pipeline is a new service directory (`backend/src/services/international/`) with four files orchestrated by a new cron job.
 
-1. **`election_races` PostgreSQL table** — stores race metadata, candidate list (JSONB), `questions_generated` and `followup_generated` flags, and result. Required for cron idempotency across stateless process restarts.
+```
+RSS Feeds / HTTP Pages
+  → RssIngestor.ts → SourceItem[]
+  → ClaimExtractor.ts (Claude) → Claim[]
+  → QuestionGenerator (reuses anthropic-client) → ValidatedQuestion[]
+  → auditQuestion() (existing, unmodified)
+  → SemanticDupDetector (existing, unmodified)
+  → INSERT trivia.questions + collection_questions
+  → PoolRegulator.ts (archive oldest if count > ceiling)
+```
 
-2. **`election_race_id` FK on questions table** — nullable column linking election questions to their race. Enables admin UI to show all questions for a race and trigger follow-up generation.
+**DB changes required:**
+1. `trivia.generation_jobs` — new table (id, collection_slug, status, counts, metadata jsonb)
+2. `trivia.user_collection_mutes` — new table (user_id uuid, collection_id FK, compound PK)
+3. Three new nullable columns on `trivia.questions`: `fact_snapshot text`, `confidence_tier text`, `generation_job_id integer FK`
+4. `CollectionTier` type: extend to `'federal' | 'state' | 'city' | 'international'`
+5. `CollectionPicker.tsx`: new `'international'` category; group order `['local', 'international', 'state', 'federal']`
 
-3. **Candidate data as structured context, not RAG** — the existing pipeline uses scraped text documents as RAG. Candidate data (name, party, incumbent) is structured and should be injected as a formatted list in the user message, not as a text file.
-
-4. **Admin activation gate on election questions** — generated questions go to `draft` status. Admin reviews and activates. This is the right balance for the auto-publish pipeline without a human review gate on regular generation.
-
-5. **Advisory severity for address/phone rule** — "Where is City Hall located?" with a street address answer can be legitimate civic content. Advisory flag for human review, not automatic archival.
-
-**Build order (from ARCHITECTURE.md):**
-- Phase 1: DB schema (`election_races` table + `election_race_id` FK)
-- Phase 2: Norwich collection (independent of election pipeline — ships playable collection immediately)
-- Phase 3: Address/phone quality rule + audit (independent of election pipeline)
-- Phase 4: Election generation script
-- Phase 5: Election cron + detection
-- Phase 6: Admin election management UI
-- Phase 7: End-to-end verification
-
-### Critical Pitfalls
-
-Top 5 by severity:
-
-1. **Candidate withdraws after questions go live (HIGH)** — Questions become factually wrong mid-election. Prevention: `withdrew` field on candidate JSONB + admin "Regenerate" action in election management UI.
-
-2. **Cron double-generation if flag not set atomically (HIGH)** — Race generates questions twice, creating duplicates. Prevention: Set `questions_generated = TRUE` immediately when generation starts (not after); add secondary existence check.
-
-3. **Timezone mismatch expiring questions before polls close (MEDIUM)** — Pacific-time elections expire at 4:59 PM local if stored as UTC. Prevention: `timezone` column on `election_races`; convert to UTC using jurisdiction's local timezone.
-
-4. **Norfolk County Council vs Norwich City Council confusion (HIGH)** — Wrong attribution of responsibilities (roads, schools) to city vs county. Prevention: Explicit two-tier structure explanation in `norwich-uk.ts` system prompt.
-
-5. **Retroactive audit auto-archiving legitimate questions (MEDIUM)** — Address rule shouldn't auto-archive "Where is City Hall located?". Prevention: Audit script is report-only; admin reviews flags manually.
+**Cron scheduling:** International pipeline at 02:00 AM Eastern — before the expiry sweep window to replenish the pool before questions expire. Maintain a 16-question buffer minimum.
 
 ---
 
-## Implications for Roadmap
+### Top 5 Pitfalls to Avoid
 
-Research confirms the 7-phase build order from ARCHITECTURE.md. Suggested phase structure continuing from Phase 34:
+1. **Silent stale RSS cache drains the pool without errors.** RSS CDNs serve cached responses as HTTP 200 with 0 new articles. Prevention: send `If-None-Match`/`If-Modified-Since`; log `warn` when 0 new articles after dedup; alert if stale > 48h; alert admin if active count < 20.
 
-### Phase 35: Election Data Foundation
-**Goal:** DB schema changes (election_races table) and address/phone quality rule + audit
-**Delivers:**
-- `election_races` table with all required columns (seat, candidates JSONB, election_date, timezone, flags, result)
-- `election_race_id` FK on questions table
-- `address-phone.ts` quality rule (advisory severity)
-- `audit-address-phone.ts` report script
-- Audit run on existing 519 questions, human review of flagged questions
+2. **Paywall-truncated articles cause Claude to hallucinate from training data.** Under 300 words causes Claude to fill gaps from parametric memory. Prevention: 300-word minimum gate; RSS-body-first strategy (`<content:encoded>` as primary source); grounding-only prompt ("generate only from the text below").
 
-**Why first:** DB schema must exist before election generation (Phase 37 depends on it). Quality rule is independent and delivers immediate value.
+3. **One malformed XML feed crashes the entire daily batch.** Prevention: per-feed `try/catch` isolation; `Promise.allSettled()` not `Promise.all()`; log offending feed URL.
 
-### Phase 36: Norwich, England Collection
-**Goal:** 50-90 local Norwich questions live in new collection
-**Delivers:**
-- `norwich-uk.ts` locale config with UK terminology, two-tier government framing
-- Question generation (targeting 60-70 questions, source-limited)
-- Collection seeded and activated in production
+4. **Admin review queue overload from advisory violations.** Prevention: promote partisan framing from advisory to **blocking** for International questions; cap daily generation at **8 auto-approved questions** per collection per run; surface `pending_review_count` on admin dashboard and throttle if > 20.
 
-**Why second:** Completely independent of election pipeline. Delivers a playable collection immediately without waiting for the election pipeline phases.
-
-### Phase 37: Election Question Generation Script
-**Goal:** `generate-election-questions.ts` that consumes a race record and produces expiring questions
-**Delivers:**
-- Election-aware generation with candidate list as structured context
-- `expiresAt` = election_date in jurisdiction's local timezone
-- `election_race_id` FK linked on all generated questions
-- `buildElectionSystemPrompt()` with MCQ guidance for small/large candidate pools
-- Test with manually-entered race data
-
-**Depends on:** Phase 35 (election_races table)
-
-### Phase 38: Election Cron + Admin UI
-**Goal:** Daily automated election detection and admin election management page
-**Delivers:**
-- `electionDetection.ts` cron job (daily 6 AM, 60-day lookahead, idempotency via flag)
-- `startCron.ts` updated to register new job
-- `ElectionManagementPage.tsx` at /admin/elections
-- "Active", "Pending Generation", "Awaiting Follow-up" sections
-- "Generate Follow-up" action with winner entry form
-- End-to-end verification: create test race → cron detects → questions generated → expire → admin enters result → follow-up generated
-
-**Depends on:** Phase 35 (schema), Phase 37 (generation script)
+5. **Correct answer changes before expiry date.** Prevention: 3-day `expiresAt` cap for any "current leader" questions; flag-velocity monitor auto-archives questions receiving 2+ flags within 24h; detect "UPDATE:" or "CORRECTION:" in source titles as re-review trigger.
 
 ---
 
-## Research Flags
+### Recommended Build Order
 
-**During planning/execution:**
+| Phase | Name | Depends On |
+|-------|------|-----------|
+| 1 | DB Foundation + Type System | — |
+| 2 | International Locale Config + Scaffold Support | Phase 1 |
+| 3 | RSS Ingestion + Claim Extraction Services | Phase 1 |
+| 4 | Pipeline Cron Worker + Pool Regulation | Phases 1–3 |
+| 5 | Collection Picker + Muting UI | Phase 1 |
+| 6 | Admin Visibility Panel | Phases 1, 4 |
 
-1. **Norwich question count** — target is 50-90 but actual count will be source-limited. Expect ~60-70 before sources run dry (similar to Fremont's 54). Don't force 90.
+Phases 5 and 6 are parallel.
 
-2. **Address/phone audit false positive rate** — regex may catch "3 branches of government" type content if not carefully constrained. Test on sample before running full 519-question audit.
+---
 
-3. **Election MCQ for small candidate pools** — generation prompt needs explicit guidance for 2-candidate and 8+ candidate races. This is non-trivial prompt engineering; allow iteration in Phase 37.
+### Open Questions Requiring Decisions Before/During Build
 
-4. **Follow-up generation prompt design** — "Who won?" questions are structurally simple, but the generation prompt needs to produce meaningfully different questions at each lifecycle stage without duplicating what was asked before the election.
+1. **Which topics launch at v2.5?** Apply threshold: 40+ distinct questions sustainable for 30+ days with civic/policy dimension. Decide before Phase 2.
+2. **AP News sourcing.** No official AP RSS. Options: (a) skip AP; (b) use verified aggregator. Decide before Phase 2.
+3. **`expirationSweep.ts` interaction.** Does the existing replacement generator attempt to generate replacements for expired International questions? If yes, add guard: `if (collection.tier === 'international') skip replacement generation`. Investigate before Phase 4.
+4. **Story clustering algorithm.** Jaccard similarity on normalized titles is LOW confidence at 15+ feeds. Design as a replaceable function.
+5. **Volatility classification calibration.** Monitor `fast`/`medium`/`slow` distribution in first 30 days post-launch.
+
+---
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Zero new npm dependencies confirmed. Democracy Club API verified as free and active. |
-| Features | HIGH | Election lifecycle stages are clear. Norwich example questions drafted and fact-checked. Address/phone detection patterns specified. |
-| Architecture | HIGH | Architecture agent read codebase directly. Build order validated against actual file structure. |
-| Pitfalls | HIGH | Top pitfalls are concrete and actionable. Timezone issue and double-generation risk specifically identified with prevention strategies. |
+| Stack | HIGH | Package versions verified. Feed URLs confirmed active. Reuters discontinuation confirmed. |
+| Features | MEDIUM | Pool management and muting patterns synthesized from analogous systems — no identical news-trivia pipeline case study exists. |
+| Architecture | HIGH | Written from direct codebase reading. DB schema, type definitions, and file paths are exact. |
+| Pitfalls | MEDIUM | Top 5 pitfalls are concrete and mechanistic. Edge-case pitfalls inferred from first principles. |
 
-**Overall confidence: HIGH**
+**Overall: MEDIUM-HIGH**
 
 ---
 
-*Research completed: 2026-02-25*
+*Research completed: 2026-04-08*
 *Ready for roadmap: yes*

@@ -116,7 +116,21 @@ Make civic learning fun through game show mechanics — play, not study. No dark
 
 ### Active
 
-_(defined in next milestone — run `/gsd:new-milestone` to set requirements)_
+**v2.5 International Collections** — Phases 75–80
+
+- [ ] PIPE-01: System ingests RSS feeds daily from curated Tier 2 sources with per-feed error isolation
+- [ ] PIPE-02: System extracts article content with RSS-body-first strategy and 300-word minimum gate
+- [ ] PIPE-03: System deduplicates stories before Claude generation (same event → at most one question cluster)
+- [ ] PIPE-04: System generates MCQ questions via Claude; partisan framing is blocking; failing questions go to admin review draft queue; passing questions publish active
+- [ ] PIPE-05: Pool regulation per collection: 40–80 target, 8 questions/day cap, 3–14 day expiry by volatility class
+- [ ] PIPE-06: System logs each pipeline run to `generation_jobs` table
+- [ ] INTL-01: "International" section in collection picker alongside Federal/State/City with freshness indicator
+- [ ] INTL-02: `scaffold-collection.ts --tier international` + `InternationalLocaleConfig` interface
+- [ ] INTL-03: War in Iran collection live at launch (15+ active questions, fast expiry)
+- [ ] INTL-04: Climate Agreements collection live at launch (15+ active questions, medium expiry)
+- [ ] ADMIN-01: Admin pipeline job history (date, collection, generated/flagged/activated counts)
+- [ ] ADMIN-02: Admin pool health monitor per International collection (warning if < 20 active)
+- [ ] ADMIN-03: Pending review count on admin dashboard; pipeline throttles when pending > 20
 
 ### Out of Scope
 

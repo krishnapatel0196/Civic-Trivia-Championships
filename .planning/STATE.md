@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 
 ## Current Position
 
-Phase: 74 (complete) — v2.4 milestone archived
+Phase: Not started (defining roadmap)
 Plan: —
-Status: Milestone complete. Ready to plan next milestone.
-Last activity: 2026-03-23 — v2.4 milestone archived (phases 72–74)
+Status: Defining roadmap for v2.5
+Last activity: 2026-04-08 — Milestone v2.5 International Collections started
 
 Progress: [██████████] v1.0–v2.4 complete (Phases 1–74)
 
@@ -71,4 +71,4 @@ Last session: 2026-03-24
 Stopped at: Quick task 031 complete — admin archive button in game
 Resume file: None
 
-Next action: `/gsd:new-milestone` — start v2.5 milestone planning
+Next action: Roadmap in progress for v2.5 International Collections (Phases 75+)
