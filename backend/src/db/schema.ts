@@ -69,6 +69,18 @@ export const electionRaces = triviaSchema.table('election_races', {
 export type ElectionRace = typeof electionRaces.$inferSelect;
 export type NewElectionRace = typeof electionRaces.$inferInsert;
 
+// Generation Jobs table — tracks International pipeline runs
+export const generationJobs = triviaSchema.table('generation_jobs', {
+  id: serial('id').primaryKey(),
+  collectionSlug: text('collection_slug').notNull(),
+  status: text('status').notNull().default('pending'),
+  questionsGenerated: integer('questions_generated').notNull().default(0),
+  questionsFlagged: integer('questions_flagged').notNull().default(0),
+  questionsActivated: integer('questions_activated').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
 // Questions table
 export const questions = triviaSchema.table('questions', {
   id: serial('id').primaryKey(),
@@ -106,7 +118,10 @@ export const questions = triviaSchema.table('questions', {
   violationCount: integer('violation_count'),
   flagCount: integer('flag_count').notNull().default(0),
   electionRaceId: integer('election_race_id')
-    .references(() => electionRaces.id, { onDelete: 'set null' })
+    .references(() => electionRaces.id, { onDelete: 'set null' }),
+  factSnapshot: text('fact_snapshot'),
+  confidenceTier: text('confidence_tier'),
+  generationJobId: integer('generation_job_id').references(() => generationJobs.id, { onDelete: 'set null' }),
 }, (table) => ({
   topicIdx: index('idx_questions_topic_id').on(table.topicId),
   learningContentIdx: index('idx_questions_learning_content')
@@ -175,6 +190,16 @@ export const playerPrefs = triviaSchema.table('player_prefs', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
+// User Collection Mutes table — UI deferred to v2.6; table exists for future use
+export const userCollectionMutes = triviaSchema.table('user_collection_mutes', {
+  userId: uuid('user_id').notNull(),
+  collectionId: integer('collection_id').notNull().references(() => collections.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => ({
+  pk: primaryKey({ columns: [table.userId, table.collectionId] }),
+  userIdx: index('idx_user_collection_mutes_user').on(table.userId),
+}));
+
 // Export TypeScript types
 export type Collection = typeof collections.$inferSelect;
 export type NewCollection = typeof collections.$inferInsert;
@@ -199,3 +224,9 @@ export type NewPlayerStats = typeof playerStats.$inferInsert;
 
 export type PlayerPrefs = typeof playerPrefs.$inferSelect;
 export type NewPlayerPrefs = typeof playerPrefs.$inferInsert;
+
+export type GenerationJob = typeof generationJobs.$inferSelect;
+export type NewGenerationJob = typeof generationJobs.$inferInsert;
+
+export type UserCollectionMute = typeof userCollectionMutes.$inferSelect;
+export type NewUserCollectionMute = typeof userCollectionMutes.$inferInsert;
