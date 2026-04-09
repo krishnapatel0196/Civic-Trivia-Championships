@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 ## Current Position
 
 Phase: 76 of 80 (Collection Picker International Section)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-09 — Completed Phase 75 (DB Foundation + Type System) — verified 9/9 must-haves
+Plan: 1 of 1 in current phase
+Status: Phase complete
+Last activity: 2026-04-09 — Completed 76-01-PLAN.md (Collection Picker International Section)
 
 Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–80 pending
 
@@ -28,6 +28,12 @@ Progress: [██████████] v1.0–v2.4 complete (Phases 1–74);
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Phase 76-01 decisions (2026-04-09):
+- International section appears after Federal in collection picker: Local > State > Federal > International
+- Freshness indicator gated on tier === 'international' (not just latestQuestionAt presence) — backend returns field for all tiers
+- formatFreshness: < 1m = just now, < 60m = Xm ago, < 24h = Xh ago, >= 24h = Mon D (Intl.DateTimeFormat, no date-fns)
+- Same Bebas Neue / #9A8878 / 10px style for freshness indicator as admin question count row
 
 Phase 75-01 decisions (2026-04-09):
 - DB Foundation complete: generation_jobs, user_collection_mutes tables created; questions.fact_snapshot, confidence_tier, generation_job_id columns added
@@ -57,7 +63,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Phase 75 complete — DB Foundation + Type System verified (9/9)
+Stopped at: Phase 76 complete — Collection Picker International Section (76-01)
 Resume file: None
 
-Next action: `/gsd:plan-phase 76`
+Next action: `/gsd:plan-phase 77`
