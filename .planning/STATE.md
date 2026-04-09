@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 ## Current Position
 
 Phase: 75 of 80 (DB Foundation + Type System)
-Plan: 02 of TBD in current phase
+Plan: 01 of TBD in current phase
 Status: In progress
-Last activity: 2026-04-09 — Completed 75-02-PLAN.md (Type System — International Tier Support)
+Last activity: 2026-04-09 — Completed 75-01-PLAN.md (DB Foundation — tables, columns, Drizzle schema)
 
 Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–80 pending
 
@@ -28,6 +28,12 @@ Progress: [██████████] v1.0–v2.4 complete (Phases 1–74);
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Phase 75-01 decisions (2026-04-09):
+- DB Foundation complete: generation_jobs, user_collection_mutes tables created; questions.fact_snapshot, confidence_tier, generation_job_id columns added
+- DDL applied directly via Supabase MCP SQL (consistent with project convention — no drizzle-kit push)
+- generationJobs placed before questions in schema.ts to satisfy FK forward-reference order
+- Supabase CLI multiline SQL in shell arg causes 400 error; use --file flag as standard workaround
 
 v2.5 decisions at roadmap time (2026-04-08):
 - International pipeline uses RSS-body-first strategy (`<content:encoded>` primary, HTTP fallback) — bypasses paywall and JS-rendering issues without extra packages
@@ -51,7 +57,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Completed 75-02-PLAN.md (Type System — International Tier Support)
+Stopped at: Completed 75-01-PLAN.md (DB Foundation)
 Resume file: None
 
-Next action: Continue Phase 75 plans (75-03 and beyond)
+Next action: Execute Phase 75 Plan 02 (75-02)
