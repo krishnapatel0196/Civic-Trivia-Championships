@@ -286,10 +286,10 @@ Plans:
 3. When no International collections are active, the International section does not appear (no empty section).
 4. The existing search/filter (Phase 74) correctly matches International collections by name.
 
-**Plans:** 2 plans
+**Plans:** 1 plan
 
 Plans:
-- [ ] 76-01: CollectionPicker International section + freshness indicator
+- [ ] 76-01-PLAN.md — Backend latestQuestionAt + frontend International section + freshness indicator
 
 ---
 
