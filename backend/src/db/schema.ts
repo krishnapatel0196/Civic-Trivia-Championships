@@ -86,6 +86,7 @@ export const generationJobs = triviaSchema.table('generation_jobs', {
     }>;
   }>(),
   feedsFailed: integer('feeds_failed').notNull().default(0),
+  reason: text('reason'),  // populated for 'skipped' and 'failed' rows; null otherwise
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
@@ -131,6 +132,7 @@ export const questions = triviaSchema.table('questions', {
   factSnapshot: text('fact_snapshot'),
   confidenceTier: text('confidence_tier'),
   generationJobId: integer('generation_job_id').references(() => generationJobs.id, { onDelete: 'set null' }),
+  volatility: text('volatility'),  // 'fast' | 'medium' | 'slow' | 'stable'; null for legacy questions
 }, (table) => ({
   topicIdx: index('idx_questions_topic_id').on(table.topicId),
   learningContentIdx: index('idx_questions_learning_content')
