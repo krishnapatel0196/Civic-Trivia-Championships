@@ -65,7 +65,8 @@ router.get('/collections', async (_req: Request, res: Response) => {
         themeColor: collections.themeColor,
         tier: collections.tier,
         sortOrder: collections.sortOrder,
-        questionCount: sql<number>`COUNT(DISTINCT ${collectionQuestions.questionId})::int`.as('questionCount')
+        questionCount: sql<number>`COUNT(DISTINCT ${collectionQuestions.questionId})::int`.as('questionCount'),
+        latestQuestionAt: sql<string | null>`MAX(${questions.createdAt})`.as('latestQuestionAt')
       })
       .from(collections)
       .leftJoin(collectionQuestions, eq(collections.id, collectionQuestions.collectionId))
