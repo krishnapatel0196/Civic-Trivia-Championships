@@ -11,16 +11,18 @@ interface CollectionPickerProps {
   onSelect: (id: number) => void;
 }
 
-function getCategory(collection: CollectionSummary): 'local' | 'state' | 'federal' {
+function getCategory(collection: CollectionSummary): 'local' | 'state' | 'federal' | 'international' {
   if (collection.tier === 'federal') return 'federal';
   if (collection.tier === 'state') return 'state';
+  if (collection.tier === 'international') return 'international';
   return 'local';
 }
 
 const GROUP_LABELS: Record<string, string> = {
-  local:   'Local',
-  state:   'State',
-  federal: 'Federal',
+  local:         'Local',
+  state:         'State',
+  federal:       'Federal',
+  international: 'International',
 };
 
 export function CollectionPicker({ collections, selectedId, loading, onSelect }: CollectionPickerProps) {
@@ -33,7 +35,7 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
 
   if (!loading && collections.length === 0) return null;
 
-  const grouped = (['local', 'state', 'federal'] as const)
+  const grouped = (['local', 'state', 'federal', 'international'] as const)
     .map((category) => ({
       category,
       label: GROUP_LABELS[category],

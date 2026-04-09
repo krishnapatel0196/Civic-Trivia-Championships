@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { CollectionSummary } from '../types';
 import { useAuthStore } from '../../../store/authStore';
 import { useTierColor } from '../../../hooks/useTierColor';
+import { formatFreshness } from '../../../utils/formatFreshness';
 
 interface CollectionCardProps {
   collection: CollectionSummary;
@@ -108,6 +109,17 @@ export function CollectionCard({ collection, isSelected, onSelect }: CollectionC
             marginTop: '6px',
           }}>
             {collection.questionCount} QUESTIONS
+          </div>
+        )}
+        {collection.tier === 'international' && collection.latestQuestionAt && (
+          <div style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: '10px',
+            letterSpacing: '0.1em',
+            color: '#9A8878',
+            marginTop: '6px',
+          }}>
+            {formatFreshness(collection.latestQuestionAt)}
           </div>
         )}
       </div>
