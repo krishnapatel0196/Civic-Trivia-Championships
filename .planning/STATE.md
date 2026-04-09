@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 
 ## Current Position
 
-Phase: 78 of 80 (Pipeline Cron Worker + Pool Regulation)
-Plan: 2 of 2 in current phase
-Status: Phase 78 complete
-Last activity: 2026-04-09 — Completed Phase 78 (Pipeline Cron Worker + Pool Regulation)
+Phase: 79 of 80 (Launch Collections)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-04-09 — Completed 79-01 (War in Iran Launch)
 
-Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–78 complete; Phases 79–80 pending
+Progress: [██████████] v1.0–v2.4 complete (Phases 1–74); v2.5 Phases 75–79-01 complete; Phase 79-02 + 80 pending
 
 **Deployment Status:**
 - Frontend LIVE: https://civic-trivia-frontend.onrender.com / https://ctc.empowered.vote
@@ -28,6 +28,12 @@ Progress: [██████████] v1.0–v2.4 complete (Phases 1–74);
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+Phase 79-01 decisions (2026-04-09):
+- MIN_INTERNATIONAL_THRESHOLD=8 added to game.ts — filter is now tier-conditional (8 for international, 50 for others)
+- Supabase CLI --file flag requires path relative to workdir (project root), not CWD
+- 3 pipeline runs needed for 15 questions: RSS dedup produces 3 clusters per run, ~4-6 questions per cluster set
+- world-news topic (id=749) lazy-created by first pipeline run — climate-agreements run will find it
 
 Phase 78-02 decisions (2026-04-09):
 - INTERNATIONAL_COLLECTIONS array is empty pending Phase 79 — correct by design; cron logs "skipping" cleanly
@@ -91,8 +97,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-09T20:33:23Z
-Stopped at: Completed 78-02-PLAN.md (Pool Regulator + Pipeline Cron)
+Last session: 2026-04-09T22:23:27Z
+Stopped at: Completed 79-01-PLAN.md (War in Iran Launch)
 Resume file: None
 
-Next action: Execute Phase 79 (Launch Collections) or Phase 80 (Admin Visibility) — both unblocked
+Next action: Execute Phase 79-02 (Climate Agreements Launch) or Phase 80 (Admin Visibility) — both unblocked
