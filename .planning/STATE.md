@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Make civic learning fun through game show mechanics — play, not study. No dark patterns, no guilt, no pressure.
-**Current focus:** Phase 78 — Pipeline Cron Worker + Pool Regulation (v2.5 International Collections)
+**Current focus:** Phase 79 — Launch Collections (v2.5 International Collections)
 
 ## Current Position
 

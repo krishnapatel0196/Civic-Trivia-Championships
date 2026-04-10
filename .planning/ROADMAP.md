@@ -357,8 +357,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 79-01-PLAN.md — War in Iran collection (scaffold + game.ts threshold fix + pipeline seed + activate)
-- [ ] 79-02-PLAN.md — Climate Agreements collection (scaffold + medium-volatility seed script + pipeline seed + activate)
+- [x] 79-01-PLAN.md — War in Iran collection (scaffold + game.ts threshold fix + pipeline seed + activate)
+- [x] 79-02-PLAN.md — Climate Agreements collection (scaffold + medium-volatility seed script + pipeline seed + activate)
 
 ---
 
@@ -422,5 +422,5 @@ Plans:
 | 76. Collection Picker International Section | v2.5 | 1/1 | Complete | 2026-04-09 |
 | 77. RSS Ingestion + Claim Extraction Pipeline | v2.5 | 2/2 | Complete | 2026-04-09 |
 | 78. Pipeline Cron Worker + Pool Regulation | v2.5 | 2/2 | Complete | 2026-04-09 |
-| 79. Launch Collections | v2.5 | 0/TBD | Not started | â |
+| 79. Launch Collections | v2.5 | 2/2 | Complete | 2026-04-09 |
 | 80. Admin Visibility | v2.5 | 0/TBD | Not started | â |
