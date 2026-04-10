@@ -118,7 +118,7 @@ VALUES
 ),
 (
   'wiran-0030',
-  'After Soleimani''s assassination, Iran launched ballistic missiles at which US military installation in Iraq?',
+  'After Soleimani''s assassination, Iran launched ballistic missiles at which US military installation?',
   '["Camp Doha in Kuwait","Al-Udeid Air Base in Qatar","Ain al-Asad Air Base in Iraq","Camp Arifjan in Kuwait"]',
   2,
   'Iran launched over a dozen ballistic missiles at Ain al-Asad on January 8, 2020. More than 100 US service members suffered traumatic brain injuries. Iran gave Iraq advance warning — no Americans were killed, but it was the largest Iranian military strike on US forces in history.',
