@@ -166,10 +166,10 @@ VALUES
 ),
 (
   'wiran-0036',
-  'Who has served as Iran''s Supreme Leader since Ayatollah Khomeini''s death in 1989?',
+  'Who became Iran''s Supreme Leader following Ayatollah Khomeini''s death in 1989?',
   '["Mohammad Khatami","Akbar Hashemi Rafsanjani","Ali Khamenei","Ebrahim Raisi"]',
   2,
-  'Ali Khamenei was appointed Supreme Leader in 1989 and has held the role for over 35 years. He is the ultimate authority on Iran''s nuclear policy, foreign relations, and military decisions including Quds Force operations.',
+  'Ali Khamenei was appointed Supreme Leader in 1989, a role he held for over 35 years. He was the ultimate authority on Iran''s nuclear policy, foreign relations, and military decisions including Quds Force operations.',
   'easy', 'stable', NULL, 'active', '{"name":"evergreen-historical"}'::jsonb, 749, NOW(), NOW()
 ),
 (
