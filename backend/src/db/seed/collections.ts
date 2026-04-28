@@ -433,4 +433,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 36
   },
+  {
+    name: 'Bainbridge Island, WA',
+    slug: 'bainbridge-island-wa',
+    description: 'The island that invented pickleball — do you know Bainbridge?',
+    localeCode: 'en-US',
+    localeName: 'Bainbridge Island, Washington',
+    iconIdentifier: 'flag-wa',
+    themeColor: '#2E6DA4',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 37
+  },
 ];
