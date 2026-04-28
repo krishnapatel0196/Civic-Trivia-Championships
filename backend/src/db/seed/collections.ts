@@ -445,4 +445,16 @@ export const collectionsData: NewCollection[] = [
     isActive: false,
     sortOrder: 37
   },
+  {
+    name: 'Washington',
+    slug: 'washington-state',
+    description: 'From the Cascades to the coast — how well do you know the Evergreen State?',
+    localeCode: 'en-US',
+    localeName: 'Washington',
+    iconIdentifier: 'flag-state',
+    themeColor: '#2B5F2B',
+    tier: 'city',
+    isActive: false,
+    sortOrder: 38
+  },
 ];
