@@ -448,7 +448,7 @@ export const collectionsData: NewCollection[] = [
   {
     name: 'Washington',
     slug: 'washington-state',
-    description: 'From the Cascades to the coast — how well do you know the Evergreen State?',
+    description: 'The Evergreen State is on the line. How well do you know it?',
     localeCode: 'en-US',
     localeName: 'Washington',
     iconIdentifier: 'flag-state',
