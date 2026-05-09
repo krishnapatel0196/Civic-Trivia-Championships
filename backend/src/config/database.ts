@@ -34,14 +34,16 @@ setInterval(() => {
 }, 20_000);
 
 pool.on('error', (err: Error & { code?: string }) => {
-  // 57P01 = admin_shutdown: Supabase closed an idle connection — recoverable, pool will reconnect
-  // 57014 = query_canceled: statement_timeout fired — recoverable, individual query throws
+  // 57P01 = admin_shutdown: Supabase closed an idle connection — recoverable
+  // 57014 = query_canceled: statement_timeout fired — recoverable
+  // All other errors (network timeouts, infra blips) are also recoverable —
+  // the pool will reconnect on the next query. Never exit: a transient Supabase
+  // outage should degrade gracefully, not crash the process.
   if (err.code === '57P01' || err.code === '57014') {
     console.warn(`PostgreSQL connection event (${err.code}), pool will recover automatically.`);
-    return;
+  } else {
+    console.error('PostgreSQL pool error (pool will attempt recovery):', err);
   }
-  console.error('PostgreSQL pool error:', err);
-  process.exit(-1);
 });
 
 export { pool };

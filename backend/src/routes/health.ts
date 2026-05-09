@@ -6,10 +6,24 @@ const router = Router();
 
 router.get('/', async (_req: Request, res: Response) => {
   const storage = storageFactory.getStorage();
+
+  let dbHealthy = true;
+  let dbError: string | undefined;
+  try {
+    await pool.query('SELECT 1');
+  } catch (err: any) {
+    dbHealthy = false;
+    dbError = err?.message || String(err);
+  }
+
   const health = {
     status: 'healthy' as string,
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
+    database: {
+      healthy: dbHealthy,
+      ...(dbError ? { error: dbError } : {})
+    },
     storage: {
       type: storageFactory.isDegradedMode() ? 'memory' : 'redis',
       healthy: storageFactory.isRedisHealthy(),
@@ -17,7 +31,10 @@ router.get('/', async (_req: Request, res: Response) => {
     }
   };
 
-  // Return 503 if Redis was expected (REDIS_URL set) but is down
+  if (!dbHealthy) {
+    return res.status(503).json({ ...health, status: 'degraded', message: 'Database unavailable' });
+  }
+
   if (process.env.REDIS_URL && storageFactory.isDegradedMode()) {
     return res.status(503).json({
       ...health,
