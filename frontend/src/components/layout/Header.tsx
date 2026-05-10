@@ -64,7 +64,7 @@ export function Header() {
 
           {/* Logo — swaps based on theme */}
           <div className="flex-shrink-0">
-            <Link to="/">
+            <a href="https://alpha.empowered.vote">
               <img
                 src={darkMode
                   ? '/images/Empowered Vote Dark Logo.png'
@@ -72,7 +72,7 @@ export function Header() {
                 alt="Empowered Vote"
                 className="h-10"
               />
-            </Link>
+            </a>
           </div>
 
           {/* Right side */}
@@ -152,7 +152,7 @@ export function Header() {
                     boxShadow: '0 4px 16px rgba(23,18,14,0.18)',
                   }}>
                     <button
-                      onClick={() => handleMenuItemClick(() => navigate('/profile'))}
+                      onClick={() => handleMenuItemClick(() => { window.location.href = 'https://login.empowered.vote/profile'; })}
                       style={{
                         display: 'block',
                         width: '100%',
@@ -170,6 +170,26 @@ export function Header() {
                       onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                     >
                       PROFILE
+                    </button>
+                    <button
+                      onClick={() => handleMenuItemClick(() => { window.location.href = 'https://financials.empowered.vote'; })}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '8px 16px',
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: '14px',
+                        letterSpacing: '0.12em',
+                        color: C.inkLight,
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                    >
+                      EV FINANCIALS
                     </button>
                     <button
                       onClick={() => handleMenuItemClick(() => navigate('/leaderboard'))}
