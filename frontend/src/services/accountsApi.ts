@@ -147,11 +147,19 @@ export async function ssoSessionCheck(): Promise<{
     if (res.status === 401) return null;
     if (res.ok) return res.json();
 
-    // 5xx: retry once after 1s
+    // 5xx: retry once after 1s (with its own 3s timeout)
     await new Promise((r) => setTimeout(r, 1000));
-    const retry = await fetch(url, { credentials: 'include' });
-    if (!retry.ok) return null;
-    return retry.json();
+    const retryController = new AbortController();
+    const retryTimeoutId = setTimeout(() => retryController.abort(), 3000);
+    try {
+      const retry = await fetch(url, { credentials: 'include', signal: retryController.signal });
+      clearTimeout(retryTimeoutId);
+      if (!retry.ok) return null;
+      return retry.json();
+    } catch {
+      clearTimeout(retryTimeoutId);
+      return null;
+    }
   } catch {
     clearTimeout(timeoutId);
     return null;

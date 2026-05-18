@@ -44,6 +44,10 @@ backend/generation-archives/
 
 # Embedding cache (Phase 31 dedup tooling)
 backend/.embedding-cache/
+.embedding-cache/
+
+# Claude Code internals
+.claude/worktrees/
 
 # Dedup reports (generated, review locally)
 .planning/dedup-reports/*.json
