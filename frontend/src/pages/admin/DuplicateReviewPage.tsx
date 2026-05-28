@@ -25,12 +25,12 @@ function useUndoToast() {
     if (countdownRef.current) clearInterval(countdownRef.current);
     setToast({ message, clusterId, visible: true, countdown: 30 });
     let remaining = 30;
-    countdownRef.current = setInterval(() => {
+    countdownRef.current = window.setInterval(() => {
       remaining -= 1;
       setToast((prev) => ({ ...prev, countdown: remaining }));
       if (remaining <= 0) { clearInterval(countdownRef.current); setToast((prev) => ({ ...prev, visible: false })); }
     }, 1000);
-    timeoutRef.current = setTimeout(() => { setToast((prev) => ({ ...prev, visible: false })); }, 30000);
+    timeoutRef.current = window.setTimeout(() => { setToast((prev) => ({ ...prev, visible: false })); }, 30000);
   };
 
   const hideToast = () => {

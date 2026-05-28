@@ -59,7 +59,7 @@ function useUndoToast() {
   const showToast = (message: string, undoCallback: () => void) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setToast({ message, undoCallback, visible: true });
-    timeoutRef.current = setTimeout(() => {
+    timeoutRef.current = window.setTimeout(() => {
       setToast((prev) => ({ ...prev, visible: false }));
     }, 5000);
   };
