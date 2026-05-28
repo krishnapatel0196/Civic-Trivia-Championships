@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { usePostHog } from 'posthog-js/react';
 import { AuthInitializer } from './components/AuthInitializer';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { SkipToContent } from './components/accessibility/SkipToContent';
@@ -33,12 +35,22 @@ function AdminGuard() {
   return <Outlet />;
 }
 
+function PostHogPageview() {
+  const location = useLocation();
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('$pageview');
+  }, [location.pathname]);
+  return null;
+}
+
 function App() {
   // Monitor Web Vitals in production
   useWebVitals();
 
   return (
     <BrowserRouter>
+      <PostHogPageview />
       <SkipToContent />
       <LiveRegions />
       <ConfettiController />
