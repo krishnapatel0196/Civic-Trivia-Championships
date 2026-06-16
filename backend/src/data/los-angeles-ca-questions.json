@@ -1,0 +1,1908 @@
+{
+  "topics": [
+    {
+      "slug": "city-government",
+      "name": "City Government",
+      "description": "Bloomington city government — mayor, city council, departments, and municipal services"
+    },
+    {
+      "slug": "civic-history",
+      "name": "Civic History",
+      "description": "Bloomington founding, key civic events, IU's civic role, and historical milestones"
+    },
+    {
+      "slug": "local-services",
+      "name": "Local Services",
+      "description": "City utilities, parks and recreation, public safety, and municipal services"
+    },
+    {
+      "slug": "elections-voting",
+      "name": "Elections & Voting",
+      "description": "Local election process, voting districts, and civic participation in Bloomington"
+    },
+    {
+      "slug": "landmarks-culture",
+      "name": "Landmarks & Culture",
+      "description": "Cultural institutions, notable places, and what makes Bloomington unique"
+    },
+    {
+      "slug": "budget-finance",
+      "name": "Budget & Finance",
+      "description": "City budget, tax structure, and how Bloomington funds public services"
+    },
+    {
+      "slug": "la-county",
+      "name": "LA County Government",
+      "description": "Los Angeles County — board of supervisors, county services, and county-level civics"
+    },
+    {
+      "slug": "california-state",
+      "name": "California State Government",
+      "description": "California state government — governor, legislature, and the ballot propositions system"
+    }
+  ],
+  "questions": [
+    {
+      "externalId": "lac-001",
+      "text": "How many members serve on the Los Angeles County Board of Supervisors?",
+      "options": [
+        "3 members",
+        "5 members",
+        "7 members",
+        "9 members"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, the Board of Supervisors has 5 members who serve as the governing body of Los Angeles County.",
+      "difficulty": "easy",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-002",
+      "text": "What is the approximate population that Los Angeles County government serves?",
+      "options": [
+        "5 million people",
+        "7 million people",
+        "Over 10 million people",
+        "15 million people"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to bos.lacounty.gov, Los Angeles County serves the needs of a population of more than 10 million people, making it the largest county government in the United States.",
+      "difficulty": "medium",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-003",
+      "text": "Which Los Angeles County Supervisor currently represents District 1?",
+      "options": [
+        "Janice Hahn",
+        "Hilda L. Solis",
+        "Kathryn Barger",
+        "Holly J. Mitchell"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, Hilda L. Solis serves as the Supervisor for District 1 of Los Angeles County.",
+      "difficulty": "medium",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-004",
+      "text": "What unique dual function does the Los Angeles County Board of Supervisors serve?",
+      "options": [
+        "Judicial and executive",
+        "Executive and legislative",
+        "Legislative and judicial",
+        "Administrative and educational"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, the Board of Supervisors has the unique function of serving as both the executive and legislative head of Los Angeles County government.",
+      "difficulty": "medium",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-005",
+      "text": "Which office provides independent oversight and monitoring of the Los Angeles County Sheriff's and Probation Departments?",
+      "options": [
+        "Office of Child Protection",
+        "Office of Inspector General",
+        "Chief Sustainability Office",
+        "Civilian Oversight Commission"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, the Office of Inspector General provides independent and comprehensive oversight, monitoring of, and reporting about the Sheriff's and Probation Departments.",
+      "difficulty": "medium",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-006",
+      "text": "Which Los Angeles County office is dedicated to cultivating a fair, resilient, and healthy food system for all County residents?",
+      "options": [
+        "Office of Food Systems",
+        "Chief Sustainability Office",
+        "Office of Child Protection",
+        "County Equity Oversight Panel"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to bos.lacounty.gov, the LA County Office of Food Systems is dedicated to cultivating a fair, resilient, and healthy food system for all County residents and functions as an innovation hub.",
+      "difficulty": "hard",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-007",
+      "text": "How far back do the official records maintained by the Los Angeles County Board of Supervisors Executive Office date?",
+      "options": [
+        "The 1850s",
+        "The 1900s",
+        "The 1920s",
+        "The 1940s"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to bos.lacounty.gov, the Executive Office maintains official records which date back to the 1850s, providing a historical archive of County governance.",
+      "difficulty": "hard",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-008",
+      "text": "Which Los Angeles County Supervisor represents District 3?",
+      "options": [
+        "Lindsey P. Horvath",
+        "Holly J. Mitchell",
+        "Kathryn Barger",
+        "Hilda L. Solis"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to bos.lacounty.gov, Lindsey P. Horvath serves as the Supervisor for District 3 of Los Angeles County.",
+      "difficulty": "medium",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-009",
+      "text": "What type of county is Los Angeles County classified as?",
+      "options": [
+        "General law county",
+        "Charter county",
+        "Home rule county",
+        "Special district county"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, Los Angeles County is a charter county, which gives it specific powers and organizational structure under California law.",
+      "difficulty": "hard",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-010",
+      "text": "Which commission reviews Los Angeles County Policy of Equity investigations and makes recommendations concerning disposition and discipline?",
+      "options": [
+        "Civilian Oversight Commission",
+        "County Equity Oversight Panel",
+        "Human Relations Commission",
+        "Civil Service Commission"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, the County Equity Oversight Panel is an independent oversight body with the authority and responsibility for reviewing County Policy of Equity investigations and making recommendations to Department Heads.",
+      "difficulty": "hard",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-011",
+      "text": "Which Los Angeles County Supervisor represents District 5?",
+      "options": [
+        "Janice Hahn",
+        "Holly J. Mitchell",
+        "Kathryn Barger",
+        "Lindsey P. Horvath"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to bos.lacounty.gov, Kathryn Barger serves as the Supervisor for District 5 of Los Angeles County.",
+      "difficulty": "medium",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-012",
+      "text": "Which office provides comprehensive policy support for making Los Angeles County communities more sustainable and equitable?",
+      "options": [
+        "Office of Inspector General",
+        "Chief Sustainability Office",
+        "Office of Child Protection",
+        "Office of Food Systems"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, the Chief Sustainability Office provides comprehensive and coordinated policy support and guidance for the Board of Supervisors, County Departments, and the region to make communities healthier, more sustainable, and more equitable.",
+      "difficulty": "medium",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-013",
+      "text": "Which Los Angeles County Supervisor represents District 4?",
+      "options": [
+        "Hilda L. Solis",
+        "Janice Hahn",
+        "Holly J. Mitchell",
+        "Kathryn Barger"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, Janice Hahn serves as the Supervisor for District 4 of Los Angeles County.",
+      "difficulty": "medium",
+      "topicCategory": "la-county",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-014",
+      "text": "What is the acronym for the Los Angeles city office that prepares the annual budget and provides financial analysis?",
+      "options": [
+        "CFO",
+        "CAO",
+        "OMB",
+        "CBO"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to cao.lacity.gov, the CAO (City Administrative Officer) is responsible for preparing budget documents and providing financial oversight for the City of Los Angeles.",
+      "difficulty": "easy",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://cao.lacity.gov",
+        "name": "City of Los Angeles City Administrative Officer"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-015",
+      "text": "Which Los Angeles city department provides both water and power services to residents?",
+      "options": [
+        "LA Public Utilities",
+        "LA Water and Power",
+        "LADWP",
+        "LA Energy Services"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to www.ladwp.com, the Los Angeles Department of Water and Power (LADWP) provides both water and power services to the city's residents and businesses.",
+      "difficulty": "easy",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.ladwp.com",
+        "name": "Los Angeles Department of Water and Power"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-016",
+      "text": "What is the maximum rebate amount available through LADWP's Used Electric Vehicle Rebate Program?",
+      "options": [
+        "$2,000",
+        "$3,000",
+        "$4,000",
+        "$5,000"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to www.ladwp.com, LADWP offers rebates of up to $4,000 for qualifying used electric vehicles (EVs) purchased within 12 months of application submittal.",
+      "difficulty": "medium",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.ladwp.com",
+        "name": "Los Angeles Department of Water and Power"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-017",
+      "text": "In California, at what age can eligible residents pre-register to vote?",
+      "options": [
+        "14 years old",
+        "15 years old",
+        "16 years old",
+        "17 years old"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to www.sos.ca.gov/elections, online pre-registration is available for eligible 16 and 17 year olds, and their registration becomes active once they turn 18 years old.",
+      "difficulty": "easy",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State Elections Division"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-018",
+      "text": "When is California's Primary Election scheduled for 2026?",
+      "options": [
+        "May 5, 2026",
+        "June 2, 2026",
+        "July 7, 2026",
+        "August 4, 2026"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to www.sos.ca.gov/elections, the Primary Election is scheduled for June 2, 2026, with the last day to register being May 18, 2026.",
+      "difficulty": "easy",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State Elections Division"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-019",
+      "text": "What minimum grade point average must California high school students maintain to be eligible to work as student poll workers?",
+      "options": [
+        "2.0 GPA",
+        "2.5 GPA",
+        "3.0 GPA",
+        "3.5 GPA"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to www.sos.ca.gov/elections, high school students must maintain a 2.5-grade point average, along with other requirements, to be eligible to work as student poll workers.",
+      "difficulty": "medium",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State Elections Division"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-020",
+      "text": "How many days after Election Day can vote-by-mail ballots be received in California if they are postmarked on or before Election Day?",
+      "options": [
+        "3 days",
+        "5 days",
+        "7 days",
+        "10 days"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to www.sos.ca.gov/elections, vote-by-mail ballots must be postmarked on or before Election Day and received by 7 days after the election (June 9, 2026 for the June 2 Primary).",
+      "difficulty": "hard",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State Elections Division"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-021",
+      "text": "What is the toll-free phone number to contact the California Secretary of State's Elections Division?",
+      "options": [
+        "(800) 345-VOTE",
+        "(888) 345-VOTE",
+        "(877) 345-VOTE",
+        "(866) 345-VOTE"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to www.sos.ca.gov/elections, voters can contact the Secretary of State's Elections Division at (800) 345-VOTE (8683) for questions about voter registration and elections.",
+      "difficulty": "hard",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State Elections Division"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-022",
+      "text": "What percentage of the United States GDP does California contribute?",
+      "options": [
+        "10%",
+        "12%",
+        "Almost 15%",
+        "20%"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to www.ca.gov, California contributes almost 15% to the US GDP and is the world's fifth-largest economy.",
+      "difficulty": "medium",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "State of California Official Website"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-023",
+      "text": "How many national parks does California have?",
+      "options": [
+        "5 national parks",
+        "7 national parks",
+        "9 national parks",
+        "11 national parks"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to www.ca.gov, California has 9 national parks, the most of any state in the US, along with 87 state parks and 63 state beaches.",
+      "difficulty": "medium",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "State of California Official Website"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-024",
+      "text": "What is California's approximate population?",
+      "options": [
+        "29 million",
+        "34 million",
+        "39 million",
+        "44 million"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to www.ca.gov, California is home to nearly 40 million residents (39 million), with one in four Californians born overseas.",
+      "difficulty": "easy",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "State of California Official Website"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-025",
+      "text": "What is the name of California's centralized voter registration database?",
+      "options": [
+        "CalVote",
+        "VoteCal",
+        "CARegistry",
+        "StateVoter"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to www.sos.ca.gov/elections, VoteCal is California's centralized voter registration database that provides benefits to voters and election officials, allowing voters to register, update information, and check ballot status.",
+      "difficulty": "medium",
+      "topicCategory": "city-government",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State Elections Division"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-028",
+      "text": "What is the population of Los Angeles County that the Board of Supervisors serves?",
+      "options": [
+        "More than 5 million people",
+        "More than 7 million people",
+        "More than 10 million people",
+        "More than 15 million people"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to bos.lacounty.gov, the Los Angeles County Board of Supervisors serves the needs of the County's population of more than 10 million people, making it the largest county government in the United States.",
+      "difficulty": "medium",
+      "topicCategory": "california-state",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-033",
+      "text": "Which Los Angeles County office is responsible for maintaining official records dating back to the 1850s?",
+      "options": [
+        "County Clerk's Office",
+        "Executive Office of the Board of Supervisors",
+        "County Archives Department",
+        "Historical Records Bureau"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, the Executive Office of the Board of Supervisors is responsible for maintaining official records which date back to the 1850s, as well as publishing the Board's weekly agenda and Statement of Proceedings.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-035",
+      "text": "What is the name of the Los Angeles County office that provides independent oversight of the Sheriff's and Probation Department?",
+      "options": [
+        "Office of Inspector General",
+        "Department of Internal Affairs",
+        "County Oversight Bureau",
+        "Public Safety Commission"
+      ],
+      "correctAnswer": 0,
+      "explanation": "According to bos.lacounty.gov, the Office of Inspector General (OIG) provides independent and comprehensive oversight, monitoring of, and reporting about the Sheriff's and Probation Department, with a mission to promote transparency and constitutional policing.",
+      "difficulty": "medium",
+      "topicCategory": "california-state",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-037",
+      "text": "What is the name of California's confidential address program for individuals who need to protect their location?",
+      "options": [
+        "Safe Harbor",
+        "Safe At Home",
+        "Secure Address",
+        "Protected Registry"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, Safe At Home is California's confidential address program. Individuals enrolled in this program should not apply to register to vote online and should contact the program directly.",
+      "difficulty": "hard",
+      "topicCategory": "california-state",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-038",
+      "text": "How many campsites are available across California's state parks system?",
+      "options": [
+        "5,000 campsites",
+        "10,000 campsites",
+        "15,000 campsites",
+        "20,000 campsites"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to ca.gov, visitors can choose from 15,000 campsites across 279 parks when booking camping reservations in California's state parks system.",
+      "difficulty": "medium",
+      "topicCategory": "california-state",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "State of California Official Website"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-039",
+      "text": "What percentage of Californians were born overseas?",
+      "options": [
+        "One in ten",
+        "One in six",
+        "One in four",
+        "One in three"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to ca.gov, one in four Californians is born overseas, reflecting the state's diverse population of nearly 40 million residents.",
+      "difficulty": "medium",
+      "topicCategory": "california-state",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "State of California Official Website"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-042",
+      "text": "What is the minimum age to work as a student poll worker in California?",
+      "options": [
+        "14 years old",
+        "15 years old",
+        "16 years old",
+        "17 years old"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the California Secretary of State, starting from the age of 16, high school students who are U.S. citizens, maintain a 2.5-grade point average, and have proper consent are eligible to work as student poll workers on Election Day.",
+      "difficulty": "easy",
+      "topicCategory": "california-state",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-043",
+      "text": "Which Los Angeles County office works to protect children by collaborating with County agencies and the community?",
+      "options": [
+        "Department of Children and Family Services",
+        "Office of Child Protection",
+        "Youth Services Bureau",
+        "Child Welfare Commission"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, the Office of Child Protection works to fulfill the Los Angeles County Board of Supervisors' charge of protecting children by collaborating with County agencies, the community, and other entities to identify problems and develop solutions.",
+      "difficulty": "medium",
+      "topicCategory": "california-state",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-044",
+      "text": "What is the name of the program created in 2016 to elevate college student voices and promote civic engagement in California?",
+      "options": [
+        "Campus Vote Initiative",
+        "Students Vote Project",
+        "College Civic Action",
+        "Youth Democracy Program"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, Students Vote Project (SVP) is a nonpartisan program established in 2016 that aims to elevate college student voices, promote civic engagement, and empower students to participate in the democratic process statewide.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-045",
+      "text": "How much can student poll workers earn for working on Election Day in California?",
+      "options": [
+        "Between $35 and $100",
+        "Between $50 and $125",
+        "Between $65 and $180",
+        "Between $80 and $200"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the California Secretary of State, students can earn between $65 and $180 by working as student poll workers on Election Day, while learning about election processes firsthand.",
+      "difficulty": "medium",
+      "topicCategory": "california-state",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-047",
+      "text": "When do High School Voter Education Weeks occur in California each year?",
+      "options": [
+        "The first two weeks of March and October",
+        "The last two full weeks in April and September",
+        "The middle two weeks of May and November",
+        "The first two weeks of February and August"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to the California Secretary of State, the California Education Code designates the last two full weeks in April and September as High School Voter Education Weeks, during which high schools work with county elections officials to promote civic education and participation.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-050",
+      "text": "In how many languages is the California voter registration application available online?",
+      "options": [
+        "5 languages",
+        "7 languages",
+        "10 languages",
+        "12 languages"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to the California Secretary of State, the online voter registration application is available in 10 languages: English, Spanish, Chinese, Hindi, Japanese, Khmer, Korean, Tagalog, Thai, and Vietnamese.",
+      "difficulty": "medium",
+      "topicCategory": "california-state",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-056",
+      "text": "What is the name of Los Angeles' municipal water and power utility?",
+      "options": [
+        "LA Power & Water",
+        "Los Angeles Department of Water and Power",
+        "Southern California Edison",
+        "Metropolitan Water District"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to ladwp.com, the Los Angeles Department of Water and Power (LADWP) is the municipal utility that provides water and power services to Los Angeles residents and businesses.",
+      "difficulty": "easy",
+      "topicCategory": "local-services",
+      "source": {
+        "url": "https://www.ladwp.com",
+        "name": "Los Angeles Department of Water and Power"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-063",
+      "text": "What special service does LADWP offer on Saturdays for customers?",
+      "options": [
+        "Free water testing",
+        "Customer Support Saturday consultations",
+        "Appliance repair services",
+        "Home energy audits"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to ladwp.com, LADWP offers Customer Support Saturday, where customers can come for a one-on-one consultation on ways to save water, power and money.",
+      "difficulty": "easy",
+      "topicCategory": "local-services",
+      "source": {
+        "url": "https://www.ladwp.com",
+        "name": "Los Angeles Department of Water and Power"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-064",
+      "text": "What is the last day to register to vote for California's June 2, 2026 Primary Election?",
+      "options": [
+        "May 4, 2026",
+        "May 12, 2026",
+        "May 18, 2026",
+        "May 23, 2026"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov/elections, the last day to register to vote for the June 2, 2026, Primary Election is May 18, 2026.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": "2026-06-03T00:00:00.000Z"
+    },
+    {
+      "externalId": "lac-065",
+      "text": "When will county elections offices begin mailing ballots for the June 2, 2026 Primary Election?",
+      "options": [
+        "April 21, 2026",
+        "May 1, 2026",
+        "May 4, 2026",
+        "May 12, 2026"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov/elections, county elections offices will begin mailing ballots by May 4, 2026 for the June 2, 2026 Primary Election.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": "2026-06-03T00:00:00.000Z"
+    },
+    {
+      "externalId": "lac-067",
+      "text": "What is the minimum age requirement to vote in California on Election Day?",
+      "options": [
+        "17 years old",
+        "18 years old",
+        "19 years old",
+        "21 years old"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov/elections, to register to vote in California, you must be 18 years old or older on Election Day.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-068",
+      "text": "What is Same Day Voter Registration officially called in California state law?",
+      "options": [
+        "Emergency Voter Registration",
+        "Conditional Voter Registration",
+        "Provisional Voter Registration",
+        "Late Voter Registration"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov/elections, Same Day Voter Registration is known as Conditional Voter Registration in state law and serves as a safety net for Californians who miss the deadline to register to vote or update their voter registration information.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-069",
+      "text": "When do ballot drop-off locations open for the June 2, 2026 Primary Election?",
+      "options": [
+        "May 1, 2026",
+        "May 4, 2026",
+        "May 5, 2026",
+        "May 18, 2026"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov/elections, ballot drop-off locations open on May 5, 2026 for the June 2, 2026 Primary Election.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": "2026-06-03T00:00:00.000Z"
+    },
+    {
+      "externalId": "lac-070",
+      "text": "What is the latest date that vote-by-mail ballots must be postmarked to be counted in the June 2, 2026 Primary Election?",
+      "options": [
+        "May 30, 2026",
+        "June 1, 2026",
+        "June 2, 2026",
+        "June 9, 2026"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to sos.ca.gov/elections, vote-by-mail ballots must be postmarked on or before Election Day (June 2, 2026) and received by June 9, 2026.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": "2026-06-03T00:00:00.000Z"
+    },
+    {
+      "externalId": "lac-072",
+      "text": "What does RAVBM stand for in California elections?",
+      "options": [
+        "Registered Active Vote by Mail",
+        "Remote Accessible Vote-by-Mail",
+        "Rapid Access Voting by Mail",
+        "Regional Approved Vote-by-Mail"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to sos.ca.gov/elections, RAVBM stands for Remote Accessible Vote by Mail, a system that allows voters to mark their selections using their own compatible technology to vote independently and privately in the comfort of their own home.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-075",
+      "text": "When do vote centers open for early in-person voting in Voter's Choice Act counties for the June 2, 2026 Primary Election?",
+      "options": [
+        "May 4, 2026",
+        "May 12, 2026",
+        "May 18, 2026",
+        "May 23, 2026"
+      ],
+      "correctAnswer": 3,
+      "explanation": "According to sos.ca.gov/elections, vote centers open for early in-person voting in all Voter's Choice Act counties beginning on May 23, 2026 for the June 2, 2026 Primary Election.",
+      "difficulty": "hard",
+      "topicCategory": "elections-voting",
+      "source": {
+        "url": "https://www.sos.ca.gov/elections",
+        "name": "California Secretary of State - Elections"
+      },
+      "expiresAt": "2026-06-03T00:00:00.000Z"
+    },
+    {
+      "externalId": "lac-078",
+      "text": "Approximately how many people does Los Angeles County government serve?",
+      "options": [
+        "5 million people",
+        "7 million people",
+        "10 million people",
+        "15 million people"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to bos.lacounty.gov, Los Angeles County serves a population of more than 10 million people, making it the most complex county government in the entire United States.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-080",
+      "text": "What is the mission of the Los Angeles County Office of Inspector General?",
+      "options": [
+        "To audit county financial records",
+        "To oversee the Sheriff's and Probation Department",
+        "To investigate fraud and waste",
+        "To manage county personnel"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, the Office of Inspector General provides independent and comprehensive oversight, monitoring of, and reporting about the Sheriff's and Probation Department, with a mission to promote transparency, constitutional policing, and the fair administration of justice.",
+      "difficulty": "medium",
+      "topicCategory": "budget-finance",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-084",
+      "text": "Which commission oversees the Los Angeles County Probation Department?",
+      "options": [
+        "Civilian Oversight Commission",
+        "Probation Oversight Commission",
+        "Civil Service Commission",
+        "Human Relations Commission"
+      ],
+      "correctAnswer": 1,
+      "explanation": "According to bos.lacounty.gov, the Probation Oversight Commission is one of the oversight boards under the Executive Office of the Board of Supervisors that works to improve transparency and accountability and monitor progress of reform in county departments.",
+      "difficulty": "medium",
+      "topicCategory": "budget-finance",
+      "source": {
+        "url": "https://bos.lacounty.gov",
+        "name": "Los Angeles County Board of Supervisors"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-095",
+      "text": "What is California's ranking among world economies?",
+      "options": [
+        "Third-largest economy",
+        "Fourth-largest economy",
+        "Fifth-largest economy",
+        "Sixth-largest economy"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to www.ca.gov, California is the world's fifth-largest economy, contributing almost 15% to the US GDP.",
+      "difficulty": "medium",
+      "topicCategory": "budget-finance",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "State of California"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "lac-100",
+      "text": "How many state parks does California have?",
+      "options": [
+        "63 state parks",
+        "75 state parks",
+        "87 state parks",
+        "95 state parks"
+      ],
+      "correctAnswer": 2,
+      "explanation": "According to www.ca.gov, California has 87 state parks along with 9 national parks and 63 state beaches, offering diverse natural, cultural, and recreational resources.",
+      "difficulty": "medium",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "url": "https://www.ca.gov",
+        "name": "State of California"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-053",
+      "text": "Which city department manages Los Angeles's public parks?",
+      "options": [
+        "LA Recreation and Parks",
+        "LA Public Works",
+        "LA Cultural Affairs",
+        "LA Sanitation"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The City of Los Angeles Recreation and Parks department oversees more than 400 parks, golf courses, pools, and recreation centers across the city. It's one of the largest municipal park systems in the U.S.",
+      "difficulty": "easy",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "City of Los Angeles Recreation and Parks",
+        "url": "https://www.laparks.org/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-054",
+      "text": "What famous outdoor amphitheater hosts summer concerts in Griffith Park?",
+      "options": [
+        "Greek Theatre",
+        "Hollywood Bowl",
+        "Ford Theatres",
+        "Staples Center"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Greek Theatre is a beloved outdoor music venue nestled in Griffith Park, one of the largest urban parks in the U.S. It has hosted concerts since 1930 and is a cultural landmark of Los Angeles.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Greek Theatre – Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Greek_Theatre_(Los_Angeles)"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-055",
+      "text": "Los Angeles was incorporated as a city in which year?",
+      "options": [
+        "1850",
+        "1781",
+        "1900",
+        "1876"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Los Angeles was officially incorporated as a city on April 4, 1850, shortly after California became a U.S. state. Understanding a city's incorporation marks when residents gained formal self-governance and civic rights.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "City of Los Angeles Official Website",
+        "url": "https://www.lacity.gov/about-la"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-056",
+      "text": "What famous museum in Los Angeles is known for its collections of art from ancient times to the present?",
+      "options": [
+        "LACMA (Los Angeles County Museum of Art)",
+        "The Getty Villa",
+        "The Hammer Museum",
+        "The Broad"
+      ],
+      "correctAnswer": 0,
+      "explanation": "LACMA is the largest art museum in the western United States, housing over 150,000 works spanning 6,000 years of history. It serves as a major cultural hub for Los Angeles and all of Southern California.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "LACMA - Los Angeles County Museum of Art",
+        "url": "https://en.wikipedia.org/wiki/Los_Angeles_County_Museum_of_Art"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-057",
+      "text": "What is the largest source of revenue in Los Angeles's city budget?",
+      "options": [
+        "Property taxes",
+        "Sales taxes",
+        "Utility users tax",
+        "Federal grants"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The Utility Users Tax (UUT), charged on electricity, gas, and telephone services, is historically the single largest General Fund revenue source for the City of Los Angeles, generating billions annually. As of 2026-02-24, it remains a cornerstone of how LA funds police, fire, and other city services.",
+      "difficulty": "easy",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Los Angeles Budget - Office of the City Administrative Officer",
+        "url": "https://cao.lacity.gov/budget"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-058",
+      "text": "What major civic role did the Port of Los Angeles play in helping the city grow into a global hub?",
+      "options": [
+        "It became the busiest container port in the Western Hemisphere, driving trade and jobs",
+        "It was primarily built to support a naval military base during World War I",
+        "It was developed mainly as a fishing harbor to supply local restaurants",
+        "It served as the city's main airport before LAX was constructed"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Port of Los Angeles, founded in 1907, grew into the busiest container port in the Western Hemisphere, making international trade a cornerstone of L.A.'s economy and civic identity. Its growth shaped city infrastructure, labor movements, and environmental policy for over a century.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Port of Los Angeles - History",
+        "url": "https://www.portoflosangeles.org/about/history"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-059",
+      "text": "Which famous museum in Los Angeles is known for its outdoor art installations and stunning hilltop views of the city?",
+      "options": [
+        "The Getty Center",
+        "LACMA",
+        "The Broad",
+        "Museum of Natural History"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Getty Center, perched in the Santa Monica Mountains, is famous for its architecture, gardens, and panoramic views of Los Angeles alongside its impressive art collection. Admission is free, making it a beloved public cultural landmark.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "The Getty Center – Getty.edu",
+        "url": "https://www.getty.edu/visit/center/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-060",
+      "text": "Which agency operates the Los Angeles Aqueduct, which supplies a major portion of the city's water?",
+      "options": [
+        "Los Angeles Department of Water and Power (LADWP)",
+        "Metropolitan Water District of Southern California",
+        "Los Angeles County Waterworks",
+        "California Department of Water Resources"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The LADWP, the largest municipal utility in the U.S., owns and operates the Los Angeles Aqueduct system, bringing water from the Eastern Sierra Nevada to LA since 1913. It serves over 4 million residents as of 2026-02-24.",
+      "difficulty": "hard",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "LADWP – Water System Overview",
+        "url": "https://www.ladwp.com/water/water-system"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-061",
+      "text": "Which famous museum in Los Angeles sits on Wilshire Boulevard and is free to the public?",
+      "options": [
+        "The Getty Center",
+        "LACMA",
+        "The Broad",
+        "The Hammer Museum"
+      ],
+      "correctAnswer": 1,
+      "explanation": "The Los Angeles County Museum of Art (LACMA) is located on Wilshire Boulevard and is the largest art museum in the western United States. General admission is free for LA County residents.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "LACMA - Los Angeles County Museum of Art",
+        "url": "https://en.wikipedia.org/wiki/Los_Angeles_County_Museum_of_Art"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-062",
+      "text": "How is Bloomington, CA governed at the local level?",
+      "options": [
+        "It is an unincorporated community governed by Los Angeles County",
+        "It has its own elected city council and mayor",
+        "It is governed by a special district board",
+        "It is part of the City of Los Angeles"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington is an unincorporated community in San Bernardino County, meaning residents vote in county elections rather than for a city government. Local services and decisions are handled by the San Bernardino County Board of Supervisors, as of 2026-02-24.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "San Bernardino County – Community Profile",
+        "url": "https://www.sbcounty.gov/departments/land-use-services/planning/community-plans/bloomington/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-063",
+      "text": "Which LA landmark served as the finish line for the 1984 Summer Olympics marathon?",
+      "options": [
+        "Los Angeles Memorial Coliseum",
+        "Dodger Stadium",
+        "Rose Bowl Stadium",
+        "Santa Anita Park"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Los Angeles Memorial Coliseum hosted the opening and closing ceremonies of the 1984 Summer Olympics and served as the marathon's finish line. The Coliseum is the only stadium to have hosted two Summer Olympic Games (1932 and 1984) and is a National Historic Landmark.",
+      "difficulty": "hard",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Wikipedia – Los Angeles Memorial Coliseum",
+        "url": "https://en.wikipedia.org/wiki/Los_Angeles_Memorial_Coliseum"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-064",
+      "text": "Which agency operates the Los Angeles Department of Water and Power (LADWP)?",
+      "options": [
+        "It is a municipally owned public utility run by the City of LA",
+        "It is a state agency operated by the California Public Utilities Commission",
+        "It is a private utility company regulated by the federal government",
+        "It is a regional authority jointly governed by LA County and the City of LA"
+      ],
+      "correctAnswer": 0,
+      "explanation": "LADWP is the largest municipally owned utility in the U.S., owned and operated by the City of Los Angeles rather than a private company or state agency. This means LA residents, through their elected officials, have direct oversight of water and power rates and infrastructure decisions. Source: LADWP official site.",
+      "difficulty": "hard",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "Los Angeles Department of Water and Power",
+        "url": "https://www.ladwp.com/about-us"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-065",
+      "text": "How does Bloomington, CA choose its local leaders?",
+      "options": [
+        "Residents vote in county-run elections overseen by the Los Angeles County Registrar",
+        "Residents vote in city elections run by Bloomington's own city clerk",
+        "Leaders are appointed by the California Governor",
+        "Leaders are selected by the local school board"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington is an unincorporated community in San Bernardino County, so it has no city government of its own. Its residents participate in county and state elections administered by the San Bernardino County Registrar of Voters, as of 2026-02-24.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "San Bernardino County Registrar of Voters",
+        "url": "https://www.sbcounty.gov/departments/registrar-of-voters/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-066",
+      "text": "Which museum in Los Angeles holds one of the world's largest collections of tar-preserved Ice Age fossils?",
+      "options": [
+        "La Brea Tar Pits & Museum",
+        "Natural History Museum of LA County",
+        "California Science Center",
+        "Getty Villa"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The La Brea Tar Pits & Museum sits atop active asphalt seeps in the heart of LA, where thousands of Ice Age animals were trapped and preserved. It's one of the world's most productive urban fossil sites, still actively excavated today.",
+      "difficulty": "medium",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "La Brea Tar Pits - Natural History Museums of LA County",
+        "url": "https://tarpits.org/experience-pits/about"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-067",
+      "text": "What is California's unique way of letting voters directly make new laws?",
+      "options": [
+        "The ballot proposition system",
+        "The state assembly vote",
+        "The governor's executive order",
+        "The senate filibuster"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California allows voters to propose and pass laws or constitutional amendments directly through ballot propositions. This direct democracy tool is used every election cycle and has shaped major state policies. Source: California Secretary of State.",
+      "difficulty": "easy",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Secretary of State – Initiatives",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-process"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-068",
+      "text": "How does Bloomington elect its local government representatives?",
+      "options": [
+        "Through the Los Angeles County Board of Supervisors district elections",
+        "By citywide at-large elections held every two years",
+        "Through a city council with ward-based district elections",
+        "By appointed committees selected by the state legislature"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Bloomington is an unincorporated community in LA County, so residents vote for a Los Angeles County Supervisor to represent them rather than electing a city council. As of 2026-02-24, Bloomington falls within the 5th Supervisorial District.",
+      "difficulty": "easy",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "Los Angeles County Registrar-Recorder/County Clerk",
+        "url": "https://www.lavote.gov/home/voting-elections/current-elections/find-my-district"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-069",
+      "text": "What is California's governor called when signing or vetoing bills passed by the state legislature?",
+      "options": [
+        "The governor has executive authority to sign or veto bills",
+        "The governor must approve all bills automatically",
+        "The legislature can pass bills without the governor",
+        "The governor only votes on tied bills"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In California, the governor holds executive power to sign bills into law or veto them. The legislature can override a veto with a two-thirds vote in both chambers. This checks-and-balances system mirrors the federal model. Source: California Legislative Information.",
+      "difficulty": "easy",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Legislative Information",
+        "url": "https://leginfo.legislature.ca.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-070",
+      "text": "How many members sit on the Bloomington City Council?",
+      "options": [
+        "5 members",
+        "7 members",
+        "9 members",
+        "11 members"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Bloomington's City Council consists of 7 members, each representing one of the city's seven districts. Council members vote on local ordinances, budgets, and city policies. As of 2026-02-24, this structure remains in place.",
+      "difficulty": "medium",
+      "topicCategory": "city-government",
+      "source": {
+        "name": "City of Bloomington, CA – City Council",
+        "url": "https://www.bloomingtonca.gov/city-council"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-071",
+      "text": "What was the original name of the city that would become Los Angeles when it was formally founded in 1781?",
+      "options": [
+        "El Pueblo de la Reina de Los Ángeles",
+        "La Ciudad de Santa María de Los Ángeles",
+        "El Real de San Gabriel de Los Ángeles",
+        "La Villa de Nuestra Señora de Los Ángeles"
+      ],
+      "correctAnswer": 0,
+      "explanation": "When Spanish Governor Felipe de Neve officially founded Los Angeles on September 4, 1781, it was named 'El Pueblo de la Reina de Los Ángeles' (The Town of the Queen of the Angels). This founding is celebrated as a key civic milestone in LA history.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Los Angeles Almanac – City History",
+        "url": "https://en.wikipedia.org/wiki/History_of_Los_Angeles"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-072",
+      "text": "What makes California's ballot proposition system unique compared to most states?",
+      "options": [
+        "Voters can directly pass laws and constitutional amendments, bypassing the legislature",
+        "Only the governor can place measures on the ballot for voter approval",
+        "Propositions can only amend the state budget, not existing laws",
+        "The state legislature must approve all propositions before voters see them"
+      ],
+      "correctAnswer": 0,
+      "explanation": "California uses a direct democracy system where citizens can collect signatures to place initiatives on the ballot, allowing voters to make laws or amend the state constitution without legislative approval. This power was established in 1911 and has shaped major state policies ever since.",
+      "difficulty": "medium",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Secretary of State – Initiatives",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-and-referendum-process"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-073",
+      "text": "Which agency is responsible for operating Los Angeles's stormwater system to reduce urban runoff pollution?",
+      "options": [
+        "Los Angeles County Flood Control District",
+        "Los Angeles Department of Water and Power (LADWP)",
+        "Bureau of Sanitation, City of Los Angeles",
+        "California Department of Water Resources"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The Bureau of Sanitation (now part of LA Sanitation & Environment) manages the city's stormwater system under the Municipal Separate Storm Sewer System (MS4) permit, working to reduce pollutants that flow into local waterways. LADWP handles drinking water and power, while the County Flood Control District manages flood infrastructure. See: lasan.org",
+      "difficulty": "hard",
+      "topicCategory": "local-services",
+      "source": {
+        "name": "LA Sanitation & Environment – Stormwater Program",
+        "url": "https://www.lacitysan.org/san/faces/home/portal/s/wpc/stormwater"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-074",
+      "text": "What famous outdoor amphitheater in Los Angeles has hosted concerts since 1922?",
+      "options": [
+        "Hollywood Bowl",
+        "Staples Center",
+        "Greek Theatre",
+        "The Forum"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Hollywood Bowl, operated by the LA Philharmonic, is one of the largest natural amphitheaters in the world and has been a beloved music venue since 1922. It is an iconic cultural landmark in Los Angeles.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Hollywood Bowl - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Hollywood_Bowl"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-075",
+      "text": "What is the largest single expenditure category in Los Angeles's annual city budget?",
+      "options": [
+        "Public Safety (Police & Fire)",
+        "Street Services & Infrastructure",
+        "Parks & Recreation",
+        "Debt Service & Pensions"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Public Safety consistently accounts for the largest share of LA's general fund budget — over 50% — with the LAPD alone receiving billions annually. This reflects how cities prioritize spending and what drives tax decisions. As of 2026-02-24, public safety remains the dominant budget category per the LA City Budget.",
+      "difficulty": "hard",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Los Angeles Budget",
+        "url": "https://cao.lacity.gov/budget/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-076",
+      "text": "Which famous outdoor amphitheater in Los Angeles is known for hosting concerts under the stars?",
+      "options": [
+        "Hollywood Bowl",
+        "Staples Center",
+        "Griffith Observatory",
+        "The Getty Center"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Hollywood Bowl is one of the world's largest natural amphitheaters, nestled in the Hollywood Hills. It has hosted performances since 1922 and is home to the LA Philharmonic's summer season.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Hollywood Bowl - Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Hollywood_Bowl"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-077",
+      "text": "What major civic milestone did Los Angeles achieve in 1850?",
+      "options": [
+        "It was incorporated as a city by the State of California",
+        "It became the capital of California",
+        "It hosted the first session of the California State Legislature",
+        "It was granted a city charter by the U.S. federal government"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Los Angeles was officially incorporated as a city on April 4, 1850, shortly after California achieved statehood. This made it one of the earliest incorporated cities in the new state, laying the foundation for its civic and legal governance structure.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "City of Los Angeles - Official History",
+        "url": "https://en.wikipedia.org/wiki/History_of_Los_Angeles"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-078",
+      "text": "Which Los Angeles museum holds one of the world's largest collections of art from Africa, the Americas, and the Pacific?",
+      "options": [
+        "The Getty Center",
+        "Los Angeles County Museum of Art (LACMA)",
+        "The Broad",
+        "Natural History Museum of LA County"
+      ],
+      "correctAnswer": 1,
+      "explanation": "LACMA is the largest art museum in the western United States and houses encyclopedic collections spanning 6,000 years, including renowned holdings from Africa, the Americas, and the Pacific. It serves as a major cultural anchor for the region.",
+      "difficulty": "medium",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "LACMA - About",
+        "url": "https://www.lacma.org/about"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-079",
+      "text": "What was Los Angeles officially incorporated as when it became a U.S. city in 1850?",
+      "options": [
+        "A pueblo under Mexican law",
+        "A city under California state law",
+        "A U.S. military territory",
+        "A Spanish colonial district"
+      ],
+      "correctAnswer": 1,
+      "explanation": "When California became a state in 1850, Los Angeles was formally incorporated as a city under California state law, transitioning from its Spanish and Mexican colonial roots to American civic governance. This incorporation set the foundation for all of LA's modern city institutions.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "City of Los Angeles - About LA",
+        "url": "https://lacity.gov/city-government/about-la"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-080",
+      "text": "What major civic event in 1781 officially established Los Angeles as a pueblo?",
+      "options": [
+        "Spanish colonial settlers founded El Pueblo de Los Ángeles under Governor Felipe de Neve",
+        "Mexican independence leaders declared Los Angeles a free city",
+        "The U.S. Army formally incorporated Los Angeles after the Mexican-American War",
+        "Franciscan missionaries from Mission San Gabriel established a permanent settlement"
+      ],
+      "correctAnswer": 0,
+      "explanation": "On September 4, 1781, Governor Felipe de Neve led 44 settlers to officially found El Pueblo de Los Ángeles, making it one of California's earliest formal civil settlements under Spanish colonial rule. This founding is celebrated annually as Los Angeles' birthday. (en.wikipedia.org/wiki/History_of_Los_Angeles)",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Wikipedia – History of Los Angeles",
+        "url": "https://en.wikipedia.org/wiki/History_of_Los_Angeles"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-081",
+      "text": "Bloomington is an unincorporated community in LA County — so who runs local government there?",
+      "options": [
+        "The Los Angeles County Board of Supervisors",
+        "An elected Bloomington City Council",
+        "The California State Legislature",
+        "A appointed Bloomington Township Board"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Because Bloomington is unincorporated, it has no city government of its own. Residents are governed by Los Angeles County, and their primary local elected representative is their LA County Supervisor. Votes in county elections directly shape services like roads and parks.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "Los Angeles County — Unincorporated Communities",
+        "url": "https://lacounty.gov/residents/unincorporated-communities/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-082",
+      "text": "What major civic milestone did Los Angeles achieve in 1925 that shaped its modern government structure?",
+      "options": [
+        "LA adopted its current city charter, establishing a strong mayor-council system",
+        "LA consolidated with neighboring cities to form a unified metropolitan government",
+        "LA became the first U.S. city to create a publicly owned water utility",
+        "LA established the first elected city planning commission in California"
+      ],
+      "correctAnswer": 0,
+      "explanation": "In 1925, Los Angeles adopted a new city charter that formalized its strong mayor-council structure, defining the balance of power between the mayor and the 15-member city council that still governs LA today. This charter laid the foundation for modern LA civic governance.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Los Angeles City Clerk - Charter and Ordinances",
+        "url": "https://clerk.lacity.gov/clerk-services/legislative-and-records-management/city-charter"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-083",
+      "text": "How many members make up the Los Angeles City Council?",
+      "options": [
+        "15 members",
+        "9 members",
+        "21 members",
+        "12 members"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Los Angeles City Council has 15 members, each representing one of the city's 15 council districts. It is one of the largest city councils in the U.S. by population served per member, as of 2026-02-24.",
+      "difficulty": "medium",
+      "topicCategory": "city-government",
+      "source": {
+        "name": "Los Angeles City Council Official Website",
+        "url": "https://council.lacity.gov/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-084",
+      "text": "How are members of the Bloomington, CA Community Services District board chosen?",
+      "options": [
+        "Elected by registered voters within the district",
+        "Appointed by the Los Angeles County Board of Supervisors",
+        "Selected by the California Governor's office",
+        "Chosen by a panel of local business leaders"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Special districts like Bloomington's Community Services District are governed by boards elected directly by voters who live within the district boundaries. This gives residents a direct say in local services like water and parks. As of 2026-02-24, Bloomington CSD holds its own elections.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "California Special Districts Association",
+        "url": "https://www.csda.net/about/what-is-a-special-district"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-085",
+      "text": "California's ballot proposition system allows citizens to bypass the legislature — but what vote threshold is required to pass a constitutional amendment via ballot initiative?",
+      "options": [
+        "A simple majority (50% + 1)",
+        "Two-thirds of voters",
+        "Three-fifths of voters",
+        "60% of voters"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Unlike amending the U.S. Constitution, Californians can amend their state constitution through a ballot initiative with just a simple majority vote. The legislature, however, requires a two-thirds vote to place constitutional amendments on the ballot for voters to consider. This makes California's constitution relatively easy to amend compared to most states.",
+      "difficulty": "hard",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Secretary of State – Initiatives",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/how-initiatives-qualify"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-086",
+      "text": "What is Los Angeles's largest source of general fund revenue?",
+      "options": [
+        "Property tax",
+        "Sales tax",
+        "Business tax",
+        "Hotel occupancy tax"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Property tax is the single largest source of revenue for LA's General Fund, helping pay for police, fire, and other core city services. As of 2026-02-24, it accounts for roughly a third of general fund revenues. Source: LA City Budget.",
+      "difficulty": "easy",
+      "topicCategory": "budget-finance",
+      "source": {
+        "name": "City of Los Angeles Budget",
+        "url": "https://cao.lacity.gov/budget"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-087",
+      "text": "Why does Los Angeles' 1850 incorporation matter to California civic history?",
+      "options": [
+        "It made LA one of the original cities incorporated when California became a U.S. state, shaping early Pacific Coast governance",
+        "It allowed LA to bypass federal land grants, giving the city unique property rights still in effect today",
+        "It established LA as the first capital of California before Sacramento took over",
+        "It gave LA special authority to negotiate directly with Mexico under the Treaty of Guadalupe Hidalgo"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Los Angeles was incorporated as a city on April 4, 1850, the same year California achieved statehood, making it one of the earliest formally governed cities on the U.S. Pacific Coast. This early civic structure helped shape how local government, land use, and public services developed across Southern California. Source: City of Los Angeles, Office of the City Clerk.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "City of Los Angeles - Official History",
+        "url": "https://clkrep.lacity.org/onlinedocs/2000/00-1817_rpt_clerk_1.pdf"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-088",
+      "text": "Which world-famous museum in Los Angeles is free to the public and sits in the La Brea Tar Pits park?",
+      "options": [
+        "La Brea Tar Pits Museum",
+        "Getty Center",
+        "LACMA",
+        "Natural History Museum of LA"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The La Brea Tar Pits Museum is free to enter and sits directly alongside active tar pits where Ice Age fossils are still being excavated today. It's a rare example of an active paleontological dig in the middle of a major city.",
+      "difficulty": "medium",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "La Brea Tar Pits – Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/La_Brea_Tar_Pits"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-089",
+      "text": "What major civic role did the Port of Los Angeles play in shaping the city's growth?",
+      "options": [
+        "It became the busiest container port in the U.S., driving trade and jobs",
+        "It was built primarily as a naval base and later converted to commercial use",
+        "It was founded by the railroads and remains privately owned today",
+        "It serves mainly cruise ships and has little impact on trade"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Port of Los Angeles is the busiest container port in the United States, handling hundreds of billions in trade annually. It has been a cornerstone of LA's economic and civic development, supporting thousands of local jobs and shaping the region's identity as a global trade hub.",
+      "difficulty": "easy",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Port of Los Angeles – About",
+        "url": "https://www.portoflosangeles.org/about/facts-and-figures"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-090",
+      "text": "How many votes are required on the LA County Board of Supervisors to pass an urgency ordinance?",
+      "options": [
+        "4 out of 5 votes",
+        "3 out of 5 votes",
+        "A unanimous 5 out of 5 votes",
+        "2 out of 5 votes"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Under California law, urgency ordinances — which take effect immediately rather than after the standard 30-day period — require a four-fifths supermajority vote. For LA County's five-member Board of Supervisors, that means 4 votes are needed. This higher threshold is meant to prevent hasty emergency legislation. See California Government Code §25131.",
+      "difficulty": "hard",
+      "topicCategory": "la-county",
+      "source": {
+        "name": "California Legislative Information - Government Code §25131",
+        "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=GOV&sectionNum=25131."
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-091",
+      "text": "How many signatures (as a % of votes cast in the last gubernatorial election) are required to place a constitutional amendment on the California ballot via citizen initiative?",
+      "options": [
+        "8% of votes cast",
+        "5% of votes cast",
+        "12% of votes cast",
+        "10% of votes cast"
+      ],
+      "correctAnswer": 2,
+      "explanation": "To amend the California Constitution through a citizen initiative, supporters must gather signatures from 12% of the number of votes cast in the last gubernatorial election — a higher bar than the 8% required for statutory initiatives. This two-tier system makes constitutional changes harder to achieve than ordinary law changes. See California Secretary of State initiative guide.",
+      "difficulty": "hard",
+      "topicCategory": "california-state",
+      "source": {
+        "name": "California Secretary of State – Initiative and Referendum",
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-and-referendum"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-092",
+      "text": "Which famous museum sits atop Griffith Park and offers free stargazing events?",
+      "options": [
+        "Griffith Observatory",
+        "Getty Center",
+        "Natural History Museum",
+        "LACMA"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The Griffith Observatory, opened in 1935, sits on the southern slope of Mount Hollywood and offers free public telescope viewing nights, making astronomy accessible to all Angelenos.",
+      "difficulty": "easy",
+      "topicCategory": "landmarks-culture",
+      "source": {
+        "name": "Griffith Observatory – City of Los Angeles",
+        "url": "https://griffithobservatory.org/about/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-093",
+      "text": "What type of government does the City of Los Angeles use?",
+      "options": [
+        "Mayor-Council government",
+        "Commission government",
+        "Council-Manager government",
+        "Township government"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Los Angeles operates under a Mayor-Council form of government, where a directly elected mayor serves as the chief executive and a 15-member City Council serves as the legislative body. This structure gives both branches distinct powers over city operations and policy.",
+      "difficulty": "easy",
+      "topicCategory": "city-government",
+      "source": {
+        "name": "City of Los Angeles Official Website",
+        "url": "https://www.lacity.gov/government"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-094",
+      "text": "Los Angeles was incorporated as a city in 1850 — but what was its approximate population at that time?",
+      "options": [
+        "About 1,600 residents",
+        "About 10,000 residents",
+        "About 50,000 residents",
+        "About 500 residents"
+      ],
+      "correctAnswer": 0,
+      "explanation": "When LA incorporated in 1850, it had roughly 1,600 residents — a tiny farming town that would grow into one of the world's largest cities. Understanding this growth helps illustrate how civic institutions must scale with population demands.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Wikipedia – History of Los Angeles",
+        "url": "https://en.wikipedia.org/wiki/History_of_Los_Angeles"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-095",
+      "text": "How is the LA County Sheriff chosen, unlike city police chiefs?",
+      "options": [
+        "Elected directly by county voters",
+        "Appointed by the Board of Supervisors",
+        "Appointed by the County CEO",
+        "Selected by a civilian commission"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The LA County Sheriff is elected countywide by voters, not appointed — making the Sheriff independently accountable to the public rather than to the Board of Supervisors. This is a key structural difference from city police chiefs, who are typically appointed. As of 2026-02-24, Robert Luna serves as Sheriff.",
+      "difficulty": "hard",
+      "topicCategory": "la-county",
+      "source": {
+        "name": "LA County Sheriff's Department – About",
+        "url": "https://lasd.org/about/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-096",
+      "text": "What major civic role did Los Angeles play during the 1932 Summer Olympics that shaped its public infrastructure?",
+      "options": [
+        "LA built the first publicly funded Olympic Village in U.S. history, setting a precedent for athlete housing",
+        "LA constructed the Memorial Coliseum specifically for the Games, which later became a landmark civic venue",
+        "LA created a permanent Olympic Committee that evolved into the city's parks and recreation department",
+        "LA issued the first municipal bonds in California history to fund Olympic stadium construction"
+      ],
+      "correctAnswer": 0,
+      "explanation": "The 1932 Los Angeles Olympics featured the first Olympic Village ever built for athletes, a publicly organized residential complex that housed male competitors. This civic innovation influenced how cities planned large-scale public infrastructure for future events. The LA Memorial Coliseum, while used for the Games, was built in 1923 before the Olympics.",
+      "difficulty": "hard",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "Encyclopedia Britannica / LA84 Foundation",
+        "url": "https://en.wikipedia.org/wiki/1932_Summer_Olympics"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-097",
+      "text": "How is Bloomington represented in the Los Angeles County Board of Supervisors?",
+      "options": [
+        "Bloomington falls within the 5th Supervisorial District",
+        "Bloomington elects its own supervisor independently",
+        "Bloomington is part of the 1st Supervisorial District",
+        "Bloomington is an incorporated city with its own city council"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Bloomington is an unincorporated community in Los Angeles County, represented by the 1st Supervisorial District. Residents vote for their County Supervisor rather than a city council, since Bloomington has no city government of its own. As of 2026-02-24, the 1st District covers much of the eastern San Gabriel Valley and parts of the Inland area.",
+      "difficulty": "medium",
+      "topicCategory": "elections-voting",
+      "source": {
+        "name": "LA County Board of Supervisors – District Map",
+        "url": "https://bos.lacounty.gov/board-of-supervisors/supervisorial-districts/"
+      },
+      "expiresAt": null
+    },
+    {
+      "externalId": "la-098",
+      "text": "What role did the Los Angeles Plaza (La Plaza) play in the city's early civic history?",
+      "options": [
+        "It served as the original civic and commercial hub of the Spanish colonial settlement",
+        "It was built as a memorial to California statehood in 1850",
+        "It was established as LA's first public park by the U.S. government after the Mexican-American War",
+        "It functioned as the city's first courthouse and jail during the American period"
+      ],
+      "correctAnswer": 0,
+      "explanation": "La Plaza, established around 1781 when Los Angeles was founded as a Spanish pueblo, served as the central gathering place for civic, religious, and commercial life — a common pattern in Spanish colonial town planning. Understanding how early civic spaces shaped city identity helps citizens connect past governance structures to modern public spaces.",
+      "difficulty": "medium",
+      "topicCategory": "civic-history",
+      "source": {
+        "name": "La Plaza de Cultura y Artes / Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/El_Pueblo_de_Los_%C3%81ngeles_Historical_Monument"
+      },
+      "expiresAt": null
+    }
+  ]
+}

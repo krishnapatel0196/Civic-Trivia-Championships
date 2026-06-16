@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-03-02T23:31:08.267Z",
+  "target": "massachusetts-state",
+  "config": {
+    "targetQuestions": 100,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 142,
+    "passedValidation": 92,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 92
+  },
+  "breakdown": {
+    "byRule": {
+      "vague-qualifiers": 5,
+      "duplicate-text": 42,
+      "pure-lookup": 3
+    },
+    "byRetryAttempt": {
+      "0": 78,
+      "1": 11,
+      "2": 2,
+      "3": 1
+    },
+    "byDifficulty": {
+      "easy": 25,
+      "medium": 46,
+      "hard": 21
+    },
+    "byTopic": {
+      "general-court": 13,
+      "governor-executive": 12,
+      "governors-council": 12,
+      "state-courts": 12,
+      "elections-voting": 11,
+      "civic-policy": 12,
+      "civic-history": 10,
+      "state-constitution": 10
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 552876,
+    "apiCalls": 46,
+    "tokensUsed": {
+      "input": 6728,
+      "output": 33105,
+      "cached": 1162268
+    },
+    "estimatedCostUsd": 0.8654394000000001
+  }
+}

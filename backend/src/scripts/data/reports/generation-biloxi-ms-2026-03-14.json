@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-03-14T07:54:35.170Z",
+  "target": "biloxi-ms",
+  "config": {
+    "targetQuestions": 182,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 260,
+    "passedValidation": 190,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 190
+  },
+  "breakdown": {
+    "byRule": {
+      "pure-lookup": 31,
+      "duplicate-text": 38,
+      "vague-qualifiers": 1
+    },
+    "byRetryAttempt": {
+      "0": 171,
+      "1": 11,
+      "2": 5,
+      "3": 3
+    },
+    "byDifficulty": {
+      "easy": 45,
+      "medium": 92,
+      "hard": 53
+    },
+    "byTopic": {
+      "city-government": 28,
+      "founding-history": 21,
+      "seafood-heritage": 29,
+      "landmarks-culture": 29,
+      "civil-rights": 28,
+      "military-geography": 29,
+      "casino-resilience": 26
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 954773,
+    "apiCalls": 68,
+    "tokensUsed": {
+      "input": 13689,
+      "output": 63017,
+      "cached": 2187779
+    },
+    "estimatedCostUsd": 1.6426557
+  }
+}

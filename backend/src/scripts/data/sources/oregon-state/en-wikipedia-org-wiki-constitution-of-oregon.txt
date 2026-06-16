@@ -1,0 +1,49 @@
+SOURCE: https://en.wikipedia.org/wiki/Constitution_of_Oregon
+============================================================
+The Oregon Constitution is the governing document of the U.S. state of Oregon, originally enacted in 1857. As amended the current state constitution contains eighteen Articles, beginning with a bill of rights. This contains most of the rights and privileges protected by the United States Bill of Rights and the main text of the United States Constitution. The remainder of the Oregon Constitution outlines the divisions of power within the state government, lists the times of elections, and defines the state boundaries and the capital as Salem.
+
+History
+The first constitutional documents enacted in Oregon pre-dated statehood. These were the Organic Law of 1843 and the Organic Law of 1845, adopted to govern Oregon Territory. In 1857, leaders of the territory gathered at the Oregon Constitutional Convention and drafted the current constitution. Over half of the document's content was derived in part from the Indiana constitution. The constitution of 1857 included a racial exclusion section that excluded African Americans and Chinese from the state. (See Racism in Oregon.)
+On November 9, 1857, Oregon voters approved its first constitution that then became effective upon statehood on February 14, 1859. The constitution was unchanged for the remainder of the 19th century, but has been amended numerous times since 1902 (see List of Oregon ballot measures). The changes have included the introduction of a direct legislation system, which enabled Oregon voters to propose and approve amendments both to the Constitution and to the Oregon Revised Statutes.
+In 1905, a coalition of Oregon lawyers advocated for convening a constitutional convention the following year, and drafted plans for the selection of delegates. According to The Oregonian, Portland attorneys were "almost to a man in favor of making the change". Dissenters included Portland attorneys George W. Joseph, who advised "leaving well enough alone", and C. E. S. Wood, who insisted that the recent passage of initiative and referendum system offered sufficient opportunity to amend the constitution as needed. Governor George Earle Chamberlain declined to take a position.
+In 1916, Oregonians voted to keep Section 6 of Article II of the constitution, which read "No negro, Chinaman or mulatto shall have the right of suffrage", even though it had been rendered void by the Fifteenth Amendment to the United States Constitution. In 1927, Oregonians finally decided to remove this suffrage exclusion from their constitution.
+
+Differences from U.S. Constitution
+The Oregon Constitution is easier to amend than its federal counterpart. Amending the U.S. Constitution requires a two-thirds vote in Congress and ratification by three-fourths of the states.  In Oregon, once an initiative amendment to its constitution has been placed on the ballot by initiative petition, or once a legislative amendment has been referred to the people by a simple majority vote in the state legislature, a simple majority of favorable votes is enough to ratify it.  Placing a petition for an amendment on the ballot requires a number of valid signatures of registered voters equal to eight percent of the total number of votes cast in the last gubernatorial election, higher than the six percent required for a change in statute. The Oregon Constitution can also be revised by the Oregon Legislative Assembly with a two-thirds supermajority vote in each house, which then requires a simply majority of voters to ratify. See the list of Oregon ballot measures for initiative amendments.
+
+Freedom of Speech
+The right to free speech in Oregon is broader than the federal level:
+
+No law shall be passed restraining the free expression of opinion, or restricting the right to speak, write, or print freely on any subject whatever; but every person shall be responsible for the abuse of this right.
+In State v. Robertson, the Oregon Supreme Court has cited this right against parts of Oregon's disorderly conduct statute, against content-based restrictions on billboards and murals, and against laws restricting the sale of pornography.
+Later in 1987, the court cited this provision when it abolished the state's obscenity statute in State v. Henry.
+
+Right to Bear Arms and Right to Self-Defense
+The right to bear arms granted by the Oregon Constitution is also considered broader than federal rights granted under the Second Amendment, as Oregon's Constitution specifically states the right to bear arms is not only for militia purposes, but also includes the right for individual self-defense: 
+
+The people shall have the right to bear arms for the defence [sic] of themselves, and the State, but the Military shall be kept in strict subordination to the civil power.
+In State v. Kessler (1980), the Oregon Supreme Court struck down a state law making the mere possession of a billy club a criminal act as being unconstitutional under Article I, section 27.
+In State v. Delgado (1984), the Oregon Supreme Court struck down a state ban on switchblade knives as being unconstitutional under Article I, section 27. 
+In City of Portland v. Lodi (1989), the Oregon Supreme Court struck down a Portland city ordinance that prohibited carrying concealed knives with blades longer than 3.5 inches as being unconstitutional under Article I, section 27.
+In State v. Turner (2008), the Oregon Court of Appeals established the key legal standard for what constitutes carrying a concealed weapon. While the court upheld the charges of unlawful possession of a concealed weapon against the defendant in this case, it also addressed police stops clarifying that an officer must have reasonable suspicion to stop someone, further clarifying that the mere lawful carrying a visible weapon in-and-of-itself is not grounds to stop someone, as they are exercising their rights under Article I, Section 27. 
+In Oregon v. Christian (2013), the Oregon Supreme Court affirmed the constitutionality of a Portland ordinance that prohibited the possession of certain weapons, including knives, in public places like government buildings and courthouses. However, the court also reaffirmed the ruling in State v. Delgado that the general carrying of a switchblade knife is a fundamental right under Article I, Section 27.
+In Arnold v. Kotek (2025), the Oregon Court of Appeals upheld Measure 114's ban on magazines with a capacity larger than 10 rounds, and upheld the requirement for a permit to purchase a firearm as being constitutional. Although the appellate court did acknowledge that a magazine is an integral part of a firearm and therefore enjoys constitutional protection, and that further efforts to restrict their use would likely constitute a violation of Article I, Section 27. The court also held that anything other than a "shall issue" policy for firearm permits would violate Article I, Section 27. The case it set to be heard by the Oregon Supreme Court, oral arguments were scheduled for November 6, 2025 and a ruling is expected by the end of the year.
+
+Text
+
+Preamble
+PREAMBLE
+We the people of the State of Oregon to the end that Justice be established, order maintained, and liberty perpetuated, do ordain this Constitution.—
+
+Articles
+
+Notes
+
+References
+
+External links
+
+Constitution of Oregon from the Oregon State Legislature
+Oregon Bill of Rights
+Crafting the Oregon Constitution, a web exhibit from the Oregon State Archives
+History of the constitution from the Oregon Blue Book (includes link to printable copy)

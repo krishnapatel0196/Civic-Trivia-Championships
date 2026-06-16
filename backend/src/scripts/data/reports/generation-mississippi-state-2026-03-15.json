@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-03-15T08:02:53.760Z",
+  "target": "mississippi-state",
+  "config": {
+    "targetQuestions": 120,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 225,
+    "passedValidation": 100,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 100
+  },
+  "breakdown": {
+    "byRule": {
+      "pure-lookup": 20,
+      "duplicate-text": 102,
+      "vague-qualifiers": 3
+    },
+    "byRetryAttempt": {
+      "0": 75,
+      "1": 12,
+      "2": 11,
+      "3": 2
+    },
+    "byDifficulty": {
+      "easy": 22,
+      "medium": 65,
+      "hard": 13
+    },
+    "byTopic": {
+      "state-government": 15,
+      "civil-rights": 13,
+      "state-history": 9,
+      "geography": 12,
+      "economy": 17,
+      "current-officeholders": 11,
+      "notable-mississippians": 12,
+      "state-symbols": 11
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 1044432,
+    "apiCalls": 110,
+    "tokensUsed": {
+      "input": 16165,
+      "output": 53297,
+      "cached": 4583250
+    },
+    "estimatedCostUsd": 2.2229249999999996
+  }
+}

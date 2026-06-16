@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-03-20T16:39:56.544Z",
+  "target": "indio-ca",
+  "config": {
+    "targetQuestions": 182,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 279,
+    "passedValidation": 189,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 189
+  },
+  "breakdown": {
+    "byRule": {
+      "pure-lookup": 10,
+      "ambiguous-answers": 1,
+      "duplicate-text": 78,
+      "vague-qualifiers": 1
+    },
+    "byRetryAttempt": {
+      "0": 153,
+      "1": 28,
+      "2": 6,
+      "3": 2
+    },
+    "byDifficulty": {
+      "easy": 40,
+      "medium": 101,
+      "hard": 48
+    },
+    "byTopic": {
+      "city-government": 27,
+      "civic-history": 35,
+      "landmarks-culture": 35,
+      "local-services": 34,
+      "economy-development": 34,
+      "community-environment": 24
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 1003695,
+    "apiCalls": 87,
+    "tokensUsed": {
+      "input": 14881,
+      "output": 64339,
+      "cached": 2680236
+    },
+    "estimatedCostUsd": 1.8137987999999998
+  }
+}
