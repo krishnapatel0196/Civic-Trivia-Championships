@@ -81,8 +81,56 @@ export async function optionalAuth(
 }
 
 /**
- * Requires the authenticated user to be in the admin_users table.
- * Must be used after requireAuth.
+ * Role slugs that grant access to the CTC admin panel's content sections,
+ * in addition to anyone listed in the admin_users table. Super-admin-only
+ * areas (e.g. Manage Admins) remain gated by requireSuperAdmin.
+ */
+export const CONTENT_ADMIN_ROLE_SLUGS = ['ctc_content_editor'];
+
+export interface AdminContext {
+  /** True if in admin_users OR holding an active content-admin role. */
+  isAdmin: boolean;
+  /** True only for admin_users.super_admin — never granted by a role. */
+  isSuperAdmin: boolean;
+  /** Active content-admin role slugs the user holds. */
+  roles: string[];
+}
+
+/**
+ * Resolves a user's admin standing from both the legacy admin_users table
+ * and the role system (public.user_roles → public.roles). A user counts as
+ * an admin if they are in admin_users OR hold an active content-admin role.
+ */
+export async function resolveAdminContext(userId: string): Promise<AdminContext> {
+  const [adminRes, rolesRes] = await Promise.all([
+    supabaseAdmin
+      .from('admin_users')
+      .select('super_admin')
+      .eq('user_id', userId)
+      .maybeSingle(),
+    supabaseAdmin
+      .from('user_roles')
+      .select('roles!inner(slug)')
+      .eq('user_id', userId)
+      .is('revoked_at', null)
+      .eq('roles.is_active', true)
+      .in('roles.slug', CONTENT_ADMIN_ROLE_SLUGS),
+  ]);
+
+  const roles = ((rolesRes.data ?? []) as Array<{ roles: { slug: string } | null }>)
+    .map((r) => r.roles?.slug)
+    .filter((slug): slug is string => !!slug);
+
+  return {
+    isAdmin: !!adminRes.data || roles.length > 0,
+    isSuperAdmin: adminRes.data?.super_admin ?? false,
+    roles,
+  };
+}
+
+/**
+ * Requires the authenticated user to have CTC admin access — either a row in
+ * admin_users or an active content-admin role. Must be used after requireAuth.
  * Returns 401 if not authenticated, 403 if not an admin.
  */
 export async function requireAdmin(
@@ -95,13 +143,9 @@ export async function requireAdmin(
     return;
   }
 
-  const { data } = await supabaseAdmin
-    .from('admin_users')
-    .select('user_id')
-    .eq('user_id', req.userId)
-    .maybeSingle();
+  const { isAdmin } = await resolveAdminContext(req.userId);
 
-  if (!data) {
+  if (!isAdmin) {
     res.status(403).json({ error: 'Admin required' });
     return;
   }

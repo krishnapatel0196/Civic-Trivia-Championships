@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth, resolveAdminContext } from '../middleware/auth.js';
 import { db } from '../db/index.js';
 import { playerStats, playerPrefs } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
@@ -19,22 +19,16 @@ router.get('/identity', (req: Request, res: Response): void => {
 });
 
 /**
- * GET /admin-status - Check whether the current user is an admin/super-admin.
- * Returns { isAdmin: boolean, isSuperAdmin: boolean }.
- * Used by the frontend AdminGuard; does NOT require admin role itself.
+ * GET /admin-status - Check whether the current user has CTC admin access.
+ * Returns { isAdmin, isSuperAdmin, roles } — isAdmin is true for anyone in
+ * admin_users OR holding an active content-admin role; isSuperAdmin remains
+ * admin_users-only. Used by the frontend AdminGuard; does NOT require admin
+ * role itself.
  */
 router.get('/admin-status', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { data } = await supabaseAdmin
-      .from('admin_users')
-      .select('super_admin')
-      .eq('user_id', req.userId!)
-      .maybeSingle();
-
-    res.json({
-      isAdmin: !!data,
-      isSuperAdmin: data?.super_admin ?? false,
-    });
+    const { isAdmin, isSuperAdmin, roles } = await resolveAdminContext(req.userId!);
+    res.json({ isAdmin, isSuperAdmin, roles });
   } catch (error) {
     console.error('Error checking admin status:', error);
     res.status(500).json({ error: 'Failed to check admin status' });

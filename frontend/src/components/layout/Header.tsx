@@ -7,7 +7,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { useTierColor } from '../../hooks/useTierColor';
 
 export function Header() {
-  const { user, accessToken, clearAuth, isAuthenticated, displayName } = useAuthStore();
+  const { user, accessToken, clearAuth, isAuthenticated, displayName, isAdmin } = useAuthStore();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen]             = useState(false);
   const [showSignedOutToast, setShowSignedOutToast] = useState(false);
@@ -171,6 +171,28 @@ export function Header() {
                     >
                       PROFILE
                     </button>
+                    {isAdmin && (
+                      <button
+                        onClick={() => handleMenuItemClick(() => navigate('/admin'))}
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '8px 16px',
+                          fontFamily: "'Bebas Neue', sans-serif",
+                          fontSize: '14px',
+                          letterSpacing: '0.12em',
+                          color: C.inkLight,
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                        }}
+                        onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
+                        onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                      >
+                        CTC ADMIN
+                      </button>
+                    )}
                     <button
                       onClick={() => handleMenuItemClick(() => { window.location.href = 'https://financials.empowered.vote'; })}
                       style={{

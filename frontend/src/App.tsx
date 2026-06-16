@@ -24,13 +24,24 @@ import { ElectionsPage } from './pages/admin/ElectionsPage';
 import { AdminsPage } from './pages/admin/AdminsPage';
 import { Leaderboard } from './pages/Leaderboard';
 
-// AdminGuard component: checks admin_users table (via isAdmin in store)
+// AdminGuard component: allows anyone with admin access (admin_users or a content-admin role)
 function AdminGuard() {
   const { isAuthenticated, isLoading, tierResolved, isAdmin } = useAuthStore();
 
   if (isLoading || !tierResolved) return null;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   if (!isAdmin) return <Forbidden />;
+
+  return <Outlet />;
+}
+
+// SuperAdminGuard: restricts a route to super-admins only (e.g. Manage Admins)
+function SuperAdminGuard() {
+  const { isAuthenticated, isLoading, tierResolved, isSuperAdmin } = useAuthStore();
+
+  if (isLoading || !tierResolved) return null;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isSuperAdmin) return <Forbidden />;
 
   return <Outlet />;
 }
@@ -80,7 +91,10 @@ function App() {
                 <Route path="flags" element={<FlagReviewPage />} />
                 <Route path="duplicates" element={<DuplicateReviewPage />} />
                 <Route path="elections" element={<ElectionsPage />} />
-                <Route path="admins" element={<AdminsPage />} />
+                {/* Manage Admins — super-admins only */}
+                <Route element={<SuperAdminGuard />}>
+                  <Route path="admins" element={<AdminsPage />} />
+                </Route>
               </Route>
             </Route>
           </Routes>
