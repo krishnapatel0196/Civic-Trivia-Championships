@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import type { GameResult, Question, LearningContent } from '../../../types/game';
-import { TOPIC_ICONS, TOPIC_LABELS } from './TopicIcon';
+import type { TopicCategory } from '../../../types/game';
+import { TOPIC_LABELS } from './TopicIcon';
 import { LearnMoreModal } from './LearnMoreModal';
 import { FlagButton } from './FlagButton';
 import { GemIcon } from '../../../components/icons/GemIcon';
@@ -12,10 +13,10 @@ import { announce } from '../../../utils/announce';
 import { XpReveal } from './XpReveal';
 import { LevelUpOverlay } from './LevelUpOverlay';
 import { ACCOUNTS_WEB_URL } from '../../../services/accountsApi';
-import { useTheme } from '../../../hooks/useTheme';
+import { useGameTheme } from '../gameTheme';
 import { Header } from '../../../components/layout/Header';
 
-const GEM_SCORE_THRESHOLD = 1000;
+const GEM_SCORE_THRESHOLD = 600;
 
 interface ResultsScreenProps {
   result: GameResult;
@@ -34,32 +35,30 @@ export function ResultsScreen({
   questions,
   collectionName,
   onPlayAgain,
-  onHome,
   flaggedQuestions,
   onFlagToggle,
   priorLevel,
   onLevelCaptured,
 }: ResultsScreenProps) {
   const [expandedQuestions, setExpandedQuestions] = useState<Set<number>>(new Set());
-  const [showScoreTooltip, setShowScoreTooltip] = useState(false);
   const [learnMoreQuestion, setLearnMoreQuestion] = useState<{
     content: LearningContent;
     userAnswer: number | null;
     correctAnswer: number;
   } | null>(null);
 
-  const navigate        = useNavigate();
-  const motionScore     = useMotionValue(0);
+  const navigate = useNavigate();
+  const motionScore = useMotionValue(0);
   const accordionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const accuracy      = Math.round((result.totalCorrect / result.totalQuestions) * 100);
   const isPerfectGame = result.totalCorrect === result.totalQuestions;
+  const missed        = result.totalQuestions - result.totalCorrect;
 
   const { fireConfettiRain } = useConfettiStore();
   const reducedMotion        = useReducedMotion();
-  const { C }                = useTheme();
+  const { G, darkMode }      = useGameTheme();
 
-  // Perfect game celebration
   useEffect(() => {
     if (isPerfectGame) {
       if (!reducedMotion) fireConfettiRain();
@@ -67,7 +66,6 @@ export function ResultsScreen({
     }
   }, [isPerfectGame, reducedMotion, fireConfettiRain]);
 
-  // Animate score counter
   useEffect(() => {
     const controls = animate(motionScore, result.totalScore, {
       type: 'spring', stiffness: 100, damping: 20, mass: 0.5, duration: 1.5,
@@ -80,18 +78,15 @@ export function ResultsScreen({
     return motionScore.on('change', (v) => setDisplayScore(Math.round(v)));
   }, [motionScore]);
 
-  // Level-up overlay
   const [showLevelUp, setShowLevelUp]   = useState(false);
   const levelUpShownRef                  = useRef(false);
   useEffect(() => {
     if (levelUpShownRef.current) return;
     const xp = result.progression?.xp;
     if (
-      xp?.confirmed &&
-      !xp.isDuplicate &&
+      xp?.confirmed && !xp.isDuplicate &&
       xp.level !== undefined &&
-      priorLevel !== null &&
-      priorLevel !== undefined &&
+      priorLevel !== null && priorLevel !== undefined &&
       xp.level > priorLevel
     ) {
       levelUpShownRef.current = true;
@@ -121,490 +116,357 @@ export function ResultsScreen({
   const handleCloseLearnMore = () => setLearnMoreQuestion(null);
 
   const handleAccordionKeyDown = (e: React.KeyboardEvent, index: number) => {
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        const nextIndex = (index + 1) % questions.length;
-        accordionButtonRefs.current[nextIndex]?.focus();
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        const prevIndex = (index + questions.length - 1) % questions.length;
-        accordionButtonRefs.current[prevIndex]?.focus();
-        break;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      accordionButtonRefs.current[(index + 1) % questions.length]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      accordionButtonRefs.current[(index + questions.length - 1) % questions.length]?.focus();
     }
   };
 
-  const scoreColor = isPerfectGame ? C.gold : result.totalScore < 0 ? C.incorrect : C.ink;
+  // Score subtitle
+  const scoreSubtitle = (() => {
+    if (result.wagerResult && result.wagerResult.wagerAmount > 0) {
+      const preWagerBase = result.answers.slice(0, -1).reduce((s, a) => s + a.basePoints + a.speedBonus, 0);
+      const sign = result.wagerResult.won ? '+' : '−';
+      return `${preWagerBase.toLocaleString()} base ${sign} ${result.wagerResult.wagerAmount.toLocaleString()} wager`;
+    }
+    return `${result.totalBasePoints.toLocaleString()} base${result.totalSpeedBonus > 0 ? ` + ${result.totalSpeedBonus.toLocaleString()} speed` : ''}`;
+  })();
 
   return (
     <div style={{
-      background: C.paper,
-      minHeight: '100vh',
-      fontFamily: "'Lora', Georgia, serif",
-      color: C.ink,
+      background: G.bg,
+      height: '100vh',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      fontFamily: "'Manrope', sans-serif",
+      color: G.ink,
     }}>
       <Header />
-      <div style={{ maxWidth: '640px', margin: '0 auto', padding: '0 24px 80px' }}>
 
-        {/* ── Masthead ── */}
+      <div style={{
+        flex: 1,
+        overflow: 'hidden',
+        display: 'flex',
+        maxWidth: '1080px',
+        width: '100%',
+        margin: '0 auto',
+        padding: '16px 20px',
+        gap: '16px',
+        alignItems: 'flex-start',
+        boxSizing: 'border-box',
+      }}>
+
+        {/* ── LEFT PANEL ── */}
         <motion.div
-          initial={{ opacity: 0, y: -8 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          style={{ paddingTop: '28px', textAlign: 'center' }}
+          style={{ width: '320px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}
         >
-          <p style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            letterSpacing: '0.22em',
-            fontSize: '18px',
-            color: C.muted,
-            margin: 0,
+          {/* Score card */}
+          <div style={{
+            background: G.questionCard,
+            border: `1px solid ${G.questionCardBorder}`,
+            borderRadius: '14px',
+            padding: '20px 20px 16px',
+            textAlign: 'center',
           }}>
-            CIVIC TRIVIA CHAMPIONSHIP
-          </p>
-          <div style={{ borderTop: `1px solid ${C.rule}`, marginTop: '10px' }} />
-        </motion.div>
-
-        {/* ── Game Complete image ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-          style={{ textAlign: 'center', marginTop: '28px' }}
-        >
-          <img
-            src="/images/GameComplete.png"
-            alt="Game Complete!"
-            style={{ maxWidth: '240px', width: '100%', display: 'inline-block' }}
-          />
-          {collectionName && (
-            <p style={{ fontStyle: 'italic', color: C.muted, fontSize: '14px', margin: '6px 0 0' }}>
-              {collectionName}
-            </p>
-          )}
-        </motion.div>
-
-        {/* ── Score — the centerpiece ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15, duration: 0.3 }}
-          style={{ textAlign: 'center', marginTop: '16px' }}
-        >
-          <div
-            onClick={() => setShowScoreTooltip(!showScoreTooltip)}
-            onMouseEnter={() => setShowScoreTooltip(true)}
-            onMouseLeave={() => setShowScoreTooltip(false)}
-            style={{ cursor: 'pointer', position: 'relative', display: 'inline-block' }}
-          >
+            <div style={{ fontSize: '36px', lineHeight: 1, marginBottom: '8px' }}>🏆</div>
             <div style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 'clamp(72px, 22vw, 128px)',
-              lineHeight: 0.88,
-              color: scoreColor,
-              letterSpacing: '-0.01em',
+              fontSize: '11px',
+              letterSpacing: '0.22em',
+              color: G.accent,
+              marginBottom: '4px',
+            }}>
+              TOTAL POINTS
+            </div>
+            <div style={{
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: '60px',
+              fontWeight: 700,
+              lineHeight: 0.95,
+              color: isPerfectGame ? G.btn : G.ink,
+              marginBottom: '4px',
             }}>
               {displayScore.toLocaleString()}
             </div>
-            <p style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              letterSpacing: '0.22em',
-              fontSize: '12px',
-              color: C.muted,
-              margin: '6px 0 0',
-            }}>
-              TOTAL POINTS
-            </p>
-            <AnimatePresence>
-              {showScoreTooltip && (
-                <motion.div
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.15 }}
-                  style={{
-                    position: 'absolute',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    bottom: '-12px',
-                    background: C.ink,
-                    color: C.paper,
-                    padding: '8px 14px',
-                    fontSize: '12px',
-                    fontFamily: "'Lora', Georgia, serif",
-                    whiteSpace: 'nowrap',
-                    zIndex: 10,
-                    borderRadius: '2px',
-                  }}
-                >
-                  Score 1,000+ to earn a gem. Perfect score earns 2 gems.
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {collectionName && (
+              <div style={{ fontSize: '12px', color: G.inkMuted, marginBottom: '2px', fontWeight: 400, letterSpacing: '0.06em' }}>
+                {collectionName}
+              </div>
+            )}
+            <div style={{ fontSize: '13px', color: G.inkMuted }}>
+              {scoreSubtitle}
+            </div>
+            {isPerfectGame && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8, type: 'spring', stiffness: 280, damping: 20 }}
+                style={{
+                  marginTop: '14px',
+                  padding: '5px 16px',
+                  border: `2px solid ${G.btn}`,
+                  borderRadius: '4px',
+                  color: G.btn,
+                  fontSize: '12px',
+                  letterSpacing: '0.2em',
+                  display: 'inline-block',
+                }}
+              >
+                ★ PERFECT GAME ★
+              </motion.div>
+            )}
           </div>
 
-          {isPerfectGame && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8, type: 'spring', stiffness: 280, damping: 20 }}
-              style={{
-                display: 'inline-block',
-                marginTop: '14px',
-                padding: '6px 20px',
-                border: `2px solid ${C.gold}`,
-                color: C.gold,
-                fontFamily: "'Bebas Neue', sans-serif",
-                letterSpacing: '0.22em',
-                fontSize: '17px',
-              }}
-            >
-              ★ PERFECT GAME ★
-            </motion.div>
-          )}
-        </motion.div>
-
-        {/* ── Score breakdown line ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.22, duration: 0.3 }}
-          style={{ textAlign: 'center', marginTop: '10px' }}
-        >
-          {(() => {
-            if (result.wagerResult && result.wagerResult.wagerAmount > 0) {
-              const nonFinalAnswers  = result.answers.slice(0, -1);
-              const nonFinalBase     = nonFinalAnswers.reduce((s, a) => s + a.basePoints, 0);
-              const nonFinalSpeed    = nonFinalAnswers.reduce((s, a) => s + a.speedBonus, 0);
-              const wagerSign        = result.wagerResult.won ? '+' : '−';
-              return (
-                <p style={{ fontStyle: 'italic', color: C.muted, fontSize: '14px', margin: 0 }}>
-                  {nonFinalBase.toLocaleString()} base + {nonFinalSpeed.toLocaleString()} speed{' '}
-                  <span style={{ color: result.wagerResult.won ? C.correct : C.incorrect }}>
-                    {wagerSign} {result.wagerResult.wagerAmount.toLocaleString()} wager
-                  </span>
-                </p>
-              );
-            }
-            return (
-              <p style={{ fontStyle: 'italic', color: C.muted, fontSize: '14px', margin: 0 }}>
-                {result.totalBasePoints.toLocaleString()} base + {result.totalSpeedBonus.toLocaleString()} speed
-              </p>
-            );
-          })()}
-        </motion.div>
-
-        {/* ── Stats strip ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.28, duration: 0.35 }}
-          style={{
-            display: 'flex',
-            borderTop: `1px solid ${C.rule}`,
-            borderBottom: `1px solid ${C.rule}`,
-            margin: '28px 0',
-          }}
-        >
+          {/* Stats card */}
           <div style={{
-            flex: 1,
-            textAlign: 'center',
-            padding: '16px 8px',
-            borderRight: `1px solid ${C.rule}`,
+            background: G.questionCard,
+            border: `1px solid ${G.questionCardBorder}`,
+            borderRadius: '14px',
+            padding: '0 20px',
           }}>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '40px', lineHeight: 1, color: C.ink }}>
-              {result.totalCorrect}/{result.totalQuestions}
-            </div>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.16em', fontSize: '10px', color: C.muted, marginTop: '4px' }}>
-              CORRECT
-            </div>
-          </div>
-
-          <div style={{
-            flex: 1,
-            textAlign: 'center',
-            padding: '16px 8px',
-            borderRight: result.fastestAnswer ? `1px solid ${C.rule}` : 'none',
-          }}>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '40px', lineHeight: 1, color: C.ink }}>
-              {accuracy}%
-            </div>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.16em', fontSize: '10px', color: C.muted, marginTop: '4px' }}>
-              ACCURACY
-            </div>
-          </div>
-
-          {result.fastestAnswer && (
-            <div style={{ flex: 1, textAlign: 'center', padding: '16px 8px' }}>
-              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '40px', lineHeight: 1, color: C.ink }}>
-                {result.fastestAnswer.responseTime.toFixed(1)}s
-              </div>
-              <div style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.16em', fontSize: '10px', color: C.muted, marginTop: '4px' }}>
-                FASTEST · Q{result.fastestAnswer.questionIndex + 1}
-              </div>
-            </div>
-          )}
-        </motion.div>
-
-        {/* ── XP + Gems — dark stamp on paper ── */}
-        {result.progression ? (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.34, duration: 0.3 }}
-            style={{
-              border: `1px solid ${C.rule}`,
-              padding: '20px 28px',
-              marginBottom: '28px',
-              textAlign: 'center',
-            }}
-          >
-            {result.progression.xp?.confirmed && (
-              <XpReveal xpResult={result.progression.xp} />
-            )}
-            {result.progression.gemsEarned > 0 && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                marginTop: result.progression.xp?.confirmed ? '12px' : '0',
-              }}>
-                {Array.from({ length: result.progression.gemsEarned }).map((_, i) => (
-                  <GemIcon key={i} className="w-5 h-5 text-yellow-400" />
-                ))}
-                <span style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: '28px',
-                  letterSpacing: '0.06em',
-                  color: C.gold,
-                }}>
-                  +{result.progression.gemsEarned} {result.progression.gemsEarned === 1 ? 'GEM' : 'GEMS'}
-                </span>
-              </div>
-            )}
-            {result.progression.gemsEarned === 0 && (
-              <div style={{
-                marginTop: result.progression.xp?.confirmed ? '12px' : '0',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-              }}>
-                <span style={{ color: C.mutedFg }}><GemIcon className="w-4 h-4" /></span>
-                <span style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: '14px',
-                  letterSpacing: '0.08em',
-                  color: C.mutedFg,
-                }}>
-                  REACH {GEM_SCORE_THRESHOLD.toLocaleString()} POINTS TO EARN A GEM
-                </span>
-              </div>
-            )}
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.34 }}
-            style={{ textAlign: 'center', marginBottom: '28px' }}
-          >
-            <a
-              href={ACCOUNTS_WEB_URL}
-              style={{ color: C.muted, fontSize: '13px', fontStyle: 'italic', textDecoration: 'underline' }}
-            >
-              Link account to earn XP
-            </a>
-          </motion.div>
-        )}
-
-        {/* ── Wager card ── */}
-        {result.wagerResult && result.wagerResult.wagerAmount > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.38, duration: 0.3 }}
-            style={{
-              border: `1px solid ${result.wagerResult.won ? C.correct : C.incorrect}`,
-              padding: '20px 24px',
-              marginBottom: '28px',
-              textAlign: 'center',
-            }}
-          >
-            <p style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              letterSpacing: '0.22em',
-              fontSize: '11px',
-              color: C.muted,
-              margin: '0 0 8px',
-            }}>
-              FINAL QUESTION WAGER
-            </p>
-            <p style={{ color: C.muted, fontSize: '14px', margin: '0 0 10px' }}>
-              Bet: {result.wagerResult.wagerAmount.toLocaleString()} points
-            </p>
             <div style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '32px',
-              letterSpacing: '0.05em',
-              color: result.wagerResult.won ? C.correct : C.incorrect,
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              padding: '11px 0',
+              borderBottom: `1px solid ${G.questionCardBorder}`,
             }}>
-              {result.wagerResult.won
-                ? `WON +${result.wagerResult.wagerAmount.toLocaleString()}`
-                : `LOST −${result.wagerResult.wagerAmount.toLocaleString()}`}
+              <span style={{ fontSize: '14px', color: G.inkMuted }}>Correct</span>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: G.ink }}>
+                {result.totalCorrect}/{result.totalQuestions}
+              </span>
             </div>
-          </motion.div>
-        )}
-
-        {/* ── Action buttons ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.42, duration: 0.3 }}
-          style={{ marginBottom: '52px' }}
-        >
-          <button
-            onClick={onPlayAgain}
-            style={{
-              display: 'block',
-              width: '100%',
-              padding: '18px',
-              minHeight: '48px',
-              background: C.accent,
-              color: '#FFFFFF',
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '22px',
-              letterSpacing: '0.14em',
-              border: 'none',
-              cursor: 'pointer',
-              marginBottom: '10px',
-              transition: 'background 0.15s',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = C.accentHover)}
-            onMouseLeave={e => (e.currentTarget.style.background = C.accent)}
-          >
-            PLAY AGAIN
-          </button>
-          <button
-            onClick={() => navigate('/leaderboard')}
-            style={{
-              display: 'block',
-              width: '100%',
-              padding: '14px',
-              minHeight: '48px',
-              background: 'transparent',
-              color: C.muted,
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '16px',
-              letterSpacing: '0.2em',
-              border: `1px solid ${C.rule}`,
-              cursor: 'pointer',
-              marginBottom: '10px',
-              transition: 'border-color 0.15s, color 0.15s',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.borderColor = C.inkLight;
-              e.currentTarget.style.color = C.ink;
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.borderColor = C.rule;
-              e.currentTarget.style.color = C.muted;
-            }}
-          >
-            LEADERBOARD
-          </button>
-          <button
-            onClick={onHome}
-            style={{
-              display: 'block',
-              width: '100%',
-              padding: '14px',
-              minHeight: '48px',
-              background: 'transparent',
-              color: C.muted,
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '16px',
-              letterSpacing: '0.2em',
-              border: `1px solid ${C.rule}`,
-              cursor: 'pointer',
-              transition: 'border-color 0.15s, color 0.15s',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.borderColor = C.inkLight;
-              e.currentTarget.style.color = C.ink;
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.borderColor = C.rule;
-              e.currentTarget.style.color = C.muted;
-            }}
-          >
-            HOME
-          </button>
-        </motion.div>
-
-        {/* ── Answer Review ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.48, duration: 0.3 }}
-        >
-          {/* Section header row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
-            <span style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              letterSpacing: '0.22em',
-              fontSize: '12px',
-              color: C.muted,
-              whiteSpace: 'nowrap',
+            <div style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              padding: '11px 0',
+              borderBottom: `1px solid ${G.questionCardBorder}`,
             }}>
-              ANSWER REVIEW
-            </span>
-            <div style={{ flex: 1, borderTop: `1px solid ${C.rule}` }} />
-            <button
-              onClick={() => {
-                if (expandedQuestions.size > 0) {
-                  setExpandedQuestions(new Set());
-                } else {
-                  setExpandedQuestions(new Set(questions.map((_, i) => i)));
-                }
-              }}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontFamily: "'Bebas Neue', sans-serif",
-                letterSpacing: '0.16em',
-                fontSize: '11px',
-                color: C.accent,
-                whiteSpace: 'nowrap',
-                padding: 0,
-              }}
-            >
-              {expandedQuestions.size > 0 ? 'COLLAPSE ALL' : 'EXPAND ALL'}
-            </button>
+              <span style={{ fontSize: '14px', color: G.inkMuted }}>Accuracy</span>
+              <span style={{
+                fontSize: '14px', fontWeight: 600,
+                color: accuracy === 100 ? G.btn : accuracy >= 70 ? G.correct : G.ink,
+              }}>
+                {accuracy}%
+              </span>
+            </div>
+            {result.wagerResult && result.wagerResult.wagerAmount > 0 ? (
+              <div style={{
+                padding: '10px 0',
+                borderTop: `1px solid ${G.questionCardBorder}`,
+                textAlign: 'center',
+              }}>
+                <div style={{
+                  fontSize: '10px', letterSpacing: '0.18em',
+                  color: G.accent, marginBottom: '4px',
+                }}>
+                  FINAL QUESTION WAGER
+                </div>
+                <div style={{ fontSize: '12px', color: G.inkMuted, marginBottom: '6px' }}>
+                  Bet: {result.wagerResult.wagerAmount.toLocaleString()} points
+                </div>
+                <div style={{
+                  fontSize: '28px', fontWeight: 700,
+                  color: result.wagerResult.won ? G.accent : G.incorrect,
+                  letterSpacing: '0.04em', marginBottom: '4px',
+                }}>
+                  {result.wagerResult.won
+                    ? `WON +${result.wagerResult.wagerAmount.toLocaleString()}`
+                    : `LOST −${result.wagerResult.wagerAmount.toLocaleString()}`}
+                </div>
+                {(() => {
+                  const preWager = result.totalScore - (result.wagerResult.won
+                    ? result.wagerResult.wagerAmount
+                    : -result.wagerResult.wagerAmount);
+                  const sign = result.wagerResult.won ? '+' : '−';
+                  return (
+                    <div style={{ fontSize: '11px', color: G.inkMuted }}>
+                      {preWager.toLocaleString()} → {result.totalScore.toLocaleString()} pts · {sign}{result.wagerResult.wagerAmount.toLocaleString()} added
+                    </div>
+                  );
+                })()}
+              </div>
+            ) : (
+              <div style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                padding: '11px 0',
+              }}>
+                <span style={{ fontSize: '14px', color: G.inkMuted }}>Final Wager</span>
+                <span style={{ fontSize: '14px', fontWeight: 600, color: G.inkMuted }}>—</span>
+              </div>
+            )}
           </div>
 
-          {/* Question rows */}
-          <div>
-            {questions.map((question, index) => {
-              const answer    = result.answers[index];
-              const isCorrect = answer.correct;
-              const timedOut  = answer.selectedOption === null;
-              const isExpanded = expandedQuestions.has(index);
+          {/* XP / Gems */}
+          {result.progression ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              style={{
+                background: G.questionCard,
+                border: `1px solid ${G.questionCardBorder}`,
+                borderRadius: '14px',
+                padding: '12px 16px',
+                textAlign: 'center',
+              }}
+            >
+              {result.progression.xp?.confirmed && (
+                <XpReveal xpResult={result.progression.xp} />
+              )}
+              {result.progression.gemsEarned > 0 ? (
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                  marginTop: result.progression.xp?.confirmed ? '10px' : '0',
+                }}>
+                  {Array.from({ length: result.progression.gemsEarned }).map((_, i) => (
+                    <GemIcon key={i} className="w-5 h-5 text-yellow-400" />
+                  ))}
+                  <span style={{ fontSize: '22px', letterSpacing: '0.06em', color: G.btn }}>
+                    +{result.progression.gemsEarned} {result.progression.gemsEarned === 1 ? 'GEM' : 'GEMS'}
+                  </span>
+                </div>
+              ) : (
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                  marginTop: result.progression.xp?.confirmed ? '10px' : '0',
+                }}>
+                  <span style={{ color: G.inkMuted }}><GemIcon className="w-4 h-4" /></span>
+                  <span style={{ fontSize: '11px', letterSpacing: '0.08em', color: G.inkMuted }}>
+                    REACH {GEM_SCORE_THRESHOLD.toLocaleString()} POINTS FOR A GEM
+                  </span>
+                </div>
+              )}
+            </motion.div>
+          ) : (
+            <div style={{ textAlign: 'center' }}>
+              <a
+                href={ACCOUNTS_WEB_URL}
+                style={{ color: G.inkMuted, fontSize: '12px', fontStyle: 'italic' }}
+              >
+                Link account to earn XP
+              </a>
+            </div>
+          )}
 
-              const borderAccent = isCorrect ? C.correct : timedOut ? C.amber : C.incorrect;
+          {/* Action buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+          >
+            <button
+              onClick={onPlayAgain}
+              style={{
+                display: 'block', width: '100%',
+                padding: '16px',
+                background: G.btn,
+                color: G.btnText,
+                border: 'none',
+                borderRadius: '50px',
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '16px',
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                cursor: 'pointer',
+                marginBottom: '10px',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = G.btnHover)}
+              onMouseLeave={e => (e.currentTarget.style.background = G.btn)}
+            >
+              PLAY AGAIN
+            </button>
+            <button
+              onClick={() => navigate('/leaderboard')}
+              style={{
+                display: 'block', width: '100%',
+                padding: '14px',
+                background: 'transparent',
+                color: G.inkMuted,
+                border: `1px solid ${G.questionCardBorder}`,
+                borderRadius: '50px',
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '13px',
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                cursor: 'pointer',
+                transition: 'border-color 0.15s, color 0.15s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = G.inkMuted;
+                e.currentTarget.style.color = G.ink;
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = G.questionCardBorder;
+                e.currentTarget.style.color = G.inkMuted;
+              }}
+            >
+              LEADERBOARD
+            </button>
+          </motion.div>
+        </motion.div>
+
+        {/* ── RIGHT PANEL ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          style={{ flex: 1, minWidth: 0 }}
+        >
+          <div style={{
+            background: G.questionCard,
+            border: `1px solid ${G.questionCardBorder}`,
+            borderRadius: '14px',
+            overflow: 'hidden',
+          }}>
+            {/* Header row */}
+            <div style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              padding: '18px 24px',
+              borderBottom: `1px solid ${G.questionCardBorder}`,
+            }}>
+              <span style={{
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '14px', fontWeight: 700, letterSpacing: '0.1em',
+                color: G.ink,
+              }}>
+                ANSWER REVIEW
+              </span>
+              <span style={{ fontSize: '13px', color: G.accent }}>
+                {result.totalCorrect} correct · {missed} missed
+              </span>
+            </div>
+
+            {/* Question rows */}
+            <div>
+            {questions.map((question, index) => {
+              const answer      = result.answers[index];
+              const isCorrect   = answer.correct;
+              const timedOut    = answer.selectedOption === null;
+              const isExpanded  = expandedQuestions.has(index);
+              const isLast      = index === questions.length - 1;
+              const topicLabel  = question.topicCategory
+                ? (TOPIC_LABELS[question.topicCategory as TopicCategory] || question.topicCategory).toUpperCase()
+                : 'GENERAL';
+              const rowAccent   = isCorrect ? G.accent : G.incorrect;
+              const badgeBg     = isCorrect ? G.accent : G.incorrect;
 
               return (
                 <div
                   key={question.id}
                   style={{
-                    borderBottom: `1px solid ${C.ruleLight}`,
-                    borderLeft: `3px solid ${borderAccent}`,
+                    borderBottom: !isLast ? `1px solid ${G.questionCardBorder}` : 'none',
+                    border: isExpanded ? `1px solid ${rowAccent}` : undefined,
+                    borderRadius: isExpanded ? '8px' : undefined,
+                    margin: isExpanded ? '4px 8px' : undefined,
+                    overflow: 'hidden',
+                    transition: 'border-color 0.2s',
                   }}
                 >
-                  {/* Collapsed row */}
                   <button
                     ref={el => (accordionButtonRefs.current[index] = el)}
                     onClick={() => toggleQuestion(index)}
@@ -612,208 +474,184 @@ export function ResultsScreen({
                     aria-expanded={isExpanded}
                     aria-controls={`question-detail-${index}`}
                     style={{
-                      width: '100%',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
+                      width: '100%', background: 'none', border: 'none', cursor: 'pointer',
+                      padding: '12px 16px',
+                      display: 'flex', alignItems: 'center', gap: '12px',
                       textAlign: 'left',
-                      padding: '14px 14px 14px 16px',
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      justifyContent: 'space-between',
-                      gap: '12px',
-                      minHeight: '48px',
                     }}
                   >
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                        <span style={{
-                          fontFamily: "'Bebas Neue', sans-serif",
-                          letterSpacing: '0.1em',
-                          fontSize: '11px',
-                          color: C.muted,
-                        }}>
-                          Q{index + 1}
-                        </span>
-                        {question.topicCategory && TOPIC_ICONS[question.topicCategory] && (() => {
-                          const Icon = TOPIC_ICONS[question.topicCategory];
-                          return (
-                            <span style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                              fontSize: '11px',
-                              color: C.muted,
-                              background: 'rgba(0,0,0,0.06)',
-                              borderRadius: '99px',
-                              padding: '2px 8px',
-                            }}>
-                              <Icon className="w-3.5 h-3.5" />
-                              {TOPIC_LABELS[question.topicCategory]}
-                            </span>
-                          );
-                        })()}
-                        {onFlagToggle ? (
-                          <FlagButton
-                            flagged={flaggedQuestions?.has(question.id) || false}
-                            disabled={false}
-                            onToggle={() => onFlagToggle(question.id)}
-                            size="sm"
-                          />
-                        ) : flaggedQuestions?.has(question.id) ? (
-                          <FlagButton
-                            flagged={true}
-                            disabled={false}
-                            onToggle={() => {}}
-                            readOnly={true}
-                            size="sm"
-                          />
-                        ) : null}
-                      </div>
-                      <p style={{ margin: 0, fontSize: '15px', color: C.ink, lineHeight: 1.45 }}>
-                        {question.text}
-                      </p>
+                    {/* Number badge — teal if correct, red if wrong */}
+                    <div style={{
+                      width: '28px', height: '28px', borderRadius: '50%',
+                      background: badgeBg,
+                      color: '#FFFFFF',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontFamily: "'Manrope', sans-serif",
+                      fontSize: '13px', fontWeight: 700,
+                      flexShrink: 0,
+                    }}>
+                      {index + 1}
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                    {/* Category + question text */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: '22px',
-                        letterSpacing: '0.02em',
-                        color: answer.totalPoints < 0 ? C.incorrect : isCorrect ? C.correct : timedOut ? C.amber : C.muted,
+                        fontFamily: "'Manrope', sans-serif",
+                        fontSize: '10px', letterSpacing: '0.14em',
+                        color: G.inkMuted, marginBottom: '2px',
                       }}>
-                        {answer.totalPoints >= 0 ? '+' : ''}{answer.totalPoints}
+                        Q{index + 1} · {topicLabel}
                       </div>
+                      <div style={{
+                        fontFamily: "'Manrope', sans-serif",
+                        fontSize: '14px', color: G.ink,
+                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                      }}>
+                        {question.text}
+                      </div>
+                    </div>
+
+                    {/* Score */}
+                    <div style={{
+                      fontFamily: "'Manrope', sans-serif",
+                      fontSize: '15px', fontWeight: 700, flexShrink: 0,
+                      color: isCorrect ? G.correct : timedOut ? G.inkMuted : G.inkMuted,
+                      minWidth: '40px', textAlign: 'right',
+                    }}>
+                      {answer.totalPoints >= 0 ? '+' : ''}{answer.totalPoints}
+                    </div>
+
+                    {/* Expand / collapse toggle — always same square style */}
+                    <div style={{
+                      width: '28px', height: '28px',
+                      background: G.optionBg,
+                      borderRadius: '6px',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0,
+                      transition: 'background 0.15s',
+                    }}>
                       <svg
-                        style={{
-                          width: '14px',
-                          height: '14px',
-                          color: C.muted,
-                          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                          transition: 'transform 0.2s',
-                          flexShrink: 0,
-                        }}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        width="12" height="12" viewBox="0 0 24 24"
+                        fill="none" stroke={G.inkMuted} strokeWidth="2.5"
+                        style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
                     </div>
                   </button>
 
-                  {/* Expanded detail panel */}
+                  {/* Expanded detail */}
                   <AnimatePresence>
                     {isExpanded && (
                       <motion.div
+                        id={`question-detail-${index}`}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.2 }}
                         style={{ overflow: 'hidden' }}
                       >
-                        <div
-                          id={`question-detail-${index}`}
-                          style={{
-                            padding: '12px 14px 16px 16px',
-                            borderTop: `1px solid ${C.ruleLight}`,
-                            background: 'rgba(0,0,0,0.025)',
-                          }}
-                        >
-                          {/* Score breakdown */}
-                          <div style={{
-                            display: 'flex',
-                            gap: '16px',
-                            flexWrap: 'wrap',
-                            marginBottom: '12px',
-                            fontSize: '13px',
-                            color: C.muted,
-                          }}>
-                            {index === questions.length - 1 && answer.wager !== undefined && answer.wager > 0 ? (
-                              <>
-                                <span>Wager: <strong style={{ color: C.ink }}>{answer.wager.toLocaleString()} pts</strong></span>
-                                <span style={{ color: isCorrect ? C.correct : C.incorrect }}>
-                                  {isCorrect ? '+' : '−'}{answer.wager.toLocaleString()}
-                                </span>
-                                <span>Time: <strong style={{ color: C.ink }}>{answer.responseTime.toFixed(1)}s</strong></span>
-                              </>
-                            ) : index === questions.length - 1 && answer.wager !== undefined && answer.wager === 0 ? (
-                              <>
-                                <span>Wager: 0 (played for fun)</span>
-                                <span>0 pts</span>
-                                <span>Time: <strong style={{ color: C.ink }}>{answer.responseTime.toFixed(1)}s</strong></span>
-                              </>
-                            ) : isCorrect ? (
-                              <>
-                                <span>Base: <strong style={{ color: C.ink }}>+{answer.basePoints}</strong></span>
-                                <span>Speed: <strong style={{ color: C.correct }}>+{answer.speedBonus}</strong></span>
-                                <span>Time: <strong style={{ color: C.ink }}>{answer.responseTime.toFixed(1)}s</strong></span>
-                              </>
-                            ) : (
-                              <span>No points awarded</span>
-                            )}
-                          </div>
-
-                          {/* Your answer */}
-                          <div style={{ marginBottom: '6px' }}>
-                            <span style={{ fontSize: '12px', color: C.muted, fontStyle: 'italic' }}>Your answer: </span>
-                            {timedOut ? (
-                              <span style={{ color: C.amber, fontSize: '14px' }}>No answer (timed out)</span>
-                            ) : (
-                              <span style={{ color: isCorrect ? C.correct : C.incorrect, fontSize: '14px' }}>
-                                {question.options[answer.selectedOption!]}
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Correct answer (if wrong) */}
-                          {!isCorrect && (
-                            <div style={{ marginBottom: '6px' }}>
-                              <span style={{ fontSize: '12px', color: C.muted, fontStyle: 'italic' }}>Correct answer: </span>
-                              <span style={{ color: C.correct, fontSize: '14px' }}>
-                                {question.options[answer.correctAnswer]}
-                              </span>
+                        <div style={{
+                          padding: '0 16px 14px 16px',
+                        }}>
+                          {/* Answer boxes — side by side if wrong, single if correct */}
+                          <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+                            <div style={{
+                              flex: 1,
+                              background: isCorrect
+                                ? (darkMode ? 'rgba(45,155,95,0.15)' : 'rgba(37,92,63,0.08)')
+                                : (darkMode ? 'rgba(192,21,42,0.18)' : 'rgba(192,21,42,0.08)'),
+                              borderRadius: '8px',
+                              padding: '10px 12px',
+                            }}>
+                              <div style={{
+                                fontFamily: "'Manrope', sans-serif",
+                                fontSize: '10px', letterSpacing: '0.14em',
+                                color: G.inkMuted, marginBottom: '4px',
+                              }}>
+                                YOUR ANSWER
+                              </div>
+                              <div style={{
+                                fontFamily: "'Manrope', sans-serif",
+                                fontSize: '13px', fontWeight: 600,
+                                color: timedOut ? G.inkMuted : isCorrect ? G.correct : G.incorrect,
+                              }}>
+                                {timedOut ? 'Timed out' : question.options[answer.selectedOption!]}
+                              </div>
                             </div>
-                          )}
+
+                            {!isCorrect && !timedOut && (
+                              <div style={{
+                                flex: 1,
+                                background: darkMode ? 'rgba(20,184,166,0.12)' : 'rgba(13,148,136,0.08)',
+                                borderRadius: '8px',
+                                padding: '10px 12px',
+                              }}>
+                                <div style={{
+                                  fontFamily: "'Manrope', sans-serif",
+                                  fontSize: '10px', letterSpacing: '0.14em',
+                                  color: G.inkMuted, marginBottom: '4px',
+                                }}>
+                                  CORRECT ANSWER
+                                </div>
+                                <div style={{
+                                  fontFamily: "'Manrope', sans-serif",
+                                  fontSize: '13px', fontWeight: 600,
+                                  color: G.accent,
+                                }}>
+                                  {question.options[answer.correctAnswer]}
+                                </div>
+                              </div>
+                            )}
+                          </div>
 
                           {/* Explanation */}
                           <div style={{
-                            marginTop: '10px',
-                            padding: '10px 14px',
-                            borderLeft: `2px solid ${C.rule}`,
-                            fontSize: '14px',
-                            color: C.inkLight,
-                            lineHeight: 1.65,
-                            fontStyle: 'italic',
+                            borderLeft: `3px solid ${G.btn}`,
+                            paddingLeft: '12px',
+                            fontFamily: "'Manrope', sans-serif",
+                            fontSize: '13px', color: G.inkMuted,
+                            fontWeight: 300, letterSpacing: '0.01em', lineHeight: 1.65,
+                            marginBottom: '8px',
                           }}>
                             {question.explanation}
                           </div>
 
-                          {/* Learn More */}
-                          {question.learningContent && (
-                            <button
-                              onClick={e => { e.stopPropagation(); handleOpenLearnMore(index); }}
-                              style={{
-                                marginTop: '10px',
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                padding: 0,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px',
-                                color: C.accent,
-                                fontSize: '13px',
-                                fontFamily: "'Lora', serif",
-                                fontStyle: 'italic',
-                              }}
-                            >
-                              <svg style={{ width: '14px', height: '14px', flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                              </svg>
-                              Learn More
-                            </button>
-                          )}
+                          {/* Learn More + Flag */}
+                          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                            {question.learningContent && (
+                              <button
+                                onClick={e => { e.stopPropagation(); handleOpenLearnMore(index); }}
+                                style={{
+                                  background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                                  color: G.accent, fontSize: '13px',
+                                  fontFamily: "'Manrope', sans-serif", fontWeight: 500, letterSpacing: '0.06em',
+                                  display: 'flex', alignItems: 'center', gap: '4px',
+                                }}
+                              >
+                                <svg style={{ width: '13px', height: '13px', flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                                Learn More
+                              </button>
+                            )}
+                            {onFlagToggle ? (
+                              <FlagButton
+                                flagged={flaggedQuestions?.has(question.id) || false}
+                                disabled={false}
+                                onToggle={() => onFlagToggle(question.id)}
+                                size="sm"
+                              />
+                            ) : flaggedQuestions?.has(question.id) ? (
+                              <FlagButton
+                                flagged={true}
+                                disabled={false}
+                                onToggle={() => {}}
+                                readOnly={true}
+                                size="sm"
+                              />
+                            ) : null}
+                          </div>
                         </div>
                       </motion.div>
                     )}
@@ -821,11 +659,11 @@ export function ResultsScreen({
                 </div>
               );
             })}
+            </div>
           </div>
         </motion.div>
       </div>
 
-      {/* LearnMoreModal — outside scrollable content */}
       <LearnMoreModal
         isOpen={learnMoreQuestion !== null}
         onClose={handleCloseLearnMore}

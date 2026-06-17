@@ -28,7 +28,8 @@ export function LevelUpOverlay({ newLevel, onDismiss }: LevelUpOverlayProps) {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/90 cursor-pointer"
+          className="fixed inset-0 z-50 flex items-center justify-center cursor-pointer"
+          style={{ background: 'rgba(10,8,6,0.92)' }}
           initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -45,13 +46,36 @@ export function LevelUpOverlay({ newLevel, onDismiss }: LevelUpOverlayProps) {
             exit={reducedMotion ? { opacity: 0 } : { scale: 1.1, opacity: 0 }}
             transition={reducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 20 }}
           >
-            <div className="text-teal-400 text-lg font-semibold tracking-widest uppercase mb-2">
-              Level Up!
+            <div style={{
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: '16px',
+              fontWeight: 600,
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase' as const,
+              color: '#E8A020',
+              marginBottom: '12px',
+            }}>
+              Level Up
             </div>
-            <div className="text-8xl font-black text-white mb-4">
+            <div style={{
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: 'clamp(64px, 18vw, 120px)',
+              fontWeight: 800,
+              color: '#F5EDD8',
+              lineHeight: 1.1,
+              letterSpacing: '-1.5px',
+              marginBottom: '16px',
+            }}>
               {newLevel}
             </div>
-            <div className="text-slate-400 text-sm mt-4">Tap to continue</div>
+            <div style={{
+              fontFamily: "'Lora', Georgia, serif",
+              fontSize: '13px',
+              color: '#7A6858',
+              fontStyle: 'italic',
+            }}>
+              Tap to continue
+            </div>
           </motion.div>
         </motion.div>
       )}

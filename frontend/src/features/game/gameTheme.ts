@@ -1,0 +1,92 @@
+import { useThemeStore } from '../../store/themeStore';
+
+export const GAME_DARK = {
+  bg:               '#0B1628',
+  idleBg:           '#0B1628',
+  surface:          '#122030',
+  surfaceHover:     '#1A2E44',
+  ink:              '#F1F1F1',
+  inkMuted:         '#7A8FA8',
+  accent:           '#14B8A6',
+  accentBg:         'rgba(20,184,166,0.10)',
+  accentLeft:       '#0D9488',
+  correct:          '#2D9B5F',
+  correctBg:        'rgba(45,155,95,0.14)',
+  incorrect:        '#C0152A',
+  incorrectBg:      'rgba(192,21,42,0.14)',
+  rule:             '#1C2E40',
+  hudCard:          'rgba(255,255,255,0.06)',
+  hudBorder:        'rgba(255,255,255,0.08)',
+  timerTrail:       '#1C2E40',
+  segmentEmpty:     'rgba(255,255,255,0.08)',
+  segmentActive:    'rgba(20,184,166,0.40)',
+  topicRule:        'rgba(20,184,166,0.45)',
+  explanationBg:    '#0D1A2C',
+  spotlight:        'rgba(20,184,166,0.07)',
+  btn:              '#E8A020',
+  btnHover:         '#C88010',
+  btnText:          '#0F0D09',
+  explanationText:  '#A8C0D8',
+  revealDimOpacity: 0.22,
+  // Card & option tokens
+  questionCard:     '#182030',
+  questionCardBorder:'rgba(255,255,255,0.07)',
+  optionBg:         '#1E2D42',
+  optionBorder:     'rgba(255,255,255,0.07)',
+  optionHoverBg:    '#253650',
+  badgeBg:          '#2A3D56',
+  badgeText:        '#8090A8',
+  leftDefault:      '#E8A020',
+  leftDefaultText:  '#0F0D09',
+  leftHover:        '#C88010',
+} as const;
+
+export const GAME_LIGHT = {
+  bg:               '#EEF4F7',
+  idleBg:           '#EEF4F7',
+  surface:          '#FFFFFF',
+  surfaceHover:     '#F0F9F8',
+  ink:              '#17120E',
+  inkMuted:         '#7A6A5A',
+  accent:           '#0D9488',
+  accentBg:         'rgba(13,148,136,0.10)',
+  accentLeft:       '#0A7870',
+  correct:          '#255C3F',
+  correctBg:        'rgba(37,92,63,0.10)',
+  incorrect:        '#C0152A',
+  incorrectBg:      'rgba(192,21,42,0.10)',
+  rule:             '#C8BAA6',
+  hudCard:          '#FFFFFF',
+  hudBorder:        'rgba(0,0,0,0.10)',
+  timerTrail:       '#CBD5E1',
+  segmentEmpty:     'rgba(0,0,0,0.10)',
+  segmentActive:    'rgba(13,148,136,0.35)',
+  topicRule:        'rgba(13,148,136,0.45)',
+  explanationBg:    '#F0F9F8',
+  spotlight:        'rgba(13,148,136,0.05)',
+  btn:              '#E8A020',
+  btnHover:         '#C88010',
+  btnText:          '#0F0D09',
+  explanationText:  '#4A3828',
+  revealDimOpacity: 0.35,
+  // Card & option tokens
+  questionCard:     '#FFFFFF',
+  questionCardBorder:'rgba(0,0,0,0.08)',
+  optionBg:         '#F2F5F9',
+  optionBorder:     'rgba(0,0,0,0.08)',
+  optionHoverBg:    '#E8EDF4',
+  badgeBg:          '#E2E8F0',
+  badgeText:        '#7A8A9A',
+  leftDefault:      '#E8A020',
+  leftDefaultText:  '#0F0D09',
+  leftHover:        '#C88010',
+} as const;
+
+export type GamePalette = {
+  [K in keyof typeof GAME_DARK]: (typeof GAME_DARK)[K] extends number ? number : string;
+};
+
+export function useGameTheme(): { G: GamePalette; darkMode: boolean } {
+  const { darkMode } = useThemeStore();
+  return { G: darkMode ? GAME_DARK : GAME_LIGHT, darkMode };
+}

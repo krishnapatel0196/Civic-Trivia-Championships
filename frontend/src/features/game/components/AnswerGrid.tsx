@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
+import { useGameTheme } from '../gameTheme';
 import type { GamePhase } from '../../../types/game';
 
 interface AnswerGridProps {
@@ -15,21 +16,6 @@ interface AnswerGridProps {
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
 
-// Design tokens (game screen dark palette)
-const G = {
-  surface:      '#1A1510',
-  border:       '#2E2620',
-  borderHover:  '#5C4A30',
-  ink:          '#F5EDD8',
-  inkMuted:     '#9A8878',
-  accent:       '#E8A020',
-  accentBg:     'rgba(232,160,32,0.10)',
-  correct:      '#2D9B5F',
-  correctBg:    'rgba(45,155,95,0.14)',
-  incorrect:    '#C0152A',
-  incorrectBg:  'rgba(192,21,42,0.12)',
-} as const;
-
 export function AnswerGrid({
   options,
   selectedOption,
@@ -39,15 +25,16 @@ export function AnswerGrid({
   onLockIn,
   explanation,
 }: AnswerGridProps) {
-  const isAnswering = phase === 'answering' || phase === 'selected';
-  const isRevealing = phase === 'revealing';
-  const isLocked    = phase === 'locked';
+  const { G } = useGameTheme();
+  const isAnswering  = phase === 'answering' || phase === 'selected';
+  const isRevealing  = phase === 'revealing';
+  const isLocked     = phase === 'locked';
   const reducedMotion = useReducedMotion();
 
-  const [focusedIndex, setFocusedIndex]   = useState<number | null>(null);
-  const buttonRefs                         = useRef<(HTMLButtonElement | null)[]>([]);
-  const lockInButtonRef                    = useRef<HTMLButtonElement>(null);
-  const [hoveredIndex, setHoveredIndex]   = useState<number | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const lockInButtonRef = useRef<HTMLButtonElement>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const canSelect = isAnswering && !isLocked;
 
@@ -61,87 +48,18 @@ export function AnswerGrid({
     }
   }, [focusedIndex]);
 
-  // Returns the inline style object for each button based on phase/selection state
-  const getButtonStyle = (index: number): React.CSSProperties => {
-    const isSelected = selectedOption === index;
-    const isCorrectAnswer = index === correctAnswer;
-    const isHovered = hoveredIndex === index;
-
-    if (isRevealing) {
-      if (isCorrectAnswer) {
-        return {
-          background: G.correctBg,
-          border: `2px solid ${G.correct}`,
-        };
-      }
-      if (isSelected && !isCorrectAnswer) {
-        return {
-          background: G.incorrectBg,
-          border: `2px solid ${G.incorrect}`,
-        };
-      }
-      return {
-        background: G.surface,
-        border: `2px solid ${G.border}`,
-        opacity: 0.2,
-      };
-    }
-
-    if ((phase === 'selected' || isLocked) && isSelected) {
-      return {
-        background: G.accentBg,
-        border: `2px solid ${G.accent}`,
-      };
-    }
-
-    if (canSelect && isHovered) {
-      return {
-        background: '#241C14',
-        border: `2px solid ${G.borderHover}`,
-      };
-    }
-
-    return {
-      background: G.surface,
-      border: `2px solid ${G.border}`,
-    };
-  };
-
-  // Letter badge style
-  const getBadgeStyle = (index: number): React.CSSProperties => {
-    const isSelected = selectedOption === index;
-    const isCorrectAnswer = index === correctAnswer;
-
-    if (isRevealing) {
-      if (isCorrectAnswer) {
-        return { background: G.correct, color: '#F5EDD8', borderColor: G.correct };
-      }
-      if (isSelected && !isCorrectAnswer) {
-        return { background: G.incorrect, color: '#F5EDD8', borderColor: G.incorrect };
-      }
-      return { background: 'transparent', color: G.inkMuted, borderColor: G.border };
-    }
-
-    if ((phase === 'selected' || isLocked) && isSelected) {
-      return { background: G.accent, color: '#0F0D09', borderColor: G.accent };
-    }
-
-    return { background: 'transparent', color: G.inkMuted, borderColor: G.border };
-  };
-
-  const getOptionScale = (index: number) => {
-    if (isRevealing && index === correctAnswer) return 1.02;
-    return 1;
-  };
-
   const getOpacity = (index: number) => {
+    if (isRevealing) {
+      const isCorrect  = index === correctAnswer;
+      const isSelected = selectedOption === index;
+      if (!isCorrect && !isSelected) return G.revealDimOpacity;
+    }
     if (phase === 'locked' && selectedOption !== null && index !== selectedOption) return 0.3;
     return 1;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     if (!canSelect) return;
-
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
@@ -154,131 +72,150 @@ export function AnswerGrid({
       case 'Enter':
       case ' ':
         e.preventDefault();
-        if (phase === 'selected') {
-          onLockIn();
-        } else if (phase === 'answering') {
-          if (selectedOption === null) {
-            onSelect(index);
-          } else {
-            onLockIn();
-          }
+        if (phase === 'selected') { onLockIn(); }
+        else if (phase === 'answering') {
+          if (selectedOption === null) onSelect(index);
+          else onLockIn();
         }
         break;
-      case '1':
-      case '2':
-      case '3':
-      case '4':
+      case '1': case '2': case '3': case '4':
         e.preventDefault();
-        const selectedIdx = parseInt(e.key) - 1;
-        onSelect(selectedIdx);
-        setFocusedIndex(selectedIdx);
+        const idx = parseInt(e.key) - 1;
+        onSelect(idx);
+        setFocusedIndex(idx);
         break;
     }
   };
 
+  const explanationBorderColor = selectedOption === correctAnswer
+    ? G.correct
+    : selectedOption === null ? G.rule : G.incorrect;
+
   return (
-    <div className="w-full max-w-3xl mx-auto px-2 md:px-6">
+    <div className="w-full">
       {/* Answer grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 lg:gap-3.5 mb-2 md:mb-3">
-        {options.map((option, index) => (
-          <motion.button
-            key={index}
-            ref={el => (buttonRefs.current[index] = el)}
-            onClick={() => canSelect && onSelect(index)}
-            onKeyDown={e => handleKeyDown(e, index)}
-            onMouseEnter={() => canSelect && setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-            disabled={!canSelect}
-            tabIndex={focusedIndex === index ? 0 : index === 0 && focusedIndex === null ? 0 : -1}
-            aria-label={`Option ${OPTION_LETTERS[index]}: ${option}`}
-            whileTap={canSelect && !reducedMotion ? { scale: 0.97 } : undefined}
-            animate={{
-              scale: getOptionScale(index),
-              opacity: getOpacity(index),
-              ...(phase === 'locked' && selectedOption === index
-                ? reducedMotion
-                  ? { boxShadow: `0 0 16px rgba(232,160,32,0.5)` }
-                  : {
-                      boxShadow: [
-                        '0 0 8px rgba(232,160,32,0.3)',
-                        '0 0 24px rgba(232,160,32,0.7)',
-                        '0 0 8px rgba(232,160,32,0.3)',
-                      ],
-                    }
-                : { boxShadow: '0 0 0px rgba(0,0,0,0)' }),
-            }}
-            transition={{
-              scale:     { type: 'spring', stiffness: 400, damping: 17 },
-              opacity:   { duration: 0.3 },
-              boxShadow: reducedMotion ? { duration: 0 } : { duration: 0.7, repeat: 1, ease: 'easeInOut' },
-            }}
-            style={{
-              position: 'relative',
-              padding: 'clamp(8px, 1.2vh, 14px) clamp(12px, 1.5vw, 20px)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              textAlign: 'left',
-              minHeight: 'clamp(48px, 6vh, 64px)',
-              cursor: canSelect ? 'pointer' : 'default',
-              borderRadius: '3px',
-              transition: 'background 0.15s, border-color 0.15s',
-              outline: 'none',
-              ...getButtonStyle(index),
-            }}
-          >
-            {/* Letter badge — square, Bebas Neue */}
-            <div style={{
-              flexShrink: 0,
-              width: '34px',
-              height: '34px',
-              border: '1px solid',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '18px',
-              letterSpacing: '0.05em',
-              borderRadius: '2px',
-              transition: 'background 0.15s, color 0.15s, border-color 0.15s',
-              ...getBadgeStyle(index),
-            }}>
-              {OPTION_LETTERS[index]}
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+        {options.map((option, index) => {
+          const isSelected    = selectedOption === index;
+          const isCorrectOpt  = index === correctAnswer;
+          const isHovered     = hoveredIndex === index;
 
-            {/* Option text */}
-            <div style={{
-              fontFamily: "'Lora', Georgia, serif",
-              color: G.ink,
-              fontSize: '15px',
-              lineHeight: 1.4,
-              flex: 1,
-            }}>
-              {option}
-            </div>
+          // Badge
+          let badgeBg      = G.badgeBg;
+          let badgeColor   = G.badgeText;
+          let badgeContent: React.ReactNode = OPTION_LETTERS[index];
 
-            {/* Status icons during reveal */}
-            {isRevealing && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.25 }}
-                style={{ flexShrink: 0 }}
-              >
-                {index === correctAnswer && (
-                  <svg style={{ width: '20px', height: '20px', color: G.correct }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                )}
-                {index === selectedOption && index !== correctAnswer && (
-                  <svg style={{ width: '20px', height: '20px', color: G.incorrect }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </motion.div>
-            )}
-          </motion.button>
-        ))}
+          // Button border + bg
+          let btnBg     = G.optionBg;
+          let btnBorder = G.optionBorder;
+
+          if (isRevealing) {
+            if (isCorrectOpt) {
+              btnBg = G.correctBg; btnBorder = G.correct;
+              badgeBg = G.correct; badgeColor = '#FFFFFF'; badgeContent = '✓';
+            } else if (isSelected) {
+              btnBg = G.incorrectBg; btnBorder = G.incorrect;
+              badgeBg = G.incorrect; badgeColor = '#FFFFFF'; badgeContent = '✗';
+            }
+          } else if ((phase === 'selected' || isLocked) && isSelected) {
+            btnBorder = G.accent;
+            badgeBg = G.accentLeft; badgeColor = '#FFFFFF';
+          } else if (canSelect && isHovered) {
+            btnBg = G.optionHoverBg;
+            badgeBg = G.leftDefault; badgeColor = G.leftDefaultText;
+          }
+
+          return (
+            <motion.button
+              key={index}
+              ref={el => (buttonRefs.current[index] = el)}
+              onClick={() => canSelect && onSelect(index)}
+              onKeyDown={e => handleKeyDown(e, index)}
+              onMouseEnter={() => canSelect && setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              disabled={!canSelect}
+              tabIndex={focusedIndex === index ? 0 : index === 0 && focusedIndex === null ? 0 : -1}
+              aria-label={`Option ${OPTION_LETTERS[index]}: ${option}`}
+              whileTap={canSelect && !reducedMotion ? { scale: 0.98 } : undefined}
+              animate={{
+                opacity: getOpacity(index),
+                ...(phase === 'locked' && isSelected
+                  ? reducedMotion
+                    ? { boxShadow: `0 0 0 2px ${G.accent}` }
+                    : { boxShadow: [`0 0 0 1px ${G.accent}40`, `0 0 0 2px ${G.accent}`, `0 0 0 1px ${G.accent}40`] }
+                  : { boxShadow: 'none' }),
+              }}
+              transition={{
+                opacity:   { duration: 0.3 },
+                boxShadow: reducedMotion ? { duration: 0 } : { duration: 0.7, repeat: 1, ease: 'easeInOut' },
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '10px 14px',
+                background: btnBg,
+                border: `1.5px solid ${btnBorder}`,
+                borderRadius: '8px',
+                width: '100%',
+                textAlign: 'left',
+                cursor: canSelect ? 'pointer' : 'default',
+                outline: 'none',
+                minHeight: '46px',
+                transition: 'background 0.15s, border-color 0.15s',
+              }}
+            >
+              {/* Letter badge */}
+              <div style={{
+                width: '28px', height: '28px',
+                borderRadius: '6px',
+                background: badgeBg,
+                color: badgeColor,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '12px',
+                fontWeight: 700,
+                flexShrink: 0,
+                transition: 'background 0.15s, color 0.15s',
+              }}>
+                {badgeContent}
+              </div>
+
+              {/* Option text */}
+              <span style={{
+                fontFamily: "'Manrope', sans-serif",
+                color: G.ink,
+                fontSize: '13px',
+                fontWeight: 500,
+                lineHeight: 1.4,
+                flex: 1,
+              }}>
+                {option}
+              </span>
+
+              {/* Reveal icons */}
+              {isRevealing && (isCorrectOpt || (isSelected && !isCorrectOpt)) && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2, type: 'spring', stiffness: 400, damping: 18 }}
+                  style={{ flexShrink: 0 }}
+                >
+                  {isCorrectOpt && (
+                    <svg style={{ width: '16px', height: '16px', color: G.correct }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {isSelected && !isCorrectOpt && (
+                    <svg style={{ width: '16px', height: '16px', color: G.incorrect }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </motion.div>
+              )}
+            </motion.button>
+          );
+        })}
       </div>
 
       {/* Lock In button */}
@@ -286,64 +223,84 @@ export function AnswerGrid({
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex justify-center mb-4"
+          className="flex justify-center mb-3"
         >
           <button
             ref={lockInButtonRef}
             onClick={onLockIn}
             style={{
-              padding: '12px 36px',
-              background: G.accent,
-              color: '#0F0D09',
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '20px',
-              letterSpacing: '0.12em',
+              padding: '12px 48px',
+              background: G.btn,
+              color: G.btnText,
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: '16px',
+              fontWeight: 700,
               border: 'none',
-              borderRadius: '2px',
+              borderRadius: '50px',
               cursor: 'pointer',
               minHeight: '48px',
               transition: 'background 0.15s',
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#C88010')}
-            onMouseLeave={e => (e.currentTarget.style.background = G.accent)}
+            onMouseEnter={e => (e.currentTarget.style.background = G.btnHover)}
+            onMouseLeave={e => (e.currentTarget.style.background = G.btn)}
           >
             LOCK IN
           </button>
         </motion.div>
       )}
 
-      {/* Reveal phase — explanation */}
+      {/* Reveal section */}
       {isRevealing && (
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-          style={{ textAlign: 'center' }}
+          transition={{ delay: 0.35 }}
+          style={{ marginTop: '20px' }}
         >
-          {selectedOption !== null && selectedOption !== correctAnswer && (
+          {/* Correct! */}
+          {selectedOption !== null && selectedOption === correctAnswer && (
             <div style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              letterSpacing: '0.12em',
-              fontSize: '16px',
-              color: G.incorrect,
-              marginBottom: '10px',
+              display: 'flex', alignItems: 'center', gap: '5px',
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: '13px', fontWeight: 600,
+              color: G.correct,
+              marginBottom: '8px',
             }}>
-              NOT QUITE
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              Correct!
             </div>
           )}
 
+          {/* Not quite */}
+          {selectedOption !== null && selectedOption !== correctAnswer && (
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '5px',
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: '13px', fontWeight: 500,
+              color: G.incorrect,
+              opacity: 0.85,
+              marginBottom: '8px',
+            }}>
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+              Not quite
+            </div>
+          )}
+
+          {/* Explanation */}
           <div style={{
-            background: '#1A1510',
-            border: `1px solid #2E2620`,
-            borderLeft: `3px solid #2E2620`,
-            padding: '14px 16px',
-            marginBottom: '8px',
-            borderRadius: '2px',
+            borderLeft: `3px solid ${explanationBorderColor}`,
+            paddingLeft: '12px',
+            paddingTop: '2px',
+            paddingBottom: '2px',
           }}>
             <div style={{
               fontFamily: "'Lora', Georgia, serif",
-              color: '#C8B89A',
-              fontSize: '14px',
+              color: G.explanationText,
+              fontSize: '13px',
               lineHeight: 1.65,
               fontStyle: 'italic',
             }}>

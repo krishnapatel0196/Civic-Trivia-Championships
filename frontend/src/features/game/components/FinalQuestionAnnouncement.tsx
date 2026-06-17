@@ -1,13 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '../../../hooks/useTheme';
 
 interface FinalQuestionAnnouncementProps {
   show: boolean;
 }
 
 export function FinalQuestionAnnouncement({ show }: FinalQuestionAnnouncementProps) {
-  const { C } = useTheme();
-
   return (
     <AnimatePresence>
       {show && (
@@ -18,7 +15,7 @@ export function FinalQuestionAnnouncement({ show }: FinalQuestionAnnouncementPro
           transition={{ duration: 0.5, ease: 'easeOut' }}
           style={{
             minHeight: '100vh',
-            background: C.paper,
+            background: '#0A0806',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

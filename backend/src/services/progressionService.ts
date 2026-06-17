@@ -8,7 +8,7 @@ import { db } from '../db/index.js';
 import { playerStats } from '../db/schema.js';
 import { sql } from 'drizzle-orm';
 
-export const GEM_SCORE_THRESHOLD = 1000;
+export const GEM_SCORE_THRESHOLD = 600;
 
 /**
  * Calculate XP and gems earned based on game performance
@@ -25,7 +25,7 @@ export function calculateProgression(
   // XP formula: 50 base + 1 per correct answer
   const xpEarned = 50 + correctAnswers;
 
-  // Gems formula: 2 for perfect game (8/8), 1 for score >= 1000, 0 otherwise
+  // Gems formula: 2 for perfect game (5/5), 1 for score >= 600, 0 otherwise
   const isPerfect = correctAnswers === totalQuestions;
   const gemsEarned = isPerfect ? 2 : finalScore >= GEM_SCORE_THRESHOLD ? 1 : 0;
 

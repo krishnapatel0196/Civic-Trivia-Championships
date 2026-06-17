@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TOPIC_LABELS } from './TopicIcon';
 import type { TopicCategory } from '../../../types/game';
-import { useTheme } from '../../../hooks/useTheme';
 import { GemIcon } from '../../../components/icons/GemIcon';
+import { useGameTheme } from '../gameTheme';
+import { useThemeStore } from '../../../store/themeStore';
 
-const GEM_SCORE_THRESHOLD = 1000;
+const GEM_SCORE_THRESHOLD = 600;
 
 interface WagerScreenProps {
   currentScore: number;
@@ -24,7 +25,8 @@ export function WagerScreen({
   onLockWager,
   isLocked,
 }: WagerScreenProps) {
-  const { C } = useTheme();
+  const { G, darkMode } = useGameTheme();
+  const { toggleDarkMode } = useThemeStore();
   const maxWager = Math.floor(currentScore / 2);
   const hasPoints = currentScore > 0;
   const categoryLabel = TOPIC_LABELS[category as TopicCategory] || category;
@@ -52,52 +54,95 @@ export function WagerScreen({
 
   return (
     <div style={{
-      minHeight: '100vh',
-      background: C.paper,
+      height: '100vh',
+      overflow: 'hidden',
+      background: G.bg,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '24px 16px',
-      fontFamily: "'Lora', Georgia, serif",
+      padding: '16px',
+      fontFamily: "'Manrope', sans-serif",
     }}>
+      {/* Theme toggle */}
+      <button
+        onClick={toggleDarkMode}
+        aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+        style={{
+          position: 'fixed',
+          top: '14px',
+          right: '16px',
+          zIndex: 40,
+          width: '36px',
+          height: '36px',
+          borderRadius: '50%',
+          background: G.hudCard,
+          border: `1px solid ${G.hudBorder}`,
+          color: G.inkMuted,
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'background 0.15s, color 0.15s',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = darkMode ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.10)';
+          e.currentTarget.style.color = G.accent;
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = G.hudCard;
+          e.currentTarget.style.color = G.inkMuted;
+        }}
+      >
+        {darkMode ? (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="5" />
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+          </svg>
+        ) : (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        )}
+      </button>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        style={{ maxWidth: '560px', width: '100%' }}
+        style={{ maxWidth: '520px', width: '100%' }}
       >
         {/* Final Question image + category */}
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '12px' }}>
           <img
             src="/images/FinalQuestion_A.png"
             alt="Final Question"
-            style={{ height: '23vh', maxHeight: '180px', objectFit: 'contain', display: 'inline-block', marginBottom: '16px' }}
+            style={{ height: '13vh', maxHeight: '110px', objectFit: 'contain', display: 'inline-block', marginBottom: '8px' }}
           />
           <p style={{
-            fontFamily: "'Bebas Neue', sans-serif",
+            fontFamily: "'Manrope', sans-serif",
             letterSpacing: '0.22em',
-            fontSize: '13px',
-            color: C.muted,
+            fontSize: '11px',
+            color: G.inkMuted,
             margin: 0,
           }}>
-            CATEGORY: <span style={{ color: C.ink }}>{categoryLabel.toUpperCase()}</span>
+            CATEGORY: <span style={{ color: G.ink }}>{categoryLabel.toUpperCase()}</span>
           </p>
         </div>
 
         {/* Current score */}
         <div style={{
           textAlign: 'center',
-          borderTop: `1px solid ${C.rule}`,
-          borderBottom: `1px solid ${C.rule}`,
-          padding: '16px 0',
-          marginBottom: '28px',
+          borderTop: `1px solid ${G.questionCardBorder}`,
+          borderBottom: `1px solid ${G.questionCardBorder}`,
+          padding: '8px 0',
+          marginBottom: '12px',
         }}>
           <div style={{
-            fontFamily: "'Bebas Neue', sans-serif",
+            fontFamily: "'Manrope', sans-serif",
             letterSpacing: '0.16em',
-            fontSize: '11px',
-            color: C.mutedFg,
-            marginBottom: '4px',
+            fontSize: '10px',
+            color: G.inkMuted,
+            marginBottom: '2px',
           }}>
             YOUR SCORE
           </div>
@@ -108,10 +153,11 @@ export function WagerScreen({
             style={{ cursor: 'pointer', position: 'relative', display: 'inline-block' }}
           >
             <div style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '52px',
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: '40px',
               lineHeight: 1,
-              color: C.ink,
+              fontWeight: 700,
+              color: G.ink,
             }}>
               {currentScore.toLocaleString()}
             </div>
@@ -127,17 +173,17 @@ export function WagerScreen({
                     left: '50%',
                     transform: 'translateX(-50%)',
                     bottom: '-8px',
-                    background: C.ink,
-                    color: C.paper,
-                    padding: '8px 14px',
-                    fontSize: '12px',
-                    fontFamily: "'Lora', Georgia, serif",
+                    background: G.ink,
+                    color: G.bg,
+                    padding: '6px 12px',
+                    fontSize: '11px',
+                    fontFamily: "'Manrope', sans-serif",
                     whiteSpace: 'nowrap',
                     zIndex: 10,
-                    borderRadius: '2px',
+                    borderRadius: '6px',
                   }}
                 >
-                  Score 1,000+ to earn a gem. Perfect score earns 2 gems.
+                  Score {GEM_SCORE_THRESHOLD.toLocaleString()}+ to earn a gem. Perfect score earns 2 gems.
                 </motion.div>
               )}
             </AnimatePresence>
@@ -146,64 +192,81 @@ export function WagerScreen({
 
         {/* Wager card */}
         <div style={{
-          border: `1px solid ${C.rule}`,
-          padding: '24px',
-          marginBottom: '24px',
+          background: G.questionCard,
+          border: `1px solid ${G.questionCardBorder}`,
+          borderRadius: '14px',
+          padding: '16px 20px',
+          marginBottom: '12px',
         }}>
-          {/* Wager amount */}
-          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <div style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              letterSpacing: '0.16em',
-              fontSize: '11px',
-              color: C.mutedFg,
-              marginBottom: '4px',
-            }}>
-              WAGER
+          {/* Wager amount + gem indicator in one row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginBottom: '12px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{
+                fontFamily: "'Manrope', sans-serif",
+                letterSpacing: '0.16em',
+                fontSize: '10px',
+                color: G.inkMuted,
+                marginBottom: '2px',
+              }}>
+                WAGER
+              </div>
+              <div style={{
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '36px',
+                fontWeight: 700,
+                lineHeight: 1,
+                color: G.btn,
+              }}>
+                {wagerAmount.toLocaleString()}
+              </div>
+              <div style={{
+                fontFamily: "'Manrope', sans-serif",
+                letterSpacing: '0.12em',
+                fontSize: '10px',
+                color: G.inkMuted,
+                marginTop: '2px',
+              }}>
+                POINTS
+              </div>
             </div>
-            <div style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '44px',
-              lineHeight: 1,
-              color: C.amber,
-            }}>
-              {wagerAmount.toLocaleString()}
-            </div>
-            <div style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              letterSpacing: '0.12em',
-              fontSize: '10px',
-              color: C.mutedFg,
-              marginTop: '2px',
-            }}>
-              POINTS
-            </div>
-          </div>
 
-          {/* Gem indicator */}
-          <motion.div
-            animate={{
-              color: meetsGemThreshold ? C.gold : C.mutedFg,
-              opacity: meetsGemThreshold ? 1 : 0.4,
-            }}
-            transition={{ duration: 0.3 }}
-            style={{ textAlign: 'center', marginBottom: '16px' }}
-          >
-            <GemIcon className="w-6 h-6" />
+            {/* Vertical divider */}
             <div style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '9px',
-              letterSpacing: '0.16em',
-              color: C.mutedFg,
-              marginTop: '4px',
-            }}>
-              1,000 PTS FOR A GEM
-            </div>
-          </motion.div>
+              width: '1px',
+              height: '48px',
+              background: G.questionCardBorder,
+              flexShrink: 0,
+            }} />
+
+            {/* Gem indicator */}
+            <motion.div
+              animate={{
+                color: meetsGemThreshold ? '#D4A017' : G.ink,
+                opacity: meetsGemThreshold ? 1 : 0.65,
+              }}
+              transition={{ duration: 0.3 }}
+              style={{ textAlign: 'center' }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <GemIcon className="w-5 h-5" />
+              </div>
+              <div style={{
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '10px',
+                letterSpacing: '0.16em',
+                color: G.inkMuted,
+                marginTop: '4px',
+                textAlign: 'center',
+                lineHeight: 1.5,
+              }}>
+                {GEM_SCORE_THRESHOLD.toLocaleString()} PTS<br />FOR A GEM
+              </div>
+            </motion.div>
+          </div>
 
           {/* Slider */}
           {hasPoints ? (
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '12px' }}>
               <input
                 type="range"
                 min={0}
@@ -226,18 +289,18 @@ export function WagerScreen({
                   borderRadius: '2px',
                   cursor: isLocked ? 'not-allowed' : 'pointer',
                   opacity: isLocked ? 0.5 : 1,
-                  background: `linear-gradient(to right, ${C.accent} 0%, ${C.accent} ${sliderFillPct}%, ${C.ruleLight} ${sliderFillPct}%, ${C.ruleLight} 100%)`,
+                  background: `linear-gradient(to right, ${G.btn} 0%, ${G.btn} ${sliderFillPct}%, ${G.optionBorder} ${sliderFillPct}%, ${G.optionBorder} 100%)`,
                   outline: 'none',
                 }}
               />
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginTop: '6px',
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: '11px',
+                marginTop: '4px',
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '10px',
                 letterSpacing: '0.08em',
-                color: C.mutedFg,
+                color: G.inkMuted,
               }}>
                 <span>0</span>
                 <span>{maxWager.toLocaleString()} MAX</span>
@@ -265,9 +328,9 @@ export function WagerScreen({
                         fontWeight: 600,
                         letterSpacing: '0.06em',
                         borderRadius: '6px',
-                        border: `1px solid ${isActive ? C.accent : C.rule}`,
-                        background: isActive ? C.accent : 'transparent',
-                        color: isActive ? '#FFFFFF' : C.muted,
+                        border: `1px solid ${isActive ? G.btn : G.optionBorder}`,
+                        background: isActive ? G.btn : 'transparent',
+                        color: isActive ? G.btnText : G.inkMuted,
                         cursor: isLocked ? 'not-allowed' : 'pointer',
                         transition: 'background 0.15s, color 0.15s, border-color 0.15s',
                       }}
@@ -279,7 +342,7 @@ export function WagerScreen({
               </div>
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '16px 0', color: C.muted, fontStyle: 'italic', fontSize: '14px' }}>
+            <div style={{ textAlign: 'center', padding: '8px 0', color: G.inkMuted, fontStyle: 'italic', fontSize: '13px' }}>
               No points to wager
             </div>
           )}
@@ -290,27 +353,33 @@ export function WagerScreen({
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '10px 0',
-              borderTop: `1px solid ${C.ruleLight}`,
+              padding: '7px 0',
+              borderTop: `1px solid ${G.optionBorder}`,
             }}>
-              <span style={{ fontStyle: 'italic', fontSize: '14px', color: C.muted }}>If correct:</span>
+              <span style={{
+                fontFamily: "'Lora', Georgia, serif",
+                fontStyle: 'italic',
+                fontSize: '13px',
+                color: G.inkMuted,
+              }}>If correct:</span>
               <span style={{ display: 'inline-flex', alignItems: 'center' }}>
                 <span style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: '22px',
-                  color: C.correct,
+                  fontFamily: "'Manrope', sans-serif",
+                  fontSize: '20px',
+                  fontWeight: 700,
+                  color: G.correct,
                   transition: 'color 0.2s',
                 }}>
                   +{ifCorrect.toLocaleString()}
                 </span>
                 {meetsGemThreshold && (
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginLeft: '8px' }}>
-                    <span style={{ color: C.gold }}><GemIcon className="w-4 h-4" /></span>
+                    <span style={{ color: '#D4A017' }}><GemIcon className="w-4 h-4" /></span>
                     <span style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: '14px',
+                      fontFamily: "'Manrope', sans-serif",
+                      fontSize: '13px',
                       letterSpacing: '0.06em',
-                      color: C.gold,
+                      color: '#D4A017',
                     }}>+1 GEM</span>
                   </span>
                 )}
@@ -320,14 +389,20 @@ export function WagerScreen({
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '10px 0',
-              borderTop: `1px solid ${C.ruleLight}`,
+              padding: '7px 0',
+              borderTop: `1px solid ${G.optionBorder}`,
             }}>
-              <span style={{ fontStyle: 'italic', fontSize: '14px', color: C.muted }}>If wrong:</span>
               <span style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: '22px',
-                color: C.incorrect,
+                fontFamily: "'Lora', Georgia, serif",
+                fontStyle: 'italic',
+                fontSize: '13px',
+                color: G.inkMuted,
+              }}>If wrong:</span>
+              <span style={{
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '20px',
+                fontWeight: 700,
+                color: G.incorrect,
                 transition: 'color 0.2s',
               }}>
                 {ifWrong.toLocaleString()}
@@ -343,22 +418,23 @@ export function WagerScreen({
           style={{
             display: 'block',
             width: '100%',
-            padding: '16px',
-            minHeight: '52px',
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: '20px',
-            letterSpacing: '0.14em',
-            border: wagerAmount === 0 ? `1px solid ${C.rule}` : 'none',
-            background: isLocked ? C.rule : wagerAmount === 0 ? 'transparent' : C.accent,
-            color: isLocked ? C.mutedFg : wagerAmount === 0 ? C.muted : '#FFFFFF',
+            padding: '10px 32px',
+            minHeight: '40px',
+            fontFamily: "'Manrope', sans-serif",
+            fontSize: '15px',
+            fontWeight: 600,
+            border: wagerAmount === 0 ? `1px solid ${G.questionCardBorder}` : 'none',
+            borderRadius: '10px',
+            background: isLocked ? G.optionBorder : wagerAmount === 0 ? 'transparent' : G.btn,
+            color: isLocked ? G.inkMuted : wagerAmount === 0 ? G.inkMuted : G.btnText,
             cursor: isLocked ? 'not-allowed' : 'pointer',
             transition: 'background 0.15s, color 0.15s',
           }}
           onMouseEnter={e => {
-            if (!isLocked && wagerAmount > 0) e.currentTarget.style.background = C.accentHover;
+            if (!isLocked && wagerAmount > 0) e.currentTarget.style.background = G.btnHover;
           }}
           onMouseLeave={e => {
-            if (!isLocked && wagerAmount > 0) e.currentTarget.style.background = C.accent;
+            if (!isLocked && wagerAmount > 0) e.currentTarget.style.background = G.btn;
           }}
         >
           {isLocked ? 'LOCKED — GET READY…' : wagerAmount === 0 ? 'PLAY FOR FUN' : 'LOCK IN WAGER'}
@@ -368,18 +444,18 @@ export function WagerScreen({
       <style>{`
         .ctc-wager-slider::-webkit-slider-thumb {
           appearance: none;
-          width: 20px;
-          height: 20px;
-          border-radius: 2px;
-          background: ${C.accent};
+          width: 18px;
+          height: 18px;
+          border-radius: 4px;
+          background: ${G.btn};
           cursor: pointer;
           border: none;
         }
         .ctc-wager-slider::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
-          border-radius: 2px;
-          background: ${C.accent};
+          width: 18px;
+          height: 18px;
+          border-radius: 4px;
+          background: ${G.btn};
           cursor: pointer;
           border: none;
         }

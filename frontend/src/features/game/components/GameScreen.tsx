@@ -19,6 +19,8 @@ import { CelebrationEffects } from '../../../components/animations/CelebrationEf
 import { DegradedBanner } from '../../../components/DegradedBanner';
 import { useAuthStore } from '../../../store/authStore';
 import { useConfettiStore } from '../../../store/confettiStore';
+import { useThemeStore } from '../../../store/themeStore';
+import { useGameTheme } from '../gameTheme';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { announce } from '../../../utils/announce';
 import type { GameState, Question, LearningContent } from '../../../types/game';
@@ -89,6 +91,9 @@ export function GameScreen({
   const [showScorePopup, setShowScorePopup] = useState(false);
   const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const { darkMode, toggleDarkMode } = useThemeStore();
+  const { G } = useGameTheme();
 
   // Get timer multiplier from auth store (defaults to 1.0)
   const timerMultiplier = useAuthStore((s) => s.timerMultiplier);
@@ -326,10 +331,54 @@ export function GameScreen({
     lockAnswer(currentTimeRemaining);
   };
 
+  const ThemeToggle = () => (
+    <button
+      onClick={toggleDarkMode}
+      aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+      style={{
+        position: 'fixed',
+        top: '14px',
+        right: '16px',
+        zIndex: 40,
+        width: '36px',
+        height: '36px',
+        borderRadius: '50%',
+        background: G.hudCard,
+        border: `1px solid ${G.hudBorder}`,
+        color: G.inkMuted,
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'background 0.15s, color 0.15s',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = darkMode ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.10)';
+        e.currentTarget.style.color = G.accent;
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = G.hudCard;
+        e.currentTarget.style.color = G.inkMuted;
+      }}
+    >
+      {darkMode ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="5" />
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+        </svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      )}
+    </button>
+  );
+
   // Idle state - show start button
   if (state.phase === 'idle') {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0F0D09' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: G.idleBg }}>
+        <ThemeToggle />
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -338,11 +387,12 @@ export function GameScreen({
           style={{ padding: '0 24px' }}
         >
           <h1 style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: 'clamp(40px, 10vw, 72px)',
-            color: '#F5EDD8',
-            letterSpacing: '0.06em',
-            lineHeight: 1,
+            fontFamily: "'Manrope', sans-serif",
+            fontSize: 'clamp(40px, 10vw, 64px)',
+            fontWeight: 800,
+            color: G.ink,
+            letterSpacing: '-1.5px',
+            lineHeight: 1.125,
             marginBottom: '32px',
           }}>
             Civic Trivia Challenge
@@ -351,19 +401,20 @@ export function GameScreen({
             onClick={startGame}
             style={{
               padding: '16px 48px',
-              background: '#E8A020',
-              color: '#0F0D09',
-              fontFamily: "'Bebas Neue', sans-serif",
+              background: G.btn,
+              color: G.btnText,
+              fontFamily: "'Manrope', sans-serif",
               fontSize: '22px',
-              letterSpacing: '0.14em',
+              fontWeight: 700,
+              letterSpacing: '-0.25px',
               border: 'none',
-              borderRadius: '2px',
+              borderRadius: '8px',
               cursor: 'pointer',
               minHeight: '56px',
               transition: 'background 0.15s',
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#C88010')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#E8A020')}
+            onMouseEnter={e => (e.currentTarget.style.background = G.btnHover)}
+            onMouseLeave={e => (e.currentTarget.style.background = G.btn)}
           >
             QUICK PLAY
           </button>
@@ -416,14 +467,19 @@ export function GameScreen({
   return (
     <div
       className="h-screen h-[100dvh] relative overflow-hidden"
-      style={{ background: '#0F0D09' }}
+      style={{ background: G.bg }}
     >
+      <ThemeToggle />
       {/* Degraded mode banner - shown only when backend is in fallback mode */}
       <DegradedBanner visible={state.degraded} />
 
-      {/* Radial warm glow */}
+      {/* Stage spotlight from above */}
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 70% 50% at 50% 40%, rgba(232,160,32,0.05) 0%, transparent 70%)',
+        background: `radial-gradient(ellipse 75% 55% at 50% -5%, ${G.spotlight} 0%, transparent 65%)`,
+      }} />
+      {/* Floor glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: 'radial-gradient(ellipse 50% 20% at 50% 100%, rgba(232,160,32,0.04) 0%, transparent 60%)',
       }} />
 
       {/* Celebration effects for streaks */}
@@ -431,11 +487,13 @@ export function GameScreen({
 
       {/* Main content container */}
       <div className="relative h-full flex flex-col py-2 md:py-4 px-4">
-        {/* Top HUD - Score, Timer, Collection name, Progress dots */}
-        <div className="flex flex-col items-center mb-1 max-w-5xl mx-auto w-full flex-shrink-0">
-          {/* Controls row - three equal columns for true centering */}
+
+        {/* Top HUD — fixed in flow, never moves */}
+        <div className="flex flex-col max-w-[700px] mx-auto w-full flex-shrink-0" style={{ gap: '16px', marginBottom: '32px' }}>
+          {/* Three-column row: score | timer | question */}
           <div className="grid grid-cols-3 items-center w-full">
-            {/* Score display (left) */}
+
+            {/* Score box (left) */}
             <div className="justify-self-start">
               <ScoreDisplay
                 score={state.totalScore}
@@ -445,7 +503,7 @@ export function GameScreen({
               />
             </div>
 
-            {/* Timer (center - grid guarantees true center, min-h reserves space) */}
+            {/* Timer (center) */}
             <div
               className="flex items-center justify-center"
               style={{ minHeight: state.phase === 'revealing' ? '56px' : '80px' }}
@@ -462,35 +520,50 @@ export function GameScreen({
               )}
             </div>
 
-            {/* Collection name + Progress dots + question counter (right) */}
-            <div className="flex flex-col items-end gap-0.5 justify-self-end">
-              {state.collectionName && (
-                <div className="truncate max-w-[160px]" style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: '11px',
-                  letterSpacing: '0.16em',
-                  color: '#5C4A30',
-                }}>
-                  {state.collectionName}
-                </div>
-              )}
-              <div className="hidden md:block">
-                <ProgressDots
-                  currentIndex={state.currentQuestionIndex}
-                  total={state.totalQuestions}
-                />
-              </div>
-              <span style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: '11px',
-                letterSpacing: '0.16em',
-                color: '#5C4A30',
+            {/* Question counter box (right) */}
+            <div className="justify-self-end">
+              <div style={{
+                background: G.hudCard,
+                border: `1px solid ${G.hudBorder}`,
+                borderRadius: '8px',
+                padding: '8px 16px',
+                textAlign: 'center',
+                minWidth: '80px',
               }}>
-                Q{state.currentQuestionIndex + 1} / {state.totalQuestions}
-              </span>
+                <div style={{
+                  fontFamily: "'Manrope', sans-serif",
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase' as const,
+                  color: G.accent,
+                  marginBottom: '2px',
+                }}>
+                  Question
+                </div>
+                <div style={{
+                  fontFamily: "'Manrope', sans-serif",
+                  fontWeight: 700,
+                  fontSize: '22px',
+                  lineHeight: 1,
+                  letterSpacing: '-0.25px',
+                  color: G.ink,
+                }}>
+                  {state.currentQuestionIndex + 1}
+                  <span style={{ fontSize: '14px', color: G.inkMuted, fontWeight: 500 }}>
+                    /{state.totalQuestions}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+
+          {/* Dash progress bar — full width */}
+          <ProgressDots
+            currentIndex={state.currentQuestionIndex}
+            total={state.totalQuestions}
+          />
+        </div>{/* end HUD */}
 
         {/* Timeout flash message */}
         <AnimatePresence>
@@ -504,7 +577,7 @@ export function GameScreen({
               <div style={{
                 background: '#C0152A',
                 color: '#F5EDD8',
-                fontFamily: "'Bebas Neue', sans-serif",
+                fontFamily: "'Manrope', sans-serif",
                 fontSize: '36px',
                 letterSpacing: '0.12em',
                 padding: '20px 48px',
@@ -531,6 +604,10 @@ export function GameScreen({
           );
         })()}
 
+        {/* Question area — takes remaining space, question card centered within */}
+        <div className="flex-1 flex flex-col items-center justify-center min-h-0 overflow-y-auto">
+        <div className="max-w-[700px] w-full">
+
         {/* Question and answers - with AnimatePresence for transitions */}
         <AnimatePresence mode="wait">
           <motion.div
@@ -539,17 +616,17 @@ export function GameScreen({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
-            className="flex-1 flex flex-col items-center justify-center max-w-[700px] mx-auto w-full px-4 min-h-0 overflow-hidden gap-2 md:gap-4 lg:gap-5"
+            className="flex flex-col items-center w-full gap-2"
           >
             {/* Final question badge */}
             {isFinalQuestion && (
               <div className="flex justify-center">
                 <div style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontFamily: "'Manrope', sans-serif",
                   fontSize: '13px',
                   letterSpacing: '0.22em',
-                  color: '#E8A020',
-                  border: '1px solid rgba(232,160,32,0.4)',
+                  color: G.accent,
+                  border: `1px solid ${G.topicRule}`,
                   padding: '4px 16px',
                   borderRadius: '2px',
                 }}>
@@ -558,99 +635,109 @@ export function GameScreen({
               </div>
             )}
 
-            {/* Question card - with amber glow for final question and flag button during reveal */}
-            <div className="relative" style={isFinalQuestion ? {
-              border: '1px solid rgba(232,160,32,0.25)',
-              boxShadow: '0 0 30px rgba(232,160,32,0.08)',
-              padding: '4px',
-            } : {}}>
-              <QuestionCard
-                question={currentQuestion}
-                questionNumber={state.currentQuestionIndex + 1}
-                totalQuestions={state.totalQuestions}
-              />
+            {/* Question + answers card */}
+            <div style={{
+              background: G.questionCard,
+              border: `1px solid ${G.questionCardBorder}`,
+              borderRadius: '14px',
+              padding: '24px',
+              width: '100%',
+              boxShadow: isFinalQuestion ? `0 0 30px ${G.spotlight}` : 'none',
+            }}>
+              {/* Flag / Admin buttons */}
+              <div className="relative">
+                <QuestionCard
+                  question={currentQuestion}
+                  questionNumber={state.currentQuestionIndex + 1}
+                  totalQuestions={state.totalQuestions}
+                />
+                {state.phase === 'revealing' && isAuthenticated && currentQuestion && (
+                  <div className="absolute top-0 right-0 z-10" onClick={(e) => e.stopPropagation()}>
+                    <FlagButton
+                      flagged={flaggedQuestions.has(currentQuestion.id)}
+                      disabled={isRateLimited}
+                      onToggle={() => onFlagToggle(currentQuestion.id)}
+                    />
+                  </div>
+                )}
+                {state.phase === 'revealing' && isAdmin && currentQuestion && accessToken && (
+                  <div className="absolute top-0 left-0 z-10" onClick={(e) => e.stopPropagation()}>
+                    <AdminArchiveButton
+                      questionId={currentQuestion.id}
+                      onArchived={() => onArchiveQuestion?.(currentQuestion.id)}
+                      accessToken={accessToken}
+                    />
+                  </div>
+                )}
+              </div>
 
-              {/* Flag button - shown during reveal phase for authenticated users only */}
-              {state.phase === 'revealing' && isAuthenticated && currentQuestion && (
-                <div className="absolute top-2 right-2 z-10" onClick={(e) => e.stopPropagation()}>
-                  <FlagButton
-                    flagged={flaggedQuestions.has(currentQuestion.id)}
-                    disabled={isRateLimited}
-                    onToggle={() => onFlagToggle(currentQuestion.id)}
-                  />
-                </div>
-              )}
+              {/* Answer grid */}
+              <AnimatePresence>
+                {(showOptions || state.phase === 'locked' || state.phase === 'revealing' || (state.phase === 'selected' && state.currentQuestionIndex === state.totalQuestions - 1)) && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4 }}
+                    className="w-full" style={{ marginTop: '24px' }}
+                  >
+                    <AnswerGrid
+                      options={currentQuestion.options}
+                      selectedOption={state.selectedOption}
+                      correctAnswer={
+                        state.phase === 'revealing' && state.answers.length > 0
+                          ? state.answers[state.answers.length - 1].correctAnswer
+                          : 0
+                      }
+                      phase={state.phase}
+                      onSelect={(index) => selectAnswer(index, currentTimeRemaining)}
+                      onLockIn={onLockIn}
+                      explanation={currentQuestion.explanation}
+                    />
 
-              {/* Admin archive button - shown during reveal for admin users */}
-              {state.phase === 'revealing' && isAdmin && currentQuestion && accessToken && (
-                <div className="absolute top-2 left-2 z-10" onClick={(e) => e.stopPropagation()}>
-                  <AdminArchiveButton
-                    questionId={currentQuestion.id}
-                    onArchived={() => onArchiveQuestion?.(currentQuestion.id)}
-                    accessToken={accessToken}
-                  />
-                </div>
-              )}
+                    {/* Learn More */}
+                    {state.phase === 'revealing' && learningContent && (
+                      <div className="relative flex justify-center mt-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="relative">
+                          <LearnMoreButton
+                            onOpenModal={handleOpenLearnMore}
+                            hasContent={!!learningContent}
+                          />
+                          <LearnMoreTooltip
+                            teaserText={getTeaserText(learningContent)}
+                            show={showTooltip}
+                            onDismiss={() => setShowTooltip(false)}
+                            onReadMore={handleOpenLearnMore}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* Answer grid - revealed after question preview */}
-            <AnimatePresence>
-              {(showOptions || state.phase === 'locked' || state.phase === 'revealing' || (state.phase === 'selected' && state.currentQuestionIndex === state.totalQuestions - 1)) && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                  className="w-full pt-1 md:pt-2 pb-2 md:pb-3"
-                >
-                  <AnswerGrid
-                    options={currentQuestion.options}
-                    selectedOption={state.selectedOption}
-                    correctAnswer={
-                      state.phase === 'revealing' && state.answers.length > 0
-                        ? state.answers[state.answers.length - 1].correctAnswer
-                        : 0
-                    }
-                    phase={state.phase}
-                    onSelect={(index) => selectAnswer(index, currentTimeRemaining)}
-                    onLockIn={onLockIn}
-                    explanation={currentQuestion.explanation}
-                  />
-
-                  {/* Learn More button and tooltip - shown during reveal below answers */}
-                  {state.phase === 'revealing' && learningContent && (
-                    <div className="relative flex justify-center mt-4" onClick={(e) => e.stopPropagation()}>
-                      <div className="relative">
-                        <LearnMoreButton
-                          onOpenModal={handleOpenLearnMore}
-                          hasContent={!!learningContent}
-                        />
-                        <LearnMoreTooltip
-                          teaserText={getTeaserText(learningContent)}
-                          show={showTooltip}
-                          onDismiss={() => setShowTooltip(false)}
-                          onReadMore={handleOpenLearnMore}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Navigation button — shown during reveal phase */}
-                  {state.phase === 'revealing' && (
-                    <div className="flex justify-center mt-3">
-                      <NextStepButton
-                        questionIndex={state.currentQuestionIndex}
-                        totalQuestions={state.totalQuestions}
-                        isFinalQuestion={isFinalQuestion}
-                        onAdvance={nextQuestion}
-                        disabled={isLearnMoreOpen}
-                      />
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Next Step button — outside card, full width */}
+            {state.phase === 'revealing' && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.55 }}
+                className="w-full"
+              >
+                <NextStepButton
+                  questionIndex={state.currentQuestionIndex}
+                  totalQuestions={state.totalQuestions}
+                  isFinalQuestion={isFinalQuestion}
+                  onAdvance={nextQuestion}
+                  disabled={isLearnMoreOpen}
+                />
+              </motion.div>
+            )}
           </motion.div>
         </AnimatePresence>
+
+        </div>{/* end max-w-[700px] */}
+        </div>{/* end question area */}
       </div>
 
       {/* Learn More modal - rendered outside main content */}

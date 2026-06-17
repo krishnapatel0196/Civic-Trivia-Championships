@@ -3,6 +3,7 @@ import type { CollectionSummary } from '../types';
 import { CollectionCard } from './CollectionCard';
 import { CollectionCardSkeleton } from './CollectionCardSkeleton';
 import { useDebounce } from '../../../hooks/useDebounce';
+import { useTheme } from '../../../hooks/useTheme';
 
 interface CollectionPickerProps {
   collections: CollectionSummary[];
@@ -28,6 +29,7 @@ const GROUP_LABELS: Record<string, string> = {
 export function CollectionPicker({ collections, selectedId, loading, onSelect }: CollectionPickerProps) {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 150);
+  const { C, darkMode } = useTheme();
   const isFiltering = debouncedQuery.trim().length > 0;
   const filtered = isFiltering
     ? collections.filter(c => c.name.toLowerCase().includes(debouncedQuery.trim().toLowerCase()))
@@ -50,15 +52,17 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
       {/* Section heading */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
         <span style={{
-          fontFamily: "'Bebas Neue', sans-serif",
-          letterSpacing: '0.22em',
-          fontSize: '14px',
-          color: '#7A6A5A',
+          fontFamily: "'Manrope', sans-serif",
+          fontWeight: 700,
+          letterSpacing: '0.10em',
+          fontSize: '12px',
+          color: C.muted,
           whiteSpace: 'nowrap',
+          textTransform: 'uppercase' as const,
         }}>
           CHOOSE YOUR COLLECTION
         </span>
-        <div style={{ flex: 1, borderTop: '1px solid #C8BAA6' }} />
+        <div style={{ flex: 1, borderTop: `1px solid ${C.rule}` }} />
       </div>
 
       {loading ? (
@@ -79,11 +83,11 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
               width: '100%',
               boxSizing: 'border-box' as const,
               padding: '8px 12px',
-              fontFamily: "'Lora', Georgia, serif",
+              fontFamily: "'Manrope', sans-serif",
               fontSize: '14px',
-              color: '#17120E',
-              background: '#F5EDD8',
-              border: '1px solid #C8BAA6',
+              color: C.ink,
+              background: darkMode ? '#0D1C2C' : '#FFFFFF',
+              border: '1px solid #B8A020',
               borderRadius: '3px',
               outline: 'none',
               marginBottom: '20px',
@@ -96,8 +100,8 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
                 <p style={{
                   gridColumn: '1 / -1',
                   textAlign: 'center',
-                  color: '#9A8878',
-                  fontFamily: "'Lora', Georgia, serif",
+                  color: C.mutedFg,
+                  fontFamily: "'Manrope', sans-serif",
                   fontSize: '14px',
                   padding: '20px 0',
                   margin: 0,
@@ -119,18 +123,20 @@ export function CollectionPicker({ collections, selectedId, loading, onSelect }:
             <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', paddingBottom: '8px' }}>
               {grouped.map(({ category, label, collections: group }) => (
                 <div key={category}>
-                  {/* Category label with rule */}
+                  {/* Category label */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
                     <span style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      letterSpacing: '0.18em',
-                      fontSize: '13px',
-                      color: '#9A8878',
+                      fontFamily: "'Manrope', sans-serif",
+                      fontWeight: 600,
+                      letterSpacing: '0.08em',
+                      fontSize: '11px',
+                      color: C.mutedFg,
                       whiteSpace: 'nowrap',
+                      textTransform: 'uppercase' as const,
                     }}>
                       {label}
                     </span>
-                    <div style={{ flex: 1, borderTop: '1px solid #DDD5C3' }} />
+                    <div style={{ flex: 1, borderTop: `1px solid ${C.ruleLight}` }} />
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(148px, 1fr))', gap: '12px' }}>

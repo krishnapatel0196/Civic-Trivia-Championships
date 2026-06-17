@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body, * {
+  font-family: 'Manrope', sans-serif;
+}
+
 /* Screen reader only - visually hidden but accessible */
 .sr-only {
   position: absolute;

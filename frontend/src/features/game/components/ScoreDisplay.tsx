@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { motion, useMotionValue, animate } from 'framer-motion';
+import { useGameTheme } from '../gameTheme';
 
 interface ScoreDisplayProps {
   score: number;
@@ -9,6 +10,7 @@ interface ScoreDisplayProps {
 }
 
 export function ScoreDisplay({ score, shouldShake, showRedFlash, compact = false }: ScoreDisplayProps) {
+  const { G } = useGameTheme();
   const motionScore = useMotionValue(0);
 
   useEffect(() => {
@@ -53,26 +55,36 @@ export function ScoreDisplay({ score, shouldShake, showRedFlash, compact = false
         className="relative"
       >
         <div style={{
-          fontFamily: "'Bebas Neue', sans-serif",
-          color: '#E8A020',
-          letterSpacing: '0.02em',
-          lineHeight: 1,
-          fontSize: compact ? '22px' : '36px',
-          tabularNums: 'tabular-nums',
-        } as React.CSSProperties}>
-          {displayScore.toLocaleString()}
-        </div>
-        {!compact && (
+          background: G.hudCard,
+          border: `1px solid ${G.hudBorder}`,
+          borderRadius: '8px',
+          padding: '8px 16px',
+          textAlign: 'center',
+          minWidth: '80px',
+        }}>
           <div style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: '10px',
-            letterSpacing: '0.2em',
-            color: '#9A8878',
-            marginTop: '2px',
+            fontFamily: "'Manrope', sans-serif",
+            fontSize: '11px',
+            fontWeight: 700,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase' as const,
+            color: G.accent,
+            marginBottom: '2px',
           }}>
-            PTS
+            Score
           </div>
-        )}
+          <div style={{
+            fontFamily: "'Manrope', sans-serif",
+            fontWeight: 700,
+            fontSize: compact ? '22px' : '35px',
+            lineHeight: 1,
+            letterSpacing: compact ? '0px' : '-0.5px',
+            color: G.ink,
+            fontVariantNumeric: 'tabular-nums',
+          }}>
+            {displayScore.toLocaleString()}
+          </div>
+        </div>
       </motion.div>
     </div>
   );

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useGameTheme } from '../gameTheme';
 
 interface NextStepButtonProps {
   questionIndex: number;      // 0-based current question index
-  totalQuestions: number;     // total questions in game (8)
-  isFinalQuestion: boolean;   // true for Q8 (wager question)
+  totalQuestions: number;     // total questions in game (5)
+  isFinalQuestion: boolean;   // true for the final question (wager)
   onAdvance: () => void;      // calls nextQuestion()
   disabled: boolean;          // true when LearnMore modal is open
 }
@@ -17,15 +18,16 @@ export function NextStepButton({
   disabled,
 }: NextStepButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const { G } = useGameTheme();
 
   // Derive label from props
   let label: string;
   if (isFinalQuestion) {
-    label = 'GAME RECAP';
+    label = 'Game Recap';
   } else if (questionIndex === totalQuestions - 2) {
-    label = 'LAST QUESTION';
+    label = 'Last Question';
   } else {
-    label = 'NEXT QUESTION';
+    label = 'Next Question';
   }
 
   return (
@@ -40,15 +42,17 @@ export function NextStepButton({
       onMouseEnter={() => { if (!disabled) setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        fontFamily: "'Bebas Neue', sans-serif",
-        fontSize: '20px',
-        letterSpacing: '0.14em',
-        background: isHovered && !disabled ? '#C88010' : '#E8A020',
-        color: '#0F0D09',
+        fontFamily: "'Manrope', sans-serif",
+        fontSize: '15px',
+        fontWeight: 600,
+        letterSpacing: '0px',
+        background: isHovered && !disabled ? G.btnHover : G.btn,
+        color: G.btnText,
         border: 'none',
-        borderRadius: '2px',
-        padding: '14px 40px',
-        minHeight: '52px',
+        borderRadius: '10px',
+        padding: '10px 32px',
+        width: '100%',
+        minHeight: '40px',
         cursor: disabled ? 'default' : 'pointer',
         opacity: disabled ? 0.4 : 1,
         transition: 'background 0.15s, opacity 0.15s',

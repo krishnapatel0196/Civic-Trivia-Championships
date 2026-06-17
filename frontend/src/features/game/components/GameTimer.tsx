@@ -1,5 +1,6 @@
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { motion } from 'framer-motion';
+import { useGameTheme } from '../gameTheme';
 
 interface GameTimerProps {
   duration: number;
@@ -17,6 +18,7 @@ export function GameTimer({
   onTimeUpdate,
   size = 80,
 }: GameTimerProps) {
+  const { G } = useGameTheme();
   const isSmall = size < 60;
 
   return (
@@ -28,7 +30,7 @@ export function GameTimer({
         colorsTime={[duration, Math.round(duration * 0.5), Math.round(duration * 0.25), 0]}
         size={size}
         strokeWidth={isSmall ? 3 : 5}
-        trailColor="#2E2620"
+        trailColor={G.timerTrail as `#${string}`}
         onComplete={() => {
           onTimeout();
           return { shouldRepeat: false };
@@ -49,11 +51,12 @@ export function GameTimer({
             >
               <div
                 style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: isSmall ? '20px' : '26px',
+                  fontFamily: "'Manrope', sans-serif",
+                  fontSize: isSmall ? '18px' : '28px',
+                  fontWeight: 700,
                   lineHeight: 1,
                   color,
-                  letterSpacing: '0.02em',
+                  letterSpacing: '-0.25px',
                 }}
               >
                 {remainingTime}

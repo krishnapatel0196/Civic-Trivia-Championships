@@ -11,31 +11,49 @@ export function Dashboard() {
   const navigate = useNavigate();
   const { collections, selectedId, loading, select } = useCollections();
   const [playPressed, setPlayPressed] = useState(false);
-  const { C } = useTheme();
+  const { C, darkMode } = useTheme();
+
+  const heroStyle = darkMode ? {
+    background: '#0B1628',
+    position: 'relative' as const,
+    overflow: 'hidden' as const,
+  } : {
+    background: '#EEF4F7',
+    position: 'relative' as const,
+    overflow: 'hidden' as const,
+  };
 
   return (
-    <div style={{ minHeight: '100vh', background: C.paper }}>
+    <div style={{ minHeight: '100vh', background: darkMode ? C.paper : '#EEF4F7' }}>
       <Header />
 
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div className="p-6">
+      {/* Hero section */}
+      <section style={heroStyle}>
+        {/* Dark mode: subtle vignette */}
+        {darkMode && (
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(14,40,80,0.30) 0%, transparent 70%)',
+          }} />
+        )}
+
+        <div className="relative max-w-3xl mx-auto px-4 pt-6 pb-10 flex flex-col items-center">
           {/* Logo */}
-          <div className="flex justify-center pt-4 pb-1">
-            <img
-              src="/images/civic-trivia-championships-logo.png"
-              alt="Civic Trivia Championship"
-              className="w-full max-w-2xl px-4"
-            />
-          </div>
+          <img
+            src="/images/civic-trivia-championships-logo.png"
+            alt="Civic Trivia Championship"
+            className="w-full max-w-2xl px-4"
+            style={{ filter: darkMode ? 'none' : 'none' }}
+          />
 
           {/* Play button */}
-          <div className="text-center py-2 -mt-6 sm:-mt-8 h-16 sm:h-20 flex items-center justify-center mb-16 sm:mb-10">
+          <div className="-mt-6 sm:-mt-8">
             <button
               onClick={() => navigate('/play', { state: { collectionId: selectedId } })}
               onPointerDown={() => setPlayPressed(true)}
               onPointerUp={() => setPlayPressed(false)}
               onPointerLeave={() => setPlayPressed(false)}
               className="transition-transform hover:scale-105 active:scale-95"
+              style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
             >
               <img
                 src={playPressed ? '/images/Play_Down.png' : '/images/Play_Up.png'}
@@ -46,32 +64,40 @@ export function Dashboard() {
             </button>
           </div>
 
-          {/* Collection Picker */}
+          {/* Sign-in nudge */}
+          {!isAuthenticated && (
+            <p style={{
+              fontFamily: "'Manrope', sans-serif",
+              color: darkMode ? '#7A6A5A' : C.muted,
+              marginTop: '8px',
+              fontSize: '14px',
+              textAlign: 'center',
+            }}>
+              <Link to="/login" style={{ color: '#B8A020', fontStyle: 'normal', textDecoration: 'none' }}>Sign in</Link>
+              {' '}or{' '}
+              <Link to="/signup" style={{ color: '#B8A020', fontStyle: 'normal', textDecoration: 'none' }}>create an account</Link>
+              {' '}to track your progress and earn rewards.
+            </p>
+          )}
+        </div>
+
+        {/* Bottom fade — blends hero into collections */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none" style={{
+          background: `linear-gradient(to bottom, transparent, ${darkMode ? C.paper : '#EEF4F7'})`,
+        }} />
+      </section>
+
+      {/* Collections section */}
+      <section style={{ background: darkMode ? C.paper : '#EEF4F7' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <CollectionPicker
             collections={collections}
             selectedId={selectedId}
             loading={loading}
             onSelect={select}
           />
-
-          {/* Sign-in nudge */}
-          {!isAuthenticated && (
-            <p style={{
-              fontFamily: "'Lora', Georgia, serif",
-              fontStyle: 'italic',
-              color: C.muted,
-              marginTop: '24px',
-              fontSize: '14px',
-              textAlign: 'center',
-            }}>
-              <Link to="/login" style={{ color: C.accent, fontStyle: 'normal', textDecoration: 'none' }}>Sign in</Link>
-              {' '}or{' '}
-              <Link to="/signup" style={{ color: C.accent, fontStyle: 'normal', textDecoration: 'none' }}>create an account</Link>
-              {' '}to track your progress and earn rewards.
-            </p>
-          )}
         </div>
-      </main>
+      </section>
     </div>
   );
 }

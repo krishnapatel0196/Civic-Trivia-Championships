@@ -23,26 +23,71 @@ export function PauseOverlay({ onResume, onQuit }: PauseOverlayProps) {
         role="dialog"
         aria-modal="true"
         aria-label="Game paused"
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        style={{ background: 'rgba(10,8,6,0.88)', backdropFilter: 'blur(6px)' }}
       >
-        <div className="text-center">
-          {/* PAUSED text */}
-          <h1 className="text-4xl font-bold text-white mb-8">PAUSED</h1>
+        <div style={{ textAlign: 'center', padding: '0 24px' }}>
+          <h1 style={{
+            fontFamily: "'Manrope', sans-serif",
+            fontSize: 'clamp(40px, 10vw, 64px)',
+            fontWeight: 800,
+            color: '#F5EDD8',
+            letterSpacing: '-1.5px',
+            lineHeight: 1.125,
+            marginBottom: '40px',
+          }}>
+            PAUSED
+          </h1>
 
-          {/* Action buttons */}
-          <div className="flex flex-col gap-4">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <button
               id="resume-button"
               onClick={onResume}
-              className="px-12 py-4 bg-teal-600 hover:bg-teal-700 text-white text-lg font-bold rounded-lg shadow-lg transition-colors"
+              style={{
+                padding: '14px 48px',
+                background: '#E8A020',
+                color: '#0F0D09',
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '22px',
+                fontWeight: 700,
+                letterSpacing: '-0.25px',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                minHeight: '52px',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#C88010')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#E8A020')}
             >
-              Resume
+              RESUME
             </button>
             <button
               onClick={onQuit}
-              className="px-12 py-4 bg-transparent border-2 border-slate-500 hover:border-slate-400 text-white text-lg font-bold rounded-lg transition-colors"
+              style={{
+                padding: '12px 48px',
+                background: 'transparent',
+                color: '#7A6858',
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '18px',
+                fontWeight: 600,
+                letterSpacing: '-0.1px',
+                border: '1px solid #3A2E20',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                minHeight: '48px',
+                transition: 'border-color 0.15s, color 0.15s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = '#7A6858';
+                e.currentTarget.style.color = '#F5EDD8';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = '#3A2E20';
+                e.currentTarget.style.color = '#7A6858';
+              }}
             >
-              Quit Game
+              QUIT GAME
             </button>
           </div>
         </div>
