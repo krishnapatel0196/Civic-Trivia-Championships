@@ -265,9 +265,9 @@ export function WagerScreen({
                         fontWeight: 600,
                         letterSpacing: '0.06em',
                         borderRadius: '6px',
-                        border: `1px solid ${isActive ? G.btn : G.optionBorder}`,
-                        background: isActive ? G.btn : 'transparent',
-                        color: isActive ? G.btnText : G.inkMuted,
+                        border: `1px solid ${isActive ? C.accent : C.rule}`,
+                        background: isActive ? C.accent : 'transparent',
+                        color: isActive ? '#FFFFFF' : C.muted,
                         cursor: isLocked ? 'not-allowed' : 'pointer',
                         transition: 'background 0.15s, color 0.15s, border-color 0.15s',
                       }}
