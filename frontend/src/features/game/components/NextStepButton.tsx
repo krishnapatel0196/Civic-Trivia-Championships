@@ -4,8 +4,8 @@ import { useGameTheme } from '../gameTheme';
 
 interface NextStepButtonProps {
   questionIndex: number;      // 0-based current question index
-  totalQuestions: number;     // total questions in game (8)
-  isFinalQuestion: boolean;   // true for Q8 (wager question)
+  totalQuestions: number;     // total questions in game (5)
+  isFinalQuestion: boolean;   // true for the final question (wager)
   onAdvance: () => void;      // calls nextQuestion()
   disabled: boolean;          // true when LearnMore modal is open
 }

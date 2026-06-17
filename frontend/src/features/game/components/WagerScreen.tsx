@@ -6,7 +6,7 @@ import { GemIcon } from '../../../components/icons/GemIcon';
 import { useGameTheme } from '../gameTheme';
 import { useThemeStore } from '../../../store/themeStore';
 
-const GEM_SCORE_THRESHOLD = 1000;
+const GEM_SCORE_THRESHOLD = 600;
 
 interface WagerScreenProps {
   currentScore: number;
@@ -183,7 +183,7 @@ export function WagerScreen({
                     borderRadius: '6px',
                   }}
                 >
-                  Score 1,000+ to earn a gem. Perfect score earns 2 gems.
+                  Score {GEM_SCORE_THRESHOLD.toLocaleString()}+ to earn a gem. Perfect score earns 2 gems.
                 </motion.div>
               )}
             </AnimatePresence>
@@ -259,7 +259,7 @@ export function WagerScreen({
                 textAlign: 'center',
                 lineHeight: 1.5,
               }}>
-                1,000 PTS<br />FOR A GEM
+                {GEM_SCORE_THRESHOLD.toLocaleString()} PTS<br />FOR A GEM
               </div>
             </motion.div>
           </div>

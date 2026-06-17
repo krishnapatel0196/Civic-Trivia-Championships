@@ -16,7 +16,7 @@ import { ACCOUNTS_WEB_URL } from '../../../services/accountsApi';
 import { useGameTheme } from '../gameTheme';
 import { Header } from '../../../components/layout/Header';
 
-const GEM_SCORE_THRESHOLD = 1000;
+const GEM_SCORE_THRESHOLD = 600;
 
 interface ResultsScreenProps {
   result: GameResult;

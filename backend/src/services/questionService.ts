@@ -13,7 +13,7 @@ import { Question } from '../services/sessionService.js';
 import { gameModes, DEFAULT_GAME_MODE } from './gameModes.js';
 import type { DBQuestionRow } from './gameModes.js';
 
-export const TOTAL_QUESTIONS = 8;
+export const TOTAL_QUESTIONS = 5;
 
 // Get current file's directory for ESM
 const __filename = fileURLToPath(import.meta.url);

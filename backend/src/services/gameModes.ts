@@ -58,9 +58,7 @@ function pickFrom(pools: DBQuestionRow[][], pickedIds: Set<number>): DBQuestionR
  * Eases new players in with easy questions first, graduating to harder ones:
  *   Positions 1-2: Easy only
  *   Positions 3-4: Easy or Medium
- *   Positions 5-6: Medium or Hard
- *   Position 7:    Hard only
- *   Position 8:    Hard only (final question)
+ *   Position 5:    Hard only (final question)
  *
  * Constraint relaxation: if a pool is exhausted, falls back to adjacent difficulty.
  */
@@ -78,13 +76,9 @@ function easySteps(
   const tiers: { positions: number; pools: DBQuestionRow[][] }[] = [
     // Positions 1-2: Easy, fallback to medium, then hard
     { positions: 2, pools: [easyPool, mediumPool, hardPool] },
-    // Positions 3-4: Easy+Medium combined (shuffle together), fallback to hard
+    // Positions 3-4: Easy+Medium combined, fallback to hard
     { positions: 2, pools: [easyPool, mediumPool, hardPool] },
-    // Positions 5-6: Medium+Hard combined, fallback to easy
-    { positions: 2, pools: [mediumPool, hardPool, easyPool] },
-    // Position 7: Hard, fallback to medium, then easy
-    { positions: 1, pools: [hardPool, mediumPool, easyPool] },
-    // Position 8 (final): Hard, fallback to medium, then easy
+    // Position 5 (final): Hard, fallback to medium, then easy
     { positions: 1, pools: [hardPool, mediumPool, easyPool] },
   ];
 
@@ -108,8 +102,8 @@ function easySteps(
  *
  * Preserves the original applyDifficultySelection behavior:
  *   Q1  = easy
- *   Q8  = hard
- *   Q2-Q7 = 2 easy + 2 medium + 2 hard (shuffled)
+ *   Q5  = hard (final question)
+ *   Q2-Q4 = 1 easy + 1 medium + 1 hard (shuffled)
  *
  * Constraint relaxation: if any pool is too small, fill from other pools.
  */
@@ -139,10 +133,10 @@ function classic(
     qFinal = easyPool.shift()!;
   }
 
-  // For Q2-Q7, pick 2 easy + 2 medium + 2 hard
-  let needEasy = 2;
-  let needMedium = 2;
-  let needHard = 2;
+  // For Q2-Q4, pick 1 easy + 1 medium + 1 hard
+  let needEasy = 1;
+  let needMedium = 1;
+  let needHard = 1;
 
   const middleQuestions: DBQuestionRow[] = [];
 
