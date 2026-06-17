@@ -39,7 +39,7 @@ export function QuestionCard({ question, questionNumber, totalQuestions }: Quest
         <div style={{ flex: 1, height: '1px', background: `linear-gradient(to left, transparent, ${G.topicRule})` }} />
       </div>
 
-      {/* Question text — H2 style, target 2 lines */}
+      {/* Question text — H2 style; wraps to as many lines as needed so long questions aren't truncated */}
       <div style={{
         fontFamily: "'Manrope', sans-serif",
         color: G.ink,
@@ -48,10 +48,6 @@ export function QuestionCard({ question, questionNumber, totalQuestions }: Quest
         textAlign: 'center',
         lineHeight: 1.3,
         letterSpacing: '-0.5px',
-        display: '-webkit-box',
-        WebkitLineClamp: 2,
-        WebkitBoxOrient: 'vertical' as const,
-        overflow: 'hidden',
       }}>
         {question.text}
       </div>
