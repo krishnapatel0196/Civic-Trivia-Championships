@@ -269,13 +269,14 @@ export function ResultsScreen({
                   Bet: {result.wagerResult.wagerAmount.toLocaleString()} points
                 </div>
                 <div style={{
-                  fontSize: '28px', fontWeight: 700,
-                  color: result.wagerResult.won ? G.accent : G.incorrect,
+                  fontSize: '28px',
+                  fontWeight: result.wagerResult.won ? 700 : 600,
+                  color: result.wagerResult.won ? G.accent : G.inkMuted,
                   letterSpacing: '0.04em', marginBottom: '4px',
                 }}>
                   {result.wagerResult.won
                     ? `WON +${result.wagerResult.wagerAmount.toLocaleString()}`
-                    : `LOST −${result.wagerResult.wagerAmount.toLocaleString()}`}
+                    : `−${result.wagerResult.wagerAmount.toLocaleString()}`}
                 </div>
                 {(() => {
                   const preWager = result.totalScore - (result.wagerResult.won
@@ -505,7 +506,7 @@ export function ResultsScreen({
                       <div style={{
                         fontFamily: "'Manrope', sans-serif",
                         fontSize: '14px', color: G.ink,
-                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                        lineHeight: 1.35,
                       }}>
                         {question.text}
                       </div>
