@@ -5,6 +5,7 @@ import { authService } from '../services/authService';
 import { fetchAccountProfile } from '../services/accountsApi';
 import type { AuthError } from '../types/auth';
 import { useTheme } from '../hooks/useTheme';
+import { Header } from '../components/layout/Header';
 
 export function Login() {
   const [email, setEmail]           = useState('');
@@ -55,13 +56,13 @@ export function Login() {
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
-    padding: '10px 12px',
-    fontFamily: "'Lora', Georgia, serif",
+    padding: '12px 14px',
+    fontFamily: "'Manrope', sans-serif",
     fontSize: '15px',
     color: C.ink,
     background: C.paper,
     border: `1px solid ${C.rule}`,
-    borderRadius: '2px',
+    borderRadius: '8px',
     outline: 'none',
     boxSizing: 'border-box',
     transition: 'border-color 0.15s',
@@ -69,35 +70,32 @@ export function Login() {
 
   const labelStyle: React.CSSProperties = {
     display: 'block',
-    fontFamily: "'Bebas Neue', sans-serif",
-    letterSpacing: '0.14em',
-    fontSize: '12px',
+    fontFamily: "'Manrope', sans-serif",
+    fontWeight: 600,
+    fontSize: '13px',
     color: C.muted,
     marginBottom: '6px',
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: C.paper, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+    <div style={{ minHeight: '100vh', background: C.paper }}>
+      <Header />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
       <div style={{ width: '100%', maxWidth: '400px' }}>
 
         {/* Masthead */}
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <p style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            letterSpacing: '0.28em',
-            fontSize: '11px',
-            color: C.muted,
-            margin: '0 0 10px',
-          }}>
-            CIVIC TRIVIA CHAMPIONSHIP
-          </p>
-          <div style={{ borderTop: `1px solid ${C.rule}` }} />
+          <img
+            src="/images/civic-trivia-logo.png"
+            alt="Civic Trivia Championship"
+            style={{ height: '150px', margin: '0 auto 16px' }}
+          />
           <h1 style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: '32px',
-            letterSpacing: '0.06em',
+            fontFamily: "'Manrope', sans-serif",
+            fontWeight: 700,
+            fontSize: '28px',
             color: C.ink,
-            margin: '16px 0 0',
+            margin: '0',
             lineHeight: 1,
           }}>
             Sign In
@@ -111,9 +109,8 @@ export function Login() {
             padding: '10px 14px',
             border: `1px solid rgba(192,21,42,0.4)`,
             background: 'rgba(192,21,42,0.06)',
-            borderRadius: '2px',
-            fontFamily: "'Lora', Georgia, serif",
-            fontStyle: 'italic',
+            borderRadius: '8px',
+            fontFamily: "'Manrope', sans-serif",
             fontSize: '13px',
             color: C.incorrect,
           }}>
@@ -177,30 +174,31 @@ export function Login() {
               minHeight: '48px',
               background: loading ? C.rule : C.accent,
               color: '#FFFFFF',
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: '18px',
-              letterSpacing: '0.14em',
+              fontFamily: "'Manrope', sans-serif",
+              fontWeight: 700,
+              fontSize: '15px',
               border: 'none',
-              borderRadius: '2px',
+              borderRadius: '8px',
               cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'background 0.15s',
             }}
             onMouseEnter={e => { if (!loading) e.currentTarget.style.background = C.accentHover; }}
             onMouseLeave={e => { if (!loading) e.currentTarget.style.background = C.accent; }}
           >
-            {loading ? 'SIGNING IN…' : 'SIGN IN'}
+            {loading ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
 
         {/* Footer link */}
         <div style={{ borderTop: `1px solid ${C.rule}`, marginTop: '28px', paddingTop: '20px', textAlign: 'center' }}>
-          <p style={{ fontFamily: "'Lora', Georgia, serif", fontStyle: 'italic', fontSize: '14px', color: C.muted, margin: 0 }}>
+          <p style={{ fontFamily: "'Manrope', sans-serif", fontSize: '14px', color: C.muted, margin: 0 }}>
             Don't have an account?{' '}
-            <Link to="/signup" style={{ color: C.accent, textDecoration: 'none', fontStyle: 'normal' }}>
+            <Link to="/signup" style={{ color: C.accent, textDecoration: 'none', fontWeight: 600 }}>
               Sign up
             </Link>
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

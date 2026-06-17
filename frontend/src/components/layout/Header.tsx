@@ -1,10 +1,9 @@
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { ACCOUNTS_API_URL } from '../../services/accountsApi';
 import { usePlayerXp } from '../../hooks/usePlayerXp';
 import { useTheme } from '../../hooks/useTheme';
-import { useTierColor } from '../../hooks/useTierColor';
 
 export function Header() {
   const { user, accessToken, clearAuth, isAuthenticated, displayName, isAdmin } = useAuthStore();
@@ -16,8 +15,7 @@ export function Header() {
   const { xpData, isConnected: isXpConnected } = usePlayerXp(userId);
   const xpNeeded         = xpData ? xpData.xpInLevel + xpData.xpToNextLevel : 0;
   const progressPercent  = xpNeeded > 0 ? Math.round((xpData!.xpInLevel / xpNeeded) * 100) : 0;
-  const { darkMode, C }  = useTheme();
-  const tierBorderColor  = useTierColor();
+  const { darkMode, toggleDarkMode, C }  = useTheme();
 
   const handleLogout = async () => {
     try {
@@ -55,12 +53,11 @@ export function Header() {
       position: 'sticky',
       top: 0,
       zIndex: 50,
-      background: C.paper,
-      borderBottom: `1px solid ${tierBorderColor}`,
+      background: darkMode ? '#0B1628' : '#FFFFFF',
+      borderBottom: `1px solid ${darkMode ? '#1C2E40' : '#E8EFF4'}`,
       transition: 'background 0.2s, border-color 0.2s',
     }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      <div style={{ maxWidth: '1512px', margin: '0 auto', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px' }}>
 
           {/* Logo — swaps based on theme */}
           <div className="flex-shrink-0">
@@ -125,16 +122,38 @@ export function Header() {
                 )}
               </div>
 
-              {/* Hamburger */}
+              {/* Dark/Light toggle */}
+              <button
+                onClick={toggleDarkMode}
+                className="flex items-center justify-center transition-colors"
+                aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                style={{ color: '#64748B', borderRadius: '50%', width: '36px', height: '36px', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                onMouseEnter={e => (e.currentTarget.style.background = darkMode ? '#1C2E40' : '#EEF4F7')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+              >
+                {darkMode ? (
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="5" />
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Account icon */}
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="min-w-[48px] min-h-[48px] p-2 flex items-center justify-center transition-opacity hover:opacity-60"
-                  aria-label="Menu"
-                  style={{ color: C.ink }}
+                  className="flex items-center justify-center transition-colors"
+                  aria-label="Account menu"
+                  style={{ color: '#14B8A6', border: '2px solid #14B8A6', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: 'transparent' }}
                 >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M4 6h16M4 12h16M4 18h16" />
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                   </svg>
                 </button>
 
@@ -143,167 +162,117 @@ export function Header() {
                   <div style={{
                     position: 'absolute',
                     right: 0,
-                    marginTop: '4px',
-                    width: '160px',
-                    background: C.paper,
-                    border: `1px solid ${C.rule}`,
-                    borderRadius: '2px',
-                    padding: '4px 0',
-                    boxShadow: '0 4px 16px rgba(23,18,14,0.18)',
+                    marginTop: '8px',
+                    width: '200px',
+                    background: '#1E2432',
+                    borderRadius: '12px',
+                    padding: '8px 0',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                    zIndex: 100,
                   }}>
-                    <button
-                      onClick={() => handleMenuItemClick(() => { window.location.href = 'https://login.empowered.vote/profile'; })}
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '8px 16px',
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.12em',
-                        color: C.inkLight,
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                      }}
-                      onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
-                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
-                    >
-                      PROFILE
-                    </button>
-                    {isAdmin && (
-                      <button
-                        onClick={() => handleMenuItemClick(() => navigate('/admin'))}
-                        style={{
-                          display: 'block',
-                          width: '100%',
-                          textAlign: 'left',
-                          padding: '8px 16px',
-                          fontFamily: "'Bebas Neue', sans-serif",
-                          fontSize: '14px',
-                          letterSpacing: '0.12em',
-                          color: C.inkLight,
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                        }}
-                        onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
-                        onMouseLeave={e => (e.currentTarget.style.background = 'none')}
-                      >
-                        CTC ADMIN
-                      </button>
-                    )}
-                    <button
-                      onClick={() => handleMenuItemClick(() => { window.location.href = 'https://financials.empowered.vote'; })}
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '8px 16px',
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.12em',
-                        color: C.inkLight,
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                      }}
-                      onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
-                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
-                    >
-                      EV FINANCIALS
-                    </button>
-                    <button
-                      onClick={() => handleMenuItemClick(() => navigate('/leaderboard'))}
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '8px 16px',
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.12em',
-                        color: C.inkLight,
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                      }}
-                      onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
-                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
-                    >
-                      LEADERBOARD
-                    </button>
+                    {[
+                      { label: 'Account', action: () => { window.location.href = 'https://login.empowered.vote/profile'; } },
+                      ...(isAdmin ? [{ label: 'CTC Admin', action: () => navigate('/admin') }] : []),
+                      { label: 'EV Financials', action: () => { window.location.href = 'https://financials.empowered.vote'; } },
+                      { label: 'Feedback', action: () => navigate('/feedback') },
+                    ].map(({ label, action }) => (
+                      <div key={label}>
+                        <button
+                          onClick={() => handleMenuItemClick(action)}
+                          style={{ display: 'block', width: '100%', textAlign: 'left', padding: '12px 20px', fontFamily: "'Manrope', sans-serif", fontSize: '15px', fontWeight: 500, color: '#E2E8F0', background: 'none', border: 'none', cursor: 'pointer' }}
+                          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
+                          onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                        >
+                          {label}
+                        </button>
+                        <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', margin: '0 20px' }} />
+                      </div>
+                    ))}
                     <button
                       onClick={() => handleMenuItemClick(handleLogout)}
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '8px 16px',
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.12em',
-                        color: C.accent,
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                      }}
-                      onMouseEnter={e => (e.currentTarget.style.background = C.ruleLight)}
+                      style={{ display: 'block', width: '100%', textAlign: 'left', padding: '12px 20px', fontFamily: "'Manrope', sans-serif", fontSize: '15px', fontWeight: 500, color: '#F87171', background: 'none', border: 'none', cursor: 'pointer' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
                       onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                     >
-                      LOG OUT
+                      Sign out
                     </button>
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-5">
-              <Link
-                to="/leaderboard"
-                style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: '15px',
-                  letterSpacing: '0.14em',
-                  color: C.muted,
-                  textDecoration: 'none',
-                }}
-                onMouseEnter={e => ((e.target as HTMLElement).style.color = C.ink)}
-                onMouseLeave={e => ((e.target as HTMLElement).style.color = C.muted)}
+            <div className="flex items-center gap-2">
+              {/* Dark/Light toggle */}
+              <button
+                onClick={toggleDarkMode}
+                className="flex items-center justify-center transition-colors"
+                aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                style={{ color: '#64748B', borderRadius: '50%', width: '36px', height: '36px', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                onMouseEnter={e => (e.currentTarget.style.background = darkMode ? '#1C2E40' : '#EEF4F7')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                LEADERBOARD
-              </Link>
-              <Link
-                to="/login"
-                style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: '15px',
-                  letterSpacing: '0.14em',
-                  color: C.muted,
-                  textDecoration: 'none',
-                }}
-                onMouseEnter={e => ((e.target as HTMLElement).style.color = C.ink)}
-                onMouseLeave={e => ((e.target as HTMLElement).style.color = C.muted)}
-              >
-                SIGN IN
-              </Link>
-              <Link
-                to="/signup"
-                style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: '15px',
-                  letterSpacing: '0.14em',
-                  color: C.accent,
-                  textDecoration: 'none',
-                }}
-                onMouseEnter={e => ((e.target as HTMLElement).style.color = C.accentHover)}
-                onMouseLeave={e => ((e.target as HTMLElement).style.color = C.accent)}
-              >
-                SIGN UP
-              </Link>
+                {darkMode ? (
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="5" />
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Account icon with Sign In / Sign Up dropdown */}
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  className="flex items-center justify-center transition-colors"
+                  aria-label="Account"
+                  style={{ color: '#14B8A6', border: '2px solid #14B8A6', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: 'transparent' }}
+                >
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                  </svg>
+                </button>
+
+                {menuOpen && (
+                  <div style={{
+                    position: 'absolute',
+                    right: 0,
+                    marginTop: '8px',
+                    width: '200px',
+                    background: '#1E2432',
+                    borderRadius: '12px',
+                    padding: '8px 0',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                    zIndex: 100,
+                  }}>
+                    <div>
+                      <button
+                        onClick={() => handleMenuItemClick(() => navigate('/leaderboard'))}
+                        style={{ display: 'block', width: '100%', textAlign: 'left', padding: '12px 20px', fontFamily: "'Manrope', sans-serif", fontSize: '15px', fontWeight: 500, color: '#E2E8F0', background: 'none', border: 'none', cursor: 'pointer' }}
+                        onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
+                        onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                      >
+                        Leaderboard
+                      </button>
+                      <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', margin: '0 20px' }} />
+                    </div>
+                    <button
+                      onClick={() => handleMenuItemClick(() => navigate('/login'))}
+                      style={{ display: 'block', width: '100%', textAlign: 'left', padding: '12px 20px', fontFamily: "'Manrope', sans-serif", fontSize: '15px', fontWeight: 500, color: '#E2E8F0', background: 'none', border: 'none', cursor: 'pointer' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                    >
+                      Sign in
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           )}
-        </div>
       </div>
     </header>
     {showSignedOutToast && (

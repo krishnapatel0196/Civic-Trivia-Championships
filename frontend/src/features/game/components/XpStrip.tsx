@@ -8,9 +8,9 @@ interface XpStripProps {
 export function XpStrip({ xpData, isLoading }: XpStripProps) {
   if (isLoading) {
     return (
-      <div className="mt-4 w-64 mx-auto">
-        <div className="h-4 bg-slate-700/50 rounded animate-pulse mb-2" />
-        <div className="h-2 bg-slate-700/50 rounded animate-pulse" />
+      <div style={{ marginTop: '20px', width: '224px', margin: '20px auto 0' }}>
+        <div style={{ height: '14px', background: 'rgba(60,44,28,0.5)', borderRadius: '1px', marginBottom: '8px', animation: 'pulse 1.5s infinite' }} />
+        <div style={{ height: '4px', background: 'rgba(60,44,28,0.5)', borderRadius: '1px', animation: 'pulse 1.5s infinite' }} />
       </div>
     );
   }
@@ -22,15 +22,31 @@ export function XpStrip({ xpData, isLoading }: XpStripProps) {
   const progressPercent = Math.round(progress * 100);
 
   return (
-    <div className="mt-4 w-64 mx-auto text-center">
-      <div className="text-slate-300 text-sm font-medium mb-1">
-        Level {xpData.level}
+    <div style={{ marginTop: '20px', width: '224px', margin: '20px auto 0', textAlign: 'center' }}>
+      <div style={{
+        fontFamily: "'Manrope', sans-serif",
+        fontSize: '13px',
+        letterSpacing: '0.18em',
+        color: '#A08870',
+        marginBottom: '4px',
+      }}>
+        LEVEL {xpData.level}
       </div>
-      <div className="text-slate-400 text-xs mb-2">
+      <div style={{
+        fontFamily: "'Lora', Georgia, serif",
+        fontSize: '11px',
+        color: '#5C4838',
+        marginBottom: '8px',
+      }}>
         {xpData.xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP
       </div>
       <div
-        className="h-2 bg-slate-700 rounded-full overflow-hidden"
+        style={{
+          height: '3px',
+          background: '#2E2620',
+          borderRadius: '1px',
+          overflow: 'hidden',
+        }}
         role="progressbar"
         aria-valuenow={progressPercent}
         aria-valuemin={0}
@@ -38,8 +54,13 @@ export function XpStrip({ xpData, isLoading }: XpStripProps) {
         aria-label={`XP progress: ${progressPercent}%`}
       >
         <div
-          className="h-full bg-cyan-500 rounded-full transition-all duration-500"
-          style={{ width: `${progressPercent}%` }}
+          style={{
+            height: '100%',
+            background: '#E8A020',
+            borderRadius: '1px',
+            transition: 'width 0.5s ease',
+            width: `${progressPercent}%`,
+          }}
         />
       </div>
     </div>

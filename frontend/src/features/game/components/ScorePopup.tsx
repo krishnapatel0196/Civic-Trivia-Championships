@@ -40,9 +40,18 @@ export function ScorePopup({
               stiffness: 300,
               damping: 25,
             }}
-            className="text-amber-500 text-4xl font-bold px-8 py-4 bg-slate-900/90 rounded-lg border-2 border-amber-500/50"
+            style={{
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: '28px',
+              letterSpacing: '0.14em',
+              color: '#E8A020',
+              padding: '14px 36px',
+              background: 'rgba(15,13,9,0.92)',
+              border: '1px solid rgba(232,160,32,0.4)',
+              borderRadius: '2px',
+            }}
           >
-            Time's up!
+            TIME'S UP
           </motion.div>
         </AnimatePresence>
       </div>
@@ -71,9 +80,14 @@ export function ScorePopup({
               damping: 25,
               delay: 0,
             }}
-            className="absolute left-0 text-3xl font-bold text-yellow-400"
             style={{
-              textShadow: '0 0 20px rgba(250, 204, 21, 0.5)',
+              position: 'absolute',
+              left: 0,
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: '32px',
+              letterSpacing: '0.04em',
+              color: '#E8A020',
+              textShadow: '0 0 20px rgba(232,160,32,0.6)',
             }}
           >
             +{basePoints}
@@ -92,12 +106,18 @@ export function ScorePopup({
                 damping: 25,
                 delay: 0.15,
               }}
-              className="absolute left-0 text-lg font-bold text-teal-400 whitespace-nowrap"
               style={{
-                textShadow: '0 0 20px rgba(45, 212, 191, 0.5)',
+                position: 'absolute',
+                left: 0,
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '16px',
+                letterSpacing: '0.1em',
+                color: '#C8A050',
+                whiteSpace: 'nowrap',
+                textShadow: '0 0 16px rgba(200,160,80,0.5)',
               }}
             >
-              +{speedBonus} speed bonus
+              +{speedBonus} SPEED
             </motion.div>
           )}
         </AnimatePresence>

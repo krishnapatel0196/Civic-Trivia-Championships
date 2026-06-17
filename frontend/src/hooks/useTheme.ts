@@ -19,7 +19,7 @@ export interface ColorTokens {
 }
 
 export const LIGHT: ColorTokens = {
-  paper:       '#ECE7D9',
+  paper:       '#FFFFFF',
   ink:         '#17120E',
   inkLight:    '#3D2E22',
   rule:        '#C8BAA6',
@@ -37,13 +37,13 @@ export const LIGHT: ColorTokens = {
 };
 
 export const DARK: ColorTokens = {
-  paper:       '#1C1510',
-  ink:         '#ECE7D9',
-  inkLight:    '#C8BAA6',
-  rule:        '#3D2E22',
-  ruleLight:   '#2A1E14',
-  muted:       '#9A8878',
-  mutedFg:     '#7A6A5A',
+  paper:       '#0B1628',
+  ink:         '#F1F1F1',
+  inkLight:    '#AAAAAA',
+  rule:        '#1C2E40',
+  ruleLight:   '#122030',
+  muted:       '#888888',
+  mutedFg:     '#666666',
   accent:      '#E04820',
   accentHover: '#C03A18',
   gold:        '#D4A017',
@@ -51,7 +51,7 @@ export const DARK: ColorTokens = {
   correct:     '#3A8A5F',
   incorrect:   '#E0253A',
   gems:        '#9A7ABF',
-  xpBg:        '#0A0806',
+  xpBg:        '#080E1A',
 };
 
 export function useTheme() {

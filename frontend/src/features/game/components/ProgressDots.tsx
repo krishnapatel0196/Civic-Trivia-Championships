@@ -1,31 +1,72 @@
+import { useGameTheme } from '../gameTheme';
+
 interface ProgressDotsProps {
   currentIndex: number;
   total?: number;
 }
 
 export function ProgressDots({ currentIndex, total = 8 }: ProgressDotsProps) {
-  return (
-    <div className="flex gap-2 items-center justify-center">
-      {Array.from({ length: total }).map((_, index) => {
-        const isPast = index < currentIndex;
-        const isCurrent = index === currentIndex;
+  const { G, darkMode } = useGameTheme();
+  const pct = Math.round((currentIndex / total) * 100);
 
-        return (
-          <div
-            key={index}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              isCurrent
-                ? 'bg-teal-500 scale-125'
-                : isPast
-                ? 'bg-teal-500/40'
-                : 'bg-slate-600 border border-slate-500'
-            }`}
-            aria-label={`Question ${index + 1} ${
-              isCurrent ? '(current)' : isPast ? '(completed)' : '(upcoming)'
-            }`}
-          />
-        );
-      })}
+  return (
+    <div style={{ width: '100%' }}>
+      {/* Labels row — dark mode only */}
+      {darkMode && (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: '6px',
+        }}>
+          <span style={{
+            fontFamily: "'Manrope', sans-serif",
+            fontSize: '11px',
+            fontWeight: 500,
+            color: G.inkMuted,
+          }}>
+            Progress
+          </span>
+          <span style={{
+            fontFamily: "'Manrope', sans-serif",
+            fontSize: '11px',
+            fontWeight: 600,
+            color: G.inkMuted,
+          }}>
+            {pct}%
+          </span>
+        </div>
+      )}
+
+      {/* Dash segments */}
+      <div
+        style={{ display: 'flex', gap: '4px' }}
+        role="progressbar"
+        aria-valuenow={currentIndex}
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-label={`Question ${currentIndex} of ${total}`}
+      >
+        {Array.from({ length: total }).map((_, i) => {
+          const filled = i < currentIndex;
+          const active = i === currentIndex;
+          return (
+            <div
+              key={i}
+              style={{
+                flex: 1,
+                height: '4px',
+                borderRadius: '2px',
+                background: filled
+                  ? `linear-gradient(to right, ${G.accent}, ${G.accentLeft})`
+                  : active
+                  ? G.segmentActive
+                  : G.segmentEmpty,
+                transition: 'background 0.3s',
+              }}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

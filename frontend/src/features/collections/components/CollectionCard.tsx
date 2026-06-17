@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { CollectionSummary } from '../types';
 import { useAuthStore } from '../../../store/authStore';
-import { useTierColor } from '../../../hooks/useTierColor';
 import { formatFreshness } from '../../../utils/formatFreshness';
+import { useTheme } from '../../../hooks/useTheme';
 
 interface CollectionCardProps {
   collection: CollectionSummary;
@@ -14,19 +14,24 @@ export function CollectionCard({ collection, isSelected, onSelect }: CollectionC
   const user       = useAuthStore((state) => state.user);
   const isAdmin    = user?.tier === 'empowered';
   const [isHovered, setIsHovered] = useState(false);
-  const tierColor  = useTierColor();
+  const { darkMode } = useTheme();
 
   const borderColor = isSelected
-    ? tierColor
+    ? '#B8A020'
     : isHovered
-    ? '#8B7A65'
-    : '#C8BAA6';
+    ? '#2A8A9A'
+    : darkMode ? '#1A3A50' : '#1A6A7A';
 
   const shadow = isSelected
-    ? `0 4px 20px ${tierColor}30`
+    ? '0 4px 20px rgba(184,160,32,0.35)'
     : isHovered
-    ? '0 2px 10px rgba(23,18,14,0.08)'
-    : '0 1px 4px rgba(23,18,14,0.06)';
+    ? '0 2px 12px rgba(30,120,140,0.25)'
+    : darkMode ? '0 1px 4px rgba(0,0,0,0.3)' : '0 1px 4px rgba(26,106,122,0.12)';
+
+  const cardBodyBg   = darkMode ? '#0D1C2C' : '#FFFFFF';
+  const cardTitleColor = darkMode ? '#E8F4FF' : '#17120E';
+  const cardDescColor  = darkMode ? '#5A8AAA' : '#5A7A8A';
+  const cardMetaColor  = darkMode ? '#3A6A80' : '#7A9AAA';
 
   return (
     <button
@@ -71,25 +76,29 @@ export function CollectionCard({ collection, isSelected, onSelect }: CollectionC
 
       {/* Card body */}
       <div style={{
-        background: '#F5EDD8',
+        background: cardBodyBg,
         padding: '10px 12px 12px',
+        height: '96px',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
         borderTop: `1px solid ${borderColor}`,
-        transition: 'border-color 0.15s',
+        transition: 'border-color 0.15s, background 0.2s',
       }}>
         <div style={{
-          fontFamily: "'Bebas Neue', sans-serif",
-          fontSize: '15px',
-          letterSpacing: '0.08em',
-          color: '#17120E',
-          lineHeight: 1.1,
+          fontFamily: "'Manrope', sans-serif",
+          fontWeight: 700,
+          fontSize: '14px',
+          letterSpacing: '0.01em',
+          color: cardTitleColor,
+          lineHeight: 1.2,
         }}>
           {collection.name}
         </div>
         <div style={{
-          fontFamily: "'Lora', Georgia, serif",
-          fontStyle: 'italic',
+          fontFamily: "'Manrope', sans-serif",
+          fontWeight: 400,
           fontSize: '11px',
-          color: '#7A6A5A',
+          color: cardDescColor,
           marginTop: '5px',
           lineHeight: 1.45,
           display: '-webkit-box',
@@ -102,10 +111,10 @@ export function CollectionCard({ collection, isSelected, onSelect }: CollectionC
         </div>
         {isAdmin && (
           <div style={{
-            fontFamily: "'Bebas Neue', sans-serif",
+            fontFamily: "'Manrope', sans-serif",
             fontSize: '10px',
             letterSpacing: '0.1em',
-            color: '#9A8878',
+            color: cardMetaColor,
             marginTop: '6px',
           }}>
             {collection.questionCount} QUESTIONS
@@ -113,10 +122,10 @@ export function CollectionCard({ collection, isSelected, onSelect }: CollectionC
         )}
         {collection.tier === 'international' && collection.latestQuestionAt && (
           <div style={{
-            fontFamily: "'Bebas Neue', sans-serif",
+            fontFamily: "'Manrope', sans-serif",
             fontSize: '10px',
             letterSpacing: '0.1em',
-            color: '#9A8878',
+            color: cardMetaColor,
             marginTop: '6px',
           }}>
             {formatFreshness(collection.latestQuestionAt)}
@@ -132,7 +141,7 @@ export function CollectionCard({ collection, isSelected, onSelect }: CollectionC
           right: '8px',
           width: '20px',
           height: '20px',
-          background: tierColor,
+          background: '#B8A020',
           borderRadius: '2px',
           display: 'flex',
           alignItems: 'center',
