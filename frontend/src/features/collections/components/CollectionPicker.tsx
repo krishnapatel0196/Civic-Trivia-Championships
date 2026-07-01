@@ -1,9 +1,16 @@
-import { useState } from 'react';
 import type { CollectionSummary } from '../types';
 import { CollectionCard } from './CollectionCard';
-import { CollectionCardSkeleton } from './CollectionCardSkeleton';
-import { useDebounce } from '../../../hooks/useDebounce';
 import { useTheme } from '../../../hooks/useTheme';
+
+const TIER_ORDER: Record<string, number> = { city: 0, state: 1, federal: 2, international: 3 };
+
+function sortCollections(collections: CollectionSummary[]): CollectionSummary[] {
+  return [...collections].sort((a, b) => {
+    const tierDiff = (TIER_ORDER[a.tier] ?? 99) - (TIER_ORDER[b.tier] ?? 99);
+    if (tierDiff !== 0) return tierDiff;
+    return a.name.localeCompare(b.name);
+  });
+}
 
 interface CollectionPickerProps {
   collections: CollectionSummary[];
@@ -12,147 +19,74 @@ interface CollectionPickerProps {
   onSelect: (id: number) => void;
 }
 
-function getCategory(collection: CollectionSummary): 'local' | 'state' | 'federal' | 'international' {
-  if (collection.tier === 'federal') return 'federal';
-  if (collection.tier === 'state') return 'state';
-  if (collection.tier === 'international') return 'international';
-  return 'local';
+function GridSkeleton({ darkMode }: { darkMode: boolean }) {
+  const bg = darkMode ? '#161B22' : '#E2E8F0';
+  const shimmer = darkMode ? '#21262D' : '#CBD5E1';
+  return (
+    <div style={{ borderRadius: 16, overflow: 'hidden', border: `2px solid ${darkMode ? '#21262D' : '#E2E8F0'}` }}>
+      <div style={{ height: 160, background: bg }} />
+      <div style={{ background: darkMode ? '#161B22' : '#FFFFFF', padding: '14px 16px 16px' }}>
+        <div style={{ height: 10, width: '50%', background: shimmer, borderRadius: 6, marginBottom: 10 }} />
+        <div style={{ height: 18, width: '70%', background: shimmer, borderRadius: 6, marginBottom: 10 }} />
+        <div style={{ height: 10, width: '100%', background: shimmer, borderRadius: 6, marginBottom: 6 }} />
+        <div style={{ height: 10, width: '80%', background: shimmer, borderRadius: 6, marginBottom: 6 }} />
+        <div style={{ height: 10, width: '60%', background: shimmer, borderRadius: 6 }} />
+      </div>
+    </div>
+  );
 }
 
-const GROUP_LABELS: Record<string, string> = {
-  local:         'Local',
-  state:         'State',
-  federal:       'Federal',
-  international: 'International',
-};
-
 export function CollectionPicker({ collections, selectedId, loading, onSelect }: CollectionPickerProps) {
-  const [query, setQuery] = useState('');
-  const debouncedQuery = useDebounce(query, 150);
-  const { C, darkMode } = useTheme();
-  const isFiltering = debouncedQuery.trim().length > 0;
-  const filtered = isFiltering
-    ? collections.filter(c => c.name.toLowerCase().includes(debouncedQuery.trim().toLowerCase()))
-    : [];
-
-  if (!loading && collections.length === 0) return null;
-
-  const grouped = (['local', 'state', 'federal', 'international'] as const)
-    .map((category) => ({
-      category,
-      label: GROUP_LABELS[category],
-      collections: collections
-        .filter((c) => getCategory(c) === category)
-        .sort((a, b) => a.name.localeCompare(b.name)),
-    }))
-    .filter((g) => g.collections.length > 0);
+  const { darkMode } = useTheme();
+  const headingColor = darkMode ? '#F1F5F9' : '#0F172A';
+  const countColor = darkMode ? '#475569' : '#94A3B8';
 
   return (
     <div>
-      {/* Section heading */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
-        <span style={{
+      {/* Section header */}
+      <div style={{
+        display: 'flex', alignItems: 'baseline',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+      }}>
+        <h2 style={{
           fontFamily: "'Manrope', sans-serif",
-          fontWeight: 700,
-          letterSpacing: '0.10em',
-          fontSize: '12px',
-          color: C.muted,
-          whiteSpace: 'nowrap',
-          textTransform: 'uppercase' as const,
+          fontWeight: 900, fontSize: 28,
+          color: headingColor,
+          margin: 0, letterSpacing: '-0.01em',
         }}>
-          CHOOSE YOUR COLLECTION
-        </span>
-        <div style={{ flex: 1, borderTop: `1px solid ${C.rule}` }} />
+          All Collections
+        </h2>
+        {!loading && collections.length > 0 && (
+          <span style={{
+            fontFamily: "'Manrope', sans-serif",
+            fontWeight: 700, fontSize: 12,
+            letterSpacing: '0.12em',
+            color: countColor,
+            textTransform: 'uppercase' as const,
+          }}>
+            {collections.length} AVAILABLE
+          </span>
+        )}
       </div>
 
+      {/* Grid */}
       {loading ? (
-        <div className="flex flex-col sm:flex-row gap-3 pb-2">
-          <CollectionCardSkeleton />
-          <CollectionCardSkeleton />
-          <CollectionCardSkeleton />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          {[0, 1, 2, 3, 4, 5].map(i => (
+            <GridSkeleton key={i} darkMode={darkMode} />
+          ))}
         </div>
-      ) : (
-        <div>
-          <input
-            type="search"
-            placeholder="Search collections..."
-            aria-label="Search collections"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            style={{
-              width: '100%',
-              boxSizing: 'border-box' as const,
-              padding: '8px 12px',
-              fontFamily: "'Manrope', sans-serif",
-              fontSize: '14px',
-              color: C.ink,
-              background: darkMode ? '#0D1C2C' : '#FFFFFF',
-              border: '1px solid #B8A020',
-              borderRadius: '3px',
-              outline: 'none',
-              marginBottom: '20px',
-            }}
-          />
-
-          {isFiltering ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(148px, 1fr))', gap: '12px' }}>
-              {filtered.length === 0 ? (
-                <p style={{
-                  gridColumn: '1 / -1',
-                  textAlign: 'center',
-                  color: C.mutedFg,
-                  fontFamily: "'Manrope', sans-serif",
-                  fontSize: '14px',
-                  padding: '20px 0',
-                  margin: 0,
-                }}>
-                  No collections match &ldquo;{debouncedQuery}&rdquo;
-                </p>
-              ) : (
-                filtered.map((collection) => (
-                  <CollectionCard
-                    key={collection.id}
-                    collection={collection}
-                    isSelected={selectedId === collection.id}
-                    onSelect={onSelect}
-                  />
-                ))
-              )}
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', paddingBottom: '8px' }}>
-              {grouped.map(({ category, label, collections: group }) => (
-                <div key={category}>
-                  {/* Category label */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                    <span style={{
-                      fontFamily: "'Manrope', sans-serif",
-                      fontWeight: 600,
-                      letterSpacing: '0.08em',
-                      fontSize: '11px',
-                      color: C.mutedFg,
-                      whiteSpace: 'nowrap',
-                      textTransform: 'uppercase' as const,
-                    }}>
-                      {label}
-                    </span>
-                    <div style={{ flex: 1, borderTop: `1px solid ${C.ruleLight}` }} />
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(148px, 1fr))', gap: '12px' }}>
-                    {group.map((collection) => (
-                      <CollectionCard
-                        key={collection.id}
-                        collection={collection}
-                        isSelected={selectedId === collection.id}
-                        onSelect={onSelect}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+      ) : collections.length === 0 ? null : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+          {sortCollections(collections).map(c => (
+            <CollectionCard
+              key={c.id}
+              collection={c}
+              isSelected={selectedId === c.id}
+              onSelect={onSelect}
+            />
+          ))}
         </div>
       )}
     </div>

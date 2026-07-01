@@ -37,11 +37,11 @@ export const LIGHT: ColorTokens = {
 };
 
 export const DARK: ColorTokens = {
-  paper:       '#0B1628',
+  paper:       '#0D1117',
   ink:         '#F1F1F1',
   inkLight:    '#AAAAAA',
-  rule:        '#1C2E40',
-  ruleLight:   '#122030',
+  rule:        '#21262D',
+  ruleLight:   '#161B22',
   muted:       '#888888',
   mutedFg:     '#666666',
   accent:      '#E04820',

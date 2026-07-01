@@ -306,40 +306,6 @@ export function WagerScreen({
                 <span>{maxWager.toLocaleString()} MAX</span>
               </div>
 
-              {/* Percentage quick-select buttons */}
-              <div style={{
-                display: 'flex',
-                gap: '8px',
-                marginTop: '10px',
-              }}>
-                {([25, 50, 75, 100] as const).map((pct) => {
-                  const amount = Math.floor(maxWager * pct / 100 / 10) * 10;
-                  const isActive = wagerAmount === amount;
-                  return (
-                    <button
-                      key={pct}
-                      onClick={() => !isLocked && onSetWager(amount)}
-                      disabled={isLocked}
-                      style={{
-                        flex: 1,
-                        padding: '5px 0',
-                        fontFamily: "'Manrope', sans-serif",
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        letterSpacing: '0.06em',
-                        borderRadius: '6px',
-                        border: `1px solid ${isActive ? G.btn : G.optionBorder}`,
-                        background: isActive ? G.btn : 'transparent',
-                        color: isActive ? G.btnText : G.inkMuted,
-                        cursor: isLocked ? 'not-allowed' : 'pointer',
-                        transition: 'background 0.15s, color 0.15s, border-color 0.15s',
-                      }}
-                    >
-                      {pct}%
-                    </button>
-                  );
-                })}
-              </div>
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '8px 0', color: G.inkMuted, fontStyle: 'italic', fontSize: '13px' }}>

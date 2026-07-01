@@ -6,6 +6,10 @@ body, * {
   font-family: 'Manrope', sans-serif;
 }
 
+body {
+  background: #0D1117;
+}
+
 /* Screen reader only - visually hidden but accessible */
 .sr-only {
   position: absolute;

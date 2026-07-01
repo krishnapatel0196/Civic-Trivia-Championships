@@ -28,7 +28,7 @@ export function useCollections(): UseCollectionsReturn {
         setCollections(collections);
         // Select: saved if valid, else first collection (lowest sortOrder = Federal Civics default)
         const validSaved = savedId && collections.find(c => c.id === savedId);
-        setSelectedId(validSaved ? savedId : (collections[0]?.id ?? null));
+        setSelectedId(validSaved ? savedId : null);
       })
       .catch((error) => {
         console.error('Failed to fetch collections:', error);

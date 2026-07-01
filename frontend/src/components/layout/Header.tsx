@@ -53,8 +53,8 @@ export function Header() {
       position: 'sticky',
       top: 0,
       zIndex: 50,
-      background: darkMode ? '#0B1628' : '#FFFFFF',
-      borderBottom: `1px solid ${darkMode ? '#1C2E40' : '#E8EFF4'}`,
+      background: darkMode ? '#161B22' : '#FFFFFF',
+      borderBottom: `1px solid ${darkMode ? '#21262D' : '#E8EFF4'}`,
       transition: 'background 0.2s, border-color 0.2s',
     }}>
       <div style={{ maxWidth: '1512px', margin: '0 auto', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px' }}>
@@ -128,7 +128,7 @@ export function Header() {
                 className="flex items-center justify-center transition-colors"
                 aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                 style={{ color: '#64748B', borderRadius: '50%', width: '36px', height: '36px', background: 'transparent', border: 'none', cursor: 'pointer' }}
-                onMouseEnter={e => (e.currentTarget.style.background = darkMode ? '#1C2E40' : '#EEF4F7')}
+                onMouseEnter={e => (e.currentTarget.style.background = darkMode ? '#21262D' : '#EEF4F7')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
                 {darkMode ? (
@@ -208,7 +208,7 @@ export function Header() {
                 className="flex items-center justify-center transition-colors"
                 aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                 style={{ color: '#64748B', borderRadius: '50%', width: '36px', height: '36px', background: 'transparent', border: 'none', cursor: 'pointer' }}
-                onMouseEnter={e => (e.currentTarget.style.background = darkMode ? '#1C2E40' : '#EEF4F7')}
+                onMouseEnter={e => (e.currentTarget.style.background = darkMode ? '#21262D' : '#EEF4F7')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
                 {darkMode ? (

@@ -35,6 +35,7 @@ export function ResultsScreen({
   questions,
   collectionName,
   onPlayAgain,
+  onHome,
   flaggedQuestions,
   onFlagToggle,
   priorLevel,
@@ -54,6 +55,9 @@ export function ResultsScreen({
   const accuracy      = Math.round((result.totalCorrect / result.totalQuestions) * 100);
   const isPerfectGame = result.totalCorrect === result.totalQuestions;
   const missed        = result.totalQuestions - result.totalCorrect;
+  const preWagerScore = result.wagerResult
+    ? result.totalScore - (result.wagerResult.won ? result.wagerResult.wagerAmount : -result.wagerResult.wagerAmount)
+    : 0;
 
   const { fireConfettiRain } = useConfettiStore();
   const reducedMotion        = useReducedMotion();
@@ -125,21 +129,10 @@ export function ResultsScreen({
     }
   };
 
-  // Score subtitle
-  const scoreSubtitle = (() => {
-    if (result.wagerResult && result.wagerResult.wagerAmount > 0) {
-      const preWagerBase = result.answers.slice(0, -1).reduce((s, a) => s + a.basePoints + a.speedBonus, 0);
-      const sign = result.wagerResult.won ? '+' : '−';
-      return `${preWagerBase.toLocaleString()} base ${sign} ${result.wagerResult.wagerAmount.toLocaleString()} wager`;
-    }
-    return `${result.totalBasePoints.toLocaleString()} base${result.totalSpeedBonus > 0 ? ` + ${result.totalSpeedBonus.toLocaleString()} speed` : ''}`;
-  })();
-
   return (
     <div style={{
       background: G.bg,
-      height: '100vh',
-      overflow: 'hidden',
+      minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
       fontFamily: "'Manrope', sans-serif",
@@ -149,12 +142,11 @@ export function ResultsScreen({
 
       <div style={{
         flex: 1,
-        overflow: 'hidden',
         display: 'flex',
         maxWidth: '1080px',
         width: '100%',
         margin: '0 auto',
-        padding: '16px 20px',
+        padding: '16px 20px 40px',
         gap: '16px',
         alignItems: 'flex-start',
         boxSizing: 'border-box',
@@ -199,9 +191,6 @@ export function ResultsScreen({
                 {collectionName}
               </div>
             )}
-            <div style={{ fontSize: '13px', color: G.inkMuted }}>
-              {scoreSubtitle}
-            </div>
             {isPerfectGame && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.85 }}
@@ -266,7 +255,7 @@ export function ResultsScreen({
                   FINAL QUESTION WAGER
                 </div>
                 <div style={{ fontSize: '12px', color: G.inkMuted, marginBottom: '6px' }}>
-                  Bet: {result.wagerResult.wagerAmount.toLocaleString()} points
+                  Base: {preWagerScore.toLocaleString()} points | Bet: {result.wagerResult.wagerAmount.toLocaleString()} points
                 </div>
                 <div style={{
                   fontSize: '28px',
@@ -278,17 +267,9 @@ export function ResultsScreen({
                     ? `WON +${result.wagerResult.wagerAmount.toLocaleString()}`
                     : `−${result.wagerResult.wagerAmount.toLocaleString()}`}
                 </div>
-                {(() => {
-                  const preWager = result.totalScore - (result.wagerResult.won
-                    ? result.wagerResult.wagerAmount
-                    : -result.wagerResult.wagerAmount);
-                  const sign = result.wagerResult.won ? '+' : '−';
-                  return (
-                    <div style={{ fontSize: '11px', color: G.inkMuted }}>
-                      {preWager.toLocaleString()} → {result.totalScore.toLocaleString()} pts · {sign}{result.wagerResult.wagerAmount.toLocaleString()} added
-                    </div>
-                  );
-                })()}
+                <div style={{ fontSize: '11px', color: G.inkMuted }}>
+                  {preWagerScore.toLocaleString()} {result.wagerResult.won ? '+' : '−'} {result.wagerResult.wagerAmount.toLocaleString()} = {result.totalScore.toLocaleString()} points
+                </div>
               </div>
             ) : (
               <div style={{
@@ -381,33 +362,63 @@ export function ResultsScreen({
             >
               PLAY AGAIN
             </button>
-            <button
-              onClick={() => navigate('/leaderboard')}
-              style={{
-                display: 'block', width: '100%',
-                padding: '14px',
-                background: 'transparent',
-                color: G.inkMuted,
-                border: `1px solid ${G.questionCardBorder}`,
-                borderRadius: '50px',
-                fontFamily: "'Manrope', sans-serif",
-                fontSize: '13px',
-                fontWeight: 600,
-                letterSpacing: '0.14em',
-                cursor: 'pointer',
-                transition: 'border-color 0.15s, color 0.15s',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = G.inkMuted;
-                e.currentTarget.style.color = G.ink;
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = G.questionCardBorder;
-                e.currentTarget.style.color = G.inkMuted;
-              }}
-            >
-              LEADERBOARD
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={() => navigate('/leaderboard')}
+                style={{
+                  flex: 1,
+                  padding: '14px',
+                  background: 'transparent',
+                  color: G.inkMuted,
+                  border: `1px solid ${G.questionCardBorder}`,
+                  borderRadius: '50px',
+                  fontFamily: "'Manrope', sans-serif",
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  letterSpacing: '0.14em',
+                  cursor: 'pointer',
+                  transition: 'border-color 0.15s, color 0.15s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = G.inkMuted;
+                  e.currentTarget.style.color = G.ink;
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = G.questionCardBorder;
+                  e.currentTarget.style.color = G.inkMuted;
+                }}
+              >
+                LEADERBOARD
+              </button>
+              <button
+                onClick={onHome}
+                aria-label="Go to home page"
+                style={{
+                  width: '48px', height: '48px',
+                  flexShrink: 0,
+                  background: 'transparent',
+                  color: G.inkMuted,
+                  border: `1px solid ${G.questionCardBorder}`,
+                  borderRadius: '50%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'border-color 0.15s, color 0.15s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = G.inkMuted;
+                  e.currentTarget.style.color = G.ink;
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = G.questionCardBorder;
+                  e.currentTarget.style.color = G.inkMuted;
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 11.5 12 4l9 7.5" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9" />
+                </svg>
+              </button>
+            </div>
           </motion.div>
         </motion.div>
 
