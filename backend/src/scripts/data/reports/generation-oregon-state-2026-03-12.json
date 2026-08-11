@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-03-12T21:52:45.571Z",
+  "target": "oregon-state",
+  "config": {
+    "targetQuestions": 100,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 110,
+    "passedValidation": 70,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 70
+  },
+  "breakdown": {
+    "byRule": {
+      "pure-lookup": 19,
+      "duplicate-text": 21
+    },
+    "byRetryAttempt": {
+      "0": 53,
+      "1": 13,
+      "2": 3,
+      "3": 1
+    },
+    "byDifficulty": {
+      "easy": 22,
+      "medium": 29,
+      "hard": 19
+    },
+    "byTopic": {
+      "state-government": 18,
+      "civic-innovations": 13,
+      "culture-identity": 29,
+      "history-statehood": 5,
+      "public-policy-law": 5
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 570154,
+    "apiCalls": 39,
+    "tokensUsed": {
+      "input": 5563,
+      "output": 26270,
+      "cached": 2685200
+    },
+    "estimatedCostUsd": 1.216299
+  }
+}

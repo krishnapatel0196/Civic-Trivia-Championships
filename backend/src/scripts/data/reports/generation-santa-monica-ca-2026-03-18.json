@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-03-18T02:10:58.882Z",
+  "target": "santa-monica-ca",
+  "config": {
+    "targetQuestions": 182,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 284,
+    "passedValidation": 189,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 189
+  },
+  "breakdown": {
+    "byRule": {
+      "pure-lookup": 11,
+      "duplicate-text": 84
+    },
+    "byRetryAttempt": {
+      "0": 150,
+      "1": 29,
+      "2": 8,
+      "3": 2
+    },
+    "byDifficulty": {
+      "easy": 31,
+      "medium": 105,
+      "hard": 53
+    },
+    "byTopic": {
+      "city-government": 32,
+      "civic-history": 32,
+      "landmarks-culture": 35,
+      "local-services": 30,
+      "economy-development": 34,
+      "community-environment": 26
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 1013095,
+    "apiCalls": 92,
+    "tokensUsed": {
+      "input": 16478,
+      "output": 64099,
+      "cached": 3430059
+    },
+    "estimatedCostUsd": 2.0399367
+  }
+}

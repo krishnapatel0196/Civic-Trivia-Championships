@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-03-03T07:47:14.071Z",
+  "target": "texas-state",
+  "config": {
+    "targetQuestions": 91,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 142,
+    "passedValidation": 93,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 93
+  },
+  "breakdown": {
+    "byRule": {
+      "vague-qualifiers": 10,
+      "pure-lookup": 8,
+      "duplicate-text": 30,
+      "ambiguous-answers": 1
+    },
+    "byRetryAttempt": {
+      "0": 79,
+      "1": 9,
+      "2": 3,
+      "3": 2
+    },
+    "byDifficulty": {
+      "easy": 23,
+      "medium": 46,
+      "hard": 24
+    },
+    "byTopic": {
+      "state-legislature": 12,
+      "governor-executive": 12,
+      "distinctive-institutions": 10,
+      "texas-history-identity": 12,
+      "state-judiciary": 13,
+      "texas-constitution": 12,
+      "public-policy": 10,
+      "civic-landmarks": 12
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 523174,
+    "apiCalls": 46,
+    "tokensUsed": {
+      "input": 6561,
+      "output": 30392,
+      "cached": 395732
+    },
+    "estimatedCostUsd": 0.5942826
+  }
+}

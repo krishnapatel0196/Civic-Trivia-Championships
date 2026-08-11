@@ -1,0 +1,97 @@
+SOURCE: https://en.wikipedia.org/wiki/Twenty-third_Amendment_to_the_United_States_Constitution
+============================================================
+The Twenty-third Amendment (Amendment XXIII) to the United States Constitution extends the right to participate in presidential elections to the District of Columbia. The amendment grants to the district electors in the Electoral College, as though it were a state, though the district can never have more electors than the least-populous state. How the electors are appointed is to be determined by Congress. The Twenty-third Amendment was proposed by the 86th Congress on June 16, 1960; it was ratified by the requisite number of states on March 29, 1961.
+The Constitution provides that each state receives presidential electors equal to the combined number of seats it has in the Senate and the House of Representatives. As the District of Columbia is not a state, it was not entitled to any electors before the adoption of the Twenty-third Amendment. As early as 1888, some journalists and members of Congress favored a constitutional amendment to grant the district electoral votes. Still, such an amendment did not win widespread support until the rise of the civil rights movement in the 1950s. The amendment was not seen as a partisan measure; ratification of the amendment was endorsed by President Dwight D. Eisenhower and both major party candidates in the 1960 presidential election. The amendment's ratification made the district the only entity other than the states to have any representation in the Electoral College.
+The first presidential election in which the District of Columbia participated was the election of 1964. Starting with that election, the District of Columbia has consistently had three members in the Electoral College, this being the constitutionally implied minimum number it is entitled to; notwithstanding the constitutionally entrenched limitation on its number of electors, the District's population has never reached the threshold where it otherwise would have been entitled to more than three. Since the passage of the Twenty-third Amendment, all but one of the district's electoral votes have been cast for the Democratic Party's presidential candidates. The Twenty-third Amendment did not grant the district voting rights in Congress, nor did it give the district the right to participate in the process that allows the Constitution to be amended. A constitutional amendment to do this was proposed by Congress in 1978, but not enough states ratified it for it to be adopted. Many citizens of the district favor statehood or further constitutional amendments to address these issues.
+
+Text
+Section 1. The District constituting the seat of Government of the United States shall appoint in such manner as the Congress may direct:
+A number of electors of President and Vice President equal to the whole number of Senators and Representatives in Congress to which the District would be entitled if it were a State, but in no event more than the least populous State; they shall be in addition to those appointed by the States, but they shall be considered, for the purposes of the election of President and Vice President, to be electors appointed by a State; and they shall meet in the District and perform such duties as provided by the twelfth article of amendment.
+
+Section 2. The Congress shall have power to enforce this article by appropriate legislation.
+
+Background
+The United States Constitution's rules for the composition of the House of Representatives and the Senate explicitly grant seats to states and no other entities. Similarly, electors (i.e., members of the Electoral College) are apportioned to states, not to territories or the federal district. The main reference to the federal district is in Article I, Section 8 of the Constitution, which gives Congress the power "To exercise exclusive Legislation in all Cases whatsoever, over such District (not exceeding ten Miles square) as may, by Cession of particular States, and the Acceptance of Congress, become the Seat of the Government of the United States." In the early existence of the District, it was too small and rural to merit a hypothetical seat in the House of Representatives anyway, with fewer than 30,000 inhabitants.
+In 1888, a bill to amend the Constitution was introduced in Congress by Senator Henry Blair of New Hampshire to grant the District of Columbia voting rights in presidential elections, but it did not proceed. Theodore W. Noyes, a writer of the Washington Evening Star, published several stories in support of D.C. voting rights. Noyes also helped found the Citizens' Joint Committee on National Representation for the District of Columbia, a group which lobbied Congress to pass an amendment expanding D.C. voting rights. Noyes died in 1946, but the Citizens' Joint Committee continued onward, and the issue of district voting rights began to be seen as similar to the civil rights movement. A split developed between advocates for greater power for the district after World War II. The Evening Star, continuing in the Noyes mold, supported D.C. representation in Congress and the electoral college but opposed "home rule" (locally elected mayors and councils with actual power rather than direct rule by Congress). The Washington Post, however, supported "home rule" and civil rights but opposed full-fledged representation for the district. Additionally, while many of the people leading the push were liberal Democrats, the District of Columbia in the 1950s was fairly balanced in its potential voting impact; Democrats had only a slight edge over Republicans, although district Republicans in the 1950s were liberal by national standards. Thus, an amendment to grant the district increased voting powers could gain bipartisan support in a way that would have been more difficult later. Only 28% of the district was African-American according to the 1940 census, and the black population was young compared to other residents, making the voting electorate even smaller due to the voting age of 21. This grew to 54% in the 1960 census, but according to political scientist Clement E. Vose, "various factors—inexperience in voting, educational handicaps, residency requirements, welfare laws, and social ostracism before the Voting Rights Act of 1965—minimized black registration and voting".
+
+Proposal and ratification
+
+Adoption by the Congress
+Senate Joint Resolution–39, which would eventually become the Twenty-third Amendment, was introduced in 1959 by Tennessee Democratic senator Estes Kefauver. His proposal would provide for the emergency functioning of Congress and continuity of the legislative process by authorizing governors to fill vacancies in the House of Representatives "on any date that the total number of vacancies ... exceeds half of the authorized membership." The governor's appointive authority would have been limited to 60 days, and the appointee would have served until a successor was elected in a special election. The bill was amended twice on the Senate floor. One added provision, proposed by New York Republican Kenneth Keating, would grant the District of Columbia electoral votes in national elections and non-voting delegate(s) to the House. The other, offered by Florida Democrat Spessard Holland, would eliminate the poll tax or other property qualification as a prerequisite for voting in federal elections. The Senate passed SJR–39 in this three-amendment form on February 2, 1960, by a vote of 70–18, and sent it to the House.
+The House Judiciary Committee, after setting aside the anti-poll tax and House emergency appointment provisions of SJR–39, sent its own proposal, House Joint Resolution–757, devoted solely to presidential electors for the District of Columbia, to the House floor for consideration. This was adopted in the House without amendment, by voice vote, on June 14, 1960. Then, by unanimous consent, the text of HJR–757 was inserted into SJR–39, the original language of which was removed. The Senate adopted the revised resolution by voice vote on June 16, 1960.
+
+Ratification by the states
+
+To become valid as part of the Constitution, the Twenty-third Amendment needed to be ratified by the legislatures of three-quarters of the states (38, following the admission of Alaska and Hawaii to the union in 1959) within seven years from its submission to the states by Congress (June 16, 1967). President Eisenhower, along with both major party candidates in the 1960 presidential election, Vice President Richard Nixon and Senator John F. Kennedy from Massachusetts, endorsed the proposal. Amendment supporters ran an effective ratification campaign, mobilizing persons in almost every state to press for its approval.
+The following states ratified the amendment:
+
+Hawaii – June 23, 1960
+Massachusetts – August 22, 1960
+New Jersey – December 19, 1960
+New York – January 17, 1961
+California – January 19, 1961
+Oregon – January 27, 1961
+Maryland – January 30, 1961
+Idaho – January 31, 1961
+Maine – January 31, 1961
+Minnesota – January 31, 1961
+New Mexico – February 1, 1961
+Nevada – February 2, 1961
+Montana – February 6, 1961
+Colorado – February 8, 1961
+Washington – February 9, 1961
+West Virginia – February 9, 1961
+Alaska – February 10, 1961
+Wyoming – February 13, 1961
+South Dakota – February 14, 1961 (date of filing in Office of Secretary of State of South Dakota)
+Delaware – February 20, 1961
+Utah – February 21, 1961
+Wisconsin – February 21, 1961
+Pennsylvania – February 28, 1961
+Indiana – March 3, 1961
+North Dakota – March 3, 1961
+Tennessee – March 6, 1961
+Michigan – March 8, 1961
+Connecticut – March 9, 1961
+Arizona – March 10, 1961
+Illinois – March 14, 1961
+Nebraska – March 15, 1961
+Vermont – March 15, 1961
+Iowa – March 16, 1961
+Missouri – March 20, 1961
+Oklahoma – March 21, 1961
+Rhode Island – March 22, 1961
+Kansas – March 29, 1961
+Ohio – March 29, 1961
+Ratification was completed on March 29, 1961, 9 months and 12 days after being proposed by Congress. The following states subsequently ratified the amendment:
+
+39. New Hampshire – March 30, 1961 (Date in the official notice; preceded by ratification on March 29, 1961, as the 37th state to ratify, which was annulled and then repeated later that same day.)
+40. Alabama – April 11, 2002
+On April 3, 1961, John L. Moore, Administrator of General Services, certified that the amendment had been adopted by the requisite number of States and had become a part of the Constitution.
+The amendment was rejected by Arkansas on January 24, 1961. Nine states took no action on the amendment: Florida, Kentucky, Mississippi, Georgia, South Carolina, Louisiana, Texas, North Carolina, and Virginia.
+
+Implementing legislation
+The Amendment granted Congress the power to determine how the District of Columbia's electors should be appointed. In October 1961, Congress enacted legislation to amend the DC Code by providing that the District's electors should be appointed based on a popular vote, with all electors awarded to the presidential ticket prevailing in the ballot.
+In 1973, Congress enacted the District of Columbia Home Rule Act, delegating to the Council of the District of Columbia certain legislative powers over the District (subject to Congressional override). The DC Council subsequently passed legislation affecting the appointment of DC's presidential electors, most notably by adopting the National Popular Vote Interstate Compact in 2010.
+
+Political impact
+
+While perceived as politically neutral and only somewhat liberal-leaning at the time of passage in 1961, the district swung dramatically toward the Democratic Party in the years after passage. African Americans voted in more significant numbers than they had in the 1940s and 1950s with the clearing away of restrictions on the vote, and their share of the district electorate increased; according to the 1970 census, 71% of the federal district was black, a dramatic jump. In line with black voters' strong support for the Democrats, the district has sent its three electoral votes to the Democratic candidate in every single presidential election since 1964, including the 1984 landslide re-election of President Reagan, where only the District of Columbia and Minnesota voted for Democratic candidate Walter Mondale. The district's electoral votes have never proven decisive in a presidential election; the smallest Electoral College majority won by a Democratic president since the Twenty-third Amendment's ratification was Jimmy Carter's 57 point win in 1976.
+Unaddressed by the Twenty-third Amendment were the parallel issues of congressional representation and "home rule" for the district. On December 24, 1973, Congress approved the District of Columbia Home Rule Act, which established an elected office of mayor and a 13-member elected council for the district. These officials were empowered to pass laws and enact administrative policies for the district, though Congress retained veto power if they chose to intervene. On September 22, 1970, President Nixon signed the District of Columbia Delegate Act, which authorized voters in the district to elect one non-voting delegate to represent them in the House of Representatives. The election to fill the seat was held on March 23, 1970. On August 22, 1978, Congress submitted the District of Columbia Voting Rights Amendment to the states for ratification. This sweeping proposal would have granted the District of Columbia full representation in the United States Congress as if it were a state, repealed the Twenty-third Amendment and granted the district full representation in the Electoral College plus participation in the process by which the Constitution is amended as if it were a state. The amendment failed to become part of the Constitution, however, as it was not ratified by the required number of states (38) prior to its August 22, 1985 ratification deadline. The campaign for the proposed amendment ran into much fiercer conservative opposition due to the open and obvious fact that by 1978 the proposed amendment would have practically guaranteed two Democratic senators for some time; the amendment was criticized on various other grounds as well, and was not ratified even by several more "liberal" states.
+
+See also
+
+District of Columbia statehood movement
+District of Columbia voting rights
+District of Columbia retrocession
+Political party strength in Washington, D.C.
+
+Notes
+
+References
+Constitution of the United States.
+Kilman, Johnny and George Costello (Eds). (2000). The Constitution of the United States of America: Analysis and Interpretation.
+Vose, Clement (1978). "When District of Columbia Representation Collides with the Constitutional Amendment Institution". Publius. 9 (1). Oxford University Press: 105–125. doi:10.2307/3329772. JSTOR 3329772.
+
+External links
+CRS Annotated Constitution: 23rd Amendment

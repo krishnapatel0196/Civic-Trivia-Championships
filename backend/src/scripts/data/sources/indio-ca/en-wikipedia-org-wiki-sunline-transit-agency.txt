@@ -1,0 +1,47 @@
+SOURCE: https://en.wikipedia.org/wiki/SunLine_Transit_Agency
+============================================================
+SunLine Transit Agency is a transit operator in Riverside County, California, United States, providing bus service to more than 3.5 million passengers per year in the Palm Springs Area. Service extends into San Bernardino Transit Center during peak hours. In 2025, the system had a ridership of 2,742,300, or about 8,700 per weekday as of the fourth quarter of 2025.
+
+History and description
+SunLine Transit Agency (STA) was established under a Joint Powers Agreement, initially between Riverside County and Coachella Valley cities (Coachella, Desert Hot Springs, Indio, Palm Desert, and Palm Springs) on July 1, 1977. Cathedral City, Indian Wells, La Quinta, and Rancho Mirage were added later. Each of the nine member cities selects one member of the SunLine Board of Directors, with the tenth provided by Riverside County.
+The service area covers 1,120 mi2 (2,900 km2), bounded approximately by the San Gorgonio Pass on the west and the Salton Sea on the southeast. In addition to its transit operations, SunLine regulates local taxi services (as the SunLine Regulatory Administration, a division of the SunLine Services Group) and sells CNG and hydrogen to the public from dispensers at its Thousand Palms and Indio operations facilities, under the brand SunFuels.
+
+Routes
+
+Local routes
+
+School Tripper routes
+Services operate weekdays only.
+
+Destinations
+Destinations served include:
+
+Governance
+SunLine is governed by a board of directors with 10 members
+
+1 City Council member From Palm Springs
+1 City Council member from the 9 cities in the Palm Springs Area that are not Palm Springs City.
+1 from the Riverside County Board of Supervisors, that represents the Palm Springs Area (District 4)
+Chair
+Nancy Ross
+Vice Chair
+Lynn Mallotto
+Chief Executive Officer
+Mona Babauta
+
+Facilities and bus fleet
+
+The initial fleet included 22 buses in 1977. SunDial paratransit operations started in 1991.
+The SunLine Board of Directors adopted a resolution in 1992 to convert their fleet to alternative fuel, and became the first transit agency in the United States to do so in 1994, using compressed natural gas (CNG) buses.
+Starting in 2000, SunLine began limited operations with hydrogen fuel cell buses, installing a hydrogen fuel station using a Stuart Energy electrolyzer to supply the XCELLSiS ZEbus for a 13-month trial. The first revenue operations were conducted with the Thor/ISE ThunderPower fuel cell bus, using an ElDorado National EZ-Rider II chassis, between November 2002 to February 2003. By that time, SunLine also had installed a HyRadix methane reformer to generate hydrogen. SunLine tested a hydrogen hybrid internal combustion engine (HHICE) bus in early 2005; the bus was subsequently sent to Winnipeg Transit for cold weather testing.
+STA plans to convert their fleet to zero-emission buses (ZEB) by 2035, with only ZEBs purchased starting in 2021. Due to the relatively long fixed routes, the final mix of ZEBs is expected to be mostly hydrogen fuel-cell buses.
+
+Active fleet
+
+SunLine has two operations and maintenance facilities: one (including the administrative offices) in Thousand Palms, and another in Indio. As of 2021, on-site refueling and charging capabilities include an electrolyzer that can produce 900 kg/d (2,000 lb/d) of hydrogen at Thousand Palms, which came online in 2019, and six 80 kW AC/DC battery-electric bus chargers, three each at both Thousand Palms and Indio. Hydrogen dispensers (using delivered liquid H2) and additional chargers are planned for both facilities.
+Hydrogen production started in November 2000. Two electrolyzers and a natural gas reformer were part of the initial installation. One electrolyzer, supplied by Teledyne Brown, generated 40 ft3 (1.1 m3) per hour using 7.5 kW of electricity, supplied by solar panels; the other electrolyzer, supplied by Stuart Energy, produced 1,400 ft3 (40 m3) per hour. The reformer produced 4,200 ft3 (120 m3) per hour. The HyRadix Adéo reformer was installed at the end of 2003.
+
+References
+
+External links
+Official SunLine Transit Agency website

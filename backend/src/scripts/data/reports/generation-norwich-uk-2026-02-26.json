@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-02-26T05:31:47.469Z",
+  "target": "norwich-uk",
+  "config": {
+    "targetQuestions": 108,
+    "batchSize": 15,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 142,
+    "passedValidation": 117,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 117
+  },
+  "breakdown": {
+    "byRule": {
+      "ambiguous-answers": 1,
+      "duplicate-text": 18,
+      "vague-qualifiers": 6
+    },
+    "byRetryAttempt": {
+      "0": 105,
+      "1": 11,
+      "2": 1
+    },
+    "byDifficulty": {
+      "easy": 44,
+      "medium": 55,
+      "hard": 18
+    },
+    "byTopic": {
+      "city-council-mechanics": 15,
+      "city-council-services": 15,
+      "civic-history": 15,
+      "landmarks-institutions": 15,
+      "economy-culture": 15,
+      "norfolk-county": 15,
+      "sports-community": 14,
+      "elections-democracy": 13
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 409880,
+    "apiCalls": 30,
+    "tokensUsed": {
+      "input": 5283,
+      "output": 27444,
+      "cached": 100065
+    },
+    "estimatedCostUsd": 0.45752849999999995
+  }
+}

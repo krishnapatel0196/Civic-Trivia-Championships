@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-03-10T04:00:16.197Z",
+  "target": "portland-or",
+  "config": {
+    "targetQuestions": 675,
+    "batchSize": 25,
+    "maxRetries": 3
+  },
+  "results": {
+    "totalGenerated": 1634,
+    "passedValidation": 367,
+    "failedValidation": 0,
+    "retryExhausted": 0,
+    "finalInserted": 367
+  },
+  "breakdown": {
+    "byRule": {
+      "pure-lookup": 134,
+      "duplicate-text": 1129,
+      "ambiguous-answers": 4
+    },
+    "byRetryAttempt": {
+      "0": 279,
+      "1": 51,
+      "2": 27,
+      "3": 10
+    },
+    "byDifficulty": {
+      "easy": 86,
+      "medium": 181,
+      "hard": 100
+    },
+    "byTopic": {
+      "city-government": 105,
+      "civic-history": 68,
+      "parks-natural": 52,
+      "rose-city-identity": 84,
+      "cultural-institutions": 58
+    }
+  },
+  "failures": [],
+  "performance": {
+    "totalDurationMs": 17668917,
+    "apiCalls": 1010,
+    "tokensUsed": {
+      "input": 173807,
+      "output": 339811,
+      "cached": 8930976
+    },
+    "estimatedCostUsd": 8.2978788
+  }
+}

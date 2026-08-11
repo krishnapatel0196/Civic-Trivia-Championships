@@ -1,0 +1,13 @@
+{
+  "topics": [
+    { "slug": "city-council-mechanics", "name": "City Council Mechanics", "description": "Norwich City Council structure, procedures, elections, and wards" },
+    { "slug": "city-council-services", "name": "City Council Services", "description": "Norwich City Council services: housing, planning, leisure, bin collections, council tax" },
+    { "slug": "civic-history", "name": "Civic History", "description": "Norwich civic history: medieval charter, notable milestones, past Lord Mayors" },
+    { "slug": "landmarks-institutions", "name": "Landmarks & Institutions", "description": "Norwich Cathedral, Norwich Castle, Guildhall, Elm Hill, and cultural institutions" },
+    { "slug": "economy-culture", "name": "Economy & Culture", "description": "Norwich economy, Norwich Market, UEA, Norwich Research Park, creative industries" },
+    { "slug": "norfolk-county", "name": "Norfolk County", "description": "Norfolk County Council responsibilities: roads, schools, social care, libraries" },
+    { "slug": "sports-community", "name": "Sports & Community", "description": "Norwich City FC, community events, UNESCO City of Literature, City of Sanctuary" },
+    { "slug": "elections-democracy", "name": "Elections & Democracy", "description": "UK local elections, wards, by-elections, MPs for Norwich, voter participation" }
+  ],
+  "questions": []
+}
