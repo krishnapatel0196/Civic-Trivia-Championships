@@ -3,15 +3,11 @@ import { Header } from '../components/layout/Header';
 import { useCollections } from '../features/collections/hooks/useCollections';
 import { CollectionPicker } from '../features/collections/components/CollectionPicker';
 import { useTheme } from '../hooks/useTheme';
-import { useReducedMotion } from '../hooks/useReducedMotion';
-import { Fireflies } from '../components/effects/Fireflies';
-import { HotAirBalloons } from '../components/effects/HotAirBalloons';
 
 export function Collections() {
   const { collections, selectedId, loading, select } = useCollections();
   const { darkMode } = useTheme();
   const navigate = useNavigate();
-  const reducedMotion = useReducedMotion();
   const pageBg = darkMode
     ? '#0D1117'
     : 'linear-gradient(180deg, #EAF3FB 0%, #F0F4F8 45%, #F5F8F7 100%)';
@@ -24,12 +20,6 @@ export function Collections() {
 
   return (
     <div style={{ minHeight: '100vh', background: pageBg, position: 'relative', zIndex: 0 }}>
-      {darkMode ? (
-        <Fireflies color="20,184,166" mouseReactive reducedMotion={reducedMotion} style={{ zIndex: -1 }} />
-      ) : (
-        <HotAirBalloons />
-      )}
-
       <Header />
       <section style={{ padding: '40px 0 64px' }}>
         <div style={{ padding: '0 24px' }}>

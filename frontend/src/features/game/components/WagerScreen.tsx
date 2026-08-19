@@ -6,9 +6,6 @@ import { GemIcon } from '../../../components/icons/GemIcon';
 import { useGameTheme } from '../gameTheme';
 import { useThemeStore } from '../../../store/themeStore';
 import { PillButton } from '../../../components/ui/PillButton';
-import { useReducedMotion } from '../../../hooks/useReducedMotion';
-import { Fireflies } from '../../../components/effects/Fireflies';
-import { HotAirBalloons } from '../../../components/effects/HotAirBalloons';
 
 const GEM_SCORE_THRESHOLD = 600;
 
@@ -31,7 +28,6 @@ export function WagerScreen({
 }: WagerScreenProps) {
   const { G, darkMode } = useGameTheme();
   const { toggleDarkMode } = useThemeStore();
-  const reducedMotion = useReducedMotion();
   const maxWager = Math.floor(currentScore / 2);
   const hasPoints = currentScore > 0;
   const categoryLabel = TOPIC_LABELS[category as TopicCategory] || category;
@@ -71,12 +67,6 @@ export function WagerScreen({
       position: 'relative',
       zIndex: 0,
     }}>
-      {darkMode ? (
-        <Fireflies color="20,184,166" mouseReactive reducedMotion={reducedMotion} style={{ zIndex: -1 }} />
-      ) : (
-        <HotAirBalloons />
-      )}
-
       {/* Theme toggle */}
       <button
         onClick={toggleDarkMode}

@@ -8,12 +8,9 @@ import type { CollectionSummary } from '../features/collections/types';
 import { PillButton } from '../components/ui/PillButton';
 import { useTheme } from '../hooks/useTheme';
 import { useWindowSize } from '../hooks/useWindowSize';
-import { useReducedMotion } from '../hooks/useReducedMotion';
-import { Fireflies } from '../components/effects/Fireflies';
-import { HotAirBalloons } from '../components/effects/HotAirBalloons';
-
-// Brand teal (#14B8A6) for the dark-mode page background's ambient fireflies.
-const FIREFLY_COLOR = '20,184,166';
+import { BobbitScene } from '../components/bobbits/BobbitScene';
+import { BobbitTrophyCarry } from '../components/bobbits/BobbitTrophyCarry';
+import { BobbitCardGreeter } from '../components/bobbits/BobbitCardGreeter';
 
 function PinIcon({ color = '#D4A017' }: { color?: string }) {
   return (
@@ -32,10 +29,16 @@ function PlayGlyph({ size = 12 }: { size?: number }) {
 }
 
 function getRegion(c: CollectionSummary): string {
-  if (c.localeName) return c.localeName.toUpperCase();
+  // Some localeName values come back as "City, State" — the badge only wants the state.
+  if (c.localeName) return c.localeName.split(',').pop()!.trim().toUpperCase();
   if (c.tier === 'federal') return 'UNITED STATES';
   if (c.tier === 'state') return 'STATE LEVEL';
   return 'LOCAL';
+}
+
+// Some collection names come back as "City, ST" — the featured heading only wants the city.
+function cityOnly(name: string): string {
+  return name.split(',')[0].trim();
 }
 
 export function Dashboard() {
@@ -49,13 +52,8 @@ export function Dashboard() {
   const isDesktop = width >= 1024;
   const isMobile = width < 640;
 
-  // Dark mode: flat navy. Light mode: a soft daytime-sky wash for the balloons to float in.
-  const pageBg = darkMode
-    ? '#0D1117'
-    : 'linear-gradient(180deg, #EAF3FB 0%, #F0F4F8 45%, #F5F8F7 100%)';
-  const mutedColor = darkMode ? '#7487A1' : '#5B6B7F';
-
-  const reducedMotion = useReducedMotion();
+  // Plain flat background in both modes — no ambient effects.
+  const pageBg = darkMode ? '#0D1117' : '#F0F4F8';
 
   const handlePlay = () => {
     navigate('/play', { state: { collectionId: selectedId } });
@@ -67,22 +65,13 @@ export function Dashboard() {
 
   return (
     <div style={{ minHeight: '100vh', background: pageBg, position: 'relative', zIndex: 0 }}>
-      {darkMode ? (
-        /* Fireflies span the whole page (not just the hero) — a scattering of brand-colored
-           embers behind every section, gently drawn toward the cursor wherever it moves. */
-        <Fireflies color={FIREFLY_COLOR} mouseReactive reducedMotion={reducedMotion} style={{ zIndex: -1 }} />
-      ) : (
-        /* Hot-air balloons: light mode's own identity, not a recolored version of the fireflies. */
-        <HotAirBalloons />
-      )}
-
       <Header />
 
       {/* ── Hero ── */}
       <section
         style={{
-          position: 'relative', overflow: 'hidden',
-          padding: isMobile ? '28px 20px 32px' : '40px 24px 36px',
+          position: 'relative',
+          padding: isMobile ? '52px 20px 8px' : '62px 24px 8px',
         }}
       >
         <div
@@ -112,50 +101,29 @@ export function Dashboard() {
             />
 
             <p style={{
-              fontFamily: "'Manrope', sans-serif", fontWeight: 300, fontSize: isMobile ? 15 : 16,
-              color: darkMode ? '#94A3B8' : '#4B5768',
+              fontFamily: "'Manrope', sans-serif", fontWeight: 500, fontSize: isMobile ? 15 : 16,
+              color: darkMode ? '#CBD5E1' : '#1E293B',
               maxWidth: 480, lineHeight: 1.6, margin: '18px 0 0',
             }}>
               Challenge your civic knowledge across local, state, and national collections. Climb the leaderboard. Earn your place.
             </p>
 
-            {/* Change collection — the empty-state card owns this affordance when nothing is picked */}
-            {selectedCollection && (
-              <button
-                onClick={() => navigate('/collections')}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 6,
-                  padding: 0, margin: '20px 0 0',
-                  background: 'none', border: 'none', cursor: 'pointer',
-                  fontFamily: "'Manrope', sans-serif", fontWeight: 600, fontSize: 15,
-                  color: darkMode ? '#00C7B1' : '#00657C', transition: 'color 0.2s',
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = darkMode ? '#5EEAD4' : '#00849E'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = darkMode ? '#00C7B1' : '#00657C'; }}
-              >
-                Change Collection
-                <svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 1l5 5-5 5"/>
-                </svg>
-              </button>
-            )}
-
             {!isAuthenticated && (
               <p style={{
-                fontFamily: "'Manrope', sans-serif", fontSize: 14,
-                color: mutedColor, maxWidth: 480,
+                fontFamily: "'Manrope', sans-serif", fontWeight: 500, fontSize: isMobile ? 15 : 16,
+                color: darkMode ? '#CBD5E1' : '#1E293B', maxWidth: 480,
                 margin: '18px 0 0', lineHeight: 1.6,
               }}>
-                <Link to="/login" style={{ color: darkMode ? '#00C7B1' : '#00657C', textDecoration: 'none', fontWeight: 600 }}>Sign in</Link>
+                <Link to="/login" style={{ color: darkMode ? '#5EEAD4' : '#00657C', textDecoration: 'none', fontWeight: 800 }}>Sign in</Link>
                 {' '}or{' '}
-                <Link to="/signup" style={{ color: darkMode ? '#00C7B1' : '#00657C', textDecoration: 'none', fontWeight: 600 }}>create an account</Link>
+                <Link to="/signup" style={{ color: darkMode ? '#5EEAD4' : '#00657C', textDecoration: 'none', fontWeight: 800 }}>create an account</Link>
                 {' '}to track your progress and earn rewards.
               </p>
             )}
           </div>
 
           {/* ── Right: the selected collection ── */}
-          <div style={{ width: '100%', maxWidth: isDesktop ? 'none' : 560, margin: isDesktop ? 0 : '0 auto' }}>
+          <div style={{ width: '100%', maxWidth: isDesktop ? 'none' : 560, margin: isDesktop ? 0 : '0 auto', position: 'relative' }}>
             {loading ? (
               <FeaturedSkeleton darkMode={darkMode} isMobile={isMobile} />
             ) : selectedCollection ? (
@@ -175,7 +143,16 @@ export function Dashboard() {
                 onExplore={() => navigate('/collections')}
               />
             )}
+            {!loading && selectedCollection && (
+              <BobbitCardGreeter darkMode={darkMode} isMobile={isMobile} />
+            )}
           </div>
+        </div>
+
+        {/* Full-bleed edge-to-edge, breaking out of the 1240px column and the section's own
+            padding — the walk-in needs the real viewport edge, not just the content column's. */}
+        <div style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)', marginRight: 'calc(50% - 50vw)' }}>
+          <BobbitTrophyCarry darkMode={darkMode} isMobile={isMobile} />
         </div>
       </section>
 
@@ -192,6 +169,7 @@ export function Dashboard() {
             onSeeMore={() => navigate('/collections')}
             anchor={selectedCollection}
           />
+          <BobbitScene darkMode={darkMode} isMobile={isMobile} />
         </div>
       </section>
     </div>
@@ -218,7 +196,7 @@ function cardShell(darkMode: boolean) {
  * feature image on roomier screens.
  */
 function imageHeight(isMobile: boolean): string {
-  return isMobile ? 'clamp(170px, 36vw, 240px)' : 'clamp(180px, 26vh, 280px)';
+  return isMobile ? 'clamp(200px, 44vw, 300px)' : 'clamp(220px, 32vh, 360px)';
 }
 
 /**
@@ -295,11 +273,11 @@ function FeaturedCollection({
         )}
       </div>
 
-      {/* Scrim: bright up top so the photo still reads as a photo, dark enough
-          by the bottom to hold every line of body text at AA. */}
+      {/* Scrim: bright up top so the photo reads clearly, with enough of a dark
+          pool at the bottom (plus each line's own text-shadow) to hold text legibility. */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none' as const,
-        background: 'linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.12) 32%, rgba(0,0,0,0.52) 56%, rgba(0,0,0,0.78) 100%)',
+        background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.08) 30%, rgba(0,0,0,0.38) 58%, rgba(0,0,0,0.65) 100%)',
       }} />
 
       {/* Selected pill — this card only ever renders the currently-selected collection */}
@@ -324,77 +302,86 @@ function FeaturedCollection({
         </span>
       </div>
 
-      {/* ── Content column: normal flow, so its height (plus the clear photo
-          reveal above it) is what sizes the card and therefore the photo. ── */}
+      {/* ── Content row: normal flow, so its height (plus the clear photo
+          reveal above it) is what sizes the card and therefore the photo. Text sits
+          left, the Play button sits right, both bottom-aligned — stacks on mobile. ── */}
       <div style={{
         position: 'relative',
         // Top value is the reveal zone: same height the image used to have on
         // its own, so the upper photo stays fully visible before text starts.
-        padding: isMobile ? `${imageHeight(isMobile)} 18px 16px` : `${imageHeight(isMobile)} 24px 20px`,
-        display: 'flex', flexDirection: 'column' as const, gap: 12,
+        padding: isMobile ? `${imageHeight(isMobile)} 16px 14px` : `${imageHeight(isMobile)} 20px 16px`,
+        display: 'flex',
+        flexDirection: isMobile ? 'column' as const : 'row' as const,
+        alignItems: isMobile ? 'stretch' as const : 'flex-end' as const,
+        justifyContent: 'space-between',
+        gap: isMobile ? 10 : 16,
       }}>
-        {/* Name over the photo — ties the place to the collection at a glance */}
-        <h2
-          id={headingId}
-          style={{
-            margin: 0,
-            fontFamily: "'Manrope', sans-serif", fontWeight: 900,
-            fontSize: isMobile ? 26 : isDesktop ? 36 : 30,
-            lineHeight: 1.08, letterSpacing: '-0.025em',
-            color: '#FFFFFF',
-            textShadow: '0 2px 14px rgba(0,0,0,0.55)',
-          }}
-        >
-          {collection.name}
-        </h2>
-
-        {/* Locale */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 5, minWidth: 0,
-          fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: 12,
-        }}>
-          <PinIcon color="#F0C24B" />
-          <span style={{
-            color: '#F0C24B', letterSpacing: '0.06em', textTransform: 'uppercase' as const,
-            whiteSpace: 'nowrap' as const, overflow: 'hidden', textOverflow: 'ellipsis',
-          }}>
-            {getRegion(collection)}
-          </span>
-        </div>
-
-        <p style={{
-          fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: isMobile ? 13 : 14,
-          color: bodyColor, lineHeight: 1.5, margin: 0,
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical' as const,
-          overflow: 'hidden',
-        }}>
-          {collection.description}
-        </p>
-
-        {hasProgress ? (
-          <CollectionProgressMeter
-            completed={progress.completed}
-            total={progress.total}
-            darkMode={darkMode}
-            label={`${collection.name} progress`}
-          />
-        ) : (
-          /* Fallback: state the total honestly rather than render an empty/faked bar. */
+        <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 8, minWidth: 0, flex: 1 }}>
+          {/* Locale */}
           <div style={{
+            display: 'flex', alignItems: 'center', gap: 5, minWidth: 0,
             fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: 12,
-            color: metaColor,
           }}>
-            {collection.questionCount} questions ready to play
+            <PinIcon color="#F0C24B" />
+            <span style={{
+              color: '#F0C24B', letterSpacing: '0.06em', textTransform: 'uppercase' as const,
+              whiteSpace: 'nowrap' as const, overflow: 'hidden', textOverflow: 'ellipsis',
+              textShadow: '0 1px 8px rgba(0,0,0,0.6)',
+            }}>
+              {getRegion(collection)}
+            </span>
           </div>
-        )}
+
+          {/* Name over the photo — ties the place to the collection at a glance */}
+          <h2
+            id={headingId}
+            style={{
+              margin: 0,
+              fontFamily: "'Manrope', sans-serif", fontWeight: 900,
+              fontSize: isMobile ? 26 : isDesktop ? 36 : 30,
+              lineHeight: 1.08, letterSpacing: '-0.025em',
+              color: '#FFFFFF',
+              textShadow: '0 2px 14px rgba(0,0,0,0.55)',
+            }}
+          >
+            {cityOnly(collection.name)}
+          </h2>
+
+          <p style={{
+            fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: isMobile ? 13 : 14,
+            color: bodyColor, lineHeight: 1.5, margin: 0,
+            textShadow: '0 1px 8px rgba(0,0,0,0.6)',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical' as const,
+            overflow: 'hidden',
+          }}>
+            {collection.description}
+          </p>
+
+          {hasProgress ? (
+            <CollectionProgressMeter
+              completed={progress.completed}
+              total={progress.total}
+              darkMode={darkMode}
+              label={`${collection.name} progress`}
+            />
+          ) : (
+            /* Fallback: state the total honestly rather than render an empty/faked bar. */
+            <div style={{
+              fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: 12,
+              color: metaColor, textShadow: '0 1px 8px rgba(0,0,0,0.6)',
+            }}>
+              {collection.questionCount} questions ready to play
+            </div>
+          )}
+        </div>
 
         <PillButton
           onClick={onPlay}
           aria-label={`${isResuming ? 'Continue playing' : 'Play now'} — ${collection.name}`}
           className="focus-ring-primary"
-          style={{ width: '100%', fontWeight: 800 }}
+          style={{ width: isMobile ? '100%' : 'auto', flexShrink: 0, whiteSpace: 'nowrap' as const, fontWeight: 800 }}
         >
           <PlayGlyph />
           {isResuming ? 'Continue Playing' : 'Play Now'}

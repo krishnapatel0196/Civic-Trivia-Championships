@@ -16,8 +16,6 @@ import { PauseOverlay } from './PauseOverlay';
 import { FlagButton } from './FlagButton';
 import { AdminArchiveButton } from './AdminArchiveButton';
 import { CelebrationEffects } from '../../../components/animations/CelebrationEffects';
-import { Fireflies } from '../../../components/effects/Fireflies';
-import { HotAirBalloons } from '../../../components/effects/HotAirBalloons';
 import { DegradedBanner } from '../../../components/DegradedBanner';
 import { useAuthStore } from '../../../store/authStore';
 import { useConfettiStore } from '../../../store/confettiStore';
@@ -105,8 +103,6 @@ export function GameScreen({
 
   // How "bright" the background glow gets as the correct-answer streak builds — maxes out at a 7-streak.
   const glowIntensity = Math.min(state.currentStreak / 7, 1);
-  // Bumps only on a correct answer — drives the fireflies' reward burst without firing on wrong/timeout.
-  const correctBurstSignal = state.answers.filter((a) => a.correct).length;
   const firedPerfectGameRef = useRef(false);
 
   // Scale the timer circle up on wide viewports so it doesn't stay tiny on large screens
@@ -437,23 +433,6 @@ export function GameScreen({
       <ThemeToggle />
       {/* Degraded mode banner - shown only when backend is in fallback mode */}
       <DegradedBanner visible={state.degraded} />
-
-      {darkMode ? (
-        /* Fireflies: ambient embers that brighten and spark on every correct answer,
-           and drift faster as the streak (glowIntensity) builds. */
-        <Fireflies
-          color="20,184,166"
-          burstColor="255,212,38"
-          energy={glowIntensity}
-          burstSignal={correctBurstSignal}
-          mouseReactive
-          reducedMotion={reducedMotion}
-          style={{ zIndex: -1 }}
-        />
-      ) : (
-        /* Same light-mode identity as the home page: hot-air balloons and clouds. */
-        <HotAirBalloons />
-      )}
 
       {/* Stage spotlight from above */}
       <div className="absolute inset-0 pointer-events-none" style={{

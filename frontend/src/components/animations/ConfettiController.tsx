@@ -45,6 +45,37 @@ class ConfettiConductor {
     frame();
   }
 
+  // Confetti raining straight down from the top of the screen — near-zero start velocity
+  // so gravity alone carries each piece downward, rather than the corner-shot arcs `run` uses.
+  // Sparse (one small rectangle at a time) rather than a dense burst.
+  rain({ duration }: { duration: number }) {
+    const end = Date.now() + duration;
+    const colors = ['#14B8A6', '#E8A020'];
+
+    const frame = () => {
+      this.confetti({
+        particleCount: 1,
+        startVelocity: 0,
+        gravity: 1,
+        decay: 1, // no velocity friction — otherwise it slows to a crawl and fades before reaching bottom
+        drift: 0,
+        ticks: 500, // enough frames for a full top-to-bottom fall, not just the top portion
+        scalar: 0.8,
+        shapes: ['square'], // small rectangles, not circles
+        origin: { x: Math.random(), y: -0.05 },
+        // Pick one color per piece ourselves — canvas-confetti's own per-particle random
+        // pick doesn't alternate reliably when particleCount is 1, so it read as one color.
+        colors: [colors[Math.floor(Math.random() * colors.length)]],
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
+
+    frame();
+  }
+
   // Fireworks bursting up from random points across the background, for a perfect game.
   fireworks({ duration }: { duration: number }) {
     const end = Date.now() + duration;

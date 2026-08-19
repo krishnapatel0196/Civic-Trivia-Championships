@@ -6,6 +6,7 @@ interface ConfettiStore {
   fireSmallBurst: () => void;
   fireMediumBurst: () => void;
   fireConfettiRain: () => void;
+  fireTopRain: (duration?: number) => void;
   fireFireworks: () => void;
 }
 
@@ -34,6 +35,13 @@ export const useConfettiStore = create<ConfettiStore>((set, get) => ({
     const { conductor } = get();
     if (conductor) {
       conductor.run({ speed: 1, duration: 5000 });
+    }
+  },
+
+  fireTopRain: (duration = 2000) => {
+    const { conductor } = get();
+    if (conductor) {
+      conductor.rain({ duration });
     }
   },
 

@@ -1,16 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameTheme } from '../gameTheme';
-import { useReducedMotion } from '../../../hooks/useReducedMotion';
-import { Fireflies } from '../../../components/effects/Fireflies';
-import { HotAirBalloons } from '../../../components/effects/HotAirBalloons';
 
 interface FinalQuestionAnnouncementProps {
   show: boolean;
 }
 
 export function FinalQuestionAnnouncement({ show }: FinalQuestionAnnouncementProps) {
-  const { G, darkMode } = useGameTheme();
-  const reducedMotion = useReducedMotion();
+  const { G } = useGameTheme();
 
   return (
     <AnimatePresence>
@@ -31,12 +27,6 @@ export function FinalQuestionAnnouncement({ show }: FinalQuestionAnnouncementPro
             zIndex: 0,
           }}
         >
-          {darkMode ? (
-            <Fireflies color="20,184,166" mouseReactive reducedMotion={reducedMotion} style={{ zIndex: -1 }} />
-          ) : (
-            <HotAirBalloons />
-          )}
-
           {/* Amber highlight glow behind the text */}
           <div style={{
             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',

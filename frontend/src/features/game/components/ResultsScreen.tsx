@@ -16,8 +16,6 @@ import { ACCOUNTS_WEB_URL } from '../../../services/accountsApi';
 import { useGameTheme } from '../gameTheme';
 import { Header } from '../../../components/layout/Header';
 import { PillButton } from '../../../components/ui/PillButton';
-import { Fireflies } from '../../../components/effects/Fireflies';
-import { HotAirBalloons } from '../../../components/effects/HotAirBalloons';
 
 const GEM_SCORE_THRESHOLD = 600;
 
@@ -157,12 +155,6 @@ export function ResultsScreen({
       position: 'relative',
       zIndex: 0,
     }}>
-      {darkMode ? (
-        <Fireflies color="20,184,166" mouseReactive reducedMotion={reducedMotion} style={{ zIndex: -1 }} />
-      ) : (
-        <HotAirBalloons />
-      )}
-
       <Header />
 
       <div

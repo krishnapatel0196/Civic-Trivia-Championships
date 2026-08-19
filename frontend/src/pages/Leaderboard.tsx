@@ -2,9 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { useTheme } from '../hooks/useTheme';
-import { useReducedMotion } from '../hooks/useReducedMotion';
-import { Fireflies } from '../components/effects/Fireflies';
-import { HotAirBalloons } from '../components/effects/HotAirBalloons';
 import { useAuthStore } from '../store/authStore';
 import { useLeaderboard } from '../features/leaderboard/hooks/useLeaderboard';
 import { LeaderboardTabs } from '../features/leaderboard/components/LeaderboardTabs';
@@ -26,7 +23,6 @@ export function Leaderboard() {
   const headingColor = darkMode ? '#F1F5F9' : '#0F172A';
   const mutedColor = darkMode ? '#7C90AC' : '#94A3B8';
   const skeletonBg = darkMode ? '#161B22' : '#E2E8F0';
-  const reducedMotion = useReducedMotion();
 
   const [tab, setTab] = useState<LeaderboardTab>('all_time');
   const { data, isLoading, error, refetch } = useLeaderboard(tab, userId);
@@ -158,12 +154,6 @@ export function Leaderboard() {
         zIndex: 0,
       }}
     >
-      {darkMode ? (
-        <Fireflies color="20,184,166" mouseReactive reducedMotion={reducedMotion} style={{ zIndex: -1 }} />
-      ) : (
-        <HotAirBalloons />
-      )}
-
       <Header />
 
       <div style={{ padding: '32px 24px 80px', maxWidth: '860px', margin: '0 auto' }}>

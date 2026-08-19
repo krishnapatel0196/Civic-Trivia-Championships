@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { CollectionSummary } from '../types';
 import { CollectionCard } from './CollectionCard';
 import { useTheme } from '../../../hooks/useTheme';
+import { BobbitCivicFactSitter } from '../../../components/bobbits/BobbitCivicFactSitter';
 
 const TIER_SECTIONS: { tier: CollectionSummary['tier']; label: string }[] = [
   { tier: 'city', label: 'City' },
@@ -39,68 +40,6 @@ function sortByTierThenName(collections: CollectionSummary[]): CollectionSummary
   return [...collections].sort((a, b) => {
     const tierDiff = (TIER_ORDER[a.tier] ?? 99) - (TIER_ORDER[b.tier] ?? 99);
     if (tierDiff !== 0) return tierDiff;
-    return a.name.localeCompare(b.name);
-  });
-}
-
-/**
- * `localeName` for a city is "City, State" (e.g. "Asheville, North Carolina");
- * for a state it's just the state's own name. Pulling the text after the last
- * comma is the only "state" signal the data actually carries — nothing here is
- * inferred beyond what's already stored on the collection.
- */
-function extractState(localeName: string | undefined | null): string | null {
-  if (!localeName || !localeName.includes(',')) return null;
-  const parts = localeName.split(',');
-  return parts[parts.length - 1].trim();
-}
-
-// Loose match rather than exact equality: the state tier's own localeName isn't always
-// identical to the suffix on a city's localeName (e.g. "New York State" vs "New York").
-function namesOverlap(a: string, b: string): boolean {
-  const x = a.toLowerCase();
-  const y = b.toLowerCase();
-  return x === y || x.includes(y) || y.includes(x);
-}
-
-/**
- * Ranks collections around an "anchor" — the currently selected collection, the only
- * location signal this project actually has (no user profile address, IP geolocation,
- * or geographic distances are available). Order:
- *   0. the anchor itself
- *   1. other cities in the same state as the anchor (the closest thing to "nearby"
- *      the data supports — no lat/long, so state-sharing stands in for proximity)
- *   2. the state collection matching the anchor's state
- *   3. collections sharing the anchor's localeCode (country/locale grouping)
- *   4. everything else
- * Returns null (no personalization) when the anchor can't anchor a location — there's
- * no selection yet, or it's a federal/international collection with no place to key off.
- */
-function sortByRelevance(collections: CollectionSummary[], anchor: CollectionSummary): CollectionSummary[] | null {
-  const anchorState = anchor.tier === 'city'
-    ? extractState(anchor.localeName)
-    : anchor.tier === 'state'
-    ? anchor.localeName ?? null
-    : null;
-
-  // A federal/international anchor (e.g. "War in Iran") isn't a place — there's
-  // nothing location-like to rank around, so don't pretend otherwise.
-  if (!anchorState) return null;
-
-  const rank = (c: CollectionSummary): number => {
-    if (c.id === anchor.id) return 0;
-    if (anchorState && c.tier === 'city') {
-      const cState = extractState(c.localeName);
-      if (cState && namesOverlap(cState, anchorState)) return 1;
-    }
-    if (anchorState && c.tier === 'state' && c.localeName && namesOverlap(c.localeName, anchorState)) return 2;
-    if (anchor.localeCode && c.localeCode === anchor.localeCode) return 3;
-    return 4;
-  };
-
-  return [...collections].sort((a, b) => {
-    const diff = rank(a) - rank(b);
-    if (diff !== 0) return diff;
     return a.name.localeCompare(b.name);
   });
 }
@@ -206,16 +145,17 @@ export function CollectionPicker({
   const inputBg = darkMode ? '#161B22' : '#FFFFFF';
   const inputBorder = darkMode ? '#21262D' : '#E2E8F0';
   const inputText = darkMode ? '#F1F5F9' : '#0F172A';
-  const placeholderColor = darkMode ? '#7487A1' : '#94A3B8';
+  const placeholderColor = darkMode ? '#94A3B8' : '#64748B';
   const accentColor = darkMode ? '#00C7B1' : '#00657C';
 
   const tierScoped = tierFilter ? collections.filter(c => c.tier === tierFilter) : collections;
   const filtered = filterCollections(tierScoped, query);
   const isPreview = variant === 'preview';
-  const relevanceOrder = isPreview && anchor ? sortByRelevance(filtered, anchor) : null;
-  const isPersonalized = relevanceOrder !== null;
-  const previewItems = isPreview ? (relevanceOrder ?? sortByTierThenName(filtered)).slice(0, previewLimit) : filtered;
-  const previewHeading = isPersonalized ? 'Collections Near You' : 'Explore Collections';
+  // Selection is shown via the card's own highlight/badge, never by moving it — the grid's
+  // order stays put (tier-then-name) whichever collection is selected.
+  const isPersonalized = isPreview && !!anchor;
+  const previewItems = isPreview ? sortByTierThenName(filtered).slice(0, previewLimit) : filtered;
+  const previewHeading = isPersonalized ? 'Featured Collections' : 'Explore Collections';
 
   return (
     <div>
@@ -241,11 +181,11 @@ export function CollectionPicker({
             style={{
               display: 'flex', alignItems: 'center', gap: 4,
               background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-              fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: 13,
+              fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: 15,
               color: accentColor,
             }}
           >
-            Explore
+            Explore All Collections
             <ChevronRightIcon color={accentColor} />
           </button>
         )}
@@ -254,12 +194,14 @@ export function CollectionPicker({
       {/* Search */}
       {!loading && collections.length > 0 && (
         <div style={{
+          position: 'relative',
           display: 'flex', alignItems: 'center', gap: 10,
           background: inputBg, border: `1px solid ${inputBorder}`,
           borderRadius: 12, padding: '12px 16px',
           width: '100%', boxSizing: 'border-box' as const,
           marginBottom: 24,
         }}>
+          {isPersonalized && <BobbitCivicFactSitter darkMode={darkMode} />}
           <SearchIcon color={placeholderColor} />
           <input
             type="text"
@@ -267,11 +209,11 @@ export function CollectionPicker({
             onChange={e => setQuery(e.target.value)}
             placeholder="Search collections by city, state, or name..."
             aria-label="Search collections"
-            className={darkMode ? 'placeholder:text-[#7487A1]' : 'placeholder:text-[#94A3B8]'}
+            className={darkMode ? 'placeholder:text-[#94A3B8]' : 'placeholder:text-[#64748B]'}
             style={{
               flex: 1, minWidth: 0, border: 'none', outline: 'none',
               background: 'transparent', color: inputText,
-              fontFamily: "'Manrope', sans-serif", fontWeight: 500, fontSize: 14,
+              fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 12,
             }}
           />
           {query && (
